@@ -33,13 +33,10 @@ export default function CreatePostForm() {
       let counter = 1
       
       // Check if slug exists and add number suffix if needed
-      const existingPost = await fetch('/api/posts', {
-        method: 'GET'
-      })
-      
-      if (existingPost.ok) {
-        const posts = await existingPost.json()
-        const existingSlugs = posts.map((post: any) => post.slug)
+      const existingResponse = await fetch('/api/posts')
+      if (existingResponse.ok) {
+        const data = await existingResponse.json()
+        const existingSlugs = data.posts?.map((post: any) => post.slug) || []
         
         while (existingSlugs.includes(slug)) {
           slug = `${baseSlug}-${counter}`
@@ -58,17 +55,34 @@ export default function CreatePostForm() {
       
       // Handle featured image
       if (featuredImage) {
-        formData.append('featuredImage', featuredImage, featuredImage.name)
+        formData.append('featuredImage', featuredImage)
       }
 
       const response = await fetch('/api/posts', {
         method: 'POST',
-        body: formData
+        body: formData,
+        // Don't set Content-Type header - let the browser set it with the correct boundary
+        headers: {}
       })
 
       if (response.ok) {
+        // Reset form
+        setTitle('')
+        setContent('')
+        setAuthor('')
+        setCategory('')
+        setTags('')
+        setFeaturedImage(null)
+        setImagePreview(null)
+        
+        // Show success message
+        alert('Post created successfully!')
+        
+        // Refresh the posts list
         router.refresh()
-        router.push('/admin')
+      } else {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create post')
       }
     } catch (error) {
       console.error('Error creating post:', error)

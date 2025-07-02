@@ -577,7 +577,7 @@ export default function HomePage() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
-              {["Home", "About", "Services", "Culture", "News Room", "Our People", "Contact"].map((item, index) => (
+              {["Home", "About", "Services", "Culture", "Posts", "Our People", "Contact"].map((item, index) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, y: -10 }}

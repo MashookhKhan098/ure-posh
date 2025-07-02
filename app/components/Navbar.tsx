@@ -64,7 +64,7 @@ export function Navbar() {
                   href={item.href}
                   className="px-4 py-2 text-slate-700 hover:text-violet-600 font-medium transition-colors duration-200 flex items-center gap-1 rounded-lg hover:bg-violet-50/50"
                 >
-                  {item.name}
+                  {item.name === 'Contact' ? <span className="cursor-smile">{item.name}</span> : item.name}
                   {item.dropdown && <ChevronDown className="w-4 h-4" />}
                 </Link>
 

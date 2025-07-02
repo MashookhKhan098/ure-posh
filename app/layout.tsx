@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { Navbar } from "./components/Navbar"
 import BackgroundImage from './components/BackgroundImage'
 
 const inter = Inter({ subsets: ["latin"] })
@@ -22,7 +23,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} relative`}>
         <BackgroundImage />
-        <div className="relative z-10">{children}</div>
+        <div className="relative z-10">
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   )

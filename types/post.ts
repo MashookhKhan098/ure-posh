@@ -8,7 +8,7 @@ export interface Post {
   createdAt: string
   updatedAt: string
   featuredImage?: string
-  tags: string[]
+  tags: string
   slug: string
 }
 

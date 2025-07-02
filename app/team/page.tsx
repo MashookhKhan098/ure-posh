@@ -713,7 +713,7 @@ export default function TeamPage() {
               </Link>
               <Link 
                 href="/contact" 
-                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 cursor-smile"
               >
                 Connect
               </Link>

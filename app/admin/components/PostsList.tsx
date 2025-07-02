@@ -20,7 +20,7 @@ export default function PostsList() {
         throw new Error('Failed to fetch posts')
       }
       const data = await response.json()
-      setPosts(data)
+      setPosts(data.posts || [])
       setError(null)
     } catch (err) {
       console.error('Error fetching posts:', err)
@@ -114,6 +114,9 @@ export default function PostsList() {
           <tbody>
             {posts.map((post: Post) => (
               <tr key={post.id} className="border-b">
+                <td className="px-6 py-4">
+                  {post.tags ? post.tags.split(',').map(tag => tag.trim()).join(', ') : ''}
+                </td>
                 <td className="px-6 py-4">{post.title}</td>
                 <td className="px-6 py-4">{post.author}</td>
                 <td className="px-6 py-4">{post.category}</td>

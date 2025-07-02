@@ -2,7 +2,36 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Search, Filter, Calendar, Clock, User, Tag, Share2, ExternalLink, Heart, MessageCircle, Bookmark, ChevronDown, Grid, List, RefreshCw, AlertCircle, Twitter, Facebook } from 'lucide-react'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  Search, 
+  Calendar, 
+  Clock, 
+  User, 
+  Tag as TagIcon, 
+  Share2, 
+  Heart, 
+  MessageCircle, 
+  Bookmark as BookmarkIcon,
+  ChevronDown, 
+  Grid, 
+  List, 
+  RefreshCw, 
+  AlertCircle, 
+  Twitter, 
+  Facebook,
+  Linkedin,
+  Copy,
+  Check,
+  ArrowRight,
+  ExternalLink
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { mockPosts } from '@/lib/mockPosts'
 
 interface PostResponse {
   id: string
@@ -43,36 +72,36 @@ export default function EnhancedPostsPage() {
   const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
-    fetchPosts()
+    // Only fetch in browser environment, use mock data for build
+    if (typeof window !== 'undefined') {
+      fetchPosts()
+    } else {
+      setPosts(mockPosts)
+      setLoading(false)
+    }
   }, [])
 
   const fetchPosts = async (showRetryLoader = false) => {
     try {
       if (!showRetryLoader) setLoading(true)
       
-      // Cache the request for 60 seconds
-      const response = await fetch('/api/posts', {
-        next: { revalidate: 60 }, // Cache for 60 seconds
-      })
+      // Try to fetch from API
+      const response = await fetch('/api/posts')
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`)
+      if (response.ok) {
+        const data = await response.json()
+        setPosts(Array.isArray(data) ? data : mockPosts)
+      } else {
+        throw new Error('Failed to fetch posts')
       }
       
-      const data = await response.json()
-      
-      // Ensure data is an array
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid response format: expected array of posts')
-      }
-      
-      // Cache the posts data
-      setPosts(data)
       setError(null)
       setRetryCount(0)
     } catch (err) {
       console.error('Error fetching posts:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load posts')
+      // Fallback to mock data
+      setPosts(mockPosts)
+      setError('Using offline content. Some features may be limited.')
       setRetryCount(prev => prev + 1)
     } finally {
       setLoading(false)
@@ -295,7 +324,9 @@ export default function EnhancedPostsPage() {
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
-              <Filter className="w-4 h-4" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-filter">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+              </svg>
               Filters
               <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
             </button>
@@ -419,7 +450,7 @@ export default function EnhancedPostsPage() {
                     onClick={() => toggleBookmark(post.id)}
                     className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white/90 transition-colors"
                   >
-                    <Bookmark className={`w-4 h-4 ${bookmarkedPosts.has(post.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
+                    <BookmarkIcon className={`w-4 h-4 ${bookmarkedPosts.has(post.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
                   </button>
                 </div>
               )}
@@ -433,7 +464,7 @@ export default function EnhancedPostsPage() {
                   </span>
                   {post.tags && post.tags.length > 0 && (
                     <div className="flex items-center gap-1">
-                      <Tag className="w-3 h-3 text-gray-400" />
+                      <TagIcon className="w-3 h-3 text-gray-400" />
                       <span className="text-xs text-gray-500">
                         {post.tags.slice(0, 2).join(', ')}
                         {post.tags.length > 2 && ` +${post.tags.length - 2}`}
