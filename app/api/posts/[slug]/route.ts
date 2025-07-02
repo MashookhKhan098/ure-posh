@@ -1,53 +1,154 @@
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextResponse } from "next/server"
+import prisma from "../../../../lib/prisma"
+import { deleteImage } from "../../../../lib/image-utils"
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { slug: string } }
+) {
   try {
-    const post = await prisma.post.findUnique({
-      where: { slug: params.slug },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        author: true,
-        createdAt: true,
-        updatedAt: true,
-        featuredImage: true,
-        category: true,
-        tags: true,
-        status: true,
-        slug: true
-      }
-    })
+    const { slug } = params
 
-    if (!post) {
-      return NextResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
+    if (!slug) {
+      return new NextResponse(
+        JSON.stringify({ error: "Slug parameter is required" }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
       )
     }
 
-    return NextResponse.json(post)
+    // First find the post to get its image path
+    const post = await prisma.post.findUnique({
+      where: { slug: slug },
+      select: { featuredImage: true }
+    })
+
+    if (!post) {
+      return new NextResponse(
+        JSON.stringify({ error: "Post not found" }),
+        { 
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Delete the featured image if it exists
+    if (post.featuredImage) {
+      await deleteImage(post.featuredImage)
+    }
+
+    // Delete the post from database
+    await prisma.post.delete({
+      where: { slug: slug }
+    })
+
+    return new NextResponse(
+      JSON.stringify({ message: "Post deleted successfully" }),
+      { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
   } catch (error) {
-    console.error('Error fetching post:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch post' },
-      { status: 500 }
+    console.error("DELETE /api/posts/[slug] error:", error)
+    return new NextResponse(
+      JSON.stringify({ error: "Failed to delete post" }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
     )
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { slug: string } }
+) {
   try {
-    await prisma.post.delete({
-      where: { slug: params.slug }
+    const { slug } = params
+
+    if (!slug) {
+      return new NextResponse(
+        JSON.stringify({ error: "Slug parameter is required" }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    const post = await prisma.post.findUnique({
+      where: {
+        slug: slug,
+        status: "PUBLISHED",
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        content: true,
+        author: true,
+        category: true,
+        createdAt: true,
+        updatedAt: true,
+        featuredImage: true,
+        tags: true,
+      },
     })
-    return NextResponse.json({ message: 'Post deleted successfully' })
+
+    if (!post) {
+      return new NextResponse(
+        JSON.stringify({ error: "Post not found" }),
+        { 
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Convert tags from string to array if needed
+    const postWithArrayTags = {
+      ...post,
+      tags: typeof post.tags === "string" 
+        ? post.tags.split(",").map((tag: string) => tag.trim()).filter(Boolean)
+        : post.tags || [],
+    }
+
+    try {
+      const jsonData = JSON.stringify(postWithArrayTags)
+      console.log('Sending response:', jsonData)
+      return new NextResponse(
+        jsonData,
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60'
+          }
+        }
+      )
+    } catch (error) {
+      console.error('Error stringifying JSON:', error)
+      return new NextResponse(
+        JSON.stringify({ error: 'Failed to generate response' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
   } catch (error) {
-    console.error('Error deleting post:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete post' },
-      { status: 500 }
+    console.error("GET /api/posts/[slug] error:", error)
+    return new NextResponse(
+      JSON.stringify({ error: "Internal server error" }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
     )
   }
 }
