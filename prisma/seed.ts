@@ -1,76 +1,83 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from './prisma-client'
 
-const prisma = new PrismaClient()
+function seedPosts() {
+  console.log('🌱 Seeding posts...')
 
-async function main() {
-  console.log('🌱 Starting database seeding...')
-  
-  try {
-    // First, delete all existing posts
-    await prisma.post.deleteMany()
-    console.log('🧹 Deleted existing posts')
+  interface Post {
+    title: string
+    content: string
+    author: string
+    category: string
+    tags: string
+    status: string
+    slug: string
+    featuredImage: string
+  }
 
-    // Create sample posts
-    const samplePosts = [
-      {
-        title: 'Welcome to Our Blog',
-        content: 'Welcome to our new blog platform! We are excited to share our thoughts and insights with you.',
-        author: 'Admin',
-        category: 'General',
-        tags: 'welcome, announcement',
-        status: 'PUBLISHED',
-        slug: 'welcome-to-our-blog',
-        featuredImage: '/uploads/welcome.jpg'
-      },
-      {
-        title: 'Getting Started Guide',
-        content: 'Learn how to use our blog platform effectively. This guide will help you get started with creating and managing your content.',
-        author: 'Admin',
-        category: 'Guide',
-        tags: 'guide, tutorial',
-        status: 'PUBLISHED',
-        slug: 'getting-started-guide',
-        featuredImage: '/uploads/guide.jpg'
-      },
-      {
-        title: 'First Blog Post',
-        content: 'This is your first blog post. Start writing your amazing content here!',
-        author: 'Admin',
-        category: 'Blog',
-        tags: 'blog, first-post',
-        status: 'PUBLISHED',
-        slug: 'first-blog-post',
-        featuredImage: '/uploads/first-post.jpg'
-      }
-    ]
-
-    // Create posts
-    for (const post of samplePosts) {
-      try {
-        await prisma.post.create({
-          data: {
-            ...post,
-            tags: post.tags,
-            status: post.status || 'PUBLISHED'
-          }
-        })
-        console.log(`✅ Created post: ${post.title}`)
-      } catch (error) {
-        console.error(`❌ Error creating post ${post.title}:`, error)
-      }
+  const samplePosts: Post[] = [
+    {
+      title: 'Welcome to Our Blog',
+      content: 'Welcome to our new blog platform! We are excited to share our thoughts and insights with you.',
+      author: 'Admin',
+      category: 'General',
+      tags: 'welcome,announcement',
+      status: 'PUBLISHED',
+      slug: 'welcome-to-our-blog',
+      featuredImage: '/uploads/welcome.jpg'
+    },
+    {
+      title: 'Getting Started Guide',
+      content: 'Learn how to use our blog platform effectively. This guide will help you get started with creating and managing your content.',
+      author: 'Admin',
+      category: 'Guide',
+      tags: 'guide,tutorial',
+      status: 'PUBLISHED',
+      slug: 'getting-started-guide',
+      featuredImage: '/uploads/guide.jpg'
+    },
+    {
+      title: 'First Blog Post',
+      content: 'This is your first blog post. Start writing your amazing content here!',
+      author: 'Admin',
+      category: 'Blog',
+      tags: 'blog,first-post',
+      status: 'PUBLISHED',
+      slug: 'first-blog-post',
+      featuredImage: '/uploads/first-post.jpg'
     }
+  ]
 
-    console.log('🌱 Database seeding completed successfully')
+  // Delete all existing posts first
+  prisma.post.deleteMany()
+  console.log('🧹 Cleared existing posts.')
+
+  for (const post of samplePosts) {
+    try {
+      prisma.post.create({
+        data: {
+          ...post
+        }
+      })
+      console.log(`✅ Created post: ${post.title}`)
+    } catch (error) {
+      console.error(`❌ Failed to create post "${post.title}":`, error)
+    }
+  }
+}
+
+function main() {
+  console.log('🚀 Starting full database seeding process...')
+
+  try {
+    seedPosts()
+    console.log('🎉 Seeding completed successfully.')
   } catch (error) {
-    console.error('❌ Error during seeding:', error)
+    console.error('🔥 Seeding failed with error:', error)
     process.exit(1)
   } finally {
-    await prisma.$disconnect()
+    prisma.$disconnect()
+    console.log('🔌 Prisma disconnected.')
   }
 }
 
 main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })

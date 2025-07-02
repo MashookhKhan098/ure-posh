@@ -115,7 +115,7 @@ export default function PostsList() {
             {posts.map((post: Post) => (
               <tr key={post.id} className="border-b">
                 <td className="px-6 py-4">
-                  {post.tags ? post.tags.split(',').map(tag => tag.trim()).join(', ') : ''}
+                  {typeof post.tags === 'string' ? post.tags.split(',').map(tag => tag.trim()).join(', ') : ''}
                 </td>
                 <td className="px-6 py-4">{post.title}</td>
                 <td className="px-6 py-4">{post.author}</td>
