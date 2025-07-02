@@ -15,59 +15,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const slug = searchParams.get('slug')
     
-    // If no slug, return all posts with pagination
-    if (!slug) {
-      try {
-        const page = parseInt(searchParams.get('page') || '1')
-        const pageSize = 12
-        const skip = (page - 1) * pageSize
-
-        const [posts, total] = await Promise.all([
-          prisma.post.findMany({
-            where: { status: 'PUBLISHED' },
-            select: {
-              id: true,
-              title: true,
-              slug: true,
-              content: true,
-              featuredImage: true,
-              category: true,
-              tags: true,
-              author: true,
-              createdAt: true,
-              updatedAt: true,
-              status: true
-            },
-            orderBy: { createdAt: 'desc' },
-            skip,
-            take: pageSize
-          }),
-          prisma.post.count({ where: { status: 'PUBLISHED' } })
-        ])
-
-        return NextResponse.json({
-          posts: posts.map(post => ({
-            ...post,
-            tags: post.tags ? post.tags.split(',').map(tag => tag.trim()) : []
-          })),
-          total,
-          page,
-          pageSize,
-          totalPages: Math.ceil(total / pageSize)
-        }, {
-          headers: {
-            'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30'
-          }
-        })
-      } catch (error) {
-        console.error('Error fetching posts:', error)
-        return NextResponse.json(
-          { error: 'Failed to fetch posts' },
-          { status: 500 }
-        )
-      }
-    }
-    
     if (slug) {
       const post = await prisma.post.findUnique({
         where: { slug },
@@ -91,24 +38,27 @@ export async function GET(request: Request) {
 
       return NextResponse.json({
         ...post,
-        tags: post.tags ? post.tags.split(',').map(tag => tag.trim()) : []
+        tags: post.tags ? post.tags.split(',').map((tag: any) => tag.trim()) : []
       })
     }
 
-    // Multiple posts request with pagination and optimization
+    // Get all posts with pagination
     const page = parseInt(searchParams.get('page') || '1')
     const pageSize = 12
     const skip = (page - 1) * pageSize
 
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
+        where: { status: 'PUBLISHED' },
         select: {
           id: true,
           title: true,
           slug: true,
           content: true,
-          createdAt: true,
           author: true,
+          category: true,
+          createdAt: true,
+          updatedAt: true,
           featuredImage: true,
           tags: true
         },
@@ -118,11 +68,11 @@ export async function GET(request: Request) {
         skip,
         take: pageSize
       }),
-      prisma.post.count()
+      prisma.post.count({ where: { status: 'PUBLISHED' } })
     ])
 
     // Convert tags from string to array for each post
-    const postsWithArrayTags = posts.map(post => ({
+    const postsWithArrayTags = posts.map((post: any) => ({
       ...post,
       tags: typeof post.tags === 'string' 
         ? post.tags.split(',').map((tag: string) => tag.trim()) 
@@ -133,7 +83,8 @@ export async function GET(request: Request) {
       posts: postsWithArrayTags,
       total,
       page,
-      pageSize
+      pageSize,
+      totalPages: Math.ceil(total / pageSize)
     }, {
       headers: {
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30'
@@ -170,13 +121,6 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!featuredImage) {
-      return NextResponse.json(
-        { error: 'Featured image is required' }, 
-        { status: 400 }
-      )
-    }
-
     // Parse tags
     const tags = tagsStr.split(',').map(tag => tag.trim()).filter(Boolean)
     const tagsForDb = tags.join(',')
@@ -189,8 +133,12 @@ export async function POST(request: Request) {
 
       // Generate unique filename
       const timestamp = Date.now()
-      const fileExt = featuredImage.name.split('.').pop()?.toLowerCase()
+      const fileExt = featuredImage?.name.split('.').pop()?.toLowerCase()
       
+      if (!fileExt) {
+        throw new Error('Invalid file format')
+      }
+
       // Clean the title for filename
       const cleanTitle = title
         .toLowerCase()
@@ -204,9 +152,11 @@ export async function POST(request: Request) {
       const filePath = join(process.cwd(), 'public', relativePath.substring(1))
 
       // Convert file to buffer and save
-      const bytes = await featuredImage.arrayBuffer()
-      const buffer = Buffer.from(bytes)
-      await writeFile(filePath, buffer)
+      if (featuredImage) {
+        const bytes = await featuredImage.arrayBuffer()
+        const buffer = Buffer.from(bytes)
+        await writeFile(filePath, buffer)
+      }
 
       // Create the post in the database
       const post = await prisma.post.create({
@@ -218,7 +168,7 @@ export async function POST(request: Request) {
           slug,
           tags: tagsForDb,
           featuredImage: relativePath,
-          status: 'PUBLISHED' // Add status field
+          status: 'PUBLISHED'
         },
         select: {
           id: true,
@@ -234,17 +184,17 @@ export async function POST(request: Request) {
         message: 'Post created successfully'
       })
 
-    } catch (dbError) {
-      console.error('Database error:', dbError)
+    } catch (error) {
+      console.error('Error creating post:', error)
       return NextResponse.json(
-        { error: 'Failed to save post to database' }, 
+        { error: error instanceof Error ? error.message : 'Failed to create post' }, 
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('POST /api/posts error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' }, 
+      { error: error instanceof Error ? error.message : 'Internal server error' }, 
       { status: 500 }
     )
   }

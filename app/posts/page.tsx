@@ -31,7 +31,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { mockPosts } from '@/lib/mockPosts'
+
 
 interface PostResponse {
   id: string
@@ -72,13 +72,8 @@ export default function EnhancedPostsPage() {
   const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
-    // Only fetch in browser environment, use mock data for build
-    if (typeof window !== 'undefined') {
-      fetchPosts()
-    } else {
-      setPosts(mockPosts)
-      setLoading(false)
-    }
+    // Always fetch real data from the API
+    fetchPosts()
   }, [])
 
   const fetchPosts = async (showRetryLoader = false) => {
@@ -90,7 +85,8 @@ export default function EnhancedPostsPage() {
       
       if (response.ok) {
         const data = await response.json()
-        setPosts(Array.isArray(data) ? data : mockPosts)
+        // Extract posts from the response
+        setPosts(data.posts || [])
       } else {
         throw new Error('Failed to fetch posts')
       }
@@ -99,8 +95,7 @@ export default function EnhancedPostsPage() {
       setRetryCount(0)
     } catch (err) {
       console.error('Error fetching posts:', err)
-      // Fallback to mock data
-      setPosts(mockPosts)
+      setError('Failed to load posts. Please check your internet connection.')
       setError('Using offline content. Some features may be limited.')
       setRetryCount(prev => prev + 1)
     } finally {
