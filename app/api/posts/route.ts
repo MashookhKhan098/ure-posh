@@ -1,7 +1,7 @@
 // /app/api/posts/route.ts
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { writeFile, mkdir } from 'fs/promises'
+import { writeFile, mkdir, unlink } from 'fs/promises'
 import { existsSync } from 'fs'
 import { join } from 'path'
 
@@ -93,6 +93,54 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('GET /api/posts error:', error)
     return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// DELETE /api/posts/[slug] - Delete a post
+// ─────────────────────────────────────────────────────
+export async function DELETE(request: Request) {
+  try {
+    // Get the slug from the URL
+    const { searchParams } = new URL(request.url)
+    const slug = searchParams.get('slug')
+
+    if (!slug) {
+      return NextResponse.json({ error: 'Slug is required' }, { status: 400 })
+    }
+
+    // Delete the post
+    const post = await prisma.post.findUnique({
+      where: { slug }
+    })
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+    }
+
+    // Delete the featured image if it exists
+    if (post.featuredImage) {
+      const imagePath = join(process.cwd(), 'public', post.featuredImage.substring(1))
+      if (existsSync(imagePath)) {
+        await unlink(imagePath)
+      }
+    }
+
+    // Delete the post from database
+    await prisma.post.delete({
+      where: { slug }
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: 'Post deleted successfully'
+    })
+  } catch (error) {
+    console.error('DELETE /api/posts error:', error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to delete post' }, 
+      { status: 500 }
+    )
   }
 }
 
