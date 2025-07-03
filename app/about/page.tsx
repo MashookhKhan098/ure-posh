@@ -24,7 +24,6 @@ import {
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Navbar } from "../components/Navbar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -180,9 +179,7 @@ export default function AboutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50/30 to-rose-50/40">
-      <Navbar />
-
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50/30 to-rose-50/40 pt-16">
       {/* Hero Section */}
       <section className="relative py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">

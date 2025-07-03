@@ -59,12 +59,10 @@ export default function HomePage() {
       content:
         "Ureposh transformed our workplace culture completely. Their approach goes beyond compliance—they helped us build genuine respect and inclusion. Our employee satisfaction scores increased by 40% within six months.",
       rating: 5,
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/2.jpg",
       companyLogo: "/placeholder.svg?height=50&width=150",
       industry: "Technology & Software",
-      employees: "2,500+",
       location: "Bangalore, Karnataka",
-      impact: "40% improvement in workplace satisfaction",
       challenge: "High attrition due to workplace culture issues",
       solution: "Comprehensive POSH training and culture transformation program",
     },
@@ -75,12 +73,10 @@ export default function HomePage() {
       content:
         "The multilingual training programs were a game-changer for our diverse workforce. Ureposh's cultural sensitivity and practical approach made complex legal concepts accessible to everyone, from factory floor to boardroom.",
       rating: 5,
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/3.jpg",
       companyLogo: "/placeholder.svg?height=50&width=150",
       industry: "Manufacturing & Engineering",
-      employees: "8,000+",
       location: "Chennai, Tamil Nadu",
-      impact: "Zero harassment incidents in 24 months",
       challenge: "Language barriers and cultural diversity across multiple locations",
       solution: "Multi-language POSH training and localized awareness programs",
     },
@@ -91,12 +87,10 @@ export default function HomePage() {
       content:
         "As a woman-led healthcare startup, creating a safe environment was crucial for our growth. Ureposh helped us establish robust policies from day one, enabling us to scale confidently while maintaining our values.",
       rating: 5,
-      image: "/placeholder.svg?height=100&width=100",
+      image: "/images/4.jpg",
       companyLogo: "/placeholder.svg?height=50&width=150",
       industry: "Healthcare Technology",
-      employees: "450+",
       location: "Mumbai, Maharashtra",
-      impact: "95% employee retention rate",
       challenge: "Building inclusive culture in fast-growing startup environment",
       solution: "Startup-focused POSH implementation and leadership training",
     },
@@ -110,7 +104,7 @@ export default function HomePage() {
       color: "from-pink-500 to-rose-600",
       description:
         "Comprehensive legal framework tailored to your organization's unique needs and industry requirements.",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "/images/5.jpg",
       features: [
         "100% compliant with Sexual Harassment of Women at Workplace Act, 2013",
         "Industry-specific customization for tech, manufacturing, healthcare, and more",
@@ -133,7 +127,6 @@ export default function HomePage() {
         "Implementation planning and rollout strategy",
         "Ongoing monitoring and annual policy updates",
       ],
-      price: "Starting from ₹25,000",
       duration: "2-4 weeks",
       deliverables: [
         "Complete POSH Policy Document",
@@ -149,7 +142,7 @@ export default function HomePage() {
       color: "from-rose-500 to-pink-600",
       description:
         "End-to-end support for establishing and managing effective Internal Committees with qualified external members.",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "/images/2.jpg",
       features: [
         "Strategic IC composition based on organizational structure",
         "Qualified external member empanelment from our expert network",
@@ -172,7 +165,6 @@ export default function HomePage() {
         "Process setup and documentation systems",
         "Ongoing support and performance monitoring",
       ],
-      price: "Starting from ₹35,000",
       duration: "3-6 weeks",
       deliverables: [
         "IC Formation Documentation",
@@ -188,7 +180,7 @@ export default function HomePage() {
       color: "from-fuchsia-500 to-pink-600",
       description:
         "Interactive, scenario-based training programs designed to build competence and confidence in handling sensitive situations.",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "/images/3.jpg",
       features: [
         "Role-specific training modules for IC members, HR teams, and leadership",
         "Real-world case studies and interactive scenario planning",
@@ -222,7 +214,7 @@ export default function HomePage() {
       color: "from-pink-600 to-rose-700",
       description:
         "Expert guidance and support throughout the investigation process to ensure fair, thorough, and legally compliant resolutions.",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "/images/4.jpg",
       features: [
         "Real-time guidance during active investigations",
         "Interview techniques and evidence collection support",
@@ -261,7 +253,7 @@ export default function HomePage() {
       color: "from-rose-500 to-red-600",
       description:
         "Thorough evaluation of your POSH implementation to identify gaps, ensure compliance, and drive continuous improvement.",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "/images/5.jpg",
       features: [
         "360-degree policy and process evaluation",
         "IC effectiveness and performance assessment",
@@ -295,7 +287,7 @@ export default function HomePage() {
       color: "from-pink-500 to-fuchsia-600",
       description:
         "Industry-recognized certification programs to build expertise in POSH compliance and diversity, equity & inclusion.",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "",
       features: [
         "Beginner to advanced level certification tracks",
         "Comprehensive coverage of POSH Act 2013 and amendments",
@@ -336,7 +328,7 @@ export default function HomePage() {
         "Advanced analytics and predictive insights to proactively identify and prevent workplace issues before they escalate.",
       icon: Zap,
       color: "from-pink-500 to-rose-600",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "/images/2.jpg",
       benefits: [
         "Predictive risk analytics and early warning systems",
         "Real-time compliance monitoring and alerts",
@@ -905,11 +897,13 @@ export default function HomePage() {
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
                   <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-pink-500/20">
                     <Image
-                      src="/placeholder.svg?height=600&width=700"
+                      src="/images/5.jpg"
                       alt="Diverse professionals in inclusive workplace"
                       width={700}
                       height={600}
                       className="w-full h-full object-cover"
+                      priority
+                      loading="eager"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pink-900/20 via-transparent to-transparent"></div>
 
@@ -1614,10 +1608,6 @@ export default function HomePage() {
                             <p className="text-white font-semibold">{testimonials[activeTestimonial].industry}</p>
                           </div>
                           <div>
-                            <p className="text-pink-100 text-sm">Company Size</p>
-                            <p className="text-white font-semibold">{testimonials[activeTestimonial].employees}</p>
-                          </div>
-                          <div>
                             <p className="text-pink-100 text-sm">Location</p>
                             <p className="text-white font-semibold">{testimonials[activeTestimonial].location}</p>
                           </div>
@@ -1630,10 +1620,6 @@ export default function HomePage() {
                           <div>
                             <p className="text-pink-100 text-sm">Solution</p>
                             <p className="text-white font-medium text-sm">{testimonials[activeTestimonial].solution}</p>
-                          </div>
-                          <div>
-                            <p className="text-pink-100 text-sm">Impact</p>
-                            <p className="text-white font-semibold">{testimonials[activeTestimonial].impact}</p>
                           </div>
                         </div>
                       </div>

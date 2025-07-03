@@ -1,269 +1,306 @@
 "use client"
 
-import { Button } from "../../components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
-import { Input } from "../../components/ui/input"
-import { Textarea } from "../../components/ui/textarea"
-import { Calendar } from "../../components/ui/calendar";
-import { Badge } from "../../components/ui/badge"
-import { Heart, Mail, Phone, MapPin, Clock, Send, MessageCircle, Calendar as CalendarIcon } from "lucide-react"
-import Link from "next/link"
+import React, { useState } from 'react';
+import { Mail, Phone, MapPin, CheckCircle, MessageSquare, Users, Clock, ArrowRight, Menu, X } from 'lucide-react';
+import { Navbar } from '../components/Navbar';
 
-export default function ContactPage() {
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  company: string;
+  service: string;
+  message: string;
+}
+
+interface ContactInfo {
+  icon: React.ReactNode;
+  title: string;
+  content: string;
+  description: string;
+}
+
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+const ContactPage: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    company: '',
+    service: '',
+    message: ''
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitStatus, setSubmitStatus] = useState<string>('');
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitStatus('success');
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        company: '',
+        service: '',
+        message: ''
+      });
+    }, 2000);
+  };
+
+  const contactInfo: ContactInfo[] = [
+    {
+      icon: <Mail className="w-6 h-6" />,
+      title: "Email",
+      content: "info@ureposh.com",
+      description: "We typically respond within 2-4 hours"
+    },
+    {
+      icon: <Phone className="w-6 h-6" />,
+      title: "Phone",
+      content: "+91 98765 43210",
+      description: "Available Mon-Fri, 9 AM - 6 PM IST"
+    },
+    {
+      icon: <MapPin className="w-6 h-6" />,
+      title: "Location",
+      content: "Mumbai, Maharashtra, India",
+      description: "Serving clients across India"
+    }
+  ];
+
+  const faqs: FAQ[] = [
+    {
+      question: "How quickly can you help us become POSH compliant?",
+      answer: "Depending on your organization's size and current state, we can help you achieve basic compliance within 2-4 weeks. Complete implementation with training typically takes 6-8 weeks."
+    },
+    {
+      question: "Do you provide ongoing support after implementation?",
+      answer: "Yes, we provide continuous support including annual compliance reviews, IC training updates, investigation assistance, and policy updates as regulations change."
+    },
+    {
+      question: "What industries do you work with?",
+      answer: "We work with organizations across all industries including IT, manufacturing, healthcare, education, startups, and government organizations of all sizes."
+    },
+    {
+      question: "Can you help with existing harassment cases?",
+      answer: "Yes, we provide expert guidance for ongoing investigations, help with proper documentation, and ensure compliance with legal procedures throughout the process."
+    },
+    {
+      question: "What is the cost of your services?",
+      answer: "Our pricing varies based on organization size, services required, and complexity. We offer customized packages and provide detailed quotes after understanding your specific needs."
+    },
+    {
+      question: "Do you provide training in regional languages?",
+      answer: "Yes, we conduct training sessions in Hindi, English, and several regional languages to ensure effective communication and understanding across your organization."
+    }
+  ];
+
+  const benefits: string[] = [
+    "Expert legal compliance guidance",
+    "24/7 ongoing support",
+    "Customized solutions for your industry",
+    "Proven track record with 200+ clients"
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
-        {/* Navigation */}
-        <nav className="bg-white/80 backdrop-blur-md border-b border-rose-200 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-lg flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                UREPOSH
-              </span>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              <Link href="/" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Home
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-rose-600 transition-colors">
-                About
-              </Link>
-              <Link href="/services" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Services
-              </Link>
-              <Link href="/culture" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Culture
-              </Link>
-              <Link href="/team" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Our People
-              </Link>
-              <Link href="/contact" className="text-rose-600 font-medium">
-                Contact
-              </Link>
-            </div>
-            <Button className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700">
-              Get Started
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-8 mb-16">
-            <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200">Contact Us</Badge>
-            <h1 className="text-5xl font-bold text-gray-900">
-              Let's{" "}
-              <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                Transform
-              </span>{" "}
-              Your Workplace
-            </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              Ready to create a safer, more inclusive workplace? We're here to help. Reach out to discuss your POSH
-              compliance needs and workplace safety goals.
-            </p>
+      <section className="pt-16 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="animate-pulse mb-8">
+            <div className="inline-block p-4 bg-white/80 backdrop-blur-sm rounded-full shadow-lg">
+              <MessageSquare className="w-12 h-12 text-rose-600" />
+            </div>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            Get In <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">Touch</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Ready to make your workplace safer and more inclusive? Our POSH compliance experts are here to help you every step of the way.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>2-4 hour response time</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              <span>200+ satisfied clients</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              <span>100% compliance guarantee</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Form & Info */}
+      {/* Main Content */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <Card className="border-rose-200 hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-gray-900 flex items-center">
-                  <MessageCircle className="h-6 w-6 text-rose-600 mr-2" />
-                  Send Us a Message
-                </CardTitle>
-                <CardDescription className="text-gray-600">
-                  Fill out the form below and we'll get back to you within 24 hours.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="firstName" className="text-sm font-medium text-gray-700">
-                      First Name *
-                    </label>
-                    <Input
-                      id="firstName"
-                      placeholder="Enter your first name"
-                      className="border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
+              
+              {submitStatus === 'success' && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <p className="text-green-800">Thank you! We'll get back to you within 2-4 hours.</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                      placeholder="John"
+                      required
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label htmlFor="lastName" className="text-sm font-medium text-gray-700">
-                      Last Name *
-                    </label>
-                    <Input
-                      id="lastName"
-                      placeholder="Enter your last name"
-                      className="border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                      placeholder="Doe"
+                      required
                     />
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                    Email Address *
-                  </label>
-                  <Input
-                    id="email"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <input
                     type="email"
-                    placeholder="Enter your email address"
-                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                    placeholder="john@company.com"
+                    required
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                    Phone Number
-                  </label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                    placeholder="Your Company"
+                    required
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="company" className="text-sm font-medium text-gray-700">
-                    Company/Organization
-                  </label>
-                  <Input
-                    id="company"
-                    placeholder="Enter your company name"
-                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-400"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="preferredDate" className="text-sm font-medium text-gray-700">
-                    Preferred Date
-                  </label>
-                  <div className="mt-1">
-                    <Calendar
-                      mode="single"
-                      className="w-full"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="service" className="text-sm font-medium text-gray-700">
-                    Service of Interest
-                  </label>
-                  <select className="w-full px-3 py-2 border border-rose-200 rounded-md focus:border-rose-400 focus:ring-rose-400 focus:ring-1">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Service Interest</label>
+                  <select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                    required
+                  >
                     <option value="">Select a service</option>
-                    <option value="policy">POSH Policy Advisory</option>
-                    <option value="ic-setup">IC Setup & Training</option>
+                    <option value="compliance">POSH Compliance Setup</option>
+                    <option value="training">Training & Workshops</option>
                     <option value="investigation">Investigation Support</option>
-                    <option value="audit">POSH Audits</option>
-                    <option value="certification">Certification Programs</option>
-                    <option value="training">Gender Sensitization</option>
+                    <option value="ongoing">Ongoing Compliance</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium text-gray-700">
-                    Message *
-                  </label>
-                  <Textarea
-                    id="message"
-                    placeholder="Tell us about your requirements and how we can help..."
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
                     rows={4}
-                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all resize-none"
+                    placeholder="Tell us about your requirements..."
+                    required
                   />
                 </div>
+                <button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 disabled:scale-100 shadow-lg flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                  ) : (
+                    <>
+                      Send Message
+                      <ArrowRight className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
 
-                <Button className="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700">
-                  Send Message
-                  <Send className="ml-2 h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Contact Information */}
+            {/* Contact Info */}
             <div className="space-y-8">
-              <Card className="border-rose-200">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-gray-900">Get in Touch</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Multiple ways to reach us for your convenience
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Mail className="h-5 w-5 text-white" />
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Information</h2>
+                <div className="space-y-6">
+                  {contactInfo.map((item, index) => (
+                    <div key={index} className="flex items-start space-x-4 p-4 rounded-lg hover:bg-rose-50/50 transition-colors">
+                      <div className="bg-rose-100 p-3 rounded-full text-rose-600">
+                        {item.icon}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
+                        <p className="text-gray-800 font-medium">{item.content}</p>
+                        <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Email Us</h4>
-                      <p className="text-gray-600">info@ureposh.com</p>
-                      <p className="text-sm text-gray-500">We respond within 24 hours</p>
-                    </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Phone className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Call Us</h4>
-                      <p className="text-gray-600">+91 98765 43210</p>
-                      <p className="text-sm text-gray-500">Mon-Fri, 9:00 AM - 6:00 PM IST</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-rose-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Visit Us</h4>
-                      <p className="text-gray-600">Mumbai, Maharashtra, India</p>
-                      <p className="text-sm text-gray-500">By appointment only</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Clock className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Business Hours</h4>
-                      <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                      <p className="text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
-                      <p className="text-sm text-gray-500">Closed on Sundays and holidays</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-rose-200 bg-gradient-to-br from-rose-50 to-pink-50">
-                <CardHeader>
-                  <CardTitle className="text-xl text-gray-900 flex items-center">
-                    <CalendarIcon className="h-5 w-5 text-rose-600 mr-2" />
-                    Schedule a Consultation
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Book a free 30-minute consultation to discuss your POSH compliance needs
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700">
-                    Book Free Consultation
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Why Choose Us?</h3>
+                <ul className="space-y-3">
+                  {benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-700">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -278,46 +315,14 @@ export default function ContactPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                question: "How quickly can you help us become POSH compliant?",
-                answer:
-                  "Depending on your organization's size and current state, we can help you achieve basic compliance within 2-4 weeks. Complete implementation with training typically takes 6-8 weeks.",
-              },
-              {
-                question: "Do you provide ongoing support after implementation?",
-                answer:
-                  "Yes, we provide continuous support including annual compliance reviews, IC training updates, investigation assistance, and policy updates as regulations change.",
-              },
-              {
-                question: "What industries do you work with?",
-                answer:
-                  "We work with organizations across all industries including IT, manufacturing, healthcare, education, startups, and government organizations of all sizes.",
-              },
-              {
-                question: "Can you help with existing harassment cases?",
-                answer:
-                  "Yes, we provide expert guidance for ongoing investigations, help with proper documentation, and ensure compliance with legal procedures throughout the process.",
-              },
-              {
-                question: "What is the cost of your services?",
-                answer:
-                  "Our pricing varies based on organization size, services required, and complexity. We offer customized packages and provide detailed quotes after understanding your specific needs.",
-              },
-              {
-                question: "Do you provide training in regional languages?",
-                answer:
-                  "Yes, we conduct training sessions in Hindi, English, and several regional languages to ensure effective communication and understanding across your organization.",
-              },
-            ].map((faq, index) => (
-              <Card key={index} className="border-rose-100 hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg text-gray-900">{faq.question}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-600 leading-relaxed">{faq.answer}</CardDescription>
-                </CardContent>
-              </Card>
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="border border-rose-100 hover:shadow-lg transition-all duration-300 p-6 rounded-lg bg-white hover:scale-105"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -330,103 +335,52 @@ export default function ContactPage() {
           <p className="text-xl text-gray-600">
             Take the first step towards creating a safer, more inclusive workplace for everyone.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700"
-            >
-              Start Your Journey Today
-            </Button>
-            <Link href="/services">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-rose-300 text-rose-700 hover:bg-rose-50 bg-transparent"
-              >
-                Explore Our Services
-              </Button>
-            </Link>
-          </div>
+          <button className="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 px-8 py-4 rounded-full text-white font-semibold transition-all transform hover:scale-105 shadow-lg inline-flex items-center gap-2">
+            Book Free Consultation
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-600 rounded-lg flex items-center justify-center">
-                  <Heart className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">UREPOSH</span>
+      <footer className="bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Us</h3>
+              <div className="space-y-2 text-gray-600">
+                <p>Email: info@ureposh.com</p>
+                <p>Phone: +91 98765 43210</p>
+                <p>Location: Mumbai, Maharashtra, India</p>
               </div>
-              <p className="text-gray-400">Creating safe, inclusive, and compliant workplaces across India.</p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Services</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/services" className="hover:text-rose-400">
-                    POSH Policy Advisory
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/services" className="hover:text-rose-400">
-                    IC Setup & Training
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/services" className="hover:text-rose-400">
-                    Investigation Support
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/services" className="hover:text-rose-400">
-                    POSH Audits
-                  </Link>
-                </li>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Services</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">About Us</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-rose-400 transition-colors">Our People</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/about" className="hover:text-rose-400">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/culture" className="hover:text-rose-400">
-                    Our Culture
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/team" className="hover:text-rose-400">
-                    Our People
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-rose-400">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Contact</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>Email: info@ureposh.com</li>
-                <li>Phone: +91 98765 43210</li>
-                <li>Address: Mumbai, India</li>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Services</h3>
+              <ul className="space-y-2 text-gray-600">
+                <li>POSH Compliance Setup</li>
+                <li>Training & Workshops</li>
+                <li>Investigation Support</li>
+                <li>Ongoing Compliance</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+          <div className="border-t border-gray-200 mt-12 pt-8 text-center text-gray-500">
             <p>&copy; 2024 Ureposh. All rights reserved.</p>
           </div>
         </div>
       </footer>
     </div>
-  )
-}
+  );
+};
+
+export default ContactPage;

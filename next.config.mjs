@@ -10,6 +10,8 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ['localhost'],
+    path: '/_next/image/',
   },
   // Enable static asset optimization
   experimental: {

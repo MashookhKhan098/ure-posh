@@ -4,9 +4,11 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, ChevronDown } from "lucide-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 
 export function Navbar() {
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -29,8 +31,8 @@ export function Navbar() {
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
     { name: "Culture", href: "/culture" },
-    { name: "News Room", href: "/news" },
-    { name: "Our People", href: "/people" },
+    { name: "News", href: "/posts" },
+    { name: "Team", href: "/team" },
     { name: "Contact", href: "/contact" },
   ]
 
@@ -62,9 +64,13 @@ export function Navbar() {
               <div key={item.name} className="relative group">
                 <Link
                   href={item.href}
-                  className="px-4 py-2 text-slate-700 hover:text-violet-600 font-medium transition-colors duration-200 flex items-center gap-1 rounded-lg hover:bg-violet-50/50"
+                  className={`px-4 py-2 font-medium transition-colors duration-200 flex items-center gap-1 rounded-lg ${
+                    pathname === item.href
+                      ? 'text-violet-600 bg-violet-50/70'
+                      : 'text-slate-700 hover:text-violet-600 hover:bg-violet-50/50'
+                  }`}
                 >
-                  {item.name === 'Contact' ? <span className="cursor-smile">{item.name}</span> : item.name}
+                  {item.name}
                   {item.dropdown && <ChevronDown className="w-4 h-4" />}
                 </Link>
 
@@ -118,8 +124,13 @@ export function Navbar() {
               {navItems.map((item) => (
                 <div key={item.name}>
                   <Link
+                    key={item.name}
                     href={item.href}
-                    className="block px-4 py-3 text-slate-700 hover:text-violet-600 hover:bg-violet-50/50 rounded-lg transition-colors font-medium"
+                    className={`block px-4 py-3 rounded-lg transition-colors duration-200 font-medium ${
+                      pathname === item.href
+                        ? 'text-violet-600 bg-violet-50/70'
+                        : 'text-slate-700 hover:bg-violet-50'
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}

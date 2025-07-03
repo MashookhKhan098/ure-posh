@@ -45,45 +45,7 @@ export default function CulturePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-rose-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-lg flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                UREPOSH
-              </span>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              <Link href="/" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Home
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-rose-600 transition-colors">
-                About
-              </Link>
-              <Link href="/services" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Services
-              </Link>
-              <Link href="/culture" className="text-rose-600 font-medium">
-                Culture
-              </Link>
-              <Link href="/team" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Our People
-              </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-rose-600 transition-colors">
-                Contact
-              </Link>
-            </div>
-            <Button className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700">
-              Get Started
-            </Button>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 pt-16">
 
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">

@@ -34,6 +34,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
+import TeamImageBar from "./components/TeamImageBar"
+
 export default function TeamPage() {
   const [activeFilter, setActiveFilter] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
@@ -836,7 +838,7 @@ export default function TeamPage() {
           </div>
         </div>
       </div>
-
+      <TeamImageBar/>
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-fuchsia-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
