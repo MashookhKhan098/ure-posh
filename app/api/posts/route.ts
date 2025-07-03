@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 import { writeFile, mkdir } from "fs/promises"
 import { existsSync } from "fs"
 import { join } from "path"
+import { Buffer } from 'buffer'
 
 const UPLOADS_DIR = join(process.cwd(), "public", "uploads")
 
@@ -14,6 +16,9 @@ export async function GET(request: Request) {
   const skip = (page - 1) * pageSize
 
   try {
+    // Ensure database connection is ready
+    await prisma.$connect()
+    
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where: { status: "PUBLISHED" },
@@ -48,9 +53,10 @@ export async function GET(request: Request) {
       pageSize,
       totalPages: Math.ceil(total / pageSize),
     }, {
+      status: 200,
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
-      },
+      }
     })
   } catch (error) {
     console.error("GET /api/posts error:", error)
@@ -121,8 +127,11 @@ export async function POST(request: Request) {
       data: newPost,
       message: "Post created successfully",
     })
-  } catch (error) {
-    console.error("POST /api/posts error:", error)
-    return NextResponse.json({ error: "Failed to create post" }, { status: 500 })
+  } catch (err) {
+    console.error('Error in posts API:', err)
+    return NextResponse.json(
+      { error: 'Failed to create post' },
+      { status: 500 }
+    )
   }
 }
