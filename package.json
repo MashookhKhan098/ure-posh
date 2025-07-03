@@ -3,13 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "prisma generate && next build",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate deploy",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "dev": "next dev",
-    "lint": "next lint",
+    "build": "next build",
     "start": "next start",
+    "vercel-build": "prisma generate && prisma db push && next build",
     "postinstall": "prisma generate"
   },
   "dependencies": {
