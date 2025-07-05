@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Home, ArrowLeft } from 'lucide-react'
+import { Home } from 'lucide-react'
 
 export default function NotFound() {
   return (
@@ -16,21 +16,13 @@ export default function NotFound() {
           </p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <Link href="/">
             <Button className="bg-gradient-to-r from-violet-600 via-purple-600 to-rose-600 hover:from-violet-700 hover:via-purple-700 hover:to-rose-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-3 rounded-xl font-semibold">
               <Home className="w-5 h-5 mr-2" />
               Go Home
             </Button>
           </Link>
-          <Button 
-            variant="outline" 
-            onClick={() => window.history.back()}
-            className="border-2 border-violet-300 text-violet-700 hover:bg-violet-50 bg-white/80 backdrop-blur-sm px-8 py-3 rounded-xl font-semibold"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Go Back
-          </Button>
         </div>
       </div>
     </div>
