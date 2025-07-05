@@ -21,8 +21,8 @@ const nextConfig = {
   },
   // Enable better error handling
   poweredByHeader: false,
-  // Disable static export completely
-  output: 'standalone',
+  // Use default output for better compatibility
+  output: undefined,
   webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
