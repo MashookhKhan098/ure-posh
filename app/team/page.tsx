@@ -696,16 +696,10 @@ export default function TeamPage() {
                 Services
               </Link>
               <Link 
-                href="/culture" 
+                href="/posts" 
                 className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               >
-                Culture
-              </Link>
-              <Link 
-                href="/news" 
-                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-              >
-                News Link
+                News
               </Link>
               <Link 
                 href="/team" 
@@ -761,16 +755,10 @@ export default function TeamPage() {
                     Services
                   </Link>
                   <Link 
-                    href="/culture" 
+                    href="/posts" 
                     className="text-gray-700 font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-gray-900"
                   >
-                    Culture
-                  </Link>
-                  <Link 
-                    href="/news" 
-                    className="text-gray-700 font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    News Link
+                    News
                   </Link>
                   <Link 
                     href="/team" 
@@ -805,11 +793,8 @@ export default function TeamPage() {
                 <Link href="/services" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
                   Services
                 </Link>
-                <Link href="/culture" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
-                  Culture
-                </Link>
-                <Link href="/news" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
-                  News Link
+                <Link href="/posts" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
+                  News
                 </Link>
                 <Link href="/team" className="text-pink-600 font-semibold px-4 py-2 rounded-lg bg-pink-50 text-sm">
                   People

@@ -15,6 +15,23 @@ export async function GET(request: Request) {
   const skip = (page - 1) * pageSize
 
   try {
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      console.warn("DATABASE_URL not set, returning empty posts")
+      return NextResponse.json({
+        posts: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      }, {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        }
+      })
+    }
+
     // Ensure database connection is ready
     await prisma.$connect()
     
@@ -62,7 +79,19 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.error("GET /api/posts error:", error)
-    return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 })
+    // Return empty response instead of error when database is not available
+    return NextResponse.json({
+      posts: [],
+      total: 0,
+      page,
+      pageSize,
+      totalPages: 0,
+    }, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+      }
+    })
   }
 }
 
