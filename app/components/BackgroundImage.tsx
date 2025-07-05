@@ -4,7 +4,7 @@ export default function BackgroundImage() {
   return (
     <div className="fixed inset-0 z-[-1]">
       <Image
-        src="/images/background2.jpg"
+        src="/images/background.jpeg"
         alt="Diverse team collaborating in office"
         fill
         priority

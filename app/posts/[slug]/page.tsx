@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import {
+import Link from "next/link"
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
   ArrowLeft,
   ArrowRight,
   ArrowUp,
@@ -28,6 +25,54 @@ import {
   User,
   Users,
   ZoomIn,
+  Video,
+  Bookmark,
+  Eye,
+  ExternalLink,
+  Check,
+  Star,
+  Sparkles,
+  BookOpen,
+  Award,
+  Target,
+  Globe,
+  Layers,
+  Palette,
+  Camera,
+  Play,
+  Pause,
+  Volume2,
+  Maximize2,
+  Share,
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  BookmarkPlus,
+  BookmarkCheck,
+  ThumbsUp,
+  MessageSquare,
+  EyeOff,
+  FilterX,
+  SortAsc,
+  SortDesc,
+  Clock3,
+  TrendingDown,
+  Hash,
+  Zap,
+  TrendingUp,
+  BookmarkX,
+  BookmarkMinus,
+  BookmarkIcon,
+  BookmarkPlus as BookmarkPlusIcon,
+  BookmarkCheck as BookmarkCheckIcon,
+  BookmarkX as BookmarkXIcon,
+  BookmarkMinus as BookmarkMinusIcon,
+  BookmarkIcon as BookmarkIconIcon,
+  BookmarkPlus as BookmarkPlusIcon2,
+  BookmarkCheck as BookmarkCheckIcon2,
+  BookmarkX as BookmarkXIcon2,
+  BookmarkMinus as BookmarkMinusIcon2,
+  BookmarkIcon as BookmarkIconIcon2
 } from "lucide-react"
 
 // Types
@@ -39,6 +84,9 @@ interface PostResponse {
   category: string
   createdAt: string
   featuredImage?: string
+  videoUrl?: string
+  videoTitle?: string
+  videoDescription?: string
   tags?: string[]
   excerpt?: string
   readTime?: number
@@ -46,6 +94,7 @@ interface PostResponse {
   authorAvatar?: string
   authorBio?: string
   imageCredit?: string
+  slug: string
 }
 
 interface Comment {
@@ -70,6 +119,12 @@ export default function ProfessionalBlogPost() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [showToC, setShowToC] = useState(false)
   const [relatedPosts, setRelatedPosts] = useState<PostResponse[]>([])
+  const [copiedLink, setCopiedLink] = useState(false)
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [showShareMenu, setShowShareMenu] = useState(false)
+  const [currentVideoTime, setCurrentVideoTime] = useState(0)
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
   useEffect(() => {
     fetchPost()
@@ -191,38 +246,54 @@ export default function ProfessionalBlogPost() {
     return imageError.includes(imageSrc)
   }
 
-  const sharePost = (platform: string) => {
-    if (typeof window === "undefined") return
+  const sharePost = async (platform: string) => {
+    if (typeof window === "undefined" || !post) return
+    
     const url = window.location.href
-    const title = post?.title || ""
+    const title = post.title
+
     const shareUrls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      copy: url,
+      mail: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`
     }
 
-    if (platform === "copy" && navigator.clipboard) {
-      navigator.clipboard.writeText(url)
-    } else if (platform in shareUrls) {
-      window.open(shareUrls[platform as keyof typeof shareUrls], "_blank", "width=600,height=400")
+    if (shareUrls[platform as keyof typeof shareUrls]) {
+      window.open(shareUrls[platform as keyof typeof shareUrls], '_blank', 'width=600,height=400')
+    } else if (platform === 'copy') {
+      try {
+        await navigator.clipboard.writeText(url)
+        setCopiedLink(true)
+        setTimeout(() => setCopiedLink(false), 2000)
+      } catch {
+        const textArea = document.createElement('textarea')
+        textArea.value = url
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textArea)
+        setCopiedLink(true)
+        setTimeout(() => setCopiedLink(false), 2000)
+      }
     }
   }
 
   const formatContent = (content: string) => {
+    // Enhanced content formatting with better visual hierarchy
     return content
       .split('\n')
       .map((line, index) => {
         // Enhanced content formatting with better visual hierarchy
-        if (line.startsWith('💥')) {
+        if (line.startsWith('🔥')) {
           return `
             <div class="my-12 space-y-6" key="${index}">
               <div class="relative">
-                <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                  ${line.replace('💥', '<span class="text-5xl">💥</span>')}
+                <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
+                  ${line.replace('🔥', '<span class="text-5xl">🔥</span>')}
                 </h2>
-                <div class="absolute -left-4 top-0 w-2 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-full opacity-20"></div>
-                <div class="h-1 w-32 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-full"></div>
+                <div class="absolute -left-4 top-0 w-2 h-full bg-gradient-to-b from-orange-500 to-red-500 rounded-full opacity-20"></div>
+                <div class="h-1 w-32 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full"></div>
               </div>
             </div>
           `;
@@ -245,10 +316,10 @@ export default function ProfessionalBlogPost() {
         
         if (line.startsWith('✅')) {
           return `
-            <div class="my-6 flex items-start gap-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg" key="${index}">
+            <div class="my-6 flex items-start gap-4 p-6 bg-green-50 border-l-4 border-green-500 rounded-r-xl" key="${index}">
               <span class="text-green-600 text-2xl flex-shrink-0">✅</span>
               <div class="flex-1">
-                <p class="text-gray-800 leading-relaxed font-medium">${line.replace('✅', '').trim()}</p>
+                <p class="text-gray-800 leading-relaxed font-medium text-lg">${line.replace('✅', '').trim()}</p>
                 <div class="mt-2 h-1 w-24 bg-green-200 rounded-full"></div>
               </div>
             </div>
@@ -259,11 +330,11 @@ export default function ProfessionalBlogPost() {
           return `
             <div class="my-12 space-y-6" key="${index}">
               <div class="relative">
-                <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-red-600 via-pink-600 to-rose-600 bg-clip-text text-transparent">
+                <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-yellow-600 via-orange-600 to-red-600 bg-clip-text text-transparent">
                   ${line.replace('👑', '<span class="text-5xl">👑</span>')}
                 </h2>
-                <div class="absolute -left-4 top-0 w-2 h-full bg-gradient-to-b from-red-500 to-pink-500 rounded-full opacity-20"></div>
-                <div class="h-1 w-32 bg-gradient-to-r from-red-500 via-pink-500 to-rose-500 rounded-full"></div>
+                <div class="absolute -left-4 top-0 w-2 h-full bg-gradient-to-b from-yellow-500 to-orange-500 rounded-full opacity-20"></div>
+                <div class="h-1 w-32 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 rounded-full"></div>
               </div>
             </div>
           `;
@@ -284,26 +355,14 @@ export default function ProfessionalBlogPost() {
           `;
         }
         
-        if (line.startsWith('🔥')) {
-          return `
-            <div class="my-8 space-y-3" key="${index}">
-              <h4 class="text-xl md:text-2xl font-semibold text-orange-700 leading-tight flex items-center gap-2">
-                <span class="text-orange-500">🔥</span>
-                ${line.replace('🔥', '').trim()}
-              </h4>
-              <div class="h-0.5 w-14 bg-orange-300 rounded-full"></div>
-            </div>
-          `;
-        }
-        
         if (line.startsWith('🖤')) {
           return `
             <div class="my-8 space-y-3" key="${index}">
-              <h4 class="text-xl md:text-2xl font-semibold text-pink-700 leading-tight flex items-center gap-2">
-                <span class="text-pink-500">🖤</span>
+              <h4 class="text-xl md:text-2xl font-semibold text-gray-800 leading-tight flex items-center gap-2">
+                <span class="text-gray-600">🖤</span>
                 ${line.replace('🖤', '').trim()}
               </h4>
-              <div class="h-0.5 w-14 bg-pink-300 rounded-full"></div>
+              <div class="h-0.5 w-14 bg-gray-300 rounded-full"></div>
             </div>
           `;
         }
@@ -324,56 +383,45 @@ export default function ProfessionalBlogPost() {
       .join('');
   }
 
-  if (!mounted || loading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-        <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="flex flex-col items-center space-y-6">
-            <div className="w-12 h-12 border-3 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-            <p className="text-gray-700 font-medium text-lg">Loading article...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-32 mb-8"></div>
+            <div className="h-16 bg-gray-200 rounded w-full mb-6"></div>
+            <div className="h-6 bg-gray-200 rounded w-3/4 mb-12"></div>
+            <div className="h-96 bg-gray-200 rounded-2xl mb-12"></div>
+            <div className="space-y-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-4 bg-gray-200 rounded w-full"></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     )
   }
 
-  if (error) {
+  if (error || !post) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4">
-        <Card className="max-w-md w-full shadow-xl">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MessageCircle className="w-8 h-8 text-red-600" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Eye className="w-8 h-8 text-red-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <Button onClick={fetchPost} className="w-full">
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4">
-        <Card className="max-w-md w-full shadow-xl">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MessageCircle className="w-8 h-8 text-gray-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Post Not Found</h2>
-            <p className="text-gray-600 mb-6">The post you're looking for doesn't exist or has been removed.</p>
-            <Button asChild className="w-full">
-              <a href="/blog">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blog
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Post Not Found</h3>
+            <p className="text-gray-600 mb-6">{error || "The post you're looking for doesn't exist."}</p>
+            <Link 
+              href="/posts"
+              className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Blog
+            </Link>
+          </div>
+        </div>
       </div>
     )
   }
@@ -381,426 +429,399 @@ export default function ProfessionalBlogPost() {
   const readTime = post.readTime || calculateReadTime(post.content)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Reading Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50">
-        <div
-          className="h-1 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 ease-out shadow-lg"
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-300"
           style={{ width: `${readingProgress}%` }}
         />
       </div>
 
-      {/* Enhanced Floating Actions */}
-      <div
-        className={`fixed top-6 right-6 z-40 transition-all duration-500 ${
-          isScrolled ? "translate-y-0 opacity-100 scale-100" : "translate-y-[-120px] opacity-0 scale-95"
-        }`}
-      >
-        <Card className="p-3 shadow-xl border-0 bg-white/90 backdrop-blur-md">
-          <div className="flex items-center space-x-3">
-            <Button size="sm" variant="outline" onClick={() => setShowToC(!showToC)} className="hover:bg-blue-50">
-              <Menu className="w-4 h-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={deletePost}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="hover:bg-green-50"
-            >
-              <ArrowUp className="w-4 h-4" />
-            </Button>
-          </div>
-        </Card>
-      </div>
+      {/* Floating Action Bar */}
+      <AnimatePresence>
+        {isScrolled && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-6 left-1/2 transform -translate-x-1/2 z-40"
+          >
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-3">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  className={`p-2 rounded-xl transition-colors ${
+                    isBookmarked 
+                      ? 'bg-blue-100 text-blue-600' 
+                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                  }`}
+                >
+                  <BookmarkIcon className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
+                </button>
+                <button
+                  onClick={() => setIsLiked(!isLiked)}
+                  className={`p-2 rounded-xl transition-colors ${
+                    isLiked 
+                      ? 'bg-red-100 text-red-600' 
+                      : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
+                  }`}
+                >
+                  <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                </button>
+                <button
+                  onClick={() => sharePost('copy')}
+                  className={`p-2 rounded-xl transition-colors ${
+                    copiedLink 
+                      ? 'bg-green-100 text-green-600' 
+                      : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                  }`}
+                >
+                  {copiedLink ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                </button>
+                <button
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                >
+                  <Share2 className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-xl transition-colors"
+                >
+                  <ArrowUp className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Enhanced Table of Contents */}
-      {showToC && (
-        <div className="fixed top-24 right-6 z-30 w-80">
-          <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-md">
-            <CardContent className="p-6">
-              <h3 className="font-bold text-gray-900 mb-4 text-lg">Table of Contents</h3>
-              <nav className="space-y-3">
-                <a href="#introduction" className="block text-sm text-gray-600 hover:text-blue-600 py-2 px-3 rounded-md hover:bg-blue-50 transition-colors">
-                  Introduction
-                </a>
-                <a href="#main-content" className="block text-sm text-gray-600 hover:text-blue-600 py-2 px-3 rounded-md hover:bg-blue-50 transition-colors">
-                  Main Content
-                </a>
-                <a href="#conclusion" className="block text-sm text-gray-600 hover:text-blue-600 py-2 px-3 rounded-md hover:bg-blue-50 transition-colors">
-                  Conclusion
-                </a>
-              </nav>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* Share Menu */}
+      <AnimatePresence>
+        {showShareMenu && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40"
+          >
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 p-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => sharePost('twitter')}
+                  className="p-3 text-gray-600 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-colors"
+                  title="Share on Twitter"
+                >
+                  <Twitter className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => sharePost('facebook')}
+                  className="p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                  title="Share on Facebook"
+                >
+                  <Facebook className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => sharePost('linkedin')}
+                  className="p-3 text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-colors"
+                  title="Share on LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => sharePost('mail')}
+                  className="p-3 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-xl transition-colors"
+                  title="Share via Email"
+                >
+                  <Mail className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Enhanced Breadcrumb */}
-        <nav className="py-6" aria-label="Breadcrumb">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Breadcrumb */}
+        <nav className="mb-8" aria-label="Breadcrumb">
           <div className="flex items-center space-x-3 text-sm">
-            <a href="/" className="text-gray-500 hover:text-blue-600 transition-colors font-medium">
+            <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors font-medium">
               Home
-            </a>
+            </Link>
             <span className="text-gray-300">/</span>
-            <a href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors font-medium">
+            <Link href="/posts" className="text-gray-500 hover:text-blue-600 transition-colors font-medium">
               Blog
-            </a>
+            </Link>
             <span className="text-gray-300">/</span>
             <span className="text-gray-900 font-semibold">{post.category}</span>
           </div>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16">
-          {/* Main Content */}
-          <div className="lg:col-span-8">
-            {/* Enhanced Article Header */}
-            <div className="mb-12">
-              <Badge variant="secondary" className="mb-6 px-4 py-2">
-                <Tag className="w-4 h-4 mr-2" />
-                {post.category}
-              </Badge>
+        {/* Article Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          {/* Category Badge */}
+          <div className="mb-6">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+              <Tag className="w-4 h-4 mr-2" />
+              {post.category}
+            </span>
+          </div>
 
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
-                {post.title}
-              </h1>
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+            {post.title}
+          </h1>
 
-              {post.excerpt && (
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed font-light max-w-4xl">
-                  {post.excerpt}
-                </p>
+          {/* Excerpt */}
+          {post.excerpt && (
+            <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-4xl">
+              {post.excerpt}
+            </p>
+          )}
+
+          {/* Author & Meta */}
+          <div className="flex flex-wrap items-center gap-6 p-8 bg-white rounded-3xl shadow-lg border border-gray-100">
+            <div className="flex items-center space-x-4">
+              {post.authorAvatar && !isImageBroken(post.authorAvatar) ? (
+                <img
+                  src={post.authorAvatar}
+                  alt={post.author}
+                  className="w-16 h-16 rounded-full object-cover ring-4 ring-white shadow-lg"
+                  onError={() => handleImageError(post.authorAvatar!)}
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-2xl">{post.author.charAt(0).toUpperCase()}</span>
+                </div>
               )}
+              <div>
+                <p className="font-bold text-gray-900 text-xl">{post.author}</p>
+                <p className="text-sm text-gray-500">Author</p>
+              </div>
+            </div>
 
-              {/* Enhanced Meta Information */}
-              <div className="flex flex-wrap items-center gap-8 text-gray-600 mb-10 p-6 bg-gray-50 rounded-xl">
-                <div className="flex items-center space-x-4">
-                  {post.authorAvatar && !isImageBroken(post.authorAvatar) ? (
-                    <img
-                      src={post.authorAvatar || "/placeholder.svg"}
-                      alt={post.author}
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
-                      onError={() => handleImageError(post.authorAvatar!)}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
-                      <span className="text-white font-bold text-lg">{post.author.charAt(0).toUpperCase()}</span>
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-6 h-6 text-blue-500" />
+              <span className="font-semibold text-lg">{formatDate(post.createdAt)}</span>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Clock className="w-6 h-6 text-green-500" />
+              <span className="font-semibold text-lg">{readTime} min read</span>
+            </div>
+
+            {/* Share Buttons */}
+            <div className="flex items-center gap-2 ml-auto">
+              <button
+                onClick={() => sharePost('twitter')}
+                className="p-3 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-colors"
+                title="Share on Twitter"
+              >
+                <Twitter className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => sharePost('facebook')}
+                className="p-3 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                title="Share on Facebook"
+              >
+                <Facebook className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => sharePost('copy')}
+                className={`p-3 rounded-xl transition-colors ${
+                  copiedLink 
+                    ? 'bg-green-100 text-green-600' 
+                    : 'text-gray-500 hover:text-green-600 hover:bg-green-50'
+                }`}
+                title="Copy link"
+              >
+                {copiedLink ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Featured Image */}
+        {post.featuredImage && !isImageBroken(post.featuredImage) && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-12"
+          >
+            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
+              <img
+                src={post.featuredImage}
+                alt={post.title}
+                className="w-full h-full object-cover"
+                onError={() => handleImageError(post.featuredImage!)}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+            </div>
+            {post.imageCredit && (
+              <p className="text-sm text-gray-500 mt-4 text-center font-medium">
+                Photo by {post.imageCredit}
+              </p>
+            )}
+          </motion.div>
+        )}
+
+        {/* Video Display */}
+        {post.videoUrl && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-12"
+          >
+            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-black">
+              <video
+                src={post.videoUrl}
+                controls
+                className="w-full h-full object-cover"
+                poster={post.featuredImage}
+                onTimeUpdate={(e) => setCurrentVideoTime(e.currentTarget.currentTime)}
+                onPlay={() => setIsVideoPlaying(true)}
+                onPause={() => setIsVideoPlaying(false)}
+              >
+                Your browser does not support the video tag.
+              </video>
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button className="p-2 bg-black/50 text-white rounded-lg hover:bg-black/70 transition-colors">
+                  <Maximize2 className="w-5 h-5" />
+                </button>
+                <button className="p-2 bg-black/50 text-white rounded-lg hover:bg-black/70 transition-colors">
+                  <Volume2 className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            {(post.videoTitle || post.videoDescription) && (
+              <div className="mt-6 p-8 bg-white rounded-3xl shadow-lg border border-gray-100">
+                {post.videoTitle && (
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
+                    <Video className="w-6 h-6 mr-3 text-blue-600" />
+                    {post.videoTitle}
+                  </h3>
+                )}
+                {post.videoDescription && (
+                  <p className="text-gray-600 leading-relaxed text-lg">{post.videoDescription}</p>
+                )}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* Article Content */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 mb-12"
+        >
+          <div
+            dangerouslySetInnerHTML={{
+              __html: formatContent(post.content)
+            }}
+            className="prose prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-code:bg-gray-100 prose-code:px-3 prose-code:py-1 prose-code:rounded-lg prose-li:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:font-medium prose-blockquote:text-gray-800 prose-h1:text-4xl prose-h1:font-bold prose-h2:text-3xl prose-h2:font-bold prose-h3:text-2xl prose-h3:font-semibold prose-h4:text-xl prose-h4:font-semibold prose-h5:text-lg prose-h5:font-medium prose-h6:text-base prose-h6:font-medium prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6 prose-ul:space-y-2 prose-ol:space-y-2 prose-li:marker:text-blue-500"
+          />
+        </motion.div>
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mb-12"
+          >
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <Hash className="w-6 h-6 mr-3 text-blue-600" />
+                Tags
+              </h3>
+              <div className="flex items-center gap-3 flex-wrap">
+                {post.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-colors cursor-pointer"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mb-12"
+          >
+            <h3 className="text-3xl font-bold text-gray-900 mb-8">Related Articles</h3>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  href={`/posts/${relatedPost.slug}`}
+                  className="group block bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
+                >
+                  {relatedPost.featuredImage && !isImageBroken(relatedPost.featuredImage) && (
+                    <div className="aspect-video relative overflow-hidden">
+                      <img
+                        src={relatedPost.featuredImage}
+                        alt={relatedPost.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={() => handleImageError(relatedPost.featuredImage!)}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                   )}
-                  <div>
-                    <p className="font-semibold text-gray-900 text-lg">{post.author}</p>
-                    <p className="text-sm text-gray-500">Author</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-5 h-5 text-blue-500" />
-                  <span className="font-medium">{formatDate(post.createdAt)}</span>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-5 h-5 text-green-500" />
-                  <span className="font-medium">{readTime} min read</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Enhanced Featured Image */}
-            {post.featuredImage && !isImageBroken(post.featuredImage) && (
-              <div className="mb-12">
-                <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
-                  <img
-                    src={post.featuredImage || "/placeholder.svg"}
-                    alt={post.title}
-                    className="w-full h-full object-cover"
-                    onError={() => handleImageError(post.featuredImage!)}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
-                {post.imageCredit && (
-                  <p className="text-sm text-gray-500 mt-4 text-center font-medium">Photo by {post.imageCredit}</p>
-                )}
-              </div>
-            )}
-
-            {/* Enhanced Article Content */}
-            <Card className="mb-12 shadow-lg border-0">
-              <CardContent className="p-10">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: formatContent(post.content)
-                  }}
-                  className="prose prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded"
-                />
-              </CardContent>
-            </Card>
-
-            {/* Enhanced Image Gallery */}
-            {post.gallery && post.gallery.length > 0 && (
-              <Card className="mb-12 shadow-lg border-0">
-                <CardContent className="p-10">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                    <ZoomIn className="w-8 h-8 mr-3" />
-                    Image Gallery
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {post.gallery.map(
-                      (image, index) =>
-                        !isImageBroken(image) && (
-                          <div key={index} className="relative group">
-                            <div className="aspect-square rounded-xl overflow-hidden shadow-lg">
-                              <img
-                                src={image || "/placeholder.svg"}
-                                alt={`Gallery image ${index + 1}`}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                loading="lazy"
-                                onError={() => handleImageError(image)}
-                              />
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
-                              onClick={() => window.open(image, "_blank")}
-                            >
-                              <ZoomIn className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        ),
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Enhanced Tags */}
-            {post.tags && post.tags.length > 0 && (
-              <Card className="mb-12 shadow-lg border-0">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <Tag className="w-6 h-6 mr-3" />
-                    Tags
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {post.tags.map((tag, index) => (
-                      <Badge key={`${tag.trim()}-${index}`} variant="outline" className="px-4 py-2 text-sm font-medium">
-                        #{tag.trim()}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Enhanced Comments Section */}
-            <Card className="shadow-lg border-0">
-              <CardContent className="p-10">
-                <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                  <MessageCircle className="w-8 h-8 mr-3" />
-                  Comments ({comments.length})
-                </h3>
-
-                {/* Enhanced Comment Form */}
-                <div className="mb-12 p-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-6">Leave a Comment</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <Input placeholder="Your Name" className="h-12" />
-                    <Input type="email" placeholder="Your Email" className="h-12" />
-                  </div>
-                  <Textarea placeholder="Share your thoughts..." rows={5} className="mb-6" />
-                  <Button className="px-8 py-3">
-                    <Send className="w-4 h-4 mr-2" />
-                    Post Comment
-                  </Button>
-                </div>
-
-                {/* Dynamic Comments */}
-                {comments.length > 0 ? (
-                  <div className="space-y-8">
-                    {comments.map((comment) => (
-                      <div key={comment.id} className="flex space-x-6 p-6 bg-gray-50 rounded-xl">
-                        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-gray-600 font-semibold text-sm">
-                            {comment.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </span>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h4 className="font-semibold text-gray-900">{comment.name}</h4>
-                            <span className="text-sm text-gray-500">{formatDate(comment.createdAt)}</span>
-                          </div>
-                          <p className="text-gray-700 mb-3 leading-relaxed">{comment.comment}</p>
-                          <div className="flex items-center space-x-6 text-sm">
-                            <button className="text-gray-500 hover:text-blue-600 flex items-center transition-colors">
-                              <Heart className="w-4 h-4 mr-1" />
-                              Like
-                            </button>
-                            <button className="text-gray-500 hover:text-blue-600 transition-colors">Reply</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg">No comments yet. Be the first to share your thoughts!</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Enhanced Sidebar */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-8 space-y-8">
-              {/* Enhanced Share Section */}
-              <Card className="shadow-lg border-0">
-                <CardContent className="p-8">
-                  <h3 className="font-bold text-gray-900 mb-6 text-lg flex items-center">
-                    <Share2 className="w-6 h-6 mr-3" />
-                    Share Article
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" size="sm" onClick={() => sharePost("twitter")} className="justify-start h-12">
-                      <Twitter className="w-4 h-4 mr-2" />
-                      Twitter
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => sharePost("linkedin")} className="justify-start h-12">
-                      <Linkedin className="w-4 h-4 mr-2" />
-                      LinkedIn
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => sharePost("facebook")} className="justify-start h-12">
-                      <Facebook className="w-4 h-4 mr-2" />
-                      Facebook
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => sharePost("copy")} className="justify-start h-12">
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copy Link
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Newsletter Subscription */}
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="text-center">
-                    <Mail className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">Stay Updated</h3>
-                    <p className="text-gray-600 mb-6">Get the latest articles and news delivered to your inbox</p>
-                    <div className="space-y-4">
-                      <Input 
-                        type="email" 
-                        placeholder="Your email address" 
-                        className="h-12 px-4 text-base border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500"
-                      />
-                      <Button className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300">
-                        Subscribe Now
-                      </Button>
+                  <div className="p-6">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 mb-4">
+                      {relatedPost.category}
+                    </span>
+                    <h4 className="font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors text-lg">
+                      {relatedPost.title}
+                    </h4>
+                    <p className="text-sm text-gray-500 mb-4">
+                      {formatDate(relatedPost.createdAt)}
+                    </p>
+                    <div className="flex items-center gap-2 text-blue-600 font-semibold">
+                      Read More
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <p className="text-xs text-gray-500 mt-3">No spam, unsubscribe anytime</p>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Related Articles */}
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                    <Users className="w-5 h-5 mr-2 text-indigo-600" />
-                    You Might Also Like
-                  </h3>
-                  <div className="space-y-6">
-                    {relatedPosts.slice(0, 3).map((post) => (
-                      <a 
-                        key={post.id} 
-                        href={`/posts/${post.id}`}
-                        className="group block hover:bg-gray-50 rounded-lg p-3 transition-colors duration-200"
-                      >
-                        <div className="flex items-start space-x-4">
-                          <div className="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-lg overflow-hidden">
-                            {post.featuredImage && (
-                              <img 
-                                src={post.featuredImage} 
-                                alt={post.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                              {post.title}
-                            </h4>
-                            <p className="text-sm text-gray-500 mt-1">
-                              {new Date(post.createdAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric'
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                </Link>
+              ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        )}
 
-        {/* Footer Navigation */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-            <Button 
-              asChild 
-              variant="outline" 
-              className="w-full sm:w-auto justify-center px-8 py-6 text-base font-medium hover:bg-gray-50 transition-colors"
-            >
-              <a href="/blog">
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back to Blog
-              </a>
-            </Button>
-            
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button 
-                variant="outline" 
-                className="w-full sm:w-auto justify-center px-8 py-6 text-base font-medium hover:bg-gray-50 transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Previous Post
-              </Button>
-              <Button 
-                className="w-full sm:w-auto justify-center px-8 py-6 text-base font-medium bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all"
-              >
-                Next Post
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </div>
-          </div>
-        </div>
+        {/* Back to Blog */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="text-center"
+        >
+          <Link 
+            href="/posts"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all font-bold shadow-xl hover:shadow-2xl text-lg"
+          >
+            <ArrowLeft className="w-6 h-6" />
+            Back to Blog
+          </Link>
+        </motion.div>
       </div>
-
-      {/* Scroll to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 bg-white p-3 rounded-full shadow-xl text-gray-700 hover:text-blue-600 transition-colors border border-gray-200 hover:border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        aria-label="Scroll to top"
-      >
-        <ArrowUp className="w-6 h-6" />
-      </button>
     </div>
   )
 }

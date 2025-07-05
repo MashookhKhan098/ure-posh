@@ -99,7 +99,7 @@ export default function HomePage() {
       id: "policy",
       title: "POSH Policy Development & Legal Advisory",
       icon: Scale,
-      color: "from-pink-500 to-rose-600",
+      color: "from-gray-500 to-slate-600",
       description:
         "Comprehensive legal framework tailored to your organization's unique needs and industry requirements.",
       image: "/images/5.jpg",
@@ -137,7 +137,7 @@ export default function HomePage() {
       id: "ic-setup",
       title: "Internal Committee Formation & Management",
       icon: Users,
-      color: "from-rose-500 to-pink-600",
+      color: "from-slate-500 to-gray-600",
       description:
         "End-to-end support for establishing and managing effective Internal Committees with qualified external members.",
       image: "/images/2.jpg",
@@ -175,7 +175,7 @@ export default function HomePage() {
       id: "training",
       title: "Specialized POSH Training & Capacity Building",
       icon: BookOpen,
-      color: "from-fuchsia-500 to-pink-600",
+      color: "from-zinc-500 to-gray-600",
       description:
         "Interactive, scenario-based training programs designed to build competence and confidence in handling sensitive situations.",
       image: "/images/3.jpg",
@@ -209,7 +209,7 @@ export default function HomePage() {
       id: "investigation",
       title: "Investigation Support & Resolution Services",
       icon: Shield,
-      color: "from-pink-600 to-rose-700",
+      color: "from-gray-600 to-slate-700",
       description:
         "Expert guidance and support throughout the investigation process to ensure fair, thorough, and legally compliant resolutions.",
       image: "/images/4.jpg",
@@ -248,7 +248,7 @@ export default function HomePage() {
       id: "audits",
       title: "Comprehensive POSH Audits & Compliance Review",
       icon: CheckCircle,
-      color: "from-rose-500 to-red-600",
+      color: "from-slate-500 to-gray-600",
       description:
         "Thorough evaluation of your POSH implementation to identify gaps, ensure compliance, and drive continuous improvement.",
       image: "/images/5.jpg",
@@ -282,7 +282,7 @@ export default function HomePage() {
       id: "certification",
       title: "Professional POSH & DEI Certification Programs",
       icon: Award,
-      color: "from-pink-500 to-fuchsia-600",
+      color: "from-gray-500 to-zinc-600",
       description:
         "Industry-recognized certification programs to build expertise in POSH compliance and diversity, equity & inclusion.",
       image: "",
@@ -325,7 +325,7 @@ export default function HomePage() {
       description:
         "Advanced analytics and predictive insights to proactively identify and prevent workplace issues before they escalate.",
       icon: Zap,
-      color: "from-pink-500 to-rose-600",
+      color: "from-gray-500 to-slate-600",
       image: "/images/2.jpg",
       benefits: [
         "Predictive risk analytics and early warning systems",
@@ -341,7 +341,7 @@ export default function HomePage() {
       description:
         "Solutions designed with accessibility, cultural sensitivity, and regional nuances at the core of every implementation.",
       icon: Heart,
-      color: "from-rose-500 to-pink-600",
+      color: "from-slate-500 to-gray-600",
       image: "/placeholder.svg?height=300&width=400",
       benefits: [
         "Universal design principles for accessibility",
@@ -357,7 +357,7 @@ export default function HomePage() {
       description:
         "Engaging, interactive learning experiences that evolve with your organization and adapt to changing needs.",
       icon: BookOpen,
-      color: "from-fuchsia-500 to-pink-600",
+      color: "from-zinc-500 to-gray-600",
       image: "/placeholder.svg?height=300&width=400",
       benefits: [
         "Microlearning modules for busy professionals",
@@ -376,7 +376,7 @@ export default function HomePage() {
       icon: "💻",
       count: "180+",
       growth: "+32%",
-      color: "from-pink-500 to-rose-600",
+      color: "from-gray-500 to-slate-600",
       description: "From startups to tech giants, ensuring safe digital workspaces",
       challenges: ["Remote work policies", "Digital harassment", "Rapid scaling"],
     },
@@ -385,7 +385,7 @@ export default function HomePage() {
       icon: "🏥",
       count: "95+",
       growth: "+28%",
-      color: "from-rose-500 to-red-600",
+      color: "from-slate-500 to-gray-600",
       description: "Protecting healthcare workers and maintaining patient care standards",
       challenges: ["High-stress environments", "Hierarchical structures", "Patient interaction protocols"],
     },
@@ -394,7 +394,7 @@ export default function HomePage() {
       icon: "🏦",
       count: "75+",
       growth: "+25%",
-      color: "from-fuchsia-500 to-pink-600",
+      color: "from-zinc-500 to-gray-600",
       description: "Ensuring compliance in regulated financial environments",
       challenges: ["Regulatory compliance", "Client-facing roles", "Performance pressure"],
     },
@@ -403,7 +403,7 @@ export default function HomePage() {
       icon: "🏭",
       count: "120+",
       growth: "+22%",
-      color: "from-pink-600 to-rose-700",
+      color: "from-gray-600 to-slate-700",
       description: "Creating safe environments in industrial settings",
       challenges: ["Blue-collar workforce", "Multiple shifts", "Safety integration"],
     },
@@ -412,7 +412,7 @@ export default function HomePage() {
       icon: "🎓",
       count: "65+",
       growth: "+35%",
-      color: "from-rose-400 to-pink-600",
+      color: "from-slate-400 to-gray-600",
       description: "Fostering safe learning and research environments",
       challenges: ["Student-faculty dynamics", "Research collaborations", "Campus safety"],
     },
@@ -421,7 +421,7 @@ export default function HomePage() {
       icon: "💼",
       count: "85+",
       growth: "+20%",
-      color: "from-pink-500 to-fuchsia-600",
+      color: "from-gray-500 to-zinc-600",
       description: "Maintaining professional standards in client-service environments",
       challenges: ["Client interactions", "Travel policies", "Project-based teams"],
     },
@@ -433,7 +433,7 @@ export default function HomePage() {
       description:
         "We believe inclusion isn't a checkbox—it's the cornerstone of every thriving workplace. Our solutions are built from the ground up to welcome and respect all gender identities, expressions, and backgrounds, creating environments where everyone can contribute their authentic selves.",
       icon: Users,
-      color: "from-pink-500 to-rose-600",
+      color: "from-gray-500 to-slate-600",
       impact: "Every individual feels valued and heard",
       approach: "Proactive inclusion strategies integrated into all processes",
     },
@@ -442,7 +442,7 @@ export default function HomePage() {
       description:
         "Every person deserves to work without fear of harassment or discrimination. We go beyond legal compliance to embed deep-rooted values of respect, dignity, and zero tolerance for any form of workplace harassment, creating cultures where safety is everyone's responsibility.",
       icon: Shield,
-      color: "from-rose-500 to-pink-600",
+      color: "from-slate-500 to-gray-600",
       impact: "Zero-tolerance culture with proactive prevention",
       approach: "Comprehensive safety frameworks with continuous monitoring",
     },
@@ -451,7 +451,7 @@ export default function HomePage() {
       description:
         "We challenge outdated systems that fail to protect or empower individuals. Our mission is to replace them with progressive structures rooted in fairness, equality, and accountability—creating lasting change that goes beyond surface-level compliance.",
       icon: Lightbulb,
-      color: "from-fuchsia-500 to-pink-600",
+      color: "from-zinc-500 to-gray-600",
       impact: "Systemic change that addresses root causes",
       approach: "Holistic transformation of organizational culture and processes",
     },
@@ -460,7 +460,7 @@ export default function HomePage() {
       description:
         "We celebrate all forms of diversity—gender, culture, ability, thought, and experience. True innovation happens when diverse perspectives come together in psychologically safe environments where everyone feels empowered to contribute their unique insights.",
       icon: Sparkles,
-      color: "from-pink-600 to-rose-700",
+      color: "from-gray-600 to-slate-700",
       impact: "Enhanced innovation and business performance",
       approach: "Diversity-driven decision making and inclusive leadership development",
     },
@@ -469,7 +469,7 @@ export default function HomePage() {
       description:
         "Our commitment extends far beyond theoretical frameworks. We work hands-on with organizations to implement tangible, measurable changes that create real impact—building cultures people can trust and environments where everyone can thrive.",
       icon: Target,
-      color: "from-rose-500 to-red-600",
+      color: "from-slate-500 to-gray-600",
       impact: "Measurable outcomes and sustainable change",
       approach: "Data-driven implementation with continuous improvement cycles",
     },
@@ -538,113 +538,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50/30 to-fuchsia-50/40 overflow-x-hidden">
-      {/* Enhanced Navigation */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-white/95 backdrop-blur-2xl border-b border-pink-200/30 sticky top-0 z-50 shadow-lg shadow-pink-500/5"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-20 flex-wrap gap-8">
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-pink-600 via-rose-600 to-fuchsia-600 rounded-2xl flex items-center justify-center shadow-xl shadow-pink-500/25">
-                  <Heart className="h-7 w-7 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full animate-pulse"></div>
-              </div>
-              <div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-pink-700 via-rose-600 to-fuchsia-600 bg-clip-text text-transparent">
-                  UREPOSH
-                </span>
-                <p className="text-xs text-slate-600 font-medium tracking-wide">
-                  Transforming Workplaces <br /> Empowering Lives
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
-              {["Home", "About", "Services", "Culture", "Posts", "Our People", "Contact"].map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
-                  className="relative group px-2"
-                >
-                  <Link
-                    href={item === "Home" ? "/" : item === "Our People" ? "/team" : `/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                    className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                      pathname === (item === 'Home' ? '/' : `/${item.toLowerCase().replace(/\s+/g, '-')}`)
-                        ? 'text-pink-600 font-semibold'
-                        : 'text-slate-700 hover:text-pink-600'
-                    }`}
-                  >
-                    {item}
-                    <span className={`absolute left-1/2 -bottom-1 h-0.5 bg-gradient-to-r from-pink-500 to-rose-500 transition-all duration-300 ${
-                      pathname === (item === 'Home' ? '/' : `/${item.toLowerCase().replace(/\s+/g, '-')}`)
-                        ? 'w-4/5 left-[10%]'
-                        : 'w-0 group-hover:w-4/5 group-hover:left-[10%]'
-                    }`}></span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="lg:hidden">
-              <Button variant="ghost" size="sm" onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-700">
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-            </div>
-
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.9 }}
-              className="hidden lg:flex items-center justify-center flex-1"
-            >
-              <Button className="bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 hover:from-pink-700 hover:via-rose-700 hover:to-fuchsia-700 shadow-xl shadow-pink-500/25 hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg font-semibold" onClick={() => router.push('/about')}>
-                Start Journey
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-white/98 backdrop-blur-2xl border-t border-pink-200/30"
-            >
-              <div className="px-8 py-6 space-y-2">
-                {["Home", "About", "Services", "Culture", "News Room", "Our People", "Contact"].map((item) => (
-                  <Link
-                    key={item}
-                    href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                    className="block text-slate-700 hover:text-pink-600 transition-colors py-3 text-lg font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item}
-                  </Link>
-                ))}
-                <Button className="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 mt- py-4 text-lg">
-                  Start Journey
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-50/30 to-zinc-50/40 overflow-x-hidden">
       {/* Revolutionary Hero Section */}
       {/* Clean & Smooth Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-50/80 via-white to-rose-50/60">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50/80 via-white to-slate-50/60">
         {/* Subtle Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Gentle gradient orbs */}
@@ -654,7 +551,7 @@ export default function HomePage() {
               opacity: [0.3, 0.5, 0.3],
             }}
             transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-pink-200/40 to-rose-200/40 rounded-full blur-3xl"
+            className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-gray-200/40 to-slate-200/40 rounded-full blur-3xl"
           />
           <motion.div
             animate={{
@@ -662,7 +559,7 @@ export default function HomePage() {
               opacity: [0.2, 0.4, 0.2],
             }}
             transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 2 }}
-            className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-fuchsia-200/30 to-pink-200/30 rounded-full blur-3xl"
+            className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-zinc-200/30 to-gray-200/30 rounded-full blur-3xl"
           />
 
           {/* Floating women symbols */}
@@ -673,7 +570,7 @@ export default function HomePage() {
               opacity: [0.1, 0.2, 0.1],
             }}
             transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 text-pink-300/20 text-8xl font-light"
+            className="absolute top-1/4 left-1/4 text-gray-300/20 text-8xl font-light"
           >
             ♀
           </motion.div>
@@ -684,7 +581,7 @@ export default function HomePage() {
               opacity: [0.1, 0.15, 0.1],
             }}
             transition={{ duration: 15, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 3 }}
-            className="absolute bottom-1/3 right-1/3 text-rose-300/20 text-6xl font-light"
+            className="absolute bottom-1/3 right-1/3 text-slate-300/20 text-6xl font-light"
           >
             ♀
           </motion.div>
@@ -695,7 +592,7 @@ export default function HomePage() {
               opacity: [0.05, 0.1, 0.05],
             }}
             transition={{ duration: 18, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 6 }}
-            className="absolute top-2/3 left-2/3 text-fuchsia-300/15 text-7xl font-light"
+            className="absolute top-2/3 left-2/3 text-zinc-300/15 text-7xl font-light"
           >
             ♀
           </motion.div>
@@ -717,11 +614,11 @@ export default function HomePage() {
                 transition={{ delay: 0.2, duration: 0.6 }}
                 className="inline-block"
               >
-                <Badge className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 px-6 py-3 text-sm font-semibold border border-pink-200/50 shadow-lg rounded-full">
+                <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-sm font-semibold border border-gray-200/50 shadow-lg rounded-full">
                   <motion.div
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                    className="mr-2 text-pink-600"
+                    className="mr-2 text-gray-600"
                   >
                     ♀
                   </motion.div>
@@ -739,14 +636,14 @@ export default function HomePage() {
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-slate-900">
                   Creating{" "}
                   <span className="relative">
-                    <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
                       Safe & Inclusive
                     </span>
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: "100%" }}
                       transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full"
+                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-gray-500 to-slate-500 rounded-full"
                     />
                   </span>
                   <br />
@@ -760,10 +657,10 @@ export default function HomePage() {
                   transition={{ delay: 1.5, duration: 0.6, type: "spring" }}
                   className="flex items-center space-x-3 pt-2"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-full flex items-center justify-center shadow-lg">
                     <span className="text-white text-xl font-bold">♀</span>
                   </div>
-                  <div className="h-px bg-gradient-to-r from-pink-300 to-transparent flex-1"></div>
+                  <div className="h-px bg-gradient-to-r from-gray-300 to-transparent flex-1"></div>
                 </motion.div>
               </motion.div>
 
@@ -815,7 +712,7 @@ export default function HomePage() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl"
+                    className="bg-gradient-to-r from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl"
                   >
                     <Calendar className="mr-2 h-5 w-5" />
                     Get Free Consultation
@@ -827,7 +724,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-2 border-pink-300 text-pink-700 hover:bg-pink-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-pink-400 transition-all duration-300 shadow-lg rounded-xl"
+                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-gray-400 transition-all duration-300 shadow-lg rounded-xl"
                   >
                     <Play className="mr-2 h-5 w-5" />
                     Watch Demo
@@ -850,7 +747,7 @@ export default function HomePage() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
-                        className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm"
+                        className="w-10 h-10 bg-gradient-to-br from-gray-400 to-slate-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm"
                       >
                         {String.fromCharCode(65 + i - 1)}
                       </motion.div>
@@ -893,7 +790,7 @@ export default function HomePage() {
               {/* Main Image Container */}
               <div className="relative">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                  <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-pink-500/20">
+                  <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20">
                     <Image
                       src="/images/5.jpg"
                       alt="Diverse professionals in inclusive workplace"
@@ -903,7 +800,7 @@ export default function HomePage() {
                       priority
                       loading="eager"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-pink-900/20 via-transparent to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent"></div>
 
                     {/* Overlay Stats */}
                     <motion.div
@@ -921,7 +818,7 @@ export default function HomePage() {
                           <motion.div
                             animate={{ rotate: [0, 360] }}
                             transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                            className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg"
+                            className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center shadow-lg"
                           >
                             <span className="text-white text-lg font-bold">♀</span>
                           </motion.div>
@@ -944,7 +841,7 @@ export default function HomePage() {
                     className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/30"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center shadow-lg">
                         <CheckCircle className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -967,7 +864,7 @@ export default function HomePage() {
                     className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/30"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-fuchsia-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-br from-slate-500 to-zinc-600 rounded-xl flex items-center justify-center shadow-lg">
                         <Award className="h-6 w-6 text-white" />
                       </div>
                       <div>
@@ -979,7 +876,7 @@ export default function HomePage() {
                 </motion.div>
 
                 {/* Background decoration */}
-                <div className="absolute -top-6 -right-6 w-full h-full bg-gradient-to-br from-pink-200/30 to-rose-200/30 rounded-3xl -z-10"></div>
+                <div className="absolute -top-6 -right-6 w-full h-full bg-gradient-to-br from-gray-200/30 to-slate-200/30 rounded-3xl -z-10"></div>
               </div>
             </motion.div>
           </div>
@@ -997,14 +894,14 @@ export default function HomePage() {
             transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             className="flex flex-col items-center space-y-2 cursor-pointer group"
           >
-            <p className="text-slate-600 text-sm font-medium group-hover:text-pink-600 transition-colors">
+            <p className="text-slate-600 text-sm font-medium group-hover:text-gray-600 transition-colors">
               Scroll to explore
             </p>
-            <div className="w-6 h-10 border-2 border-pink-400 rounded-full flex justify-center group-hover:border-pink-600 transition-colors">
+            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center group-hover:border-gray-600 transition-colors">
               <motion.div
                 animate={{ y: [0, 12, 0] }}
                 transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                className="w-1 h-3 bg-pink-400 rounded-full mt-2 group-hover:bg-pink-600 transition-colors"
+                className="w-1 h-3 bg-gray-400 rounded-full mt-2 group-hover:bg-gray-600 transition-colors"
               />
             </div>
           </motion.div>
@@ -1019,7 +916,7 @@ export default function HomePage() {
         viewport={{ once: true }}
         className="py-24 bg-white/80 backdrop-blur-sm relative"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-pink-50/50 to-rose-50/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -1028,15 +925,12 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 px-6 py-3 text-lg font-semibold border border-pink-200/50">
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Target className="w-5 h-5 mr-2" />
               Why Choose Ureposh
             </Badge>
             <h2 className="text-5xl font-bold text-slate-900">
-              Your Trusted{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                POSH Partner
-              </span>
+              Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
               We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive
@@ -1053,13 +947,13 @@ export default function HomePage() {
           >
             {whyChooseUs.map((reason, index) => (
               <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
-                <Card className="h-full text-center border-pink-100 hover:border-pink-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+                <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
                   <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                       <reason.icon className="h-8 w-8 text-white" />
                     </div>
                     <CardTitle className="text-xl text-slate-900">{reason.title}</CardTitle>
-                    <Badge variant="secondary" className="bg-pink-100 text-pink-700 mx-auto">
+                    <Badge variant="secondary" className="bg-gray-100 text-gray-700 mx-auto">
                       {reason.stats}
                     </Badge>
                   </CardHeader>
@@ -1074,7 +968,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Services Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-pink-50/50 to-rose-50/50">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-slate-50/50">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -1083,13 +977,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-white/90 text-pink-800 px-6 py-3 text-lg font-semibold border border-pink-200/50">
+            <Badge className="bg-white/90 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Scale className="w-5 h-5 mr-2" />
               Our Services
             </Badge>
             <h2 className="text-5xl font-bold text-slate-900">
               Comprehensive{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
                 POSH Solutions
               </span>
             </h2>
@@ -1109,7 +1003,7 @@ export default function HomePage() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
               >
-                <Card className="bg-white/90 backdrop-blur-sm border-pink-200 shadow-2xl overflow-hidden">
+                <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-2xl overflow-hidden">
                   <div className="grid lg:grid-cols-2 gap-0">
                     <div className="relative h-96 lg:h-auto">
                       <Image
@@ -1146,7 +1040,7 @@ export default function HomePage() {
                           <h4 className="text-lg font-semibold text-slate-900">Key Features:</h4>
                           {services[activeService].features.slice(0, 4).map((feature, index) => (
                             <div key={index} className="flex items-start space-x-3">
-                              <CheckCircle className="h-5 w-5 text-pink-500 flex-shrink-0 mt-0.5" />
+                              <CheckCircle className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" />
                               <span className="text-slate-700">{feature}</span>
                             </div>
                           ))}
@@ -1156,7 +1050,7 @@ export default function HomePage() {
                           <Button className={`bg-gradient-to-r ${services[activeService].color} text-white flex-1`}>
                             Learn More
                           </Button>
-                          <Button variant="outline" className="border-pink-200 text-pink-700 flex-1 bg-transparent">
+                          <Button variant="outline" className="border-gray-200 text-gray-700 flex-1 bg-transparent">
                             Get Quote
                           </Button>
                         </div>
@@ -1175,7 +1069,7 @@ export default function HomePage() {
                   onClick={() => setActiveService(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-300 ${
                     index === activeService
-                      ? "bg-gradient-to-r from-pink-500 to-rose-500 w-8"
+                      ? "bg-gradient-to-r from-gray-500 to-slate-500 w-8"
                       : "bg-slate-300 hover:bg-slate-400"
                   }`}
                 />
@@ -1193,7 +1087,7 @@ export default function HomePage() {
           >
             {services.map((service, index) => (
               <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.03, y: -5 }}>
-                <Card className="h-full bg-white/90 backdrop-blur-sm border-pink-100 hover:border-pink-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <Card className="h-full bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                   <div className="relative h-48 overflow-hidden">
                     <Image
                       src={service.image || "/placeholder.svg"}
@@ -1223,14 +1117,14 @@ export default function HomePage() {
                     <div className="space-y-2 mb-4">
                       {service.features.slice(0, 3).map((feature, idx) => (
                         <div key={idx} className="flex items-start text-sm text-slate-600">
-                          <CheckCircle className="h-4 w-4 text-pink-500 mr-2 flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="h-4 w-4 text-gray-500 mr-2 flex-shrink-0 mt-0.5" />
                           <span className="line-clamp-2">{feature}</span>
                         </div>
                       ))}
                     </div>
                     <Button
                       variant="outline"
-                      className="w-full border-pink-200 text-pink-700 hover:bg-pink-50 bg-transparent"
+                      className="w-full border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
                     >
                       Learn More
                       <ChevronRight className="ml-2 h-4 w-4" />
@@ -1252,7 +1146,7 @@ export default function HomePage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 hover:from-pink-700 hover:via-rose-700 hover:to-fuchsia-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold"
+                  className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 hover:from-gray-700 hover:via-slate-700 hover:to-zinc-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold"
                 >
                   Explore All Services & Pricing
                   <ArrowRight className="ml-3 h-6 w-6" />
@@ -1273,13 +1167,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 px-6 py-3 text-lg font-semibold">
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold">
               <Sparkles className="w-5 h-5 mr-2" />
               Our Core Values
             </Badge>
             <h2 className="text-5xl font-bold text-slate-900">
               Values That{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
                 Drive Impact
               </span>
             </h2>
@@ -1298,7 +1192,7 @@ export default function HomePage() {
           >
             {coreValues.map((value, index) => (
               <motion.div key={index} variants={fadeInUp}>
-                <Card className="border-pink-100 hover:border-pink-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <Card className="border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <CardContent className="p-8">
                     <div className="grid lg:grid-cols-12 gap-8 items-start">
                       <div className="lg:col-span-2">
@@ -1308,7 +1202,7 @@ export default function HomePage() {
                           <value.icon className="h-10 w-10 text-white" />
                         </div>
                         <div className="text-center lg:text-left">
-                          <Badge variant="secondary" className="bg-pink-100 text-pink-700 text-xs">
+                          <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
                             {value.impact}
                           </Badge>
                         </div>
@@ -1316,7 +1210,7 @@ export default function HomePage() {
                       <div className="lg:col-span-10 text-center lg:text-left space-y-4">
                         <h3 className="text-2xl font-bold text-slate-900">{value.title}</h3>
                         <p className="text-slate-600 leading-relaxed text-lg">{value.description}</p>
-                        <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-4">
+                        <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-4">
                           <p className="text-sm font-medium text-slate-700">
                             <span className="font-semibold">Our Approach:</span> {value.approach}
                           </p>
@@ -1339,7 +1233,7 @@ export default function HomePage() {
         viewport={{ once: true }}
         className="py-24 bg-white/80 backdrop-blur-sm relative"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-pink-50/50 to-rose-50/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -1348,13 +1242,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 px-6 py-3 text-lg font-semibold border border-pink-200/50">
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <TrendingUp className="w-5 h-5 mr-2" />
               Our Impact Across India
             </Badge>
             <h2 className="text-5xl font-bold text-slate-900">
               Transforming Workplaces{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
                 Nationwide
               </span>
             </h2>
@@ -1376,7 +1270,7 @@ export default function HomePage() {
                 number: "500+",
                 label: "Organizations Transformed",
                 icon: Building,
-                color: "from-pink-500 to-rose-600",
+                color: "from-gray-500 to-slate-600",
                 description: "Across 25+ industries",
                 metric: "98% client retention rate",
                 details: "From startups to Fortune 500 companies",
@@ -1385,7 +1279,7 @@ export default function HomePage() {
                 number: "50,000+",
                 label: "Professionals Empowered",
                 icon: Users,
-                color: "from-rose-500 to-fuchsia-600",
+                color: "from-slate-500 to-zinc-600",
                 description: "Training delivered in 15+ languages",
                 metric: "95% satisfaction score",
                 details: "Comprehensive awareness and skill building",
@@ -1394,7 +1288,7 @@ export default function HomePage() {
                 number: "99.2%",
                 label: "Compliance Achievement",
                 icon: CheckCircle,
-                color: "from-fuchsia-500 to-pink-600",
+                color: "from-zinc-500 to-gray-600",
                 description: "Legal standards exceeded",
                 metric: "Zero major compliance failures",
                 details: "Rigorous legal framework adherence",
@@ -1403,14 +1297,14 @@ export default function HomePage() {
                 number: "75+",
                 label: "Expert Consultants",
                 icon: Award,
-                color: "from-pink-600 to-rose-700",
+                color: "from-gray-600 to-slate-700",
                 description: "Certified professionals",
                 metric: "15+ years average experience",
                 details: "Legal, HR, and compliance specialists",
               },
             ].map((stat, index) => (
               <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }} className="group">
-                <Card className="h-full bg-white/90 backdrop-blur-sm border-pink-100 hover:border-pink-200 shadow-xl hover:shadow-2xl shadow-pink-500/10 transition-all duration-500 text-center">
+                <Card className="h-full bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-xl hover:shadow-2xl shadow-gray-500/10 transition-all duration-500 text-center">
                   <CardContent className="p-8">
                     <div
                       className={`w-16 h-16 bg-gradient-to-br ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform`}
@@ -1427,7 +1321,7 @@ export default function HomePage() {
                     </motion.div>
                     <h3 className="text-lg font-semibold text-slate-900 mb-2">{stat.label}</h3>
                     <p className="text-sm text-slate-600 mb-3">{stat.description}</p>
-                    <Badge variant="secondary" className="bg-pink-100 text-pink-700 text-xs mb-2">
+                    <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs mb-2">
                       {stat.metric}
                     </Badge>
                     <p className="text-xs text-slate-500">{stat.details}</p>
@@ -1449,13 +1343,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 px-6 py-3 text-lg font-semibold">
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold">
               <Briefcase className="w-5 h-5 mr-2" />
               Industries We Serve
             </Badge>
             <h2 className="text-5xl font-bold text-slate-900">
               Trusted Across{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
                 All Sectors
               </span>
             </h2>
@@ -1474,41 +1368,30 @@ export default function HomePage() {
           >
             {industries.map((industry, index) => (
               <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.03, y: -5 }}>
-                <Card className="bg-white/90 backdrop-blur-sm border-pink-100 hover:border-pink-200 shadow-lg hover:shadow-xl shadow-pink-500/10 transition-all duration-300 overflow-hidden group">
+                <Card className="bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl shadow-gray-500/10 transition-all duration-300 overflow-hidden group">
                   <CardContent className="p-8">
                     <div className="flex items-center justify-between mb-6">
                       <div className="text-5xl">{industry.icon}</div>
-                      <Badge
-                        variant="secondary"
-                        className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 group-hover:from-pink-200 group-hover:to-rose-200 transition-colors font-semibold"
-                      >
-                        {industry.growth}
-                      </Badge>
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">{industry.growth}</span>
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 mb-3">{industry.name}</h3>
                     <p className="text-slate-600 text-sm mb-4 leading-relaxed">{industry.description}</p>
-                    <p className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-                      {industry.count}
-                    </p>
+                    <p className="text-4xl font-bold text-slate-900 mb-2">{industry.count}</p>
                     <p className="text-sm text-slate-600 mb-4">Organizations transformed</p>
-
                     <div className="space-y-2 mb-4">
                       <p className="text-xs font-semibold text-slate-700">Key Challenges Addressed:</p>
                       <div className="flex flex-wrap gap-1">
                         {industry.challenges.map((challenge, idx) => (
-                          <Badge key={idx} variant="outline" className="text-xs border-pink-200 text-pink-700">
-                            {challenge}
-                          </Badge>
+                          <span key={idx} className="text-xs px-2 py-1 border border-gray-200 text-gray-700 rounded-full bg-white">{challenge}</span>
                         ))}
                       </div>
                     </div>
-
-                    <div className="relative h-3 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="relative h-3 bg-gray-100 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        whileInView={{ width: "85%" }}
-                        transition={{ delay: index * 0.1, duration: 1.2, ease: "easeOut" }}
-                        className={`h-full bg-gradient-to-r ${industry.color} rounded-full relative`}
+                        whileInView={{ width: '85%' }}
+                        transition={{ delay: index * 0.1, duration: 1.2, ease: 'easeOut' }}
+                        className="h-full bg-gray-700 rounded-full relative"
                       >
                         <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                       </motion.div>
@@ -1537,19 +1420,15 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-white/90 text-pink-800 px-6 py-3 text-lg font-semibold border border-pink-200/50">
+            <Badge className="bg-white/90 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Quote className="w-5 h-5 mr-2" />
               Client Success Stories
             </Badge>
             <h2 className="text-5xl font-bold text-slate-900">
-              What Our{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                Partners Say
-              </span>
+              What Our <span className="text-slate-900">Partners</span> Say
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Real stories from leaders who have transformed their workplaces with Ureposh's comprehensive solutions and
-              expert guidance.
+              Real stories from leaders who have transformed their workplaces with Ureposh's comprehensive solutions and expert guidance.
             </p>
           </motion.div>
 
@@ -1562,11 +1441,11 @@ export default function HomePage() {
                 exit={{ opacity: 0, x: -100 }}
                 transition={{ duration: 0.5 }}
               >
-                <Card className="bg-white/95 backdrop-blur-sm border-pink-200 shadow-2xl overflow-hidden">
+                <Card className="bg-white/95 backdrop-blur-sm border-gray-200 shadow-2xl overflow-hidden">
                   <div className="grid lg:grid-cols-3 gap-0">
                     <div className="lg:col-span-2 p-12">
                       <div className="flex justify-start mb-6">
-                        <Quote className="h-12 w-12 text-pink-300" />
+                        <Quote className="h-12 w-12 text-gray-300" />
                       </div>
                       <div className="flex justify-center mb-6">
                         {[1, 2, 3, 4, 5].map((i) => (
@@ -1582,16 +1461,16 @@ export default function HomePage() {
                           alt={testimonials[activeTestimonial].name}
                           width={80}
                           height={80}
-                          className="rounded-full border-4 border-pink-200"
+                          className="rounded-full border-4 border-gray-200"
                         />
                         <div>
                           <div className="font-bold text-slate-900 text-xl">{testimonials[activeTestimonial].name}</div>
                           <div className="text-slate-600 text-lg">{testimonials[activeTestimonial].position}</div>
-                          <div className="text-pink-600 font-semibold">{testimonials[activeTestimonial].company}</div>
+                          <div className="text-gray-600 font-semibold">{testimonials[activeTestimonial].company}</div>
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-pink-500 to-rose-600 p-12 text-white flex flex-col justify-center">
+                    <div className="bg-gray-700 p-12 text-white flex flex-col justify-center">
                       <div className="space-y-6">
                         <Image
                           src={testimonials[activeTestimonial].companyLogo || "/placeholder.svg"}
@@ -1602,21 +1481,21 @@ export default function HomePage() {
                         />
                         <div className="space-y-4">
                           <div>
-                            <p className="text-pink-100 text-sm">Industry</p>
+                            <p className="text-gray-300 text-sm">Industry</p>
                             <p className="text-white font-semibold">{testimonials[activeTestimonial].industry}</p>
                           </div>
                           <div>
-                            <p className="text-pink-100 text-sm">Location</p>
+                            <p className="text-gray-300 text-sm">Location</p>
                             <p className="text-white font-semibold">{testimonials[activeTestimonial].location}</p>
                           </div>
                           <div>
-                            <p className="text-pink-100 text-sm">Challenge</p>
+                            <p className="text-gray-300 text-sm">Challenge</p>
                             <p className="text-white font-medium text-sm">
                               {testimonials[activeTestimonial].challenge}
                             </p>
                           </div>
                           <div>
-                            <p className="text-pink-100 text-sm">Solution</p>
+                            <p className="text-gray-300 text-sm">Solution</p>
                             <p className="text-white font-medium text-sm">{testimonials[activeTestimonial].solution}</p>
                           </div>
                         </div>
@@ -1635,8 +1514,8 @@ export default function HomePage() {
                   onClick={() => setActiveTestimonial(index)}
                   className={`w-4 h-4 rounded-full transition-all duration-300 ${
                     index === activeTestimonial
-                      ? "bg-gradient-to-r from-pink-500 to-rose-500 w-10"
-                      : "bg-pink-200 hover:bg-pink-300"
+                      ? "bg-gradient-to-r from-gray-500 to-slate-500 w-10"
+                      : "bg-gray-200 hover:bg-gray-300"
                   }`}
                 />
               ))}
@@ -1653,14 +1532,14 @@ export default function HomePage() {
         viewport={{ once: true }}
         className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-rose-500/10 to-fuchsia-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-slate-500/10 to-zinc-500/10"></div>
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=600&width=1200')] bg-cover bg-center opacity-5"></div>
 
         {/* Floating geometric elements */}
         <motion.div
           animate={{ rotate: 360, scale: [1, 1.2, 1] }}
           transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="absolute top-20 right-20 w-40 h-40 border-2 border-pink-200/30 rounded-full"
+          className="absolute top-20 right-20 w-40 h-40 border-2 border-gray-200/30 rounded-full"
         ></motion.div>
 
         <div className="max-w-6xl mx-auto text-center space-y-12 relative">
@@ -1671,13 +1550,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <Badge className="bg-white/90 text-pink-800 px-8 py-4 text-xl font-semibold border border-pink-200/50 shadow-lg">
+            <Badge className="bg-white/90 text-gray-800 px-8 py-4 text-xl font-semibold border border-gray-200/50 shadow-lg">
               <Sparkles className="w-6 h-6 mr-3" />
               Ready to Transform Your Workplace?
             </Badge>
             <h2 className="text-6xl font-bold text-slate-900 leading-tight">
               Start Your{" "}
-              <span className="bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 bg-clip-text text-transparent">
                 Transformation
               </span>{" "}
               Journey Today
@@ -1699,7 +1578,7 @@ export default function HomePage() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 hover:from-pink-700 hover:via-rose-700 hover:to-fuchsia-700 shadow-2xl shadow-pink-500/25 hover:shadow-3xl transition-all duration-300 px-12 py-8 text-xl font-semibold"
+                className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 hover:from-gray-700 hover:via-slate-700 hover:to-zinc-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold"
               >
                 Get Free Consultation
                 <ArrowRight className="ml-3 h-6 w-6" />
@@ -1710,7 +1589,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-pink-300 text-pink-700 hover:bg-pink-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-pink-500/10"
+                className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-gray-500/10"
               >
                 <FileCheck className="mr-3 h-6 w-6" />
                 Download Resources
@@ -1721,7 +1600,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-rose-300 text-rose-700 hover:bg-rose-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-rose-500/10"
+                className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-slate-500/10"
               >
                 <Phone className="mr-3 h-6 w-6" />
                 Call Expert Now
@@ -1743,7 +1622,7 @@ export default function HomePage() {
                 title: "Speak with Expert",
                 content: "+91 98765 43210",
                 subtitle: "Available Mon-Fri, 9 AM - 6 PM IST",
-                color: "from-pink-500 to-rose-600",
+                color: "from-gray-500 to-slate-600",
                 action: "Immediate consultation available",
               },
               {
@@ -1751,7 +1630,7 @@ export default function HomePage() {
                 title: "Email Consultation",
                 content: "hello@ureposh.com",
                 subtitle: "Response within 4 hours",
-                color: "from-rose-500 to-fuchsia-600",
+                color: "from-slate-500 to-zinc-600",
                 action: "Detailed project discussion",
               },
               {
@@ -1759,14 +1638,14 @@ export default function HomePage() {
                 title: "Visit Our Office",
                 content: "Mumbai, Maharashtra",
                 subtitle: "Schedule appointment",
-                color: "from-fuchsia-500 to-pink-600",
+                color: "from-zinc-500 to-gray-600",
                 action: "In-person consultation",
               },
             ].map((contact, index) => (
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl shadow-pink-500/10 border border-white/20"
+                className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl shadow-gray-500/10 border border-white/20"
               >
                 <div
                   className={`w-16 h-16 bg-gradient-to-br ${contact.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg`}
@@ -1776,7 +1655,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold text-slate-900 mb-2">{contact.title}</h3>
                 <p className="text-lg font-semibold text-slate-700 mb-1">{contact.content}</p>
                 <p className="text-sm text-slate-600 mb-2">{contact.subtitle}</p>
-                <Badge variant="secondary" className="bg-pink-100 text-pink-700 text-xs">
+                <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
                   {contact.action}
                 </Badge>
               </motion.div>
@@ -1792,10 +1671,10 @@ export default function HomePage() {
             className="flex flex-wrap justify-center items-center gap-12 pt-12"
           >
             {[
-              { icon: Shield, text: "100% Confidential", color: "text-pink-600", desc: "Secure processes" },
-              { icon: CheckCircle, text: "Legal Compliance", color: "text-rose-600", desc: "Full POSH adherence" },
-              { icon: Award, text: "Expert Team", color: "text-fuchsia-600", desc: "Certified professionals" },
-              { icon: Clock, text: "Quick Response", color: "text-pink-700", desc: "24-hour turnaround" },
+              { icon: Shield, text: "100% Confidential", color: "text-gray-600", desc: "Secure processes" },
+              { icon: CheckCircle, text: "Legal Compliance", color: "text-slate-600", desc: "Full POSH adherence" },
+              { icon: Award, text: "Expert Team", color: "text-zinc-600", desc: "Certified professionals" },
+              { icon: Clock, text: "Quick Response", color: "text-gray-700", desc: "24-hour turnaround" },
             ].map((badge, index) => (
               <div key={index} className="flex items-center space-x-3 text-slate-700">
                 <badge.icon className={`w-6 h-6 ${badge.color}`} />
@@ -1811,14 +1690,14 @@ export default function HomePage() {
 
       {/* Enhanced Footer */}
       <footer className="bg-slate-900 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-pink-900/20 to-rose-900/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900/20 to-slate-900/20"></div>
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=400&width=1200')] bg-cover bg-center opacity-5"></div>
 
         {/* Floating elements */}
         <motion.div
           animate={{ rotate: -360, scale: [1, 1.1, 1] }}
           transition={{ duration: 40, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="absolute top-20 right-20 w-32 h-32 border border-pink-300/20 rounded-full"
+          className="absolute top-20 right-20 w-32 h-32 border border-gray-300/20 rounded-full"
         ></motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -1830,7 +1709,7 @@ export default function HomePage() {
               className="lg:col-span-2 space-y-8"
             >
               <div className="flex items-center space-x-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-600 via-rose-600 to-fuchsia-600 rounded-2xl flex items-center justify-center shadow-xl">
+                <div className="w-14 h-14 bg-gradient-to-br from-gray-600 via-slate-600 to-zinc-600 rounded-2xl flex items-center justify-center shadow-xl">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
                 <div>
@@ -1848,7 +1727,7 @@ export default function HomePage() {
                   <motion.div
                     key={social}
                     whileHover={{ scale: 1.2, y: -3 }}
-                    className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center hover:bg-gradient-to-br hover:from-pink-500 hover:to-rose-500 transition-all duration-300 cursor-pointer group"
+                    className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center hover:bg-gradient-to-br hover:from-gray-500 hover:to-slate-500 transition-all duration-300 cursor-pointer group"
                   >
                     <div className="w-6 h-6 bg-slate-400 group-hover:bg-white rounded transition-colors"></div>
                   </motion.div>
@@ -1904,7 +1783,7 @@ export default function HomePage() {
                     <li key={link}>
                       <Link
                         href="#"
-                        className="text-slate-400 hover:text-pink-400 transition-colors text-lg hover:translate-x-2 inline-block transition-transform duration-300"
+                        className="text-slate-400 hover:text-gray-400 transition-colors text-lg hover:translate-x-2 inline-block transition-transform duration-300"
                       >
                         {link}
                       </Link>
@@ -1920,16 +1799,16 @@ export default function HomePage() {
               <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
                 <p className="text-slate-400 text-lg">&copy; 2024 Ureposh. All rights reserved.</p>
                 <div className="flex space-x-8 text-base">
-                  <Link href="#" className="text-slate-400 hover:text-pink-400 transition-colors">
+                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
                     Privacy Policy
                   </Link>
-                  <Link href="#" className="text-slate-400 hover:text-pink-400 transition-colors">
+                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
                     Terms of Service
                   </Link>
-                  <Link href="#" className="text-slate-400 hover:text-pink-400 transition-colors">
+                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
                     Cookie Policy
                   </Link>
-                  <Link href="#" className="text-slate-400 hover:text-pink-400 transition-colors">
+                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
                     Compliance Statement
                   </Link>
                 </div>

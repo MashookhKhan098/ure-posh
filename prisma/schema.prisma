@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Post {
@@ -20,6 +20,9 @@ model Post {
   status        String   @default("DRAFT")
   slug          String   @unique
   featuredImage String?
+  videoUrl      String?
+  videoTitle    String?
+  videoDescription String?
   readTime      Int?     @default(5)
   likes         Int?     @default(0)
   comments      Int?     @default(0)

@@ -1,7 +1,42 @@
 'use client'
 
-import { useState } from 'react'
-import { Upload, X, Tag, User, Calendar, Globe, FileText, Image, Type, Hash } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { 
+  Upload, 
+  X, 
+  Tag, 
+  User, 
+  Calendar, 
+  Globe, 
+  FileText, 
+  Image, 
+  Type, 
+  Hash, 
+  Save, 
+  Eye, 
+  EyeOff, 
+  AlertCircle, 
+  CheckCircle, 
+  Clock, 
+  Zap, 
+  Brain, 
+  Database, 
+  Video, 
+  Play,
+  Plus,
+  Trash2,
+  Settings,
+  Palette,
+  Sparkles,
+  Target,
+  TrendingUp,
+  BarChart3,
+  Shield,
+  Globe2,
+  Smartphone,
+  Monitor,
+  Tablet
+} from 'lucide-react'
 
 export default function CreatePostForm() {
   const [formData, setFormData] = useState({
@@ -17,36 +52,19 @@ export default function CreatePostForm() {
     metaTitle: '',
     metaDescription: '',
     readTime: '',
-    language: 'en'
+    language: 'en',
+    videoTitle: '',
+    videoDescription: ''
   })
 
-  // Add tag handling functions
-  const addTag = (tag: string) => {
-    if (!tag.trim()) return
-    const newTag = tag.trim()
-    if (!formData.tags.includes(newTag)) {
-      setFormData(prev => ({ ...prev, tags: [...prev.tags, newTag] }))
-    }
-  }
-
-  const removeTag = (tag: string) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags.filter(t => t !== tag)
-    }))
-  }
-
-  const handleTagsInputChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const input = e.currentTarget
-    if (e.key === 'Enter' || e.key === 'Tab') {
-      addTag(input.value)
-      input.value = ''
-    }
-  }
-  
   const [featuredImage, setFeaturedImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [videoPreview, setVideoPreview] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isPreviewMode, setIsPreviewMode] = useState(false)
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved')
+  const [tagInput, setTagInput] = useState('')
   const [activeTab, setActiveTab] = useState('content')
 
   const categories = [
@@ -62,496 +80,667 @@ export default function CreatePostForm() {
     { code: 'hi', name: 'Hindi' }
   ]
 
-  const handleInputChange = (field: string, value: string) => {
+  // Auto-save functionality
+  useEffect(() => {
+    const autoSaveTimer = setTimeout(() => {
+      if (formData.title || formData.content) {
+        setAutoSaveStatus('saving')
+        // Simulate auto-save
+        setTimeout(() => {
+          setAutoSaveStatus('saved')
+        }, 1000)
+      }
+    }, 2000)
+
+    return () => clearTimeout(autoSaveTimer)
+  }, [formData.title, formData.content])
+
+  const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
-    
-    // Auto-calculate read time based on content
-    if (field === 'content') {
-      const wordCount = value.split(' ').filter(word => word.length > 0).length
-      const readTime = Math.ceil(wordCount / 200) // Average reading speed
-      setFormData(prev => ({ ...prev, readTime: `${readTime} min read` }))
-    }
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        alert('Image size should be less than 5MB')
-        return
-      }
-      
       setFeaturedImage(file)
       const reader = new FileReader()
-      reader.onload = (event) => {
-        setImagePreview(event.target?.result as string)
-      }
+      reader.onload = (e) => setImagePreview(e.target?.result as string)
       reader.readAsDataURL(file)
     }
   }
 
-  const removeImage = () => {
-    setFeaturedImage(null)
-    setImagePreview(null)
-  }
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true)
-    
-    try {
-      // Validation
-      if (!formData.title.trim()) throw new Error('Title is required')
-      if (!formData.content.trim()) throw new Error('Content is required')
-      if (!formData.author.trim()) throw new Error('Author is required')
-      if (!featuredImage) throw new Error('Featured image is required')
-
-      // Generate slug
-      let baseSlug = formData.title.toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '')
-        .slice(0, 50)
+  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      // Check if file is a video
+      if (!file.type.startsWith('video/')) {
+        alert('Please select a valid video file')
+        return
+      }
       
-      // Create form data
-      const submitData = new FormData()
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'tags') {
-          const tags = value as string[]
-          if (tags && tags.length > 0) {
-            submitData.append(key, tags.join(','))
-          }
-        } else {
-          submitData.append(key, value as string)
-        }
-      })
-      submitData.append('slug', baseSlug)
-      submitData.append('featuredImage', featuredImage)
-
-      // Make API call
-      const response = await fetch('/api/posts', {
-        method: 'POST',
-        body: submitData,
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to create post')
+      // Check file size (limit to 100MB)
+      if (file.size > 100 * 1024 * 1024) {
+        alert('Video file size must be less than 100MB')
+        return
       }
 
-      const data = await response.json()
-      alert('Post created successfully!')
-      
-      // Redirect to the new post page
-      window.location.href = `/posts/${data.data.slug}`
-    } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to create post')
-    } finally {
-      setIsSubmitting(false)
-      // Reset form state
-      setFormData({
-        title: '',
-        subtitle: '',
-        content: '',
-        excerpt: '',
-        author: '',
-        category: '',
-        tags: [],
-        status: 'draft',
-        publishDate: '',
-        metaTitle: '',
-        metaDescription: '',
-        readTime: '',
-        language: 'en'
-      })
-      setFeaturedImage(null)
-      setImagePreview(null)
+      setVideoFile(file)
+      const reader = new FileReader()
+      reader.onload = (e) => setVideoPreview(e.target?.result as string)
+      reader.readAsDataURL(file)
     }
   }
 
-  const TabButton = ({ id, label, icon: Icon, isActive }: any) => (
-    <button
-      type="button"
-      onClick={() => setActiveTab(id)}
-      className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-        isActive 
-          ? 'bg-blue-100 text-blue-700 border-blue-200' 
-          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-      }`}
-    >
-      <Icon className="w-4 h-4 mr-2" />
-      {label}
-    </button>
-  )
+  const addTag = () => {
+    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, tagInput.trim()]
+      }))
+      setTagInput('')
+    }
+  }
+
+  const removeTag = (tagToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const submitFormData = new FormData()
+      
+      // Add text fields
+      submitFormData.append('title', formData.title)
+      submitFormData.append('content', formData.content)
+      submitFormData.append('author', formData.author)
+      submitFormData.append('category', formData.category)
+      submitFormData.append('tags', formData.tags.join(','))
+      submitFormData.append('slug', formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
+      
+      // Add image file
+      if (featuredImage) {
+        submitFormData.append('featuredImage', featuredImage)
+      }
+      
+      // Add video file and metadata
+      if (videoFile) {
+        submitFormData.append('videoFile', videoFile)
+        submitFormData.append('videoTitle', formData.videoTitle)
+        submitFormData.append('videoDescription', formData.videoDescription)
+      }
+
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        body: submitFormData,
+      })
+
+      if (response.ok) {
+        // Reset form
+        setFormData({
+          title: '',
+          subtitle: '',
+          content: '',
+          excerpt: '',
+          author: '',
+          category: '',
+          tags: [],
+          status: 'draft',
+          publishDate: '',
+          metaTitle: '',
+          metaDescription: '',
+          readTime: '',
+          language: 'en',
+          videoTitle: '',
+          videoDescription: ''
+        })
+        setFeaturedImage(null)
+        setImagePreview(null)
+        setVideoFile(null)
+        setVideoPreview(null)
+        alert('Post created successfully!')
+      } else {
+        throw new Error('Failed to create post')
+      }
+    } catch (error) {
+      console.error('Error creating post:', error)
+      alert('Failed to create post. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const getAutoSaveIcon = () => {
+    switch (autoSaveStatus) {
+      case 'saving':
+        return <Clock className="h-4 w-4 text-yellow-500 animate-spin" />
+      case 'saved':
+        return <CheckCircle className="h-4 w-4 text-green-500" />
+      case 'error':
+        return <AlertCircle className="h-4 w-4 text-red-500" />
+      default:
+        return <Clock className="h-4 w-4 text-blue-500" />
+    }
+  }
+
+  const tabs = [
+    { id: 'content', label: 'Content', icon: FileText },
+    { id: 'media', label: 'Media', icon: Image },
+    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'seo', label: 'SEO', icon: Target },
+    { id: 'preview', label: 'Preview', icon: Eye }
+  ]
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Post</h1>
-        <p className="text-gray-600">Fill in the details below to create your blog post</p>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="flex space-x-1 mb-8 border-b border-gray-200">
-        <TabButton id="content" label="Content" icon={FileText} isActive={activeTab === 'content'} />
-        <TabButton id="media" label="Media" icon={Image} isActive={activeTab === 'media'} />
-        <TabButton id="settings" label="Settings" icon={Globe} isActive={activeTab === 'settings'} />
-        <TabButton id="seo" label="SEO" icon={Hash} isActive={activeTab === 'seo'} />
-      </div>
-
-      <div className="space-y-6">
-        {/* Content Tab */}
-        {activeTab === 'content' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Type className="w-4 h-4 mr-2" />
-                  Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your post title..."
-                  required
-                />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <Plus className="w-5 h-5 text-white" />
+                </div>
+                <h1 className="text-xl font-bold text-gray-900">Create New Post</h1>
               </div>
+              <div className="hidden md:flex items-center space-x-2 text-sm">
+                {getAutoSaveIcon()}
+                <span className="text-gray-600">
+                  {autoSaveStatus === 'saving' ? 'Saving...' : 
+                   autoSaveStatus === 'saved' ? 'Saved' : 
+                   autoSaveStatus === 'error' ? 'Save Error' : 'Ready'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={() => setIsPreviewMode(!isPreviewMode)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
+                  isPreviewMode 
+                    ? 'bg-purple-100 text-purple-700 border border-purple-300' 
+                    : 'bg-blue-100 text-blue-700 border border-blue-300'
+                }`}
+              >
+                {isPreviewMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                <span className="hidden sm:inline">{isPreviewMode ? 'Edit Mode' : 'Preview Mode'}</span>
+              </button>
               
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Type className="w-4 h-4 mr-2" />
-                  Subtitle
-                </label>
-                <input
-                  type="text"
-                  value={formData.subtitle}
-                  onChange={(e) => handleInputChange('subtitle', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Optional subtitle..."
-                />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={handleSubmit}
+                className="flex items-center space-x-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 transition-all font-medium shadow-lg hover:shadow-xl"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Publishing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="h-4 w-4" />
+                    <span>Publish Post</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Tab Navigation */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
+            <div className="flex space-x-1">
+              {tabs.map((tab) => {
+                const Icon = tab.icon
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all flex-1 justify-center ${
+                      activeTab === tab.id
+                        ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Content Tab */}
+          {activeTab === 'content' && (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Title */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                    <Type className="h-4 w-4 mr-2" />
+                    Post Title
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 text-lg"
+                    placeholder="Enter your post title..."
+                    required
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Post Content
+                  </label>
+                  <textarea
+                    value={formData.content}
+                    onChange={(e) => handleInputChange('content', e.target.value)}
+                    rows={20}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 resize-none text-base leading-relaxed"
+                    placeholder="Write your blog post content..."
+                    required
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                <FileText className="w-4 h-4 mr-2" />
-                Excerpt
-              </label>
-              <textarea
-                value={formData.excerpt}
-                onChange={(e) => handleInputChange('excerpt', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                rows={3}
-                placeholder="Brief description of your post (will be shown in previews)..."
-              />
-            </div>
-
-            <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                <FileText className="w-4 h-4 mr-2" />
-                Content *
-              </label>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
-                  {/* Content preview */}
-                  <div className="prose prose-sm max-w-none">
-                    <div dangerouslySetInnerHTML={{
-                      __html: formData.content
-                        .split('\n')
-                        .map((line, index) => {
-                          // Handle different sections with proper styling
-                          if (line.startsWith('💥')) {
-                            return `<h2 class="text-2xl font-bold mb-4">${line}</h2>`;
-                          }
-                          if (line.startsWith('🕶️')) {
-                            return `<h3 class="text-xl font-semibold mb-3">${line}</h3>`;
-                          }
-                          if (line.startsWith('✅')) {
-                            return `<li class="list-disc pl-5 mb-2">${line}</li>`;
-                          }
-                          if (line.startsWith('👑')) {
-                            return `<h2 class="text-2xl font-bold text-red-600 mb-4">${line}</h2>`;
-                          }
-                          if (line.startsWith('📌')) {
-                            return `<h3 class="text-xl font-semibold text-blue-600 mb-3">${line}</h3>`;
-                          }
-                          if (line.startsWith('🔥')) {
-                            return `<h4 class="text-lg font-semibold text-orange-600 mb-2">${line}</h4>`;
-                          }
-                          if (line.startsWith('🖤')) {
-                            return `<h4 class="text-lg font-semibold text-pink-600 mb-2">${line}</h4>`;
-                          }
-                          return `<p class="mb-4">${line}</p>`;
-                        })
-                        .join('')
-                    }} />
-                  </div>
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Author & Category */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <User className="h-5 w-5 mr-2" />
+                    Author & Category
+                  </h3>
                   
-                  {/* Content editing textarea */}
-                  <div>
-                    <textarea
-                      value={formData.content}
-                      onChange={(e) => handleInputChange('content', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      rows={12}
-                      placeholder="Write your post content here... Use emojis and special characters to create sections:
-                        🔄 for main headings
-                        🕶️ for subheadings
-                        ✅ for checklist items
-                        👑 for special headings
-                        📌 for call-to-action headings
-                        🔥 for highlight headings
-                        🖤 for special headings"
-                      required
-                    />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Author</label>
+                      <input
+                        type="text"
+                        value={formData.author}
+                        onChange={(e) => handleInputChange('author', e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
+                        placeholder="Enter author name..."
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <select
+                        value={formData.category}
+                        onChange={(e) => handleInputChange('category', e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
+                        required
+                      >
+                        <option value="">Select a category</option>
+                        {categories.map(category => (
+                          <option key={category} value={category}>{category}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <Tag className="h-5 w-5 mr-2" />
+                    Tags
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                        className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
+                        placeholder="Add tag..."
+                      />
+                      <button
+                        type="button"
+                        onClick={addTag}
+                        className="px-4 py-3 bg-blue-100 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-200 transition-colors"
+                      >
+                        <Hash className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {formData.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 border border-blue-300 rounded-full text-sm"
+                        >
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => removeTag(tag)}
+                            className="ml-2 hover:text-red-600 transition-colors"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="text-sm text-gray-500 mt-1">
-                {formData.content.split(' ').filter(word => word.length > 0).length} words
-                {formData.readTime && ` • ${formData.readTime}`}
-              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Media Tab */}
-        {activeTab === 'media' && (
-          <div className="space-y-6">
-            <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-4">
-                <Image className="w-4 h-4 mr-2" />
-                Featured Image *
-              </label>
-              
-              {!imagePreview ? (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+          {/* Media Tab */}
+          {activeTab === 'media' && (
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Featured Image */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Image className="h-5 w-5 mr-2" />
+                  Featured Image
+                </h3>
+                
+                <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+                  {imagePreview ? (
+                    <div className="relative">
+                      <img src={imagePreview} alt="Preview" className="max-w-full h-48 object-cover rounded-lg mx-auto" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFeaturedImage(null)
+                          setImagePreview(null)
+                        }}
+                        className="absolute top-2 right-2 p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Upload className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+                      <p className="text-gray-700 font-medium mb-2">Upload Featured Image</p>
+                      <p className="text-gray-500 text-sm">Drag & drop or click to select</p>
+                    </div>
+                  )}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="hidden"
-                    id="featuredImage"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <label htmlFor="featuredImage" className="cursor-pointer">
-                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-lg font-medium text-gray-700 mb-1">Upload Featured Image</p>
-                    <p className="text-sm text-gray-500">PNG, JPG, GIF up to 5MB</p>
-                  </label>
                 </div>
-              ) : (
-                <div className="relative inline-block">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full max-w-md h-64 object-cover rounded-lg shadow-lg"
+              </div>
+
+              {/* Video Upload */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Video className="h-5 w-5 mr-2" />
+                  Video Upload
+                </h3>
+                
+                <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-400 transition-colors">
+                  {videoPreview ? (
+                    <div className="relative">
+                      <video 
+                        src={videoPreview} 
+                        controls 
+                        className="max-w-full h-48 object-cover rounded-lg mx-auto"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setVideoFile(null)
+                          setVideoPreview(null)
+                        }}
+                        className="absolute top-2 right-2 p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Video className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                      <p className="text-gray-700 font-medium mb-2">Upload Video</p>
+                      <p className="text-gray-500 text-sm">Drag & drop or click to select (Max 100MB)</p>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                  <div className="mt-2 text-sm text-gray-600">
-                    {featuredImage?.name} ({Math.round((featuredImage?.size || 0) / 1024)}KB)
+                </div>
+                
+                {/* Video Metadata */}
+                {videoFile && (
+                  <div className="mt-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Video Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.videoTitle}
+                        onChange={(e) => handleInputChange('videoTitle', e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-900 placeholder-gray-500"
+                        placeholder="Enter video title..."
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Video Description
+                      </label>
+                      <textarea
+                        value={formData.videoDescription}
+                        onChange={(e) => handleInputChange('videoDescription', e.target.value)}
+                        rows={3}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-900 placeholder-gray-500 resize-none"
+                        placeholder="Enter video description..."
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Publish Settings */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Settings className="h-5 w-5 mr-2" />
+                  Publish Settings
+                </h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) => handleInputChange('status', e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Publish Date</label>
+                    <input
+                      type="datetime-local"
+                      value={formData.publishDate}
+                      onChange={(e) => handleInputChange('publishDate', e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                    <select
+                      value={formData.language}
+                      onChange={(e) => handleInputChange('language', e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
+                    >
+                      {languages.map(lang => (
+                        <option key={lang.code} value={lang.code}>{lang.name}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Settings Tab */}
-        {activeTab === 'settings' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <User className="w-4 h-4 mr-2" />
-                  Author *
-                </label>
-                <input
-                  type="text"
-                  value={formData.author}
-                  onChange={(e) => handleInputChange('author', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Author name..."
-                  required
-                />
               </div>
 
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Tag className="w-4 h-4 mr-2" />
-                  Category *
-                </label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => handleInputChange('category', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  required
-                >
-                  <option value="">Select a category</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+              {/* Content Settings */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Palette className="h-5 w-5 mr-2" />
+                  Content Settings
+                </h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                    <input
+                      type="text"
+                      value={formData.subtitle}
+                      onChange={(e) => handleInputChange('subtitle', e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
+                      placeholder="Enter subtitle..."
+                    />
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Tag className="w-4 h-4 mr-2" />
-                  Tags
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {/* Display existing tags */}
-                  {formData.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm"
-                    >
-                      {tag}
-                      <button
-                        onClick={() => removeTag(tag)}
-                        className="ml-2 text-blue-500 hover:text-blue-700"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  ))}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
+                    <textarea
+                      value={formData.excerpt}
+                      onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                      rows={3}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 resize-none"
+                      placeholder="Enter excerpt..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Read Time (minutes)</label>
+                    <input
+                      type="number"
+                      value={formData.readTime}
+                      onChange={(e) => handleInputChange('readTime', e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
+                      placeholder="Estimated read time..."
+                    />
+                  </div>
                 </div>
-                <input
-                  type="text"
-                  onKeyDown={handleTagsInputChange}
-                  placeholder="Press Enter to add tag"
-                  className="w-full mt-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Globe className="w-4 h-4 mr-2" />
-                  Language
-                </label>
-                <select
-                  value={formData.language}
-                  onChange={(e) => handleInputChange('language', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                >
-                  {languages.map(lang => (
-                    <option key={lang.code} value={lang.code}>{lang.name}</option>
-                  ))}
-                </select>
               </div>
             </div>
+          )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Publish Date
-                </label>
-                <input
-                  type="datetime-local"
-                  value={formData.publishDate}
-                  onChange={(e) => handleInputChange('publishDate', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
+          {/* SEO Tab */}
+          {activeTab === 'seo' && (
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* SEO Settings */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Target className="h-5 w-5 mr-2" />
+                  SEO Settings
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Meta Title</label>
+                    <input
+                      type="text"
+                      value={formData.metaTitle || ''}
+                      onChange={e => handleInputChange('metaTitle', e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
+                      placeholder="SEO title..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+                    <textarea
+                      value={formData.metaDescription || ''}
+                      onChange={e => handleInputChange('metaDescription', e.target.value)}
+                      rows={3}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 resize-none"
+                      placeholder="SEO description..."
+                    />
+                  </div>
+                </div>
               </div>
-
-              <div>
-                <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                  Status
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => handleInputChange('status', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                  <option value="scheduled">Scheduled</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SEO Tab */}
-        {activeTab === 'seo' && (
-          <div className="space-y-6">
-            <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                <Type className="w-4 h-4 mr-2" />
-                Meta Title
-              </label>
-              <input
-                type="text"
-                value={formData.metaTitle}
-                onChange={(e) => handleInputChange('metaTitle', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="SEO title (leave blank to use post title)..."
-                maxLength={60}
-              />
-              <div className="text-sm text-gray-500 mt-1">
-                {formData.metaTitle.length}/60 characters
-              </div>
-            </div>
-
-            <div>
-              <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                <FileText className="w-4 h-4 mr-2" />
-                Meta Description
-              </label>
-              <textarea
-                value={formData.metaDescription}
-                onChange={(e) => handleInputChange('metaDescription', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                rows={3}
-                placeholder="Brief description for search engines..."
-                maxLength={160}
-              />
-              <div className="text-sm text-gray-500 mt-1">
-                {formData.metaDescription.length}/160 characters
+              {/* Google Search Preview */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2" />
+                  Search Preview
+                </h3>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="text-sm text-gray-600 mb-2">Google Search Preview</div>
+                  <div className="text-blue-600 font-medium text-sm mb-1">
+                    {formData.metaTitle || formData.title || 'Your post title will appear here'}
+                  </div>
+                  <div className="text-green-600 text-sm mb-1">
+                    yourdomain.com/posts/{formData.title ? formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'your-slug'}
+                  </div>
+                  <div className="text-gray-600 text-sm">
+                    {formData.metaDescription || formData.excerpt || 'Your post description will appear here...'}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Submit Button */}
-        <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-          <div className="text-sm text-gray-500">
-            * Required fields
-          </div>
-          
-          <div className="flex space-x-3">
-            <button
-              type="button"
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Save Draft
-            </button>
-            
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Creating Post...
-                </>
-              ) : (
-                'Create Post'
-              )}
-            </button>
-          </div>
-        </div>
-        </div>
+          {/* Preview Tab */}
+          {activeTab === 'preview' && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Eye className="h-5 w-5 mr-2" />
+                Post Preview
+              </h3>
+              <div className="prose max-w-none">
+                <h1>{formData.title || 'Your post title will appear here'}</h1>
+                {formData.subtitle && <h2 className="text-lg text-gray-600">{formData.subtitle}</h2>}
+                {formData.excerpt && <p className="text-lg text-gray-600">{formData.excerpt}</p>}
+                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
+                  <span>By {formData.author || 'Author'}</span>
+                  <span>•</span>
+                  <span>{formData.category || 'Category'}</span>
+                  <span>•</span>
+                  <span>{formData.readTime || '5'} min read</span>
+                </div>
+                {imagePreview && (
+                  <img src={imagePreview} alt="Preview" className="max-w-full h-48 object-cover rounded-lg mx-auto mb-4" />
+                )}
+                {videoPreview && (
+                  <video src={videoPreview} controls className="max-w-full h-48 object-cover rounded-lg mx-auto mb-4" />
+                )}
+                <div className="whitespace-pre-wrap">{formData.content || 'Your content will appear here...'}</div>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   )
 }

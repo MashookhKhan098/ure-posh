@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "./components/Navbar"
 import BackgroundImage from './components/BackgroundImage'
+import NavbarWrapper from './components/NavbarWrapper'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,7 +25,7 @@ export default function RootLayout({
       <body className={`${inter.className} relative`}>
         <BackgroundImage />
         <div className="relative z-10">
-          <Navbar />
+          <NavbarWrapper />
           {children}
         </div>
       </body>

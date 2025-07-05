@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import prisma from "../../../../lib/prisma"
 import { deleteImage } from "../../../../lib/image-utils"
+import { unlink } from "fs/promises"
+import { join } from "path"
 
 export async function DELETE(
   request: Request,
@@ -19,10 +21,10 @@ export async function DELETE(
       )
     }
 
-    // First find the post to get its image path
+    // First find the post to get its image and video paths
     const post = await prisma.post.findUnique({
       where: { slug: slug },
-      select: { featuredImage: true }
+      select: { featuredImage: true, videoUrl: true }
     })
 
     if (!post) {
@@ -38,6 +40,16 @@ export async function DELETE(
     // Delete the featured image if it exists
     if (post.featuredImage) {
       await deleteImage(post.featuredImage)
+    }
+
+    // Delete the video file if it exists
+    if (post.videoUrl) {
+      try {
+        const videoPath = join(process.cwd(), "public", post.videoUrl)
+        await unlink(videoPath)
+      } catch (error) {
+        console.error("Error deleting video file:", error)
+      }
     }
 
     // Delete the post from database
@@ -96,6 +108,9 @@ export async function GET(
         createdAt: true,
         updatedAt: true,
         featuredImage: true,
+        videoUrl: true,
+        videoTitle: true,
+        videoDescription: true,
         tags: true,
       },
     })

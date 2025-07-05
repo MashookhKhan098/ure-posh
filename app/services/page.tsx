@@ -51,8 +51,8 @@ export default function ServicesPage() {
         "Implementation guidance",
         "Ongoing support and updates",
       ],
-      price: "Starting from ₹25,000",
-      duration: "2-4 weeks",
+      price: "",
+      duration: "",
       details:
         "At Ureposh, we guide you to recognize that having a clear and solid Prevention of Sexual Harassment (PoSH) policy forms the base of a secure and law-abiding workplace. Our legal experts work closely with your team to draft or refine PoSH policies that are fully compliant with the PoSH Act, 2013, customized to suit your industry, organizational structure, and culture.",
     },
@@ -77,8 +77,8 @@ export default function ServicesPage() {
         "Process documentation",
         "Continuous advisory support",
       ],
-      price: "Starting from ₹35,000",
-      duration: "3-6 weeks",
+      price: "",
+      duration: "",
       details:
         "We offer complete help to set up and improve your organization's IC. Our offerings cover Formation and Structuring of the Internal Committee, Empanelment of Qualified External Members, Orientation and Capacity Building, Ongoing IC Support, and Documentation and Compliance Management.",
     },
@@ -103,8 +103,8 @@ export default function ServicesPage() {
         "Practical exercises and simulations",
         "Ongoing mentorship",
       ],
-      price: "₹15,000 per person",
-      duration: "1-2 weeks",
+      price: "",
+      duration: "",
       details:
         "Internal Committee (IC) members play a crucial role in ensuring a workplace free from sexual harassment. At Ureposh, we offer specialized, scenario-based POSH training designed to build the confidence and competence of IC members in real-world situations.",
     },
@@ -155,8 +155,8 @@ export default function ServicesPage() {
         "Gap analysis and recommendations",
         "Implementation roadmap",
       ],
-      price: "Starting from ₹45,000",
-      duration: "4-6 weeks",
+      price: "",
+      duration: "",
       details:
         "Ureposh focuses on conducting detailed PoSH audits designed to match the unique needs of your workplace, including its culture, structure, and legal responsibilities. We examine your workplace's policies, how the Internal Committee operates, ways employees report issues, and awareness programs.",
     },
@@ -181,8 +181,8 @@ export default function ServicesPage() {
         "Assessment and evaluation",
         "Certification and empanelment",
       ],
-      price: "₹15,000 per person",
-      duration: "6-8 weeks",
+      price: "",
+      duration: "",
       details:
         "Build Inclusive, Safe, and Legally Compliant Workplaces with India's Top PoSH & DEI Training. Equip yourself with the tools and knowledge to create harassment-free, inclusive work environments through our comprehensive certification.",
     },
@@ -255,95 +255,6 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50/30 to-rose-50/40">
-      {/* Navigation */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-white/95 backdrop-blur-2xl border-b border-violet-200/30 sticky top-0 z-50 shadow-lg shadow-violet-500/5"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-violet-600 via-purple-600 to-rose-600 rounded-2xl flex items-center justify-center shadow-xl shadow-violet-500/25">
-                  <Heart className="h-7 w-7 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full animate-pulse"></div>
-              </div>
-              <div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-violet-700 via-purple-600 to-rose-600 bg-clip-text text-transparent">
-                  UREPOSH
-                </span>
-                <p className="text-xs text-slate-600 font-medium tracking-wide">Empowering Inclusive Workplaces</p>
-              </div>
-            </motion.div>
-
-            <div className="hidden md:flex space-x-8">
-              {["Home", "About", "Services", "Culture", "News Room","Our People", "Contact"].map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link
-                    href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                    className={`text-slate-700 hover:text-violet-600 transition-all duration-300 font-semibold text-lg relative group py-2 ${
-                      item === "Services" ? "text-violet-600" : ""
-                    }`}
-                  >
-                    {item}
-                    <span className="absolute -bottom-1 left-0 w-0 h-1 bg-gradient-to-r from-violet-500 to-rose-500 group-hover:w-full transition-all duration-300 rounded-full"></span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="md:hidden">
-              <Button variant="ghost" size="sm" onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-700">
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-            </div>
-
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">
-              <Button className="bg-gradient-to-r from-violet-600 via-purple-600 to-rose-600 hover:from-violet-700 hover:via-purple-700 hover:to-rose-700 shadow-xl shadow-violet-500/25 hover:shadow-2xl transition-all duration-300 px-8 py-3 text-lg font-semibold">
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white/98 backdrop-blur-2xl border-t border-violet-200/30"
-            >
-              <div className="px-6 py-6 space-y-4">
-                {["Home", "About", "Services", "Culture", "News Room", "Our People", "Contact"].map((item) => (
-                  <Link
-                    key={item}
-                    href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                    className="block text-slate-700 hover:text-violet-600 transition-colors py-3 text-lg font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item}
-                  </Link>
-                ))}
-                <Button className="w-full bg-gradient-to-r from-violet-600 to-rose-600 hover:from-violet-700 hover:to-rose-700 mt-6 py-4 text-lg">
-                  Get Started
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-
       {/* Hero Section */}
       <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
@@ -694,16 +605,8 @@ export default function ServicesPage() {
                     About Us
                   </Link>
                 </li>
-                <li>
-                  <Link href="/culture" className="hover:text-violet-400">
-                    Our Culture
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/team" className="hover:text-violet-400">
-                    Team
-                  </Link>
-                </li>
+                
+                 
                 <li>
                   <Link href="/contact" className="hover:text-violet-400">
                     Contact

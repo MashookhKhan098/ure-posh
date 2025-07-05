@@ -33,6 +33,9 @@ export async function GET(request: Request) {
           createdAt: true,
           updatedAt: true,
           featuredImage: true,
+          videoUrl: true,
+          videoTitle: true,
+          videoDescription: true,
           tags: true,
         },
         skip,
@@ -76,6 +79,9 @@ export async function POST(request: Request) {
     const tagsStr = formData.get("tags")?.toString() || ""
     const slug = formData.get("slug")?.toString()
     const featuredImage = formData.get("featuredImage") as File | null
+    const videoFile = formData.get("videoFile") as File | null
+    const videoTitle = formData.get("videoTitle")?.toString()
+    const videoDescription = formData.get("videoDescription")?.toString()
 
     if (!title || !content || !author || !category || !slug) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -87,7 +93,9 @@ export async function POST(request: Request) {
       .filter(Boolean)
 
     let relativePath = ""
+    let videoUrl = ""
 
+    // Handle featured image upload
     if (featuredImage && featuredImage.size > 0) {
       if (!existsSync(UPLOADS_DIR)) {
         await mkdir(UPLOADS_DIR, { recursive: true })
@@ -103,6 +111,22 @@ export async function POST(request: Request) {
       await writeFile(join(UPLOADS_DIR, filename), buffer)
     }
 
+    // Handle video upload
+    if (videoFile && videoFile.size > 0) {
+      if (!existsSync(UPLOADS_DIR)) {
+        await mkdir(UPLOADS_DIR, { recursive: true })
+      }
+
+      const timestamp = Date.now()
+      const ext = videoFile.name.split(".").pop()?.toLowerCase()
+      const cleanTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+      const filename = `${cleanTitle}-video-${timestamp}.${ext}`
+      videoUrl = `/uploads/${filename}`
+
+      const buffer = Buffer.from(await videoFile.arrayBuffer())
+      await writeFile(join(UPLOADS_DIR, filename), buffer)
+    }
+
     const newPost = await prisma.post.create({
       data: {
         title,
@@ -112,6 +136,9 @@ export async function POST(request: Request) {
         slug,
         tags: tags.join(","),
         featuredImage: relativePath || null,
+        videoUrl: videoUrl || null,
+        videoTitle: videoTitle || null,
+        videoDescription: videoDescription || null,
         status: "PUBLISHED",
       },
       select: {

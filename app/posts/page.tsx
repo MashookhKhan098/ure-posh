@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Search, 
@@ -25,13 +24,42 @@ import {
   Copy,
   Check,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Video,
+  Filter,
+  TrendingUp,
+  Eye,
+  Star,
+  Zap,
+  Sparkles,
+  BookOpen,
+  Users,
+  Award,
+  Target,
+  Globe,
+  Layers,
+  Palette,
+  Camera,
+  Play,
+  Pause,
+  Volume2,
+  Maximize2,
+  Share,
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  BookmarkPlus,
+  BookmarkCheck,
+  ThumbsUp,
+  MessageSquare,
+  EyeOff,
+  FilterX,
+  SortAsc,
+  SortDesc,
+  Clock3,
+  TrendingDown,
+  Hash
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-
 
 interface PostResponse {
   id: string
@@ -43,6 +71,9 @@ interface PostResponse {
   category: string
   createdAt: string
   featuredImage?: string
+  videoUrl?: string
+  videoTitle?: string
+  videoDescription?: string
   tags?: string[]
   slug: string
   content: string
@@ -69,49 +100,40 @@ export default function EnhancedPostsPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set())
   const [copiedLink, setCopiedLink] = useState<string | null>(null)
-  const [retryCount, setRetryCount] = useState(0)
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set())
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postsPerPage] = useState(9)
 
   useEffect(() => {
-    // Always fetch real data from the API
     fetchPosts()
   }, [])
 
-  const fetchPosts = async (showRetryLoader = false) => {
+  const fetchPosts = async () => {
     try {
-      if (!showRetryLoader) setLoading(true)
-      
-      // Try to fetch from API
+      setLoading(true)
       const response = await fetch('/api/posts')
       
       if (response.ok) {
         const data = await response.json()
-        // Extract posts from the response
         setPosts(data.posts || [])
       } else {
         throw new Error('Failed to fetch posts')
       }
       
       setError(null)
-      setRetryCount(0)
     } catch (err) {
       console.error('Error fetching posts:', err)
       setError('Failed to load posts. Please check your internet connection.')
-      setError('Using offline content. Some features may be limited.')
-      setRetryCount(prev => prev + 1)
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleRetry = () => {
-    fetchPosts(true)
   }
 
   const formatDate = (dateString: string) => {
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric'
       })
     } catch {
@@ -133,7 +155,7 @@ export default function EnhancedPostsPage() {
   const isImageBroken = (src: string) => imageErrors.has(src)
 
   const sharePost = async (platform: string, post: PostResponse) => {
-    const url = `${window.location.origin}/blog/${post.slug}`
+    const url = `${window.location.origin}/posts/${post.slug}`
     const title = post.title
 
     const shareUrls = {
@@ -150,7 +172,6 @@ export default function EnhancedPostsPage() {
         setCopiedLink(post.id)
         setTimeout(() => setCopiedLink(null), 2000)
       } catch {
-        // Fallback for older browsers
         const textArea = document.createElement('textarea')
         textArea.value = url
         document.body.appendChild(textArea)
@@ -165,6 +186,18 @@ export default function EnhancedPostsPage() {
 
   const toggleBookmark = (postId: string) => {
     setBookmarkedPosts(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(postId)) {
+        newSet.delete(postId)
+      } else {
+        newSet.add(postId)
+      }
+      return newSet
+    })
+  }
+
+  const toggleLike = (postId: string) => {
+    setLikedPosts(prev => {
       const newSet = new Set(prev)
       if (newSet.has(postId)) {
         newSet.delete(postId)
@@ -190,11 +223,10 @@ export default function EnhancedPostsPage() {
   const filteredAndSortedPosts = useMemo(() => {
     let filtered = posts.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (post.excerpt && post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())) ||
                           post.author.toLowerCase().includes(searchTerm.toLowerCase())
       
       const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory
-      
       const matchesTag = selectedTag === 'all' || (post.tags && post.tags.includes(selectedTag))
       
       return matchesSearch && matchesCategory && matchesTag
@@ -219,34 +251,52 @@ export default function EnhancedPostsPage() {
     return filtered
   }, [posts, searchTerm, selectedCategory, selectedTag, sortBy])
 
+  // Pagination
+  const indexOfLastPost = currentPage * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = filteredAndSortedPosts.slice(indexOfFirstPost, indexOfLastPost)
+  const totalPages = Math.ceil(filteredAndSortedPosts.length / postsPerPage)
+
   const clearFilters = () => {
     setSearchTerm('')
     setSelectedCategory('all')
     setSelectedTag('all')
     setSortBy('newest')
+    setCurrentPage(1)
   }
 
   const hasActiveFilters = searchTerm || selectedCategory !== 'all' || selectedTag !== 'all' || sortBy !== 'newest'
 
+  // Featured post (first post)
+  const featuredPost = posts.length > 0 ? posts[0] : null
+
   // Loading state
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-8"></div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-sm border p-6">
-                <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
-                <div className="h-6 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="h-6 w-6 bg-gray-200 rounded-full"></div>
-                  <div className="h-4 bg-gray-200 rounded w-32"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-200 rounded-lg w-80 mb-8"></div>
+            <div className="h-6 bg-gray-200 rounded w-96 mb-12"></div>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-gray-200 rounded w-20 mb-3"></div>
+                    <div className="h-6 bg-gray-200 rounded w-full mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-10 w-10 bg-gray-200 rounded-full"></div>
+                      <div className="flex-1">
+                        <div className="h-4 bg-gray-200 rounded w-24 mb-1"></div>
+                        <div className="h-3 bg-gray-200 rounded w-32"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -256,18 +306,18 @@ export default function EnhancedPostsPage() {
   // Error state
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center max-w-md mx-auto">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-red-800 mb-2">Failed to Load Posts</h3>
-          <p className="text-red-600 mb-4">{error}</p>
-          <div className="flex gap-3 justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6" />
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Failed to Load Posts</h3>
+            <p className="text-gray-600 mb-6">{error}</p>
             <button
-              onClick={handleRetry}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+              onClick={fetchPosts}
+              className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
             >
-              <RefreshCw className="w-4 h-4" />
-              Retry {retryCount > 0 && `(${retryCount})`}
+              <RefreshCw className="w-5 h-5" />
+              Try Again
             </button>
           </div>
         </div>
@@ -276,288 +326,639 @@ export default function EnhancedPostsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Latest Blog Posts</h1>
-        <p className="text-gray-600">Discover insights, tutorials, and stories from our community</p>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search posts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* View Toggle */}
-          <div className="flex items-center gap-2">
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
-              >
-                <List className="w-4 h-4" />
-              </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+              <Sparkles className="w-5 h-5 text-yellow-300" />
+              <span className="text-white/90 text-sm font-medium">Discover Amazing Content</span>
             </div>
-            
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-filter">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-              </svg>
-              Filters
-              <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-            </button>
-          </div>
-        </div>
-
-        {/* Advanced Filters */}
-        {showFilters && (
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Category Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="all">All Categories</option>
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              Our Blog
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
+              Discover insights, tutorials, and stories from our community. 
+              Stay updated with the latest trends and best practices.
+            </p>
+            <div className="flex items-center justify-center gap-6 text-white/80">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5" />
+                <span className="font-medium">{posts.length} Articles</span>
               </div>
-
-              {/* Tag Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tag</label>
-                <select
-                  value={selectedTag}
-                  onChange={(e) => setSelectedTag(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="all">All Tags</option>
-                  {allTags.map(tag => (
-                    <option key={tag} value={tag}>{tag}</option>
-                  ))}
-                </select>
+              <div className="w-1 h-1 bg-white/50 rounded-full"></div>
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                <span className="font-medium">Expert Authors</span>
               </div>
-
-              {/* Sort */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="popular">Most Popular</option>
-                  <option value="title">Alphabetical</option>
-                </select>
+              <div className="w-1 h-1 bg-white/50 rounded-full"></div>
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5" />
+                <span className="font-medium">Premium Content</span>
               </div>
             </div>
-
-            {/* Clear Filters */}
-            {hasActiveFilters && (
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={clearFilters}
-                  className="text-sm text-blue-600 hover:text-blue-800"
-                >
-                  Clear all filters
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Results Summary */}
-      <div className="mb-6 flex items-center justify-between">
-        <p className="text-gray-600">
-          {filteredAndSortedPosts.length} {filteredAndSortedPosts.length === 1 ? 'post' : 'posts'} found
-        </p>
-        <button
-          onClick={() => fetchPosts(true)}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Refresh
-        </button>
-      </div>
-
-      {/* Posts Grid/List */}
-      {filteredAndSortedPosts.length === 0 ? (
-        <div className="text-center py-12">
-          <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No posts found</h3>
-          <p className="text-gray-600 mb-4">Try adjusting your search or filter criteria</p>
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              Clear all filters
-            </button>
-          )}
+          </motion.div>
         </div>
-      ) : (
-        <div className={`grid gap-6 ${
-          viewMode === 'grid' 
-            ? 'md:grid-cols-2 lg:grid-cols-3' 
-            : 'grid-cols-1 max-w-4xl mx-auto'
-        }`}>
-          {filteredAndSortedPosts.map(post => (
-            <article key={post.id} className={`bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow ${
-              viewMode === 'list' ? 'flex gap-6 p-6' : 'overflow-hidden'
-            }`}>
-              {/* Featured Image */}
-              {post.featuredImage && !isImageBroken(post.featuredImage) && (
-                <div className={`${viewMode === 'list' ? 'w-48 flex-shrink-0' : 'aspect-video'} relative`}>
-                  <img 
-                    src={post.featuredImage} 
-                    alt={post.title}
-                    onError={() => handleImageError(post.featuredImage!)}
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    onClick={() => toggleBookmark(post.id)}
-                    className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white/90 transition-colors"
-                  >
-                    <BookmarkIcon className={`w-4 h-4 ${bookmarkedPosts.has(post.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
-                  </button>
-                </div>
-              )}
+      </div>
 
-              {/* Content */}
-              <div className={viewMode === 'list' ? 'flex-1' : 'p-6'}>
-                {/* Category */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {post.category}
-                  </span>
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <TagIcon className="w-3 h-3 text-gray-400" />
-                      <span className="text-xs text-gray-500">
-                        {post.tags.slice(0, 2).join(', ')}
-                        {post.tags.length > 2 && ` +${post.tags.length - 2}`}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Title */}
-                <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 cursor-pointer">
-                  {post.title}
-                </h2>
-
-                {/* Excerpt */}
-                <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-
-                {/* Author & Meta */}
-                <div className="flex items-center gap-3 mb-4">
-                  {post.authorAvatar && !isImageBroken(post.authorAvatar) ? (
-                    <img
-                      src={post.authorAvatar}
-                      alt={post.author}
-                      onError={() => handleImageError(post.authorAvatar!)}
-                      className="w-8 h-8 rounded-full object-cover"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Featured Post */}
+        {featuredPost && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-16"
+          >
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+              <div className="grid lg:grid-cols-2 gap-0">
+                {/* Featured Image */}
+                <div className="relative h-80 lg:h-full overflow-hidden">
+                  {featuredPost.featuredImage && !isImageBroken(featuredPost.featuredImage) ? (
+                    <img 
+                      src={featuredPost.featuredImage} 
+                      alt={featuredPost.title}
+                      onError={() => handleImageError(featuredPost.featuredImage!)}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                      <User className="w-4 h-4 text-gray-500" />
+                    <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                      <BookOpen className="w-20 h-20 text-white/50" />
                     </div>
                   )}
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{post.author}</p>
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                      <Calendar className="w-3 h-3" />
-                      <span>{formatDate(post.createdAt)}</span>
-                      <span>•</span>
-                      <Clock className="w-3 h-3" />
-                      <span>{post.readTime || calculateReadTime(post.content)} min read</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                  {featuredPost.videoUrl && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <Video className="w-10 h-10 text-gray-800" />
+                      </div>
                     </div>
+                  )}
+                  <div className="absolute top-4 left-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-400 text-yellow-900">
+                      <Star className="w-3 h-3 mr-1" />
+                      Featured
+                    </span>
+                  </div>
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    <button
+                      onClick={() => toggleBookmark(featuredPost.id)}
+                      className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
+                    >
+                      <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(featuredPost.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
+                    </button>
+                    <button
+                      onClick={() => sharePost('copy', featuredPost)}
+                      className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
+                    >
+                      {copiedLink === featuredPost.id ? <Check className="w-5 h-5 text-green-600" /> : <Share className="w-5 h-5 text-gray-600" />}
+                    </button>
                   </div>
                 </div>
 
-                {/* Engagement Stats */}
-                {(post.likes || post.comments) && (
-                  <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
-                    {post.likes && (
-                      <div className="flex items-center gap-1">
-                        <Heart className="w-4 h-4" />
-                        <span>{post.likes}</span>
-                      </div>
-                    )}
-                    {post.comments && (
-                      <div className="flex items-center gap-1">
-                        <MessageCircle className="w-4 h-4" />
-                        <span>{post.comments}</span>
-                      </div>
+                {/* Featured Content */}
+                <div className="p-8 lg:p-12 flex flex-col justify-center">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                      {featuredPost.category}
+                    </span>
+                    {featuredPost.videoUrl && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                        <Video className="w-3 h-3 mr-1" />
+                        Video
+                      </span>
                     )}
                   </div>
-                )}
 
-                {/* Action Buttons */}
-                <div className="flex items-center justify-between">
-                  <Link href={`/posts/${post.slug}`} className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium">
-                    Read More
-                    <ExternalLink className="w-4 h-4" />
-                  </Link>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => sharePost('twitter', post)}
-                      className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-full transition-colors"
-                      title="Share on Twitter"
-                    >
-                      <Twitter className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => sharePost('facebook', post)}
-                      className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-full transition-colors"
-                      title="Share on Facebook"
-                    >
-                      <Facebook className="w-4 h-4" />
-                    </button>
-                    <Link
-                      href={`/posts/${post.slug}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium shadow-lg hover:shadow-xl"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
-                      Read More
+                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                    <Link href={`/posts/${featuredPost.slug}`} className="hover:text-blue-600 transition-colors">
+                      {featuredPost.title}
                     </Link>
+                  </h2>
+
+                  {featuredPost.excerpt && (
+                    <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                      {featuredPost.excerpt}
+                    </p>
+                  )}
+
+                  <div className="flex items-center gap-4 mb-6">
+                    {featuredPost.authorAvatar && !isImageBroken(featuredPost.authorAvatar) ? (
+                      <img
+                        src={featuredPost.authorAvatar}
+                        alt={featuredPost.author}
+                        onError={() => handleImageError(featuredPost.authorAvatar!)}
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-md">
+                        <span className="text-white font-bold text-lg">{featuredPost.author.charAt(0).toUpperCase()}</span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">{featuredPost.author}</p>
+                      <div className="flex items-center gap-3 text-sm text-gray-500">
+                        <Calendar className="w-4 h-4" />
+                        <span>{formatDate(featuredPost.createdAt)}</span>
+                        <span>•</span>
+                        <Clock className="w-4 h-4" />
+                        <span>{featuredPost.readTime || calculateReadTime(featuredPost.content)} min read</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Link 
+                      href={`/posts/${featuredPost.slug}`} 
+                      className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
+                    >
+                      Read Featured Article
+                      <ArrowRight className="w-5 h-5" />
+                    </Link>
+
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => toggleLike(featuredPost.id)}
+                        className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
+                          likedPosts.has(featuredPost.id)
+                            ? 'bg-red-100 text-red-600'
+                            : 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600'
+                        }`}
+                      >
+                        <Heart className={`w-4 h-4 ${likedPosts.has(featuredPost.id) ? 'fill-current' : ''}`} />
+                        <span className="text-sm font-medium">{(featuredPost.likes || 0) + (likedPosts.has(featuredPost.id) ? 1 : 0)}</span>
+                      </button>
+                      <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg">
+                        <MessageSquare className="w-4 h-4" />
+                        <span className="text-sm font-medium">{featuredPost.comments || 0}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
-      )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Categories Showcase */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-12"
+        >
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Explore Categories</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Discover content organized by topics that interest you most</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {categories.slice(0, 6).map((category, index) => (
+              <motion.button
+                key={category}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 * index }}
+                onClick={() => setSelectedCategory(category)}
+                className={`p-4 rounded-2xl text-center transition-all duration-300 ${
+                  selectedCategory === category
+                    ? 'bg-blue-600 text-white shadow-lg scale-105'
+                    : 'bg-white text-gray-700 hover:bg-blue-50 hover:scale-105 shadow-sm border border-gray-100'
+                }`}
+              >
+                <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center">
+                  {category === 'Technology' && <Zap className="w-5 h-5" />}
+                  {category === 'Business' && <TrendingUp className="w-5 h-5" />}
+                  {category === 'Health' && <Heart className="w-5 h-5" />}
+                  {category === 'Travel' && <Globe className="w-5 h-5" />}
+                  {category === 'Food' && <Palette className="w-5 h-5" />}
+                  {category === 'Lifestyle' && <Sparkles className="w-5 h-5" />}
+                  {category === 'Education' && <BookOpen className="w-5 h-5" />}
+                  {category === 'Entertainment' && <Video className="w-5 h-5" />}
+                  {category === 'Sports' && <Target className="w-5 h-5" />}
+                  {category === 'Finance' && <TrendingDown className="w-5 h-5" />}
+                  {category === 'Science' && <Layers className="w-5 h-5" />}
+                  {category === 'Art' && <Camera className="w-5 h-5" />}
+                </div>
+                <span className="text-sm font-semibold">{category}</span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Search and Filters */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-12"
+        >
+          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+            {/* Search */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search articles, authors, or topics..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+              />
+            </div>
+
+            {/* View Toggle */}
+            <div className="flex items-center gap-4">
+              <div className="flex bg-gray-100 rounded-2xl p-1">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-3 rounded-xl transition-all ${
+                    viewMode === 'grid' 
+                      ? 'bg-white shadow-lg text-blue-600' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <Grid className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-3 rounded-xl transition-all ${
+                    viewMode === 'list' 
+                      ? 'bg-white shadow-lg text-blue-600' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <List className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-2 px-6 py-4 rounded-2xl transition-all ${
+                  showFilters 
+                    ? 'bg-blue-600 text-white shadow-lg' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Filter className="w-5 h-5" />
+                Filters
+                <ChevronDown className={`w-5 h-5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Advanced Filters */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-8 pt-8 border-t border-gray-100"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Category Filter */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-3">Category</label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                    >
+                      <option value="all">All Categories</option>
+                      {categories.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Tag Filter */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-3">Tag</label>
+                    <select
+                      value={selectedTag}
+                      onChange={(e) => setSelectedTag(e.target.value)}
+                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                    >
+                      <option value="all">All Tags</option>
+                      {allTags.map(tag => (
+                        <option key={tag} value={tag}>{tag}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sort */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-3">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as SortOption)}
+                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                    >
+                      <option value="newest">Newest First</option>
+                      <option value="oldest">Oldest First</option>
+                      <option value="popular">Most Popular</option>
+                      <option value="title">Alphabetical</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Clear Filters */}
+                {hasActiveFilters && (
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={clearFilters}
+                      className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
+                    >
+                      <FilterX className="w-4 h-4" />
+                      Clear all filters
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Results Summary */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="mb-8 flex items-center justify-between"
+        >
+          <div className="flex items-center gap-4">
+            <p className="text-gray-600 font-semibold text-lg">
+              {filteredAndSortedPosts.length} {filteredAndSortedPosts.length === 1 ? 'article' : 'articles'} found
+            </p>
+            {hasActiveFilters && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                <Filter className="w-3 h-3 mr-1" />
+                Filtered
+              </span>
+            )}
+          </div>
+          <button
+            onClick={fetchPosts}
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-700 text-sm font-semibold"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh
+          </button>
+        </motion.div>
+
+        {/* Posts Grid/List */}
+        {filteredAndSortedPosts.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="text-center py-20"
+          >
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="w-12 h-12 text-gray-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">No articles found</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              Try adjusting your search or filter criteria to find what you're looking for.
+            </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="bg-blue-600 text-white px-8 py-4 rounded-2xl hover:bg-blue-700 transition-colors font-semibold"
+              >
+                Clear all filters
+              </button>
+            )}
+          </motion.div>
+        ) : (
+          <>
+            <div className={`grid gap-8 ${
+              viewMode === 'grid' 
+                ? 'md:grid-cols-2 lg:grid-cols-3' 
+                : 'grid-cols-1 max-w-4xl mx-auto'
+            }`}>
+              <AnimatePresence>
+                {currentPosts.map((post, index) => (
+                  <motion.article
+                    key={post.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`bg-white rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-500 overflow-hidden group ${
+                      viewMode === 'list' ? 'flex gap-6' : ''
+                    }`}
+                  >
+                    {/* Featured Image */}
+                    {post.featuredImage && !isImageBroken(post.featuredImage) && (
+                      <div className={`${viewMode === 'list' ? 'w-80 flex-shrink-0' : 'aspect-video'} relative overflow-hidden`}>
+                        <img 
+                          src={post.featuredImage} 
+                          alt={post.title}
+                          onError={() => handleImageError(post.featuredImage!)}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                        {post.videoUrl && (
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center backdrop-blur-sm">
+                              <Video className="w-8 h-8 text-gray-800" />
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button
+                            onClick={() => toggleBookmark(post.id)}
+                            className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
+                          >
+                            <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(post.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
+                          </button>
+                          <button
+                            onClick={() => sharePost('copy', post)}
+                            className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
+                          >
+                            {copiedLink === post.id ? <Check className="w-5 h-5 text-green-600" /> : <Share className="w-5 h-5 text-gray-600" />}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Content */}
+                    <div className={viewMode === 'list' ? 'flex-1 p-8' : 'p-8'}>
+                      {/* Category and Tags */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                          {post.category}
+                        </span>
+                        {post.videoUrl && (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">
+                            <Video className="w-3 h-3 mr-1" />
+                            Video
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
+                        <Link href={`/posts/${post.slug}`}>
+                          {post.title}
+                        </Link>
+                      </h2>
+
+                      {/* Excerpt */}
+                      {post.excerpt && (
+                        <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base">
+                          {post.excerpt}
+                        </p>
+                      )}
+
+                      {/* Author & Meta */}
+                      <div className="flex items-center gap-4 mb-6">
+                        {post.authorAvatar && !isImageBroken(post.authorAvatar) ? (
+                          <img
+                            src={post.authorAvatar}
+                            alt={post.author}
+                            onError={() => handleImageError(post.authorAvatar!)}
+                            className="w-12 h-12 rounded-full object-cover ring-2 ring-gray-100"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                            <span className="text-white font-bold text-lg">{post.author.charAt(0).toUpperCase()}</span>
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-900">{post.author}</p>
+                          <div className="flex items-center gap-3 text-sm text-gray-500">
+                            <Calendar className="w-4 h-4" />
+                            <span>{formatDate(post.createdAt)}</span>
+                            <span>•</span>
+                            <Clock className="w-4 h-4" />
+                            <span>{post.readTime || calculateReadTime(post.content)} min read</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Tags */}
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="flex items-center gap-2 mb-6">
+                          <Hash className="w-4 h-4 text-gray-400" />
+                          <div className="flex flex-wrap gap-1">
+                            {post.tags.slice(0, 3).map((tag, index) => (
+                              <span
+                                key={index}
+                                className="text-xs text-gray-500 hover:text-gray-700 cursor-pointer font-medium"
+                              >
+                                #{tag}
+                              </span>
+                            ))}
+                            {post.tags.length > 3 && (
+                              <span className="text-xs text-gray-400 font-medium">
+                                +{post.tags.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                        <Link 
+                          href={`/posts/${post.slug}`} 
+                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-bold text-sm group/link"
+                        >
+                          Read Article
+                          <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                        </Link>
+
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => toggleLike(post.id)}
+                            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
+                              likedPosts.has(post.id)
+                                ? 'bg-red-100 text-red-600'
+                                : 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600'
+                            }`}
+                          >
+                            <Heart className={`w-4 h-4 ${likedPosts.has(post.id) ? 'fill-current' : ''}`} />
+                            <span className="text-sm font-medium">{(post.likes || 0) + (likedPosts.has(post.id) ? 1 : 0)}</span>
+                          </button>
+                          <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg">
+                            <MessageSquare className="w-4 h-4" />
+                            <span className="text-sm font-medium">{post.comments || 0}</span>
+                          </div>
+                          <button
+                            onClick={() => sharePost('twitter', post)}
+                            className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Share on Twitter"
+                          >
+                            <Twitter className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => sharePost('facebook', post)}
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Share on Facebook"
+                          >
+                            <Facebook className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.article>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="mt-12 flex items-center justify-center gap-2"
+              >
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="p-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-4 py-3 rounded-xl font-semibold transition-colors ${
+                        currentPage === page
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                })}
+                
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="p-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </motion.div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }
