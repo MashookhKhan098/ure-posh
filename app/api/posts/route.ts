@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
+import prisma from "@/lib/database"
 import { writeFile, mkdir } from "fs/promises"
 import { existsSync } from "fs"
 import { join } from "path"

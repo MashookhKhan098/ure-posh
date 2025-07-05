@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import prisma from "../../../../lib/prisma"
+import prisma from "@/lib/database"
 import { deleteImage } from "../../../../lib/image-utils"
 import { unlink } from "fs/promises"
 import { join } from "path"
