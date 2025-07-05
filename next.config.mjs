@@ -21,8 +21,10 @@ const nextConfig = {
   },
   // Enable better error handling
   poweredByHeader: false,
-  // Disable static export for API routes
+  // Disable static export completely
   output: 'standalone',
+  // Disable static generation for error pages
+  generateStaticParams: false,
   webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
