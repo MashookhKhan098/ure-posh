@@ -13,16 +13,6 @@ const nextConfig = {
     domains: ['localhost'],
     path: '/_next/image/',
   },
-  // Disable static generation completely
-  trailingSlash: false,
-  // Enable static asset optimization
-  experimental: {
-    optimizeCss: true,
-  },
-  // Enable better error handling
-  poweredByHeader: false,
-  // Use default output for better compatibility
-  output: undefined,
   webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
