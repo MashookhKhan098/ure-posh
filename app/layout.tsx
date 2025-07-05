@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 import { Navbar } from "./components/Navbar"
 import BackgroundImage from './components/BackgroundImage'
@@ -28,6 +29,7 @@ export default function RootLayout({
           <NavbarWrapper />
           {children}
         </div>
+        <SpeedInsights />
       </body>
     </html>
   )
