@@ -141,6 +141,24 @@ export async function GET(request: Request) {
 // POST /api/posts
 export async function POST(request: Request) {
   try {
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      console.warn("DATABASE_URL not set, cannot create post")
+      return NextResponse.json({ 
+        error: "Database not configured" 
+      }, { status: 503 })
+    }
+
+    // Test database connection first
+    try {
+      await prisma.$connect()
+    } catch (connectionError) {
+      console.error("Database connection failed:", connectionError)
+      return NextResponse.json({ 
+        error: "Database connection failed" 
+      }, { status: 503 })
+    }
+
     const formData = await request.formData()
 
     const title = formData.get("title")?.toString()
@@ -198,27 +216,36 @@ export async function POST(request: Request) {
       await writeFile(join(UPLOADS_DIR, filename), buffer)
     }
 
-    const newPost = await prisma.post.create({
-      data: {
-        title,
-        content,
-        author,
-        category,
-        slug,
-        tags: tags.join(","),
-        featuredImage: relativePath || null,
-        videoUrl: videoUrl || null,
-        videoTitle: videoTitle || null,
-        videoDescription: videoDescription || null,
-        status: "PUBLISHED",
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        createdAt: true,
-      },
-    })
+    // Try to create the post
+    let newPost
+    try {
+      newPost = await prisma.post.create({
+        data: {
+          title,
+          content,
+          author,
+          category,
+          slug,
+          tags: tags.join(","),
+          featuredImage: relativePath || null,
+          videoUrl: videoUrl || null,
+          videoTitle: videoTitle || null,
+          videoDescription: videoDescription || null,
+          status: "PUBLISHED",
+        },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          createdAt: true,
+        },
+      })
+    } catch (createError) {
+      console.error("Database create operation failed:", createError)
+      return NextResponse.json({ 
+        error: "Failed to create post in database" 
+      }, { status: 500 })
+    }
 
     return NextResponse.json({
       success: true,
@@ -231,5 +258,12 @@ export async function POST(request: Request) {
       { error: 'Failed to create post' },
       { status: 500 }
     )
+  } finally {
+    // Always disconnect to prevent connection leaks
+    try {
+      await prisma.$disconnect()
+    } catch (disconnectError) {
+      console.error("Error disconnecting from database:", disconnectError)
+    }
   }
 }
