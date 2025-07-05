@@ -32,33 +32,69 @@ export async function GET(request: Request) {
       })
     }
 
-    // Ensure database connection is ready
-    await prisma.$connect()
+    // Test database connection first
+    try {
+      await prisma.$connect()
+    } catch (connectionError) {
+      console.error("Database connection failed:", connectionError)
+      return NextResponse.json({
+        posts: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      }, {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        }
+      })
+    }
     
-    const [posts, total] = await Promise.all([
-      prisma.post.findMany({
-        where: { status: "PUBLISHED" },
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          content: true,
-          author: true,
-          category: true,
-          createdAt: true,
-          updatedAt: true,
-          featuredImage: true,
-          videoUrl: true,
-          videoTitle: true,
-          videoDescription: true,
-          tags: true,
-        },
-        skip,
-        take: pageSize,
-      }),
-      prisma.post.count({ where: { status: "PUBLISHED" } }),
-    ])
+    // Try to fetch posts
+    let posts: any[] = []
+    let total = 0
+    
+    try {
+      [posts, total] = await Promise.all([
+        prisma.post.findMany({
+          where: { status: "PUBLISHED" },
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            content: true,
+            author: true,
+            category: true,
+            createdAt: true,
+            updatedAt: true,
+            featuredImage: true,
+            videoUrl: true,
+            videoTitle: true,
+            videoDescription: true,
+            tags: true,
+          },
+          skip,
+          take: pageSize,
+        }),
+        prisma.post.count({ where: { status: "PUBLISHED" } }),
+      ])
+    } catch (queryError) {
+      console.error("Database query failed:", queryError)
+      return NextResponse.json({
+        posts: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      }, {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
+        }
+      })
+    }
 
     const postsWithArrayTags = posts.map((post: any) => ({
       ...post,
@@ -92,6 +128,13 @@ export async function GET(request: Request) {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=30",
       }
     })
+  } finally {
+    // Always disconnect to prevent connection leaks
+    try {
+      await prisma.$disconnect()
+    } catch (disconnectError) {
+      console.error("Error disconnecting from database:", disconnectError)
+    }
   }
 }
 
