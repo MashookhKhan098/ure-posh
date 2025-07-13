@@ -2,10 +2,14 @@
 
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, MessageCircle, Calendar, MapPin } from "lucide-react";
+import { Clock, MessageCircle, Calendar, MapPin, Send, Download } from "lucide-react";
 import { contactInfo } from "./about-data";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Phone } from "lucide-react";
 
 const ContactSection = () => {
   const fadeInUp = {
@@ -30,11 +34,11 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
+    <section className="py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-gray-50/50 to-white relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-blue-100/40 to-violet-100/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-violet-100/40 to-pink-100/40 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-gray-100/40 to-gray-200/40 rounded-full blur-2xl" />
+        <div className="absolute bottom-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-gray-200/40 to-gray-100/40 rounded-full blur-2xl" />
       </div>
 
       <div className="max-w-7xl mx-auto relative">
@@ -46,26 +50,26 @@ const ContactSection = () => {
           className="text-center space-y-6 mb-20"
         >
           <motion.div variants={fadeInUp}>
-            <Badge className="bg-gradient-to-r from-violet-100 via-blue-100 to-cyan-100 text-blue-700 px-8 py-4 text-sm font-semibold rounded-full border-0 shadow-lg">
+            <Badge className="bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-black px-8 py-4 text-sm font-semibold rounded-full border border-gray-300 shadow-lg">
               <MessageCircle className="w-4 h-4 mr-2" />
-              Get in Touch
+              Get In Touch
             </Badge>
           </motion.div>
           <motion.h2 
             variants={fadeInUp}
-            className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight"
+            className="text-4xl md:text-6xl font-bold text-black leading-tight"
           >
-            Let's Start{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-              The Conversation
+            Let's Start a{" "}
+            <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
+              Conversation
             </span>
           </motion.h2>
           <motion.p 
             variants={fadeInUp}
-            className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-black max-w-4xl mx-auto leading-relaxed"
           >
-            Ready to transform your workplace? We're here to guide you through every step 
-            of your compliance and culture transformation journey.
+            Ready to transform your workplace culture? We're here to listen, understand, 
+            and create solutions that make a real difference.
           </motion.p>
         </motion.div>
 
@@ -74,172 +78,166 @@ const ContactSection = () => {
           whileInView="animate"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="grid md:grid-cols-3 gap-8 mb-16"
+          className="grid lg:grid-cols-2 gap-16 items-start"
         >
-          {contactInfo.map((info, index) => (
-            <motion.div
-              key={index}
-              variants={fadeInUp}
-              className="group"
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="h-full border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white text-center overflow-hidden relative">
-                <CardContent className="p-8">
-                  {/* Icon */}
-                  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-violet-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                    <info.icon className="w-10 h-10 text-white" />
+          {/* Contact Form */}
+          <motion.div variants={fadeInUp} className="space-y-8">
+            <Card className="border border-gray-200 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl font-bold text-black">
+                  Send us a message
+                </CardTitle>
+                <CardDescription className="text-gray-600">
+                  We'll get back to you within 24 hours
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-black font-medium">First Name</Label>
+                    <Input 
+                      id="firstName" 
+                      placeholder="John" 
+                      className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
+                    />
                   </div>
-
-                  {/* Title */}
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    {info.type}
-                  </h3>
-
-                  {/* Value */}
-                  <div className="mb-4">
-                    <p className="text-lg font-semibold text-gray-800 mb-2">
-                      {info.value}
-                    </p>
-                    <p className="text-gray-600">
-                      {info.description}
-                    </p>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-black font-medium">Last Name</Label>
+                    <Input 
+                      id="lastName" 
+                      placeholder="Doe" 
+                      className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
+                    />
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-black font-medium">Email</Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="john@company.com" 
+                    className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="company" className="text-black font-medium">Company</Label>
+                  <Input 
+                    id="company" 
+                    placeholder="Your Company Name" 
+                    className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="text-black font-medium">Message</Label>
+                  <Textarea 
+                    id="message" 
+                    placeholder="Tell us about your workplace culture challenges and how we can help..." 
+                    rows={6}
+                    className="border-gray-300 focus:border-gray-500 focus:ring-gray-500 resize-none"
+                  />
+                </div>
+                <Button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white py-6 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  <Send className="w-5 h-5 mr-2" />
+                  Send Message
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-                  {/* Response Time */}
-                  {info.responseTime && (
-                    <div className="mb-4">
-                      <Badge className="bg-green-100 text-green-700 px-4 py-2 text-sm font-medium rounded-full">
-                        <Clock className="w-4 h-4 mr-2" />
-                        {info.responseTime}
-                      </Badge>
-                    </div>
-                  )}
-
-                  {/* Availability */}
-                  <div className="text-sm text-gray-500 mb-4">
-                    {info.availability}
-                  </div>
-
-                  {/* Preferred For */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold text-gray-700 mb-2">Best for:</h4>
-                    <div className="space-y-1">
-                      {info.preferredFor.map((item, itemIndex) => (
-                        <div key={itemIndex} className="text-xs text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <Button 
-                    className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform group-hover:-translate-y-1"
-                  >
-                    {info.type === 'Email' ? 'Send Email' : 
-                     info.type === 'Phone' ? 'Call Now' : 
-                     'Get Directions'}
-                  </Button>
-                </CardContent>
-
-                {/* Hover Effect */}
+          {/* Contact Information */}
+          <motion.div variants={fadeInUp} className="space-y-8">
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold text-black">Other ways to reach us</h3>
+              
+              {contactInfo.map((info, index) => (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500 to-violet-500 opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"
-                />
-              </Card>
-            </motion.div>
-          ))}
+                  key={index}
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-start gap-4 p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:bg-white/80 transition-all duration-300 group"
+                >
+                  <div className="w-12 h-12 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+                    <info.icon className="w-6 h-6" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-black text-lg mb-2">{info.type}</h4>
+                    <p className="text-gray-600 mb-2">{info.value}</p>
+                    <div className="space-y-1">
+                      {info.description && <p className="text-black font-medium">{info.description}</p>}
+                      {info.responseTime && (
+                        <p className="text-black font-medium">
+                          <Clock className="w-4 h-4" />
+                          {info.responseTime}
+                        </p>
+                      )}
+                      {info.availability && (
+                        <p className="text-black font-medium">
+                          {info.availability}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Office Locations */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold text-black">Our Offices</h3>
+              
+              {contactInfo.map((info, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                >
+                  <div className="flex items-start gap-4">
+                    <MapPin className="w-6 h-6 text-gray-500 mt-1 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-black text-lg mb-2">{info.type}</h4>
+                      <p className="text-gray-600 mb-2">{info.value}</p>
+                      {info.description && (
+                        <p className="text-black font-medium">{info.description}</p>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Quick Contact Form */}
+        {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-4xl mx-auto"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-20"
         >
-          <Card className="border-0 shadow-2xl bg-white">
-            <CardContent className="p-12">
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                  Schedule a Free Consultation
-                </h3>
-                <p className="text-xl text-gray-600">
-                  Let's discuss your specific needs and how we can help transform your workplace.
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
-                {/* Consultation Options */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 mb-4">Consultation Options:</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                      <Calendar className="w-5 h-5 text-blue-600" />
-                      <div>
-                        <div className="font-medium text-gray-900">30-min Discovery Call</div>
-                        <div className="text-sm text-gray-600">Understand your needs and challenges</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-4 bg-violet-50 rounded-xl border border-violet-100">
-                      <MapPin className="w-5 h-5 text-violet-600" />
-                      <div>
-                        <div className="font-medium text-gray-900">On-site Assessment</div>
-                        <div className="text-sm text-gray-600">Comprehensive workplace evaluation</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                      <MessageCircle className="w-5 h-5 text-emerald-600" />
-                      <div>
-                        <div className="font-medium text-gray-900">Workshop Preview</div>
-                        <div className="text-sm text-gray-600">Experience our training methodology</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* What to Expect */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 mb-4">What to Expect:</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                      <div>
-                        <div className="font-medium text-gray-900">Current State Analysis</div>
-                        <div className="text-sm text-gray-600">We'll assess your current compliance status and culture</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-violet-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                      <div>
-                        <div className="font-medium text-gray-900">Customized Recommendations</div>
-                        <div className="text-sm text-gray-600">Tailored solutions for your specific industry and size</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                      <div>
-                        <div className="font-medium text-gray-900">Implementation Roadmap</div>
-                        <div className="text-sm text-gray-600">Clear timeline and milestones for transformation</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-center">
-                <Button className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white px-12 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                  <Calendar className="w-5 h-5 mr-3" />
-                  Schedule Free Consultation
-                </Button>
-                <p className="text-sm text-gray-500 mt-4">
-                  No commitment required • Usually scheduled within 24 hours
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-gradient-to-r from-gray-600 to-gray-700 rounded-3xl p-12 text-white">
+            <h3 className="text-3xl font-bold mb-4">
+              Ready to Transform Your Workplace?
+            </h3>
+            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+              Let's discuss how we can help you create a safer, more inclusive workplace culture.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-white text-gray-700 hover:bg-gray-50 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule Consultation
+              </Button>
+              <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-gray-700 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <Download className="w-5 h-5 mr-2" />
+                Download Resources
+              </Button>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

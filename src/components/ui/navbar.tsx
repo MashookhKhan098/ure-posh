@@ -1,144 +1,244 @@
 "use client"
 
-import { useState } from "react"
-import { usePathname } from "next/navigation"
-import Link from "next/link"
-import { Heart, Menu, X, ArrowRight } from "lucide-react"
-import { AnimatePresence, motion } from "framer-motion"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Menu, X, ChevronDown, Heart } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 
-interface NavbarProps {
-  className?: string
-}
-
-export function Navbar({ className = "" }: NavbarProps) {
-  const pathname = usePathname()
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isExpertiseOpen, setIsExpertiseOpen] = useState(false)
+  const pathname = usePathname()
 
-  const navigationItems = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Culture", href: "/culture" },
-    { label: "News Room", href: "/news-room" },
-    { label: "Our People", href: "/team" },
-    { label: "Contact", href: "/contact" }
+  const expertiseSubmenu = [
+    {
+      title: "Compliance at ALL Work Place",
+      items: [
+        "POSH Compliance Initiation",
+        "External Members from Renowned NGO",
+        "Compliant Redressal",
+        "Order Writing",
+        "Annual Report",
+        "Organisation Disclosure",
+        "POSH Audit"
+      ]
+    },
+    {
+      title: "Trainings and Adaptability",
+      items: [
+        "POSH Training for Workforce",
+        "POSH Training for IC Members",
+        "Quarterly Mandatory Training",
+        "Managers Level Training"
+      ]
+    },
+    {
+      title: "Remote Training (Cost Effective)",
+      items: [
+        "POSH Training for Workforce",
+        "POSH Training for IC Members",
+        "Managers Level Training"
+      ]
+    },
+    {
+      title: "Organisation Counselling and Well-being",
+      items: [
+        "Well Being Programmes",
+        "Code of Conduct Training",
+        "Mental Health Training",
+        "Inclusion at Work Place",
+        "LGBTQIA++ Inclusion"
+      ]
+    }
   ]
 
-  return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="bg-white/95 backdrop-blur-2xl border-b border-violet-200/30 sticky top-0 z-50 shadow-lg shadow-violet-500/5 h-24"
-    >
-      {/* Gradient Background */}
-      <div className="h-24 bg-gradient-to-br from-pink-50 via-rose-50 to-fuchsia-50/30 backdrop-blur-xl" />
-      
-      {/* Main Navigation Container */}
-      <div className="bg-white/95 backdrop-blur-2xl border-b border-violet-200/30 shadow-lg shadow-violet-500/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo Section */}
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-4"
-            >
-              <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-violet-600 via-purple-600 to-rose-600 rounded-2xl flex items-center justify-center shadow-xl shadow-violet-500/25">
-                  <Heart className="h-7 w-7 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full animate-pulse"></div>
-              </div>
-              <div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-violet-700 via-purple-600 to-rose-600 bg-clip-text text-transparent">
-                  UREPOSH
-                </span>
-                <p className="text-xs text-slate-600 font-medium tracking-wide">
-                  Empowering Inclusive Workplaces
-                </p>
-              </div>
-            </motion.div>
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "People", href: "/people" },
+    { name: "Work", href: "/work" },
+    { name: "News", href: "/news" },
+    { name: "Connect", href: "/connect" },
+  ]
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navigationItems.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative group"
-                >
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isExpertiseOpen && !(event.target as Element).closest('.expertise-dropdown')) {
+        setIsExpertiseOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isExpertiseOpen])
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="w-12 h-12 bg-gradient-to-br from-gray-600 via-slate-600 to-zinc-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+              <Heart className="h-7 w-7 text-white" />
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-black group-hover:text-gray-700 transition-colors">
+                UREPOSH
+              </span>
+              <p className="text-xs text-gray-600 font-medium">Transforming Workplaces</p>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`text-gray-700 hover:text-black font-medium transition-colors duration-200 relative group ${
+                  pathname === item.href ? "text-black" : ""
+                }`}
+              >
+                {item.name}
+                {item.name === "Connect" && (
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black group-hover:w-full transition-all duration-300"></span>
+                )}
+              </Link>
+            ))}
+
+            {/* Expertise Dropdown */}
+            <div className="relative expertise-dropdown">
+              <button
+                onClick={() => setIsExpertiseOpen(!isExpertiseOpen)}
+                className={`flex items-center space-x-1 text-gray-700 hover:text-black font-medium transition-colors duration-200 ${
+                  pathname === "/services" ? "text-black" : ""
+                }`}
+              >
+                <span>Expertise</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpertiseOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <AnimatePresence>
+                {isExpertiseOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-0 mt-2 w-96 bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-2xl shadow-gray-500/20 p-6"
+                  >
+                    <div className="grid grid-cols-2 gap-6">
+                      {expertiseSubmenu.map((category, index) => (
+                        <div key={index} className="space-y-3">
+                          <h3 className="font-semibold text-black text-sm border-b border-gray-200 pb-2">
+                            {category.title}
+                          </h3>
+                          <ul className="space-y-2">
+                            {category.items.map((item, itemIndex) => (
+                              <li key={itemIndex}>
+                                <Link
+                                  href="/services"
+                                  className="text-xs text-gray-600 hover:text-black transition-colors duration-200 block py-1"
+                                >
+                                  {item}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <Link
+                        href="/services"
+                        className="text-sm font-medium text-black hover:text-gray-700 transition-colors duration-200"
+                      >
+                        View All Services →
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* CTA Button */}
+            <Button className="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+              Get Started
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="lg:hidden border-t border-gray-200 py-6"
+            >
+              <div className="space-y-4">
+                {navItems.map((item) => (
                   <Link
+                    key={item.name}
                     href={item.href}
-                    className={`px-4 py-3 text-base font-medium transition-all duration-300 ${
-                      pathname === item.href
-                        ? "text-pink-600 font-semibold bg-pink-50/50 rounded-lg"
-                        : "text-gray-800 hover:text-pink-600 hover:bg-pink-50/20 rounded-lg"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block text-lg font-medium transition-colors duration-200 ${
+                      pathname === item.href ? "text-black" : "text-gray-700 hover:text-black"
                     }`}
                   >
-                    {item.label}
+                    {item.name}
                   </Link>
-                  <span className={`absolute left-0 bottom-0 w-full h-0.5 bg-gradient-to-r from-pink-500 to-rose-500 transition-all duration-300 ${
-                    pathname === item.href
-                      ? "opacity-100"
-                      : "opacity-0 group-hover:opacity-100"
-                  }`}></span>
-                </motion.div>
-              ))}
-            </div>
+                ))}
+                
+                {/* Mobile Expertise Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-medium text-gray-700">Expertise</span>
+                    <ChevronDown className="w-5 h-5" />
+                  </div>
+                  <div className="pl-4 space-y-2">
+                    {expertiseSubmenu.map((category, index) => (
+                      <div key={index} className="space-y-2">
+                        <h4 className="font-medium text-black text-sm">{category.title}</h4>
+                        <ul className="pl-4 space-y-1">
+                          {category.items.slice(0, 3).map((item, itemIndex) => (
+                            <li key={itemIndex}>
+                              <Link
+                                href="/services"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="text-sm text-gray-600 hover:text-black transition-colors duration-200"
+                              >
+                                {item}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-slate-700 hover:text-violet-600"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-            </div>
-
-            {/* Get Started Button */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">
-              <Button className="bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 hover:from-pink-700 hover:via-rose-700 hover:to-fuchsia-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg font-semibold">
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+                <Button className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-xl">
+                  Get Started
+                </Button>
+              </div>
             </motion.div>
-          </div>
-        </div>
+          )}
+        </AnimatePresence>
       </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white/98 backdrop-blur-2xl border-t border-violet-200/30"
-          >
-            <div className="px-6 py-6 space-y-4">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="block text-slate-700 hover:text-violet-600 transition-colors py-3 text-lg font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Button className="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 mt-6 py-4 text-lg">
-                Get Started
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+    </nav>
   )
 }

@@ -273,7 +273,7 @@ export default function EnhancedPostsPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
             <div className="h-12 bg-gray-200 rounded-lg w-80 mb-8"></div>
@@ -306,15 +306,15 @@ export default function EnhancedPostsPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50 flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6" />
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Failed to Load Posts</h3>
-            <p className="text-gray-600 mb-6">{error}</p>
+            <AlertCircle className="w-16 h-16 text-pink-500 mx-auto mb-6" />
+            <h3 className="text-xl font-bold text-black mb-3">Failed to Load Posts</h3>
+            <p className="text-black mb-6">{error}</p>
             <button
               onClick={fetchPosts}
-              className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
+              className="bg-pink-600 text-white px-6 py-3 rounded-xl hover:bg-pink-700 transition-colors flex items-center gap-2 mx-auto"
             >
               <RefreshCw className="w-5 h-5" />
               Try Again
@@ -326,9 +326,9 @@ export default function EnhancedPostsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-pink-600 via-rose-600 to-pink-700 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -339,7 +339,7 @@ export default function EnhancedPostsPage() {
             className="text-center"
           >
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <Sparkles className="w-5 h-5 text-yellow-300" />
+              <Sparkles className="w-5 h-5 text-pink-300" />
               <span className="text-white/90 text-sm font-medium">Discover Amazing Content</span>
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
@@ -390,7 +390,7 @@ export default function EnhancedPostsPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
                       <BookOpen className="w-20 h-20 text-white/50" />
                     </div>
                   )}
@@ -398,12 +398,12 @@ export default function EnhancedPostsPage() {
                   {featuredPost.videoUrl && (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                       <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center backdrop-blur-sm">
-                        <Video className="w-10 h-10 text-gray-800" />
+                        <Video className="w-10 h-10 text-black" />
                       </div>
                     </div>
                   )}
                   <div className="absolute top-4 left-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-400 text-yellow-900">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-pink-400 text-pink-900">
                       <Star className="w-3 h-3 mr-1" />
                       Featured
                     </span>
@@ -413,13 +413,13 @@ export default function EnhancedPostsPage() {
                       onClick={() => toggleBookmark(featuredPost.id)}
                       className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
                     >
-                      <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(featuredPost.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
+                      <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(featuredPost.id) ? 'fill-current text-pink-600' : 'text-black'}`} />
                     </button>
                     <button
                       onClick={() => sharePost('copy', featuredPost)}
                       className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
                     >
-                      {copiedLink === featuredPost.id ? <Check className="w-5 h-5 text-green-600" /> : <Share className="w-5 h-5 text-gray-600" />}
+                      {copiedLink === featuredPost.id ? <Check className="w-5 h-5 text-pink-600" /> : <Share className="w-5 h-5 text-black" />}
                     </button>
                   </div>
                 </div>
@@ -427,25 +427,25 @@ export default function EnhancedPostsPage() {
                 {/* Featured Content */}
                 <div className="p-8 lg:p-12 flex flex-col justify-center">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-800">
                       {featuredPost.category}
                     </span>
                     {featuredPost.videoUrl && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-800">
                         <Video className="w-3 h-3 mr-1" />
                         Video
                       </span>
                     )}
                   </div>
 
-                  <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 leading-tight">
-                    <Link href={`/posts/${featuredPost.slug}`} className="hover:text-blue-600 transition-colors">
+                  <h2 className="text-2xl lg:text-3xl font-bold text-black mb-4 leading-tight">
+                    <Link href={`/posts/${featuredPost.slug}`} className="hover:text-pink-600 transition-colors">
                       {featuredPost.title}
                     </Link>
                   </h2>
 
                   {featuredPost.excerpt && (
-                    <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                    <p className="text-black mb-6 leading-relaxed line-clamp-3">
                       {featuredPost.excerpt}
                     </p>
                   )}
@@ -459,13 +459,13 @@ export default function EnhancedPostsPage() {
                         className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-md"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-md">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-md">
                         <span className="text-white font-bold text-lg">{featuredPost.author.charAt(0).toUpperCase()}</span>
                       </div>
                     )}
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-900">{featuredPost.author}</p>
-                      <div className="flex items-center gap-3 text-sm text-gray-500">
+                      <p className="font-semibold text-black">{featuredPost.author}</p>
+                      <div className="flex items-center gap-3 text-sm text-black">
                         <Calendar className="w-4 h-4" />
                         <span>{formatDate(featuredPost.createdAt)}</span>
                         <span>•</span>
@@ -478,7 +478,7 @@ export default function EnhancedPostsPage() {
                   <div className="flex items-center justify-between">
                     <Link 
                       href={`/posts/${featuredPost.slug}`} 
-                      className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
+                      className="inline-flex items-center gap-2 bg-pink-600 text-white px-6 py-3 rounded-xl hover:bg-pink-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
                     >
                       Read Featured Article
                       <ArrowRight className="w-5 h-5" />
@@ -489,14 +489,14 @@ export default function EnhancedPostsPage() {
                         onClick={() => toggleLike(featuredPost.id)}
                         className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                           likedPosts.has(featuredPost.id)
-                            ? 'bg-red-100 text-red-600'
-                            : 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600'
+                            ? 'bg-pink-100 text-pink-600'
+                            : 'bg-gray-100 text-black hover:bg-pink-100 hover:text-pink-600'
                         }`}
                       >
                         <Heart className={`w-4 h-4 ${likedPosts.has(featuredPost.id) ? 'fill-current' : ''}`} />
                         <span className="text-sm font-medium">{(featuredPost.likes || 0) + (likedPosts.has(featuredPost.id) ? 1 : 0)}</span>
                       </button>
-                      <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg">
+                      <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-black rounded-lg">
                         <MessageSquare className="w-4 h-4" />
                         <span className="text-sm font-medium">{featuredPost.comments || 0}</span>
                       </div>
@@ -516,8 +516,8 @@ export default function EnhancedPostsPage() {
           className="mb-12"
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Explore Categories</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Discover content organized by topics that interest you most</p>
+            <h2 className="text-3xl font-bold text-black mb-3">Explore Categories</h2>
+            <p className="text-black max-w-2xl mx-auto">Discover content organized by topics that interest you most</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {categories.slice(0, 6).map((category, index) => (
@@ -529,8 +529,8 @@ export default function EnhancedPostsPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={`p-4 rounded-2xl text-center transition-all duration-300 ${
                   selectedCategory === category
-                    ? 'bg-blue-600 text-white shadow-lg scale-105'
-                    : 'bg-white text-gray-700 hover:bg-blue-50 hover:scale-105 shadow-sm border border-gray-100'
+                    ? 'bg-pink-600 text-white shadow-lg scale-105'
+                    : 'bg-white text-black hover:bg-pink-50 hover:scale-105 shadow-sm border border-gray-100'
                 }`}
               >
                 <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center">
@@ -563,13 +563,13 @@ export default function EnhancedPostsPage() {
           <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black w-5 h-5" />
               <input
                 type="text"
                 placeholder="Search articles, authors, or topics..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
               />
             </div>
 
@@ -580,8 +580,8 @@ export default function EnhancedPostsPage() {
                   onClick={() => setViewMode('grid')}
                   className={`p-3 rounded-xl transition-all ${
                     viewMode === 'grid' 
-                      ? 'bg-white shadow-lg text-blue-600' 
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-white shadow-lg text-pink-600' 
+                      : 'text-black hover:text-black'
                   }`}
                 >
                   <Grid className="w-5 h-5" />
@@ -590,8 +590,8 @@ export default function EnhancedPostsPage() {
                   onClick={() => setViewMode('list')}
                   className={`p-3 rounded-xl transition-all ${
                     viewMode === 'list' 
-                      ? 'bg-white shadow-lg text-blue-600' 
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-white shadow-lg text-pink-600' 
+                      : 'text-black hover:text-black'
                   }`}
                 >
                   <List className="w-5 h-5" />
@@ -602,8 +602,8 @@ export default function EnhancedPostsPage() {
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-6 py-4 rounded-2xl transition-all ${
                   showFilters 
-                    ? 'bg-blue-600 text-white shadow-lg' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-pink-600 text-white shadow-lg' 
+                    : 'bg-gray-100 text-black hover:bg-gray-200'
                 }`}
               >
                 <Filter className="w-5 h-5" />
@@ -625,11 +625,11 @@ export default function EnhancedPostsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Category Filter */}
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-3">Category</label>
+                    <label className="block text-sm font-bold text-black mb-3">Category</label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
                     >
                       <option value="all">All Categories</option>
                       {categories.map(category => (
@@ -640,11 +640,11 @@ export default function EnhancedPostsPage() {
 
                   {/* Tag Filter */}
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-3">Tag</label>
+                    <label className="block text-sm font-bold text-black mb-3">Tag</label>
                     <select
                       value={selectedTag}
                       onChange={(e) => setSelectedTag(e.target.value)}
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
                     >
                       <option value="all">All Tags</option>
                       {allTags.map(tag => (
@@ -655,11 +655,11 @@ export default function EnhancedPostsPage() {
 
                   {/* Sort */}
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-3">Sort By</label>
+                    <label className="block text-sm font-bold text-black mb-3">Sort By</label>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as SortOption)}
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
+                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-gray-50 focus:bg-white transition-all text-lg"
                     >
                       <option value="newest">Newest First</option>
                       <option value="oldest">Oldest First</option>
@@ -674,7 +674,7 @@ export default function EnhancedPostsPage() {
                   <div className="mt-6 flex justify-end">
                     <button
                       onClick={clearFilters}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold"
+                      className="flex items-center gap-2 text-pink-600 hover:text-pink-800 font-semibold"
                     >
                       <FilterX className="w-4 h-4" />
                       Clear all filters
@@ -694,11 +694,11 @@ export default function EnhancedPostsPage() {
           className="mb-8 flex items-center justify-between"
         >
           <div className="flex items-center gap-4">
-            <p className="text-gray-600 font-semibold text-lg">
+            <p className="text-black font-semibold text-lg">
               {filteredAndSortedPosts.length} {filteredAndSortedPosts.length === 1 ? 'article' : 'articles'} found
             </p>
             {hasActiveFilters && (
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-pink-100 text-pink-800">
                 <Filter className="w-3 h-3 mr-1" />
                 Filtered
               </span>
@@ -722,16 +722,16 @@ export default function EnhancedPostsPage() {
             className="text-center py-20"
           >
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Search className="w-12 h-12 text-gray-400" />
+              <Search className="w-12 h-12 text-black" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">No articles found</h3>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            <h3 className="text-2xl font-bold text-black mb-3">No articles found</h3>
+            <p className="text-black mb-8 max-w-md mx-auto">
               Try adjusting your search or filter criteria to find what you're looking for.
             </p>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="bg-blue-600 text-white px-8 py-4 rounded-2xl hover:bg-blue-700 transition-colors font-semibold"
+                className="bg-pink-600 text-white px-8 py-4 rounded-2xl hover:bg-pink-700 transition-colors font-semibold"
               >
                 Clear all filters
               </button>
@@ -767,7 +767,7 @@ export default function EnhancedPostsPage() {
                         {post.videoUrl && (
                           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                             <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center backdrop-blur-sm">
-                              <Video className="w-8 h-8 text-gray-800" />
+                              <Video className="w-8 h-8 text-black" />
                             </div>
                           </div>
                         )}
@@ -777,13 +777,13 @@ export default function EnhancedPostsPage() {
                             onClick={() => toggleBookmark(post.id)}
                             className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
                           >
-                            <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(post.id) ? 'fill-current text-blue-600' : 'text-gray-600'}`} />
+                            <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(post.id) ? 'fill-current text-pink-600' : 'text-black'}`} />
                           </button>
                           <button
                             onClick={() => sharePost('copy', post)}
                             className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors shadow-sm"
                           >
-                            {copiedLink === post.id ? <Check className="w-5 h-5 text-green-600" /> : <Share className="w-5 h-5 text-gray-600" />}
+                            {copiedLink === post.id ? <Check className="w-5 h-5 text-pink-600" /> : <Share className="w-5 h-5 text-black" />}
                           </button>
                         </div>
                       </div>
@@ -793,11 +793,11 @@ export default function EnhancedPostsPage() {
                     <div className={viewMode === 'list' ? 'flex-1 p-8' : 'p-8'}>
                       {/* Category and Tags */}
                       <div className="flex items-center gap-2 mb-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-800">
                           {post.category}
                         </span>
                         {post.videoUrl && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-800">
                             <Video className="w-3 h-3 mr-1" />
                             Video
                           </span>
@@ -805,7 +805,7 @@ export default function EnhancedPostsPage() {
                       </div>
 
                       {/* Title */}
-                      <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
+                      <h2 className="text-xl lg:text-2xl font-bold text-black mb-4 line-clamp-2 group-hover:text-pink-600 transition-colors leading-tight">
                         <Link href={`/posts/${post.slug}`}>
                           {post.title}
                         </Link>
@@ -813,7 +813,7 @@ export default function EnhancedPostsPage() {
 
                       {/* Excerpt */}
                       {post.excerpt && (
-                        <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base">
+                        <p className="text-black mb-6 line-clamp-3 leading-relaxed text-base">
                           {post.excerpt}
                         </p>
                       )}
@@ -828,13 +828,13 @@ export default function EnhancedPostsPage() {
                             className="w-12 h-12 rounded-full object-cover ring-2 ring-gray-100"
                           />
                         ) : (
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
                             <span className="text-white font-bold text-lg">{post.author.charAt(0).toUpperCase()}</span>
                           </div>
                         )}
                         <div className="flex-1">
-                          <p className="font-semibold text-gray-900">{post.author}</p>
-                          <div className="flex items-center gap-3 text-sm text-gray-500">
+                          <p className="font-semibold text-black">{post.author}</p>
+                          <div className="flex items-center gap-3 text-sm text-black">
                             <Calendar className="w-4 h-4" />
                             <span>{formatDate(post.createdAt)}</span>
                             <span>•</span>
@@ -847,18 +847,18 @@ export default function EnhancedPostsPage() {
                       {/* Tags */}
                       {post.tags && post.tags.length > 0 && (
                         <div className="flex items-center gap-2 mb-6">
-                          <Hash className="w-4 h-4 text-gray-400" />
+                          <Hash className="w-4 h-4 text-black" />
                           <div className="flex flex-wrap gap-1">
                             {post.tags.slice(0, 3).map((tag, index) => (
                               <span
                                 key={index}
-                                className="text-xs text-gray-500 hover:text-gray-700 cursor-pointer font-medium"
+                                className="text-xs text-black hover:text-black cursor-pointer font-medium"
                               >
                                 #{tag}
                               </span>
                             ))}
                             {post.tags.length > 3 && (
-                              <span className="text-xs text-gray-400 font-medium">
+                              <span className="text-xs text-black font-medium">
                                 +{post.tags.length - 3} more
                               </span>
                             )}
@@ -870,7 +870,7 @@ export default function EnhancedPostsPage() {
                       <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                         <Link 
                           href={`/posts/${post.slug}`} 
-                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-bold text-sm group/link"
+                          className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 font-bold text-sm group/link"
                         >
                           Read Article
                           <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
@@ -881,27 +881,27 @@ export default function EnhancedPostsPage() {
                             onClick={() => toggleLike(post.id)}
                             className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                               likedPosts.has(post.id)
-                                ? 'bg-red-100 text-red-600'
-                                : 'bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600'
+                                ? 'bg-pink-100 text-pink-600'
+                                : 'bg-gray-100 text-black hover:bg-pink-100 hover:text-pink-600'
                             }`}
                           >
                             <Heart className={`w-4 h-4 ${likedPosts.has(post.id) ? 'fill-current' : ''}`} />
                             <span className="text-sm font-medium">{(post.likes || 0) + (likedPosts.has(post.id) ? 1 : 0)}</span>
                           </button>
-                          <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg">
+                          <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-black rounded-lg">
                             <MessageSquare className="w-4 h-4" />
                             <span className="text-sm font-medium">{post.comments || 0}</span>
                           </div>
                           <button
                             onClick={() => sharePost('twitter', post)}
-                            className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-black hover:text-pink-500 hover:bg-pink-50 rounded-lg transition-colors"
                             title="Share on Twitter"
                           >
                             <Twitter className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => sharePost('facebook', post)}
-                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-black hover:text-pink-600 hover:bg-pink-50 rounded-lg transition-colors"
                             title="Share on Facebook"
                           >
                             <Facebook className="w-4 h-4" />
@@ -938,8 +938,8 @@ export default function EnhancedPostsPage() {
                       onClick={() => setCurrentPage(page)}
                       className={`px-4 py-3 rounded-xl font-semibold transition-colors ${
                         currentPage === page
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                          ? 'bg-pink-600 text-white shadow-lg'
+                          : 'bg-white text-black border border-gray-200 hover:bg-gray-50'
                       }`}
                     >
                       {page}

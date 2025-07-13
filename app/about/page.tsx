@@ -1,23 +1,19 @@
 "use client";
 
 import HeroSection from "./hero-section";
+import PeopleSection from "./people-section";
 import CoreValuesSection from "./core-values-section";
-import TestimonialsSection from "./testimonials-section";
-import ContactSection from "./contact-section";
+import MissionVisionSection from "./mission-vision-section";
 import FAQSection from "./faq-section";
-import CTASection from "./cta-section";
-import Footer from "./footer";
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       <HeroSection />
+      <PeopleSection />
       <CoreValuesSection />
-      <TestimonialsSection />
-      <ContactSection />
+      <MissionVisionSection />
       <FAQSection />
-      <CTASection />
-      <Footer />
     </div>
   );
 }

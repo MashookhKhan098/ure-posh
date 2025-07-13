@@ -671,7 +671,7 @@ export default function TeamPage() {
                 <h1 className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                   UREPOSH
                 </h1>
-                <p className="text-sm text-gray-600 font-medium">Transforming Workplaces <br /> Empowering Lives</p>
+                <p className="text-sm text-black font-medium">Transforming Workplaces <br /> Empowering Lives</p>
               </div>
             </div>
 
@@ -685,33 +685,39 @@ export default function TeamPage() {
               </Link>
               <Link 
                 href="/about" 
-                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                className="text-black font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-black"
               >
                 About
               </Link>
               <Link 
-                href="/services" 
-                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+                href="/expertise" 
+                className="text-black font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-black"
               >
-                Services
+                Expertise
               </Link>
               <Link 
-                href="/posts" 
-                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-              >
-                News
-              </Link>
-              <Link 
-                href="/team" 
+                href="/people" 
                 className="text-pink-600 font-semibold px-4 py-2 rounded-full bg-pink-50 text-sm transition-all duration-200 hover:bg-pink-100"
               >
                 People
               </Link>
               <Link 
-                href="/contact" 
-                className="text-gray-700 font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 cursor-smile"
+                href="/work" 
+                className="text-black font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-black"
+              >
+                Work
+              </Link>
+              <Link 
+                href="/connect" 
+                className="text-black font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-black cursor-smile"
               >
                 Connect
+              </Link>
+              <Link 
+                href="/news" 
+                className="text-black font-medium px-4 py-2 rounded-full text-sm transition-all duration-200 hover:bg-gray-100 hover:text-black"
+              >
+                News
               </Link>
             </div>
 
@@ -726,7 +732,7 @@ export default function TeamPage() {
             <div className="lg:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-1.5 rounded-full text-gray-700 hover:bg-gray-100 hover:text-pink-600 transition-all duration-200"
+                className="p-1.5 rounded-full text-black hover:bg-gray-100 hover:text-pink-600 transition-all duration-200"
               >
                 <Menu className="h-5 w-5" />
               </button>
@@ -744,33 +750,39 @@ export default function TeamPage() {
                   </Link>
                   <Link 
                     href="/about" 
-                    className="text-gray-700 font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-gray-900"
+                    className="text-black font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-black"
                   >
                     About
                   </Link>
                   <Link 
-                    href="/services" 
-                    className="text-gray-700 font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-gray-900"
+                    href="/expertise" 
+                    className="text-black font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-black"
                   >
-                    Services
+                    Expertise
                   </Link>
                   <Link 
-                    href="/posts" 
-                    className="text-gray-700 font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    News
-                  </Link>
-                  <Link 
-                    href="/team" 
+                    href="/people" 
                     className="text-pink-600 font-semibold px-3 py-2 rounded-full bg-pink-50 text-sm"
                   >
                     People
                   </Link>
                   <Link 
-                    href="/contact" 
-                    className="text-gray-700 font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-gray-900"
+                    href="/work" 
+                    className="text-black font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-black"
+                  >
+                    Work
+                  </Link>
+                  <Link 
+                    href="/connect" 
+                    className="text-black font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-black"
                   >
                     Connect
+                  </Link>
+                  <Link 
+                    href="/news" 
+                    className="text-black font-medium px-3 py-2 rounded-full text-sm hover:bg-gray-100 hover:text-black"
+                  >
+                    News
                   </Link>
                   <button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:from-pink-600 hover:to-rose-600 transition-all duration-200 shadow-sm hover:shadow-md">
                     Start Journey
@@ -787,20 +799,23 @@ export default function TeamPage() {
                 <Link href="/" className="text-pink-600 font-semibold px-4 py-2 rounded-lg bg-pink-50 text-sm">
                   Home
                 </Link>
-                <Link href="/about" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
+                <Link href="/about" className="text-black font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
                   About
                 </Link>
-                <Link href="/services" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
-                  Services
+                <Link href="/expertise" className="text-black font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
+                  Expertise
                 </Link>
-                <Link href="/posts" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
-                  News
-                </Link>
-                <Link href="/team" className="text-pink-600 font-semibold px-4 py-2 rounded-lg bg-pink-50 text-sm">
+                <Link href="/people" className="text-pink-600 font-semibold px-4 py-2 rounded-lg bg-pink-50 text-sm">
                   People
                 </Link>
-                <Link href="/contact" className="text-gray-700 font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
-                  Contact
+                <Link href="/work" className="text-black font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
+                  Work
+                </Link>
+                <Link href="/connect" className="text-black font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
+                  Connect
+                </Link>
+                <Link href="/news" className="text-black font-medium px-4 py-2 hover:bg-gray-50 rounded-lg text-sm">
+                  News
                 </Link>
                 <button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2.5 rounded-full font-semibold mx-4 mt-2 text-sm">
                   Start Journey
@@ -861,19 +876,19 @@ export default function TeamPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-pink-600 mb-2">500+</div>
-              <div className="text-gray-600 font-medium">Projects Completed</div>
+              <div className="text-black font-medium">Projects Completed</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-rose-600 mb-2">98%</div>
-              <div className="text-gray-600 font-medium">Success Rate</div>
+              <div className="text-black font-medium">Success Rate</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-fuchsia-600 mb-2">50+</div>
-              <div className="text-gray-600 font-medium">Expert Team</div>
+              <div className="text-black font-medium">Expert Team</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">24/7</div>
-              <div className="text-gray-600 font-medium">Support Available</div>
+              <div className="text-black font-medium">Support Available</div>
             </div>
           </div>
         </div>
@@ -885,13 +900,13 @@ export default function TeamPage() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black h-5 w-5" />
                 <input
                   type="text"
                   placeholder="Search by name, expertise, or specialization..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 placeholder-gray-500"
+                  className="w-full pl-12 pr-4 py-4 bg-white/90 backdrop-blur-sm shadow-sm text-black font-medium placeholder-gray-500"
                 />
               </div>
 
@@ -1574,10 +1589,10 @@ export default function TeamPage() {
                   <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                     UREPOSH
                   </h3>
-                  <p className="text-sm text-gray-600 font-medium">Transforming Workplaces <br /> Empowering Lives</p>
+                  <p className="text-sm text-black font-medium">Transforming Workplaces <br /> Empowering Lives</p>
                 </div>
               </div>
-              <p className="text-gray-600 leading-relaxed mb-4">
+              <p className="text-black leading-relaxed mb-4">
                 Leading the way in workplace safety and POSH compliance with our team of certified experts and
                 comprehensive solutions.
               </p>
@@ -1597,22 +1612,22 @@ export default function TeamPage() {
               <h4 className="font-bold text-gray-900 mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     Services
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     Our Team
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     Contact
                   </a>
                 </li>
@@ -1622,22 +1637,22 @@ export default function TeamPage() {
               <h4 className="font-bold text-gray-900 mb-4">Services</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     POSH Training
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     Legal Compliance
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     Risk Assessment
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
+                  <a href="#" className="text-black hover:text-pink-600 transition-colors duration-200">
                     Consultation
                   </a>
                 </li>

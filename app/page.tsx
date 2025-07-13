@@ -46,8 +46,6 @@ export default function HomePage() {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
-  const [activeService, setActiveService] = useState(0)
-  const [activeFeature, setActiveFeature] = useState(0)
 
   const testimonials = [
     {
@@ -94,279 +92,30 @@ export default function HomePage() {
     },
   ]
 
-  const services = [
+  const whyChooseUs = [
     {
-      id: "policy",
-      title: "POSH Policy Development & Legal Advisory",
-      icon: Scale,
-      color: "from-gray-500 to-slate-600",
-      description:
-        "Comprehensive legal framework tailored to your organization's unique needs and industry requirements.",
-      image: "/images/5.jpg",
-      features: [
-        "100% compliant with Sexual Harassment of Women at Workplace Act, 2013",
-        "Industry-specific customization for tech, manufacturing, healthcare, and more",
-        "Gender-inclusive language covering all forms of workplace harassment",
-        "Regular legal updates to ensure ongoing compliance",
-        "Integration with existing HR policies and procedures",
-        "Multi-location policy harmonization for large enterprises",
-      ],
-      benefits: [
-        "Reduced legal liability and compliance risks",
-        "Clear guidelines for employees and management",
-        "Streamlined reporting and resolution processes",
-        "Enhanced organizational reputation and employer branding",
-      ],
-      process: [
-        "Comprehensive organizational assessment and gap analysis",
-        "Stakeholder consultation and requirement gathering",
-        "Custom policy drafting with legal review",
-        "Management approval and board ratification process",
-        "Implementation planning and rollout strategy",
-        "Ongoing monitoring and annual policy updates",
-      ],
-      duration: "2-4 weeks",
-      deliverables: [
-        "Complete POSH Policy Document",
-        "Implementation Guidelines",
-        "Training Materials",
-        "Compliance Checklist",
-      ],
-    },
-    {
-      id: "ic-setup",
-      title: "Internal Committee Formation & Management",
-      icon: Users,
-      color: "from-slate-500 to-gray-600",
-      description:
-        "End-to-end support for establishing and managing effective Internal Committees with qualified external members.",
-      image: "/images/2.jpg",
-      features: [
-        "Strategic IC composition based on organizational structure",
-        "Qualified external member empanelment from our expert network",
-        "Comprehensive orientation and capacity building programs",
-        "Ongoing advisory support and mentorship",
-        "Documentation and compliance management systems",
-        "Performance monitoring and effectiveness evaluation",
-      ],
-      benefits: [
-        "Legally compliant committee structure",
-        "Access to experienced external members",
-        "Reduced administrative burden on HR teams",
-        "Improved complaint resolution efficiency",
-      ],
-      process: [
-        "Organizational structure analysis and IC design",
-        "Internal member selection and external member matching",
-        "Committee formation and legal documentation",
-        "Comprehensive training and orientation program",
-        "Process setup and documentation systems",
-        "Ongoing support and performance monitoring",
-      ],
-      duration: "3-6 weeks",
-      deliverables: [
-        "IC Formation Documentation",
-        "Member Training Certificates",
-        "Process Manuals",
-        "Ongoing Support Plan",
-      ],
-    },
-    {
-      id: "training",
-      title: "Specialized POSH Training & Capacity Building",
-      icon: BookOpen,
-      color: "from-zinc-500 to-gray-600",
-      description:
-        "Interactive, scenario-based training programs designed to build competence and confidence in handling sensitive situations.",
-      image: "/images/3.jpg",
-      features: [
-        "Role-specific training modules for IC members, HR teams, and leadership",
-        "Real-world case studies and interactive scenario planning",
-        "Legal procedure training and documentation best practices",
-        "Confidentiality protocols and ethical guidelines",
-        "Trauma-informed approach to complaint handling",
-        "Continuous learning and refresher programs",
-      ],
-      benefits: [
-        "Enhanced IC member competence and confidence",
-        "Reduced resolution time for complaints",
-        "Improved stakeholder satisfaction",
-        "Better legal compliance and documentation",
-      ],
-      process: [
-        "Training needs assessment and customization",
-        "Interactive workshop design and material development",
-        "Hands-on training sessions with expert facilitators",
-        "Practical exercises and case study analysis",
-        "Competency evaluation and certification",
-        "Ongoing mentorship and support programs",
-      ],
-      price: "₹15,000 per person",
-      duration: "1-2 weeks",
-      deliverables: ["Training Certificates", "Reference Materials", "Case Study Library", "Ongoing Support Access"],
-    },
-    {
-      id: "investigation",
-      title: "Investigation Support & Resolution Services",
-      icon: Shield,
-      color: "from-gray-600 to-slate-700",
-      description:
-        "Expert guidance and support throughout the investigation process to ensure fair, thorough, and legally compliant resolutions.",
-      image: "/images/4.jpg",
-      features: [
-        "Real-time guidance during active investigations",
-        "Interview techniques and evidence collection support",
-        "Confidentiality maintenance and stakeholder management",
-        "Professional report writing and documentation",
-        "Legal insights for complex and sensitive cases",
-        "Post-resolution monitoring and follow-up support",
-      ],
-      benefits: [
-        "Legally sound investigation processes",
-        "Reduced risk of procedural errors",
-        "Fair and unbiased resolution outcomes",
-        "Enhanced stakeholder confidence in the process",
-      ],
-      process: [
-        "Case assessment and investigation planning",
-        "Evidence collection and stakeholder interview guidance",
-        "Legal compliance review and documentation support",
-        "Report preparation and recommendation development",
-        "Resolution implementation and monitoring",
-        "Post-case analysis and process improvement",
-      ],
-      price: "Custom pricing based on case complexity",
-      duration: "As needed (typically 2-8 weeks)",
-      deliverables: [
-        "Investigation Reports",
-        "Legal Compliance Documentation",
-        "Resolution Recommendations",
-        "Follow-up Plans",
-      ],
-    },
-    {
-      id: "audits",
-      title: "Comprehensive POSH Audits & Compliance Review",
-      icon: CheckCircle,
-      color: "from-slate-500 to-gray-600",
-      description:
-        "Thorough evaluation of your POSH implementation to identify gaps, ensure compliance, and drive continuous improvement.",
-      image: "/images/5.jpg",
-      features: [
-        "360-degree policy and process evaluation",
-        "IC effectiveness and performance assessment",
-        "Reporting mechanism analysis and optimization",
-        "Employee awareness and culture measurement",
-        "Legal compliance verification and gap analysis",
-        "Benchmarking against industry best practices",
-      ],
-      benefits: [
-        "Complete visibility into POSH program effectiveness",
-        "Proactive identification of compliance gaps",
-        "Data-driven improvement recommendations",
-        "Enhanced organizational risk management",
-      ],
-      process: [
-        "Comprehensive audit planning and scope definition",
-        "Document review and stakeholder interviews",
-        "Process observation and effectiveness evaluation",
-        "Gap analysis and risk assessment",
-        "Detailed reporting with actionable recommendations",
-        "Implementation support and follow-up monitoring",
-      ],
-      price: "Starting from ₹45,000",
-      duration: "4-6 weeks",
-      deliverables: ["Comprehensive Audit Report", "Gap Analysis", "Improvement Roadmap", "Implementation Support"],
-    },
-    {
-      id: "certification",
-      title: "Professional POSH & DEI Certification Programs",
+      title: "Proven Track Record",
+      description: "500+ organizations transformed across 25+ industries with 99.2% compliance success rate",
       icon: Award,
-      color: "from-gray-500 to-zinc-600",
-      description:
-        "Industry-recognized certification programs to build expertise in POSH compliance and diversity, equity & inclusion.",
-      image: "",
-      features: [
-        "Beginner to advanced level certification tracks",
-        "Comprehensive coverage of POSH Act 2013 and amendments",
-        "Practical skills development for IC empanelment",
-        "Leadership training for awareness program management",
-        "Investigation best practices and case study analysis",
-        "Continuing education and recertification programs",
-      ],
-      benefits: [
-        "Industry-recognized professional credentials",
-        "Enhanced career opportunities in compliance roles",
-        "Practical skills for immediate application",
-        "Access to exclusive professional network",
-      ],
-      process: [
-        "Program selection and enrollment process",
-        "Interactive learning modules and assessments",
-        "Practical case studies and simulation exercises",
-        "Competency evaluation and certification exam",
-        "Professional certification and credential issuance",
-        "Ongoing professional development opportunities",
-      ],
-      price: "₹15,000 per person",
-      duration: "6-8 weeks",
-      deliverables: [
-        "Professional Certification",
-        "Digital Credentials",
-        "Resource Library Access",
-        "Alumni Network Membership",
-      ],
-    },
-  ]
-
-  const features = [
-    {
-      title: "AI-Powered Compliance Intelligence",
-      description:
-        "Advanced analytics and predictive insights to proactively identify and prevent workplace issues before they escalate.",
-      icon: Zap,
-      color: "from-gray-500 to-slate-600",
-      image: "/images/2.jpg",
-      benefits: [
-        "Predictive risk analytics and early warning systems",
-        "Real-time compliance monitoring and alerts",
-        "Custom dashboards with actionable insights",
-        "Trend analysis and pattern recognition for prevention",
-      ],
-      details:
-        "Our proprietary AI system analyzes workplace data patterns to predict potential issues, enabling proactive intervention and prevention strategies.",
+      stats: "99.2% Success Rate",
     },
     {
-      title: "Inclusive Design & Cultural Adaptation",
-      description:
-        "Solutions designed with accessibility, cultural sensitivity, and regional nuances at the core of every implementation.",
+      title: "Expert Team",
+      description: "Legal professionals, certified trainers, and compliance experts with 15+ years average experience",
+      icon: Users,
+      stats: "15+ Years Experience",
+    },
+    {
+      title: "Comprehensive Solutions",
+      description: "End-to-end services from policy development to ongoing support and continuous improvement",
+      icon: CheckCircle,
+      stats: "360° Coverage",
+    },
+    {
+      title: "Cultural Sensitivity",
+      description: "Deep understanding of Indian workplace culture with solutions adapted for regional diversity",
       icon: Heart,
-      color: "from-slate-500 to-gray-600",
-      image: "/placeholder.svg?height=300&width=400",
-      benefits: [
-        "Universal design principles for accessibility",
-        "Multi-language support in 15+ Indian languages",
-        "Cultural adaptation for diverse workforce",
-        "Region-specific compliance considerations",
-      ],
-      details:
-        "We understand India's diverse cultural landscape and design solutions that respect local customs while maintaining global standards.",
-    },
-    {
-      title: "Continuous Learning Ecosystem",
-      description:
-        "Engaging, interactive learning experiences that evolve with your organization and adapt to changing needs.",
-      icon: BookOpen,
-      color: "from-zinc-500 to-gray-600",
-      image: "/placeholder.svg?height=300&width=400",
-      benefits: [
-        "Microlearning modules for busy professionals",
-        "Gamification elements to increase engagement",
-        "Progress tracking and competency measurement",
-        "Personalized content based on role and experience",
-      ],
-      details:
-        "Our learning platform adapts to individual learning styles and organizational needs, ensuring maximum retention and practical application.",
+      stats: "15+ Languages",
     },
   ]
 
@@ -427,101 +176,12 @@ export default function HomePage() {
     },
   ]
 
-  const coreValues = [
-    {
-      title: "Inclusion as Foundation, Not Afterthought",
-      description:
-        "We believe inclusion isn't a checkbox—it's the cornerstone of every thriving workplace. Our solutions are built from the ground up to welcome and respect all gender identities, expressions, and backgrounds, creating environments where everyone can contribute their authentic selves.",
-      icon: Users,
-      color: "from-gray-500 to-slate-600",
-      impact: "Every individual feels valued and heard",
-      approach: "Proactive inclusion strategies integrated into all processes",
-    },
-    {
-      title: "Safety as a Fundamental Right",
-      description:
-        "Every person deserves to work without fear of harassment or discrimination. We go beyond legal compliance to embed deep-rooted values of respect, dignity, and zero tolerance for any form of workplace harassment, creating cultures where safety is everyone's responsibility.",
-      icon: Shield,
-      color: "from-slate-500 to-gray-600",
-      impact: "Zero-tolerance culture with proactive prevention",
-      approach: "Comprehensive safety frameworks with continuous monitoring",
-    },
-    {
-      title: "Transforming Systems, Not Just Policies",
-      description:
-        "We challenge outdated systems that fail to protect or empower individuals. Our mission is to replace them with progressive structures rooted in fairness, equality, and accountability—creating lasting change that goes beyond surface-level compliance.",
-      icon: Lightbulb,
-      color: "from-zinc-500 to-gray-600",
-      impact: "Systemic change that addresses root causes",
-      approach: "Holistic transformation of organizational culture and processes",
-    },
-    {
-      title: "Diversity as Competitive Advantage",
-      description:
-        "We celebrate all forms of diversity—gender, culture, ability, thought, and experience. True innovation happens when diverse perspectives come together in psychologically safe environments where everyone feels empowered to contribute their unique insights.",
-      icon: Sparkles,
-      color: "from-gray-600 to-slate-700",
-      impact: "Enhanced innovation and business performance",
-      approach: "Diversity-driven decision making and inclusive leadership development",
-    },
-    {
-      title: "Action-Oriented Implementation",
-      description:
-        "Our commitment extends far beyond theoretical frameworks. We work hands-on with organizations to implement tangible, measurable changes that create real impact—building cultures people can trust and environments where everyone can thrive.",
-      icon: Target,
-      color: "from-slate-500 to-gray-600",
-      impact: "Measurable outcomes and sustainable change",
-      approach: "Data-driven implementation with continuous improvement cycles",
-    },
-  ]
-
-  const whyChooseUs = [
-    {
-      title: "Proven Track Record",
-      description: "500+ organizations transformed across 25+ industries with 99.2% compliance success rate",
-      icon: Award,
-      stats: "99.2% Success Rate",
-    },
-    {
-      title: "Expert Team",
-      description: "Legal professionals, certified trainers, and compliance experts with 15+ years average experience",
-      icon: Users,
-      stats: "15+ Years Experience",
-    },
-    {
-      title: "Comprehensive Solutions",
-      description: "End-to-end services from policy development to ongoing support and continuous improvement",
-      icon: CheckCircle,
-      stats: "360° Coverage",
-    },
-    {
-      title: "Cultural Sensitivity",
-      description: "Deep understanding of Indian workplace culture with solutions adapted for regional diversity",
-      icon: Heart,
-      stats: "15+ Languages",
-    },
-  ]
-
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
     }, 8000)
     return () => clearInterval(interval)
   }, [testimonials.length])
-
-  useEffect(() => {
-    const featureInterval = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % features.length)
-    }, 6000)
-    return () => clearInterval(featureInterval)
-  }, [features.length])
-
-  useEffect(() => {
-    const serviceInterval = setInterval(() => {
-      setActiveService((prev) => (prev + 1) % services.length)
-    }, 7000)
-    return () => clearInterval(serviceInterval)
-  }, [services.length])
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
@@ -539,73 +199,16 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-50/30 to-zinc-50/40 overflow-x-hidden">
-      {/* Revolutionary Hero Section */}
-      {/* Clean & Smooth Hero Section */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50/80 via-white to-slate-50/60">
-        {/* Subtle Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Gentle gradient orbs */}
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-gray-200/40 to-slate-200/40 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 2 }}
-            className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-zinc-200/30 to-gray-200/30 rounded-full blur-3xl"
-          />
-
-          {/* Floating women symbols */}
-          <motion.div
-            animate={{
-              y: [-20, 20, -20],
-              rotate: [0, 5, 0],
-              opacity: [0.1, 0.2, 0.1],
-            }}
-            transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 text-gray-300/20 text-8xl font-light"
-          >
-            ♀
-          </motion.div>
-          <motion.div
-            animate={{
-              y: [20, -20, 20],
-              rotate: [0, -5, 0],
-              opacity: [0.1, 0.15, 0.1],
-            }}
-            transition={{ duration: 15, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 3 }}
-            className="absolute bottom-1/3 right-1/3 text-slate-300/20 text-6xl font-light"
-          >
-            ♀
-          </motion.div>
-          <motion.div
-            animate={{
-              y: [-15, 15, -15],
-              rotate: [0, 3, 0],
-              opacity: [0.05, 0.1, 0.05],
-            }}
-            transition={{ duration: 18, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 6 }}
-            className="absolute top-2/3 left-2/3 text-zinc-300/15 text-7xl font-light"
-          >
-            ♀
-          </motion.div>
-        </div>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-screen py-20">
+          <div className="grid lg:grid-cols-2 gap-20 items-center min-h-screen py-20">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8 lg:pr-8"
+              className="space-y-8 lg:pr-12"
             >
               {/* Badge */}
               <motion.div
@@ -614,14 +217,8 @@ export default function HomePage() {
                 transition={{ delay: 0.2, duration: 0.6 }}
                 className="inline-block"
               >
-                <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-sm font-semibold border border-gray-200/50 shadow-lg rounded-full">
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                    className="mr-2 text-gray-600"
-                  >
-                    ♀
-                  </motion.div>
+                <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-sm font-semibold border border-gray-200/50 shadow-lg rounded-full">
+                  <div className="mr-2 text-black">♀</div>
                   India's Leading POSH Compliance Partner
                 </Badge>
               </motion.div>
@@ -633,35 +230,20 @@ export default function HomePage() {
                 transition={{ delay: 0.4, duration: 0.8 }}
                 className="space-y-4"
               >
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-slate-900">
+                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
                   Creating{" "}
                   <span className="relative">
-                    <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
-                      Safe & Inclusive
-                    </span>
+                    <span className="text-black">Safe & Inclusive</span>
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: "100%" }}
                       transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-gray-500 to-slate-500 rounded-full"
+                      className="absolute bottom-0 left-0 h-1 bg-black rounded-full"
                     />
                   </span>
                   <br />
                   Workplaces for Everyone
                 </h1>
-
-                {/* Women symbol integration */}
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 1.5, duration: 0.6, type: "spring" }}
-                  className="flex items-center space-x-3 pt-2"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white text-xl font-bold">♀</span>
-                  </div>
-                  <div className="h-px bg-gradient-to-r from-gray-300 to-transparent flex-1"></div>
-                </motion.div>
               </motion.div>
 
               {/* Description */}
@@ -669,38 +251,11 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
-                className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl"
+                className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl"
               >
                 We transform organizational cultures through comprehensive POSH compliance, expert training, and
                 innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
               </motion.p>
-
-              {/* Key Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.8 }}
-                className="grid grid-cols-3 gap-6"
-              >
-                {[
-                  { number: "500+", label: "Organizations", icon: "🏢" },
-                  { number: "99.2%", label: "Success Rate", icon: "✅" },
-                  { number: "50K+", label: "Lives Impacted", icon: "♀" },
-                ].map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1 + index * 0.1, duration: 0.5 }}
-                    whileHover={{ scale: 1.05 }}
-                    className="text-center p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <div className="text-2xl mb-1">{stat.icon}</div>
-                    <div className="text-2xl font-bold text-slate-900">{stat.number}</div>
-                    <div className="text-sm text-slate-600 font-medium">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </motion.div>
 
               {/* CTA Buttons */}
               <motion.div
@@ -712,7 +267,7 @@ export default function HomePage() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl"
+                    className="bg-black hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl"
                   >
                     <Calendar className="mr-2 h-5 w-5" />
                     Get Free Consultation
@@ -724,59 +279,12 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-gray-400 transition-all duration-300 shadow-lg rounded-xl"
+                    className="border-2 border-black text-black hover:bg-gray-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-gray-800 transition-all duration-300 shadow-lg rounded-xl"
                   >
                     <Play className="mr-2 h-5 w-5" />
                     Watch Demo
                   </Button>
                 </motion.div>
-              </motion.div>
-
-              {/* Trust Indicators */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.4, duration: 0.8 }}
-                className="flex flex-wrap items-center gap-8 pt-6"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
-                        className="w-10 h-10 bg-gradient-to-br from-gray-400 to-slate-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm"
-                      >
-                        {String.fromCharCode(65 + i - 1)}
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold text-slate-900">500+ Organizations</p>
-                    <p className="text-sm text-slate-600">Trust Our Expertise</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0, rotate: 180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ delay: 1.8 + i * 0.05, type: "spring" }}
-                      >
-                        <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold text-slate-900">4.9/5</p>
-                    <p className="text-sm text-slate-600">Client Rating</p>
-                  </div>
-                </div>
               </motion.div>
             </motion.div>
 
@@ -785,10 +293,10 @@ export default function HomePage() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-              className="relative lg:pl-8"
+              className="relative lg:pl-12 flex flex-col items-center"
             >
               {/* Main Image Container */}
-              <div className="relative">
+              <div className="relative max-w-lg w-full">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
                   <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20">
                     <Image
@@ -815,97 +323,80 @@ export default function HomePage() {
                             <p className="text-2xl font-bold text-slate-900">50,000+</p>
                             <p className="text-slate-600 font-medium">Lives Transformed</p>
                           </div>
-                          <motion.div
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                            className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center shadow-lg"
-                          >
+                          <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center shadow-lg">
                             <span className="text-white text-lg font-bold">♀</span>
-                          </motion.div>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
                   </div>
                 </motion.div>
-
-                {/* Floating Achievement Cards */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ delay: 1, duration: 0.8, type: "spring" }}
-                  className="absolute top-12 -left-12 z-30"
-                >
-                  <motion.div
-                    animate={{ y: [-10, 10, -10] }}
-                    transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                    className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/30"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <CheckCircle className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-slate-900">99.2%</p>
-                        <p className="text-sm text-slate-600 font-medium">Compliance Rate</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8, y: -20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ delay: 1.3, duration: 0.8, type: "spring" }}
-                  className="absolute bottom-12 -right-12 z-30"
-                >
-                  <motion.div
-                    animate={{ y: [10, -10, 10] }}
-                    transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 3 }}
-                    className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/30"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-slate-500 to-zinc-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <Award className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-slate-900">2024</p>
-                        <p className="text-sm text-slate-600 font-medium">Excellence Award</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-
-                {/* Background decoration */}
-                <div className="absolute -top-6 -right-6 w-full h-full bg-gradient-to-br from-gray-200/30 to-slate-200/30 rounded-3xl -z-10"></div>
               </div>
+
+              {/* Trust Indicators */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.4, duration: 0.8 }}
+                className="w-full max-w-md mt-8"
+              >
+                <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/30">
+                  <div className="space-y-6">
+                    {/* Organization Trust */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3, 4].map((i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
+                              className="w-10 h-10 bg-gradient-to-br from-gray-600 to-slate-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm"
+                            >
+                              {String.fromCharCode(65 + i - 1)}
+                            </motion.div>
+                          ))}
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold text-slate-900">500+ Organizations</p>
+                          <p className="text-sm text-slate-600 font-medium">Trust Our Expertise</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+
+                    {/* Client Rating */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ scale: 0, rotate: 180 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: 1.8 + i * 0.05, type: "spring" }}
+                          >
+                            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                          </motion.div>
+                        ))}
+                      </div>
+                      <div>
+                        <p className="text-lg font-bold text-slate-900">4.9/5</p>
+                        <p className="text-sm text-slate-600 font-medium">Client Rating</p>
+                      </div>
+                      <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-slate-700 px-3 py-1 text-xs font-semibold border border-gray-200/50">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        Verified & Trusted Partner
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            className="flex flex-col items-center space-y-2 cursor-pointer group"
-          >
-            <p className="text-slate-600 text-sm font-medium group-hover:text-gray-600 transition-colors">
-              Scroll to explore
-            </p>
-            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center group-hover:border-gray-600 transition-colors">
-              <motion.div
-                animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                className="w-1 h-3 bg-gray-400 rounded-full mt-2 group-hover:bg-gray-600 transition-colors"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* Why Choose Us Section */}
@@ -925,7 +416,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center space-y-6 mb-16"
           >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Target className="w-5 h-5 mr-2" />
               Why Choose Ureposh
             </Badge>
@@ -953,378 +444,12 @@ export default function HomePage() {
                       <reason.icon className="h-8 w-8 text-white" />
                     </div>
                     <CardTitle className="text-xl text-slate-900">{reason.title}</CardTitle>
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-700 mx-auto">
+                    <Badge variant="secondary" className="bg-gray-100 text-black mx-auto">
                       {reason.stats}
                     </Badge>
                   </CardHeader>
                   <CardContent>
                     <CardDescription className="text-slate-600 leading-relaxed">{reason.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Services Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-slate-50/50">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-white/90 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <Scale className="w-5 h-5 mr-2" />
-              Our Services
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Comprehensive{" "}
-              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
-                POSH Solutions
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto">
-              From policy development to ongoing compliance management—we provide end-to-end workplace safety solutions
-              tailored to your organization's unique needs and industry requirements.
-            </p>
-          </motion.div>
-
-          {/* Featured Service */}
-          <div className="mb-16">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeService}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-2xl overflow-hidden">
-                  <div className="grid lg:grid-cols-2 gap-0">
-                    <div className="relative h-96 lg:h-auto">
-                      <Image
-                        src={services[activeService].image || "/placeholder.svg"}
-                        alt={services[activeService].title}
-                        width={600}
-                        height={400}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
-                      <div className="absolute bottom-6 left-6 text-white">
-                        <Badge className="bg-white/20 text-white mb-3">{services[activeService].duration}</Badge>
-                        <h3 className="text-2xl font-bold mb-2">{services[activeService].title}</h3>
-                        <p className="text-lg">{services[activeService].price}</p>
-                      </div>
-                    </div>
-                    <div className="p-12">
-                      <div className="space-y-6">
-                        <div className="flex items-start space-x-4">
-                          <div
-                            className={`w-16 h-16 bg-gradient-to-br ${services[activeService].color} rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0`}
-                          >
-                            {React.createElement(services[activeService].icon, { className: "h-8 w-8 text-white" })}
-                          </div>
-                          <div>
-                            <h3 className="text-3xl font-bold text-slate-900 mb-2">{services[activeService].title}</h3>
-                            <p className="text-slate-600 text-lg leading-relaxed">
-                              {services[activeService].description}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-slate-900">Key Features:</h4>
-                          {services[activeService].features.slice(0, 4).map((feature, index) => (
-                            <div key={index} className="flex items-start space-x-3">
-                              <CheckCircle className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" />
-                              <span className="text-slate-700">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="flex gap-4 pt-6">
-                          <Button className={`bg-gradient-to-r ${services[activeService].color} text-white flex-1`}>
-                            Learn More
-                          </Button>
-                          <Button variant="outline" className="border-gray-200 text-gray-700 flex-1 bg-transparent">
-                            Get Quote
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Service Navigation */}
-            <div className="flex justify-center space-x-3 mt-8">
-              {services.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveService(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === activeService
-                      ? "bg-gradient-to-r from-gray-500 to-slate-500 w-8"
-                      : "bg-slate-300 hover:bg-slate-400"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Services Grid */}
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {services.map((service, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.03, y: -5 }}>
-                <Card className="h-full bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={service.image || "/placeholder.svg"}
-                      alt={service.title}
-                      width={400}
-                      height={200}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                    <div
-                      className={`absolute top-4 right-4 w-12 h-12 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg`}
-                    >
-                      {React.createElement(service.icon, { className: "h-6 w-6 text-white" })}
-                    </div>
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <p className="text-sm font-medium">{service.duration}</p>
-                      <p className="text-lg font-bold">{service.price}</p>
-                    </div>
-                  </div>
-
-                  <CardHeader>
-                    <CardTitle className="text-lg text-slate-900">{service.title}</CardTitle>
-                    <CardDescription className="text-slate-600">{service.description}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    <div className="space-y-2 mb-4">
-                      {service.features.slice(0, 3).map((feature, idx) => (
-                        <div key={idx} className="flex items-start text-sm text-slate-600">
-                          <CheckCircle className="h-4 w-4 text-gray-500 mr-2 flex-shrink-0 mt-0.5" />
-                          <span className="line-clamp-2">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="w-full border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
-                    >
-                      Learn More
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center mt-16"
-          >
-            <Link href="/services">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 hover:from-gray-700 hover:via-slate-700 hover:to-zinc-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold"
-                >
-                  Explore All Services & Pricing
-                  <ArrowRight className="ml-3 h-6 w-6" />
-                </Button>
-              </motion.div>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Core Values Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold">
-              <Sparkles className="w-5 h-5 mr-2" />
-              Our Core Values
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Values That{" "}
-              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
-                Drive Impact
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Our values aren't just words on a wall—they're the foundation of every solution we create and every
-              partnership we build.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            {coreValues.map((value, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <CardContent className="p-8">
-                    <div className="grid lg:grid-cols-12 gap-8 items-start">
-                      <div className="lg:col-span-2">
-                        <div
-                          className={`w-20 h-20 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mx-auto lg:mx-0 shadow-xl mb-4`}
-                        >
-                          <value.icon className="h-10 w-10 text-white" />
-                        </div>
-                        <div className="text-center lg:text-left">
-                          <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
-                            {value.impact}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="lg:col-span-10 text-center lg:text-left space-y-4">
-                        <h3 className="text-2xl font-bold text-slate-900">{value.title}</h3>
-                        <p className="text-slate-600 leading-relaxed text-lg">{value.description}</p>
-                        <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-4">
-                          <p className="text-sm font-medium text-slate-700">
-                            <span className="font-semibold">Our Approach:</span> {value.approach}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-24 bg-white/80 backdrop-blur-sm relative"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <TrendingUp className="w-5 h-5 mr-2" />
-              Our Impact Across India
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Transforming Workplaces{" "}
-              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
-                Nationwide
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Measurable results that demonstrate our commitment to creating safer, more inclusive work environments
-              across diverse industries and organizational sizes.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {[
-              {
-                number: "500+",
-                label: "Organizations Transformed",
-                icon: Building,
-                color: "from-gray-500 to-slate-600",
-                description: "Across 25+ industries",
-                metric: "98% client retention rate",
-                details: "From startups to Fortune 500 companies",
-              },
-              {
-                number: "50,000+",
-                label: "Professionals Empowered",
-                icon: Users,
-                color: "from-slate-500 to-zinc-600",
-                description: "Training delivered in 15+ languages",
-                metric: "95% satisfaction score",
-                details: "Comprehensive awareness and skill building",
-              },
-              {
-                number: "99.2%",
-                label: "Compliance Achievement",
-                icon: CheckCircle,
-                color: "from-zinc-500 to-gray-600",
-                description: "Legal standards exceeded",
-                metric: "Zero major compliance failures",
-                details: "Rigorous legal framework adherence",
-              },
-              {
-                number: "75+",
-                label: "Expert Consultants",
-                icon: Award,
-                color: "from-gray-600 to-slate-700",
-                description: "Certified professionals",
-                metric: "15+ years average experience",
-                details: "Legal, HR, and compliance specialists",
-              },
-            ].map((stat, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }} className="group">
-                <Card className="h-full bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-xl hover:shadow-2xl shadow-gray-500/10 transition-all duration-500 text-center">
-                  <CardContent className="p-8">
-                    <div
-                      className={`w-16 h-16 bg-gradient-to-br ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform`}
-                    >
-                      <stat.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
-                      className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-2"
-                    >
-                      {stat.number}
-                    </motion.div>
-                    <h3 className="text-lg font-semibold text-slate-900 mb-2">{stat.label}</h3>
-                    <p className="text-sm text-slate-600 mb-3">{stat.description}</p>
-                    <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs mb-2">
-                      {stat.metric}
-                    </Badge>
-                    <p className="text-xs text-slate-500">{stat.details}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -1404,126 +529,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-24 bg-gradient-to-r from-pink-100/70 to-rose-100/70 backdrop-blur-sm"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-white/90 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <Quote className="w-5 h-5 mr-2" />
-              Client Success Stories
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              What Our <span className="text-slate-900">Partners</span> Say
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Real stories from leaders who have transformed their workplaces with Ureposh's comprehensive solutions and expert guidance.
-            </p>
-          </motion.div>
-
-          <div className="relative max-w-6xl mx-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTestimonial}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Card className="bg-white/95 backdrop-blur-sm border-gray-200 shadow-2xl overflow-hidden">
-                  <div className="grid lg:grid-cols-3 gap-0">
-                    <div className="lg:col-span-2 p-12">
-                      <div className="flex justify-start mb-6">
-                        <Quote className="h-12 w-12 text-gray-300" />
-                      </div>
-                      <div className="flex justify-center mb-6">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <Star key={i} className="w-6 h-6 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                      <blockquote className="text-2xl text-slate-700 mb-8 leading-relaxed italic font-medium">
-                        "{testimonials[activeTestimonial].content}"
-                      </blockquote>
-                      <div className="flex items-center space-x-6">
-                        <Image
-                          src={testimonials[activeTestimonial].image || "/placeholder.svg"}
-                          alt={testimonials[activeTestimonial].name}
-                          width={80}
-                          height={80}
-                          className="rounded-full border-4 border-gray-200"
-                        />
-                        <div>
-                          <div className="font-bold text-slate-900 text-xl">{testimonials[activeTestimonial].name}</div>
-                          <div className="text-slate-600 text-lg">{testimonials[activeTestimonial].position}</div>
-                          <div className="text-gray-600 font-semibold">{testimonials[activeTestimonial].company}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-700 p-12 text-white flex flex-col justify-center">
-                      <div className="space-y-6">
-                        <Image
-                          src={testimonials[activeTestimonial].companyLogo || "/placeholder.svg"}
-                          alt={`${testimonials[activeTestimonial].company} logo`}
-                          width={120}
-                          height={40}
-                          className="brightness-0 invert"
-                        />
-                        <div className="space-y-4">
-                          <div>
-                            <p className="text-gray-300 text-sm">Industry</p>
-                            <p className="text-white font-semibold">{testimonials[activeTestimonial].industry}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-300 text-sm">Location</p>
-                            <p className="text-white font-semibold">{testimonials[activeTestimonial].location}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-300 text-sm">Challenge</p>
-                            <p className="text-white font-medium text-sm">
-                              {testimonials[activeTestimonial].challenge}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-300 text-sm">Solution</p>
-                            <p className="text-white font-medium text-sm">{testimonials[activeTestimonial].solution}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Testimonial Navigation */}
-            <div className="flex justify-center space-x-3 mt-8">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveTestimonial(index)}
-                  className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                    index === activeTestimonial
-                      ? "bg-gradient-to-r from-gray-500 to-slate-500 w-10"
-                      : "bg-gray-200 hover:bg-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
       {/* CTA Section */}
       <motion.section
         initial={{ opacity: 0 }}
@@ -1533,15 +538,6 @@ export default function HomePage() {
         className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-slate-500/10 to-zinc-500/10"></div>
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=600&width=1200')] bg-cover bg-center opacity-5"></div>
-
-        {/* Floating geometric elements */}
-        <motion.div
-          animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-          transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="absolute top-20 right-20 w-40 h-40 border-2 border-gray-200/30 rounded-full"
-        ></motion.div>
-
         <div className="max-w-6xl mx-auto text-center space-y-12 relative">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -1687,140 +683,6 @@ export default function HomePage() {
           </motion.div>
         </div>
       </motion.section>
-
-      {/* Enhanced Footer */}
-      <footer className="bg-slate-900 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900/20 to-slate-900/20"></div>
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=400&width=1200')] bg-cover bg-center opacity-5"></div>
-
-        {/* Floating elements */}
-        <motion.div
-          animate={{ rotate: -360, scale: [1, 1.1, 1] }}
-          transition={{ duration: 40, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="absolute top-20 right-20 w-32 h-32 border border-gray-300/20 rounded-full"
-        ></motion.div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-5 gap-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="lg:col-span-2 space-y-8"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-gray-600 via-slate-600 to-zinc-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Heart className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <span className="text-3xl font-bold">UREPOSH</span>
-                  <p className="text-slate-400 text-sm">Transforming Workplaces <br /> Empowering Lives</p>
-                </div>
-              </div>
-              <p className="text-slate-300 leading-relaxed text-lg">
-                We're dedicated to creating workplaces where every individual feels valued, respected, and empowered to
-                contribute their best. Through innovative solutions and expert guidance, we help organizations build
-                cultures of inclusion, safety, and legal compliance that drive sustainable business success.
-              </p>
-              <div className="flex space-x-4">
-                {["facebook", "twitter", "linkedin", "instagram", "youtube"].map((social, index) => (
-                  <motion.div
-                    key={social}
-                    whileHover={{ scale: 1.2, y: -3 }}
-                    className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center hover:bg-gradient-to-br hover:from-gray-500 hover:to-slate-500 transition-all duration-300 cursor-pointer group"
-                  >
-                    <div className="w-6 h-6 bg-slate-400 group-hover:bg-white rounded transition-colors"></div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {[
-              {
-                title: "Solutions",
-                links: [
-                  "POSH Policy Development",
-                  "Internal Committee Setup",
-                  "Expert Training Programs",
-                  "Investigation Support",
-                  "Compliance Audits",
-                  "Professional Certification",
-                ],
-              },
-              {
-                title: "Company",
-                links: [
-                  "About Ureposh",
-                  "Our Mission & Values",
-                  "Leadership Team",
-                  "Career Opportunities",
-                  "Press & Media",
-                  "Contact Us",
-                ],
-              },
-              {
-                title: "Resources",
-                links: [
-                  "Knowledge Center",
-                  "Success Stories",
-                  "Industry Reports",
-                  "Legal Updates",
-                  "Best Practice Guides",
-                  "Resource Downloads",
-                ],
-              },
-            ].map((section, index) => (
-              <motion.div
-                key={section.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="font-bold mb-8 text-xl text-white">{section.title}</h3>
-                <ul className="space-y-4">
-                  {section.links.map((link) => (
-                    <li key={link}>
-                      <Link
-                        href="#"
-                        className="text-slate-400 hover:text-gray-400 transition-colors text-lg hover:translate-x-2 inline-block transition-transform duration-300"
-                      >
-                        {link}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="border-t border-slate-800 mt-20 pt-12">
-            <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
-              <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
-                <p className="text-slate-400 text-lg">&copy; 2024 Ureposh. All rights reserved.</p>
-                <div className="flex space-x-8 text-base">
-                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
-                    Privacy Policy
-                  </Link>
-                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
-                    Terms of Service
-                  </Link>
-                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
-                    Cookie Policy
-                  </Link>
-                  <Link href="#" className="text-slate-400 hover:text-gray-400 transition-colors">
-                    Compliance Statement
-                  </Link>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4 text-slate-400">
-                <Globe className="h-5 w-5" />
-                <span>Proudly serving organizations across India and beyond</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
