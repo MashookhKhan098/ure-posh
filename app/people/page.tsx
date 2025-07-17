@@ -1,198 +1,237 @@
-"use client"
+"use client";
 
-import React from "react"
-import { motion } from "framer-motion"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Users, Award, Heart, Target, Sparkles, CheckCircle } from "lucide-react"
+import React, { useState } from "react";
+
+const topImages = [
+  "/images/aarushi.jpg",
+  "/images/abhijeet.jpg",
+  "/images/abhilash.jpg",
+  "/images/abhileen.jpg",
+  // "/images/team5.jpg",
+  // "/images/team6.jpg",
+];
+
+const allMembers = [
+  {
+    name: "Aarushi Jain",
+    role: "Partner (Head - Media, Education & Gaming)",
+    department: "General Corporate",
+    sector: "Media",
+    location: "Mumbai",
+    email: "aarushi.jain@example.com",
+    linkedin: "https://www.linkedin.com/in/aarushijain",
+    image: "/images/aarushi.jpg",
+  },
+  {
+    name: "Abhijeet Das",
+    role: "Partner",
+    department: "Insolvency & Bankruptcy",
+    sector: "Banking",
+    location: "Delhi",
+    email: "abhijeet.das@example.com",
+    linkedin: "https://www.linkedin.com/in/abhijeetdas",
+    image: "/images/abhijeet.jpg",
+  },
+  {
+    name: "Abhilash Pillai",
+    role: "Partner",
+    department: "Real Estate",
+    sector: "Construction",
+    location: "Mumbai",
+    email: "abhilash.pillai@example.com",
+    linkedin: "https://www.linkedin.com/in/abhilashpillai",
+    image: "/images/abhilash.jpg",
+  },
+  {
+    name: "Abhileen Chaturvedi",
+    role: "Partner",
+    department: "Disputes",
+    sector: "Litigation",
+    location: "Bangalore",
+    email: "abhileen.chaturvedi@example.com",
+    linkedin: "https://www.linkedin.com/in/abhileenchaturvedi",
+    image: "/images/abhileen.jpg",
+  },
+];
 
 export default function PeoplePage() {
-  const teamMembers = [
-    {
-      name: "Priya Sharma",
-      role: "Founder & CEO",
-      bio: "Legal expert with 15+ years experience in workplace compliance and cultural transformation.",
-      image: "/images/2.jpg",
-      expertise: ["POSH Compliance", "Legal Advisory", "Leadership"],
-      achievements: ["500+ Organizations Transformed", "99.2% Success Rate"],
-    },
-    {
-      name: "Rajesh Kumar",
-      role: "Head of Training",
-      bio: "Certified trainer specializing in inclusive workplace practices and cultural sensitivity.",
-      image: "/images/3.jpg",
-      expertise: ["Training Programs", "Cultural Adaptation", "Skill Development"],
-      achievements: ["50,000+ Professionals Trained", "15+ Languages"],
-    },
-    {
-      name: "Dr. Anjali Mehta",
-      role: "Chief Compliance Officer",
-      bio: "Legal professional focused on ensuring comprehensive compliance and risk management.",
-      image: "/images/4.jpg",
-      expertise: ["Legal Compliance", "Risk Management", "Policy Development"],
-      achievements: ["Zero Major Violations", "Industry Expert"],
-    },
-  ]
+  const [search, setSearch] = useState("");
+  const [practiceArea, setPracticeArea] = useState("");
+  const [sector, setSector] = useState("");
+  const [location, setLocation] = useState("");
+  const [visibleCount, setVisibleCount] = useState(6);
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: "easeOut" },
-  }
+  const filteredMembers = allMembers.filter((member) => {
+    return (
+      member.name.toLowerCase().includes(search.toLowerCase()) &&
+      (practiceArea ? member.department === practiceArea : true) &&
+      (sector ? member.sector === sector : true) &&
+      (location ? member.location === location : true)
+    );
+  });
 
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
+  const clearFilters = () => {
+    setPracticeArea("");
+    setSector("");
+    setLocation("");
+    setSearch("");
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-50/30 to-zinc-50/40">
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50 mb-6">
-              <Users className="w-5 h-5 mr-2" />
-              Our Team
-            </Badge>
-            <h1 className="text-4xl lg:text-5xl font-bold text-black mb-6">
-              Meet the <span className="text-black">Experts</span> Behind Our Success
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Our diverse team of legal professionals, certified trainers, and compliance experts 
-              are dedicated to transforming workplaces across India.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {teamMembers.map((member, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <CardHeader className="text-center">
-                    <div className="w-24 h-24 bg-gradient-to-br from-gray-500 to-slate-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <Users className="h-12 w-12 text-white" />
-                    </div>
-                    <CardTitle className="text-2xl text-slate-900">{member.name}</CardTitle>
-                    <CardDescription className="text-lg font-semibold text-slate-600">{member.role}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <p className="text-slate-600 leading-relaxed">{member.bio}</p>
-                    
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-3">Expertise</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {member.expertise.map((skill, idx) => (
-                          <Badge key={idx} variant="secondary" className="bg-gray-100 text-gray-700">
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-slate-900 mb-3">Key Achievements</h4>
-                      <div className="space-y-2">
-                        {member.achievements.map((achievement, idx) => (
-                          <div key={idx} className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            <span className="text-sm text-slate-600">{achievement}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <Heart className="w-5 h-5 mr-2" />
-              Our Values
-            </Badge>
-            <h2 className="text-4xl font-bold text-slate-900">
-              What <span className="text-slate-900">Drives</span> Our Team
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Our team is united by a shared commitment to creating safer, more inclusive workplaces 
-              where every individual can thrive and contribute their best.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {[
-              {
-                title: "Excellence",
-                description: "We maintain the highest standards in all our services and interactions.",
-                icon: Award,
-                color: "from-gray-500 to-slate-600",
-              },
-              {
-                title: "Empathy",
-                description: "We understand the human impact of workplace issues and approach solutions with compassion.",
-                icon: Heart,
-                color: "from-slate-500 to-gray-600",
-              },
-              {
-                title: "Innovation",
-                description: "We continuously evolve our approaches to meet changing workplace needs.",
-                icon: Sparkles,
-                color: "from-zinc-500 to-gray-600",
-              },
-            ].map((value, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
-                <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
-                  <CardHeader>
-                    <div className={`w-16 h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
-                      <value.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="text-xl text-slate-900">{value.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600 leading-relaxed">{value.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+    <div className="bg-white min-h-screen">
+      {/* ✅ FULL-WIDTH IMAGE STRIP WITHOUT GAPS */}
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 mt-14">
+  {topImages.map((src, idx) => (
+    <div
+      key={idx}
+      className="bg-white shadow-md rounded-lg p-2 flex justify-center items-center"
+    >
+      <img
+        src={src}
+        alt={`team-${idx}`}
+        className="max-h-[300px] w-auto object-contain rounded-md"
+      />
     </div>
-  )
-} 
+  ))}
+</div>
+
+
+
+
+      {/* ✅ PURPLE TITLE BAR (Centered) */}
+      <div className="bg-purple-800 text-white text-center text-3xl font-bold py-6 mt-0">
+        People
+      </div>
+
+      {/* ✅ DESCRIPTION */}
+      <section className="py-10 text-center px-4">
+        <p className="text-lg max-w-3xl mx-auto text-gray-700">
+          Our lawyers have an unmatched combination of academic pedigree,
+          technical skills and an ahead-of-the-curve mindset, allowing them to
+          deliver complex, innovative solutions to our clients.
+        </p>
+      </section>
+
+      {/* ✅ SEARCH BAR */}
+      <div className="flex justify-center mb-10 px-4">
+        <input
+          type="text"
+          placeholder="Search people by name, service and location"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-2/3 lg:w-1/2 border px-5 py-3 rounded-md shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+        />
+      </div>
+
+      {/* ✅ MAIN CONTENT */}
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 pb-12">
+        {/* ✅ LEFT FILTERS */}
+        <aside className="space-y-5 md:sticky md:top-10 self-start border rounded-md p-4 shadow-sm">
+          <h2 className="text-xl font-semibold text-purple-900 mb-4">
+            Find Lawyers
+          </h2>
+          <select
+            value={practiceArea}
+            onChange={(e) => setPracticeArea(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md shadow-sm"
+          >
+            <option value="">Select Practice Area</option>
+            <option value="General Corporate">General Corporate</option>
+            <option value="Insolvency & Bankruptcy">Insolvency & Bankruptcy</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Disputes">Disputes</option>
+          </select>
+          <select
+            value={sector}
+            onChange={(e) => setSector(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md shadow-sm"
+          >
+            <option value="">Select Sector</option>
+            <option value="Media">Media</option>
+            <option value="Banking">Banking</option>
+            <option value="Construction">Construction</option>
+            <option value="Litigation">Litigation</option>
+          </select>
+          <select
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md shadow-sm"
+          >
+            <option value="">Select Location</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bangalore">Bangalore</option>
+          </select>
+
+          <button
+            onClick={clearFilters}
+            className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-md mt-4"
+          >
+            Clear Filters
+          </button>
+        </aside>
+
+        {/* ✅ RIGHT SIDE - Lawyer Cards */}
+        <section className="md:col-span-3">
+          {filteredMembers.length === 0 ? (
+            <p className="text-center text-gray-500 text-lg">No results found</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredMembers.slice(0, visibleCount).map((member, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border rounded-md shadow hover:shadow-lg transition p-3"
+                >
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-72 object-cover rounded-md"
+                  />
+                  <div className="pt-4">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {member.name}
+                    </h3>
+                    <p className="text-sm text-purple-700 font-medium">
+                      {member.role}
+                    </p>
+                    <p className="text-sm text-gray-500 italic">
+                      {member.department}
+                    </p>
+                    <div className="mt-3 text-sm space-y-1">
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="block text-blue-600 hover:underline"
+                      >
+                        {member.email}
+                      </a>
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-blue-600 hover:underline"
+                      >
+                        LinkedIn Profile
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ✅ Load More Button */}
+          {visibleCount < filteredMembers.length && (
+            <div className="text-center mt-10">
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 4)}
+                className="bg-purple-700 text-white px-6 py-2 rounded-md hover:bg-purple-800 transition"
+              >
+                Load More
+              </button>
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
