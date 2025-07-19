@@ -91,7 +91,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     value: "all", 
     label: "All Questions", 
     icon: HelpCircle, 
-    color: "bg-gradient-to-r from-blue-500 to-blue-600", 
+    color: "bg-gradient-to-r from-gray-500 to-gray-600", 
     count: 8,
     description: "Browse all available questions"
   },
@@ -99,7 +99,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     value: "compliance", 
     label: "Compliance & Security", 
     icon: Shield, 
-    color: "bg-gradient-to-r from-emerald-500 to-emerald-600", 
+    color: "bg-gradient-to-r from-gray-500 to-gray-600", 
     count: 2,
     description: "Data protection and compliance standards"
   },
@@ -107,7 +107,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     value: "pricing", 
     label: "Pricing & Plans", 
     icon: TrendingUp, 
-    color: "bg-gradient-to-r from-purple-500 to-purple-600", 
+    color: "bg-gradient-to-r from-gray-500 to-gray-600", 
     count: 2,
     description: "Subscription plans and billing"
   },
@@ -115,7 +115,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     value: "implementation", 
     label: "Implementation", 
     icon: Zap, 
-    color: "bg-gradient-to-r from-orange-500 to-orange-600", 
+    color: "bg-gradient-to-r from-gray-500 to-gray-600", 
     count: 2,
     description: "Setup and integration guidance"
   },
@@ -123,7 +123,7 @@ const FAQ_CATEGORIES: FAQCategory[] = [
     value: "support", 
     label: "Support & Training", 
     icon: Users, 
-    color: "bg-gradient-to-r from-pink-500 to-pink-600", 
+    color: "bg-gradient-to-r from-gray-500 to-gray-600", 
     count: 2,
     description: "Help and learning resources"
   }
@@ -312,11 +312,11 @@ const FAQSection: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     const colors = {
-      beginner: "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white",
-      intermediate: "bg-gradient-to-r from-amber-500 to-amber-600 text-white",
-      advanced: "bg-gradient-to-r from-red-500 to-red-600 text-white"
+      beginner: "bg-gradient-to-r from-gray-500 to-gray-600 text-white",
+      intermediate: "bg-gradient-to-r from-gray-500 to-gray-600 text-white",
+      advanced: "bg-gradient-to-r from-gray-500 to-gray-600 text-white"
     };
-    return colors[difficulty as keyof typeof colors] || "bg-gradient-to-r from-blue-500 to-blue-600 text-white";
+    return colors[difficulty as keyof typeof colors] || "bg-gradient-to-r from-gray-500 to-gray-600 text-white";
   };
 
   const getDifficultyIcon = (difficulty: string) => {
@@ -356,12 +356,11 @@ const FAQSection: React.FC = () => {
   const featuredFAQs = FAQ_DATA.filter(faq => faq.featured);
 
   return (
-    <><section className="py-32 px-4 sm:px-6 lg:px-8 bg-gray-900 relative overflow-hidden">
+    <section className="py-32 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-blue-400/5 to-purple-400/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full blur-2xl" />
+        <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-gray-100 to-gray-50 rounded-full blur-2xl" />
       </div>
 
       <div className="max-w-7xl mx-auto relative">
@@ -373,25 +372,25 @@ const FAQSection: React.FC = () => {
           className="text-center space-y-6 mb-20"
         >
           <motion.div variants={fadeInUp}>
-            <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 text-sm font-semibold rounded-full border-0 shadow-xl">
+            <Badge className="bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-black px-8 py-4 text-sm font-semibold rounded-full border border-gray-300 shadow-lg">
               <HelpCircle className="w-4 h-4 mr-2" />
               Frequently Asked Questions
             </Badge>
           </motion.div>
-          <motion.h2
+          <motion.h2 
             variants={fadeInUp}
-            className="text-4xl md:text-6xl font-bold text-white leading-tight"
+            className="text-4xl md:text-6xl font-bold text-black leading-tight"
           >
             Got{" "}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
               Questions?
             </span>
           </motion.h2>
-          <motion.p
+          <motion.p 
             variants={fadeInUp}
-            className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-black max-w-4xl mx-auto leading-relaxed"
           >
-            We've got answers. Here are the most common questions we receive about our
+            We've got answers. Here are the most common questions we receive about our 
             workplace culture transformation services.
           </motion.p>
         </motion.div>
@@ -409,13 +408,13 @@ const FAQSection: React.FC = () => {
               variants={fadeInUp}
               className="group"
             >
-              <Card className="border border-gray-700/50 shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 bg-gray-800/50 backdrop-blur-sm overflow-hidden hover:border-blue-500/30">
+              <Card className="border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm overflow-hidden">
                 <CardContent className="p-0">
                   <button
                     onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
-                    className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-700/20 transition-colors duration-200"
+                    className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
                   >
-                    <h3 className="text-xl font-semibold text-white pr-4 group-hover:text-blue-300 transition-colors duration-200">
+                    <h3 className="text-xl font-semibold text-black pr-4">
                       {faq.question}
                     </h3>
                     <motion.div
@@ -423,10 +422,10 @@ const FAQSection: React.FC = () => {
                       transition={{ duration: 0.3 }}
                       className="flex-shrink-0"
                     >
-                      <ChevronDown className="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition-colors duration-200" />
+                      <ChevronDown className="w-6 h-6 text-gray-600" />
                     </motion.div>
                   </button>
-
+                  
                   <AnimatePresence>
                     {expandedFAQ === faq.id && (
                       <motion.div
@@ -437,21 +436,21 @@ const FAQSection: React.FC = () => {
                         className="overflow-hidden"
                       >
                         <div className="px-8 pb-6">
-                          <div className="pt-4 border-t border-gray-700/50">
-                            <p className="text-gray-300 leading-relaxed mb-4 text-lg">
+                          <div className="pt-4 border-t border-gray-200">
+                            <p className="text-black leading-relaxed mb-4">
                               {faq.answer}
                             </p>
-
+                            
                             {faq.relatedLinks && faq.relatedLinks.length > 0 && (
                               <div className="space-y-3">
                                 {faq.relatedLinks.map((link, index) => (
-                                  <div key={index} className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20 hover:border-blue-400/30 transition-all duration-200">
-                                    <ArrowRight className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                                  <div key={index} className="flex items-start gap-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+                                    <ArrowRight className="w-5 h-5 text-gray-600 mt-0.5 flex-shrink-0" />
                                     <a
                                       href={link.url}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-blue-300 hover:text-blue-200 text-sm leading-relaxed transition-colors duration-200"
+                                      className="text-gray-700 text-sm leading-relaxed"
                                     >
                                       {link.title}
                                     </a>
@@ -459,16 +458,16 @@ const FAQSection: React.FC = () => {
                                 ))}
                               </div>
                             )}
-
-                            <div className="mt-6 pt-4 border-t border-gray-700/50">
+                            
+                            <div className="mt-6 pt-4 border-t border-gray-200">
                               <div className="flex items-center gap-4">
-                                <span className="text-sm text-gray-300 font-medium">Was this helpful?</span>
+                                <span className="text-sm text-black font-medium">Was this helpful?</span>
                                 <div className="flex gap-2">
-                                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-100 bg-emerald-500/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 hover:border-emerald-400/50 transition-all duration-200 hover:scale-105">
+                                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-green-200 rounded-lg hover:bg-green-200 transition-all duration-200 hover:scale-105">
                                     <ThumbsUp className="w-4 h-4" />
                                     <span>Yes</span>
                                   </button>
-                                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-100 bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 hover:border-red-400/50 transition-all duration-200 hover:scale-105">
+                                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-100 border border-red-200 rounded-lg hover:bg-red-200 transition-all duration-200 hover:scale-105">
                                     <ThumbsDown className="w-4 h-4" />
                                     <span>No</span>
                                   </button>
@@ -486,63 +485,35 @@ const FAQSection: React.FC = () => {
           ))}
         </motion.div>
 
-
-      </div>
-    </section>
-    <section >
         {/* Additional Help Section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-center mt-20 bg-white py-10"
+          className="text-center mt-20"
         >
-          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 rounded-3xl p-12 text-white relative overflow-hidden">
-            {/* Animated background elements */}
-            <div className="absolute inset-0 overflow-hidden opacity-20">
-              {[...Array(6)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  animate={{
-                    x: [0, 100, 0],
-                    y: [0, 50, 0],
-                    opacity: [0.1, 0.3, 0.1]
-                  }}
-                  transition={{
-                    duration: 20 + i * 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute w-32 h-32 rounded-full bg-white"
-                  style={{
-                    left: `${10 + i * 15}%`,
-                    top: `${20 + i * 10}%`
-                  }} />
-              ))}
-            </div>
-
-            <div className="relative z-10">
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Still Have <span className="text-yellow-300">Questions?</span>
-              </h3>
-              <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                Our team is here to help. Reach out and we'll get back to you with personalized answers.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Contact Support
-                </Button>
-                <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Schedule Call
-                </Button>
-              </div>
+          <div className="bg-gradient-to-r from-gray-600 to-gray-700 rounded-3xl p-12 text-white">
+            <h3 className="text-3xl font-bold mb-4">
+              Still Have Questions?
+            </h3>
+            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+              Our team is here to help. Reach out and we'll get back to you with personalized answers.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-white text-gray-700 hover:bg-gray-50 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Contact Support
+              </Button>
+              <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-gray-700 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <Calendar className="w-5 h-5 mr-2" />
+                Schedule Call
+              </Button>
             </div>
           </div>
         </motion.div>
-      </section></>
+      </div>
+    </section>
   );
 };
 

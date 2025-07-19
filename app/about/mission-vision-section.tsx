@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, Eye, Heart, Shield, Users, ArrowRight, Sparkles } from "lucide-react";
+import { Target, Eye, Heart, Shield, Users, ArrowRight } from "lucide-react";
 
 const MissionVisionSection = () => {
   const fadeInUp = {
@@ -32,8 +32,7 @@ const MissionVisionSection = () => {
       "Ensure 100% legal compliance across all organizations",
       "Empower employees with knowledge and confidence"
     ],
-    impact: "500+ organizations transformed, 75,000+ lives impacted",
-    color: "from-blue-600 to-blue-500"
+    impact: "500+ organizations transformed, 75,000+ lives impacted"
   };
 
   const vision = {
@@ -46,273 +45,204 @@ const MissionVisionSection = () => {
       "Cultural transformation at scale",
       "Leadership in workplace safety innovation"
     ],
-    future: "Leading the global movement for workplace safety and inclusion",
-    color: "from-purple-600 to-purple-500"
+    future: "Leading the global movement for workplace safety and inclusion"
   };
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
-      {/* Floating Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, -50, 0],
-            opacity: [0.03, 0.06, 0.03]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 blur-xl"
-        />
+    <section className="py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-gray-50/50 to-white relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-gray-100/40 to-gray-200/40 rounded-full blur-2xl" />
+        <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-gray-200/40 to-gray-100/40 rounded-full blur-2xl" />
       </div>
 
       <div className="max-w-7xl mx-auto relative">
-        {/* Header Section */}
         <motion.div
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="text-center space-y-6 mb-16"
+          className="text-center space-y-6 mb-20"
         >
           <motion.div variants={fadeInUp}>
-            <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 text-sm font-semibold rounded-full border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Sparkles className="w-4 h-4 mr-2" />
+            <Badge className="bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-black px-8 py-4 text-sm font-semibold rounded-full border border-gray-300 shadow-lg">
+              <Heart className="w-4 h-4 mr-2" />
               Mission & Vision
             </Badge>
           </motion.div>
-          
           <motion.h2 
             variants={fadeInUp}
-            className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight"
+            className="text-4xl md:text-6xl font-bold text-black leading-tight"
           >
-            Our <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Purpose</span> Drives Us
+            Our{" "}
+            <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
+              Purpose
+            </span>
           </motion.h2>
-          
           <motion.p 
             variants={fadeInUp}
-            className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-black max-w-4xl mx-auto leading-relaxed"
           >
-            We're committed to creating workplaces where everyone thrives through our clear mission and bold vision for the future.
+            Driving change through clear mission and bold vision to create workplaces 
+            where everyone thrives.
           </motion.p>
         </motion.div>
 
-        {/* Mission & Vision Cards - Improved Design */}
         <motion.div
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="grid lg:grid-cols-2 gap-8"
+          className="grid lg:grid-cols-2 gap-12"
         >
           {/* Mission Card */}
           <motion.div variants={fadeInUp}>
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full overflow-hidden group bg-gradient-to-br from-blue-50 to-white">
-              <CardHeader className="text-center pb-6 pt-10">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${mission.color} flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <mission.icon className="w-7 h-7 text-white" />
+            <Card className="border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white/80 backdrop-blur-sm overflow-hidden h-full">
+              <div className="h-2 bg-gradient-to-r from-gray-500 to-gray-600 transition-all duration-500" />
+              
+              <CardHeader className="text-center pb-6">
+                <div className="w-20 h-20 rounded-3xl bg-gradient-to-r from-gray-500 to-gray-600 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <mission.icon className="w-10 h-10 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold text-gray-900">
+                <CardTitle className="text-3xl font-bold text-black">
                   {mission.title}
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-6 px-8 pb-10">
-                <p className="text-gray-700 text-lg leading-relaxed text-center">
+              <CardContent className="space-y-6">
+                <p className="text-black text-lg leading-relaxed text-center">
                   {mission.description}
                 </p>
                 
-                <div className="space-y-4 bg-white/80 p-6 rounded-lg border border-gray-100">
-                  <h4 className="font-semibold text-gray-900 text-lg flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${mission.color}`} />
-                    Key Goals
-                  </h4>
-                  <ul className="space-y-3">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-black text-lg">Our Goals:</h4>
+                  <div className="space-y-3">
                     {mission.goals.map((goal, index) => (
-                      <motion.li
+                      <motion.div
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
                         className="flex items-start gap-3"
                       >
-                        <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 bg-gradient-to-r ${mission.color}`}></div>
-                        <span className="text-gray-700">{goal}</span>
-                      </motion.li>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full mt-2 flex-shrink-0"></div>
+                        <span className="text-black text-sm leading-relaxed">{goal}</span>
+                      </motion.div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
 
-                <div className="pt-2">
-                  <p className="text-sm font-medium text-gray-500 text-center">
-                    <span className="font-semibold text-blue-600">{mission.impact}</span>
-                  </p>
+                <div className="pt-6 border-t border-gray-200">
+                  <p className="text-sm font-semibold text-black text-center">{mission.impact}</p>
                 </div>
 
                 <Button 
                   variant="outline" 
-                  className={`w-full mt-4 border-gray-300 text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all duration-300 group-hover:shadow-sm`}
+                  className="w-full group-hover:bg-gray-50 group-hover:border-gray-400 text-black border-gray-300 hover:text-gray-700 transition-all duration-300"
                 >
-                  Learn More
+                  Learn More About Our Mission
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
+
+              {/* Hover Effect Overlay */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-gray-500 to-gray-600 opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"
+              />
             </Card>
           </motion.div>
 
           {/* Vision Card */}
           <motion.div variants={fadeInUp}>
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full overflow-hidden group bg-gradient-to-br from-purple-50 to-white">
-              <CardHeader className="text-center pb-6 pt-10">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${vision.color} flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <vision.icon className="w-7 h-7 text-white" />
+            <Card className="border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-white/80 backdrop-blur-sm overflow-hidden h-full">
+              <div className="h-2 bg-gradient-to-r from-gray-500 to-gray-600 transition-all duration-500" />
+              
+              <CardHeader className="text-center pb-6">
+                <div className="w-20 h-20 rounded-3xl bg-gradient-to-r from-gray-500 to-gray-600 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <vision.icon className="w-10 h-10 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold text-gray-900">
+                <CardTitle className="text-3xl font-bold text-black">
                   {vision.title}
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-6 px-8 pb-10">
-                <p className="text-gray-700 text-lg leading-relaxed text-center">
+              <CardContent className="space-y-6">
+                <p className="text-black text-lg leading-relaxed text-center">
                   {vision.description}
                 </p>
                 
-                <div className="space-y-4 bg-white/80 p-6 rounded-lg border border-gray-100">
-                  <h4 className="font-semibold text-gray-900 text-lg flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${vision.color}`} />
-                    Core Aspirations
-                  </h4>
-                  <ul className="space-y-3">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-black text-lg">Our Aspirations:</h4>
+                  <div className="space-y-3">
                     {vision.aspirations.map((aspiration, index) => (
-                      <motion.li
+                      <motion.div
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
                         className="flex items-start gap-3"
                       >
-                        <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 bg-gradient-to-r ${vision.color}`}></div>
-                        <span className="text-gray-700">{aspiration}</span>
-                      </motion.li>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full mt-2 flex-shrink-0"></div>
+                        <span className="text-black text-sm leading-relaxed">{aspiration}</span>
+                      </motion.div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
 
-                <div className="pt-2">
-                  <p className="text-sm font-medium text-gray-500 text-center">
-                    <span className="font-semibold text-purple-600">{vision.future}</span>
-                  </p>
+                <div className="pt-6 border-t border-gray-200">
+                  <p className="text-sm font-semibold text-black text-center">{vision.future}</p>
                 </div>
 
                 <Button 
                   variant="outline" 
-                  className={`w-full mt-4 border-gray-300 text-gray-700 hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200 transition-all duration-300 group-hover:shadow-sm`}
+                  className="w-full group-hover:bg-gray-50 group-hover:border-gray-400 text-black border-gray-300 hover:text-gray-700 transition-all duration-300"
                 >
-                  Explore Vision
+                  Explore Our Vision
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
+
+              {/* Hover Effect Overlay */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-gray-500 to-gray-600 opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"
+              />
             </Card>
           </motion.div>
         </motion.div>
 
-        {/* Driving Change Together Section (Unchanged from your good version) */}
+        {/* Impact Section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-24"
+          className="mt-20"
         >
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-12 text-white relative overflow-hidden shadow-2xl">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden opacity-20">
-              {[...Array(8)].map((_, i) => (
+          <div className="bg-gradient-to-r from-gray-600 to-gray-700 rounded-3xl p-12 text-white">
+            <h3 className="text-3xl font-bold mb-8 text-center">
+              Driving Change Together
+            </h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { icon: Shield, value: "100%", label: "Compliance Rate", desc: "Legal adherence across all clients" },
+                { icon: Users, value: "500+", label: "Organizations", desc: "Transformed workplaces" },
+                { icon: Heart, value: "75K+", label: "Lives Impacted", desc: "Through our programs" }
+              ].map((stat, index) => (
                 <motion.div
-                  key={i}
-                  animate={{
-                    x: [0, 100, 0],
-                    y: [0, 50, 0],
-                    opacity: [0.1, 0.3, 0.1]
-                  }}
-                  transition={{
-                    duration: 15 + i * 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute w-40 h-40 rounded-full bg-white"
-                  style={{
-                    left: `${10 + i * 10}%`,
-                    top: `${10 + i * 5}%`
-                  }}
-                />
-              ))}
-            </div>
-            
-            <div className="relative z-10">
-              <div className="text-center max-w-3xl mx-auto mb-12">
-                <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                  Driving <span className="text-yellow-300">Change</span> Together
-                </h3>
-                <p className="text-lg text-blue-100">
-                  We measure our success by the positive impact we create in workplaces worldwide. 
-                  Join us in building safer, more inclusive environments for all.
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-8">
-                {[
-                  { 
-                    icon: Shield, 
-                    value: "100%", 
-                    label: "Compliance Rate", 
-                    desc: "Legal adherence across all client organizations",
-                    color: "bg-blue-400"
-                  },
-                  { 
-                    icon: Users, 
-                    value: "500+", 
-                    label: "Organizations", 
-                    desc: "Transformed workplaces worldwide",
-                    color: "bg-purple-400"
-                  },
-                  { 
-                    icon: Heart, 
-                    value: "75K+", 
-                    label: "Lives Impacted", 
-                    desc: "Through our training and programs",
-                    color: "bg-pink-400"
-                  }
-                ].map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -5 }}
-                    className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-white/40 transition-all duration-300"
-                  >
-                    <div className={`w-14 h-14 ${stat.color} rounded-xl flex items-center justify-center mb-4 mx-auto shadow-lg`}>
-                      <stat.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="text-4xl font-bold mb-2 text-center">{stat.value}</div>
-                    <div className="text-xl font-semibold mb-2 text-center">{stat.label}</div>
-                    <div className="text-sm text-blue-100 text-center">{stat.desc}</div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="text-center mt-12">
-                <Button 
-                  className="bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="text-center group"
                 >
-                  Join Our Movement
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
+                  <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <stat.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="text-4xl font-bold mb-2">{stat.value}</div>
+                  <div className="text-lg font-semibold mb-2">{stat.label}</div>
+                  <div className="text-sm opacity-90">{stat.desc}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </motion.div>
@@ -321,4 +251,4 @@ const MissionVisionSection = () => {
   );
 };
 
-export default MissionVisionSection;
+export default MissionVisionSection; 
