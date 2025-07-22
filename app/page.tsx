@@ -1,690 +1,581 @@
-"use client"
+"use client";
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Shield, Zap, Globe, Users, TrendingUp, Star, BarChart3, PieChart, Target, Award, Settings, Cog, Phone, Mail, MapPin, Download, Play, CheckCircle, Building, GraduationCap, Factory, Computer } from 'lucide-react';
 
-import React from "react"
-import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import {
-  ArrowRight,
-  Shield,
-  Users,
-  Award,
-  Heart,
-  CheckCircle,
-  Star,
-  Menu,
-  X,
-  Play,
-  Building,
-  Clock,
-  Phone,
-  Mail,
-  MapPin,
-  Globe,
-  Sparkles,
-  Target,
-  Lightbulb,
-  TrendingUp,
-  BookOpen,
-  Zap,
-  Scale,
-  ChevronRight,
-  Quote,
-  FileCheck,
-  Briefcase,
-  Calendar,
-} from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
-
-export default function HomePage() {
-  const pathname = usePathname()
-  const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeTestimonial, setActiveTestimonial] = useState(0)
-
-  const testimonials = [
-    {
-      name: "Priya Sharma",
-      position: "Chief People Officer",
-      company: "TechVision Solutions",
-      content:
-        "Ureposh transformed our workplace culture completely. Their approach goes beyond compliance—they helped us build genuine respect and inclusion. Our employee satisfaction scores increased by 40% within six months.",
-      rating: 5,
-      image: "/images/2.jpg",
-      companyLogo: "/placeholder.svg?height=50&width=150",
-      industry: "Technology & Software",
-      location: "Bangalore, Karnataka",
-      challenge: "High attrition due to workplace culture issues",
-      solution: "Comprehensive POSH training and culture transformation program",
-    },
-    {
-      name: "Rajesh Kumar",
-      position: "Managing Director",
-      company: "Global Manufacturing Corp",
-      content:
-        "The multilingual training programs were a game-changer for our diverse workforce. Ureposh's cultural sensitivity and practical approach made complex legal concepts accessible to everyone, from factory floor to boardroom.",
-      rating: 5,
-      image: "/images/3.jpg",
-      companyLogo: "/placeholder.svg?height=50&width=150",
-      industry: "Manufacturing & Engineering",
-      location: "Chennai, Tamil Nadu",
-      challenge: "Language barriers and cultural diversity across multiple locations",
-      solution: "Multi-language POSH training and localized awareness programs",
-    },
-    {
-      name: "Dr. Anjali Mehta",
-      position: "Founder & CEO",
-      company: "HealthTech Innovations",
-      content:
-        "As a woman-led healthcare startup, creating a safe environment was crucial for our growth. Ureposh helped us establish robust policies from day one, enabling us to scale confidently while maintaining our values.",
-      rating: 5,
-      image: "/images/4.jpg",
-      companyLogo: "/placeholder.svg?height=50&width=150",
-      industry: "Healthcare Technology",
-      location: "Mumbai, Maharashtra",
-      challenge: "Building inclusive culture in fast-growing startup environment",
-      solution: "Startup-focused POSH implementation and leadership training",
-    },
-  ]
-
-  const whyChooseUs = [
-    {
-      title: "Proven Track Record",
-      description: "500+ organizations transformed across 25+ industries with 99.2% compliance success rate",
-      icon: Award,
-      stats: "99.2% Success Rate",
-    },
-    {
-      title: "Expert Team",
-      description: "Legal professionals, certified trainers, and compliance experts with 15+ years average experience",
-      icon: Users,
-      stats: "15+ Years Experience",
-    },
-    {
-      title: "Comprehensive Solutions",
-      description: "End-to-end services from policy development to ongoing support and continuous improvement",
-      icon: CheckCircle,
-      stats: "360° Coverage",
-    },
-    {
-      title: "Cultural Sensitivity",
-      description: "Deep understanding of Indian workplace culture with solutions adapted for regional diversity",
-      icon: Heart,
-      stats: "15+ Languages",
-    },
-  ]
-
-  const industries = [
-    {
-      name: "Information Technology & Software",
-      icon: "💻",
-      count: "180+",
-      growth: "+32%",
-      color: "from-gray-500 to-slate-600",
-      description: "From startups to tech giants, ensuring safe digital workspaces",
-      challenges: ["Remote work policies", "Digital harassment", "Rapid scaling"],
-    },
-    {
-      name: "Healthcare & Life Sciences",
-      icon: "🏥",
-      count: "95+",
-      growth: "+28%",
-      color: "from-slate-500 to-gray-600",
-      description: "Protecting healthcare workers and maintaining patient care standards",
-      challenges: ["High-stress environments", "Hierarchical structures", "Patient interaction protocols"],
-    },
-    {
-      name: "Financial Services & Banking",
-      icon: "🏦",
-      count: "75+",
-      growth: "+25%",
-      color: "from-zinc-500 to-gray-600",
-      description: "Ensuring compliance in regulated financial environments",
-      challenges: ["Regulatory compliance", "Client-facing roles", "Performance pressure"],
-    },
-    {
-      name: "Manufacturing & Engineering",
-      icon: "🏭",
-      count: "120+",
-      growth: "+22%",
-      color: "from-gray-600 to-slate-700",
-      description: "Creating safe environments in industrial settings",
-      challenges: ["Blue-collar workforce", "Multiple shifts", "Safety integration"],
-    },
-    {
-      name: "Education & Research Institutions",
-      icon: "🎓",
-      count: "65+",
-      growth: "+35%",
-      color: "from-slate-400 to-gray-600",
-      description: "Fostering safe learning and research environments",
-      challenges: ["Student-faculty dynamics", "Research collaborations", "Campus safety"],
-    },
-    {
-      name: "Professional Services & Consulting",
-      icon: "💼",
-      count: "85+",
-      growth: "+20%",
-      color: "from-gray-500 to-zinc-600",
-      description: "Maintaining professional standards in client-service environments",
-      challenges: ["Client interactions", "Travel policies", "Project-based teams"],
-    },
-  ]
-
+export default function UreposhHomepage() {
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const [gearRotation, setGearRotation] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const animationRef = useRef<number | null>(null);
+  
+  useEffect(() => {
+    // Optimized gear animation with reduced frequency
+    const animateGears = () => {
+      setGearRotation(prev => prev + (isHovering ? 0.8 : 0.2));
+      animationRef.current = requestAnimationFrame(animateGears);
+    };
+    
+    setIsVisible(true);
+    animationRef.current = requestAnimationFrame(animateGears);
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isHovering]);
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
-    }, 8000)
-    return () => clearInterval(interval)
-  }, [testimonials.length])
+      setCurrentTestimonial((prev) => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: "easeOut" },
-  }
+  const testimonials = [
+    { name: "Priya Sharma", role: "HR Director, TechFlow India", text: "Ureposh transformed our workplace culture completely. Their POSH compliance solutions are comprehensive and culturally sensitive.", rating: 5 },
+    { name: "Rajesh Kumar", role: "CEO, InnovateCorp", text: "The most professional and thorough POSH compliance partner we've worked with. Our employees feel safer and more valued.", rating: 5 },
+    { name: "Anita Desai", role: "Legal Head, FinanceFirst", text: "Expert guidance, seamless implementation, and ongoing support. Ureposh made POSH compliance effortless for our organization.", rating: 5 }
+  ];
 
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
+  const features = [
+    { icon: <Shield className="w-8 h-8" />, title: "POSH Policy Development", desc: "Comprehensive policies tailored to your organization's unique needs and culture", gear: "Policy Engine" },
+    { icon: <Users className="w-8 h-8" />, title: "Expert Training Programs", desc: "Certified trainers delivering impactful sessions across 15+ languages", gear: "Training Hub" },
+    { icon: <CheckCircle className="w-8 h-8" />, title: "Compliance Audits", desc: "Regular assessments ensuring continuous adherence to legal requirements", gear: "Audit System" },
+    { icon: <Target className="w-8 h-8" />, title: "Investigation Support", desc: "Professional investigation services with complete confidentiality", gear: "Support Network" }
+  ];
+
+  // Simplified Gear Component - optimized for performance
+  const OptimizedGear = ({ className = "", size = 120, teeth = 12, rotation = 0, variant = "primary" }) => {
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const outerRadius = size / 2 - 6;
+    const toothHeight = size * 0.06;
+    const innerRadius = outerRadius * 0.4;
+    
+    const variants = {
+      primary: {
+        body: "url(#pinkGradient)",
+        stroke: "#ec4899",
+        center: "#f9a8d4"
       },
-    },
-  }
+      secondary: {
+        body: "url(#whiteGradient)", 
+        stroke: "#f472b6",
+        center: "#fce7f3"
+      }
+    };
+    
+    const currentVariant = variants[variant as keyof typeof variants] || variants.primary;
+    
+    // Simplified gear path for better performance
+    const createGearPath = () => {
+      let path = '';
+      const angleStep = (2 * Math.PI) / teeth;
+      
+      for (let i = 0; i < teeth; i++) {
+        const angle1 = i * angleStep - angleStep * 0.2;
+        const angle2 = i * angleStep + angleStep * 0.2;
+        const angle3 = i * angleStep;
+        
+        const x1 = centerX + Math.cos(angle1) * outerRadius;
+        const y1 = centerY + Math.sin(angle1) * outerRadius;
+        const x2 = centerX + Math.cos(angle2) * outerRadius;
+        const y2 = centerY + Math.sin(angle2) * outerRadius;
+        const x3 = centerX + Math.cos(angle3) * (outerRadius + toothHeight);
+        const y3 = centerY + Math.sin(angle3) * (outerRadius + toothHeight);
+        
+        if (i === 0) {
+          path += `M ${x1} ${y1}`;
+        }
+        
+        path += ` L ${x3} ${y3} L ${x2} ${y2}`;
+        
+        if (i < teeth - 1) {
+          const nextAngle = (i + 1) * angleStep - angleStep * 0.2;
+          const nextX = centerX + Math.cos(nextAngle) * outerRadius;
+          const nextY = centerY + Math.sin(nextAngle) * outerRadius;
+          path += ` A ${outerRadius} ${outerRadius} 0 0 1 ${nextX} ${nextY}`;
+        }
+        
+        if (i === teeth - 1) {
+          path += ' Z';
+        }
+      }
+      return path;
+    };
+
+    const gearId = `gear-${Math.random().toString(36).substr(2, 9)}`;
+
+    return (
+      <svg width={size} height={size} className={className}>
+        <defs>
+          <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#fdf2f8" />
+            <stop offset="30%" stopColor="#fce7f3" />
+            <stop offset="70%" stopColor="#f9a8d4" />
+            <stop offset="100%" stopColor="#ec4899" />
+          </linearGradient>
+          
+          <linearGradient id="whiteGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="30%" stopColor="#fef7ff" />
+            <stop offset="70%" stopColor="#fdf2f8" />
+            <stop offset="100%" stopColor="#fce7f3" />
+          </linearGradient>
+          
+          <filter id={`shadow-${gearId}`} x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="2" dy="4" stdDeviation="3" floodOpacity="0.2" floodColor="#ec4899"/>
+          </filter>
+        </defs>
+        
+        <g transform={`rotate(${rotation} ${centerX} ${centerY})`}>
+          {/* Main gear body */}
+          <path
+            d={createGearPath()}
+            fill={currentVariant.body}
+            stroke={currentVariant.stroke}
+            strokeWidth="2"
+            filter={`url(#shadow-${gearId})`}
+          />
+          
+          {/* Inner circle */}
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={innerRadius}
+            fill={currentVariant.center}
+            stroke={currentVariant.stroke}
+            strokeWidth="2"
+          />
+          
+          {/* Center bore */}
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={size * 0.08}
+            fill="#f472b6"
+            stroke="#ec4899"
+            strokeWidth="1"
+          />
+          
+          {/* Simple spokes */}
+          {[0, 72, 144, 216, 288].map(angle => (
+            <line
+              key={angle}
+              x1={centerX}
+              y1={centerY}
+              x2={centerX + Math.cos((angle * Math.PI) / 180) * (innerRadius - 8)}
+              y2={centerY + Math.sin((angle * Math.PI) / 180) * (innerRadius - 8)}
+              stroke="#ec4899"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          ))}
+        </g>
+      </svg>
+    );
+  };
+
+  // Simplified connecting mechanism
+  const ConnectingRods = () => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-60">
+      {/* Main horizontal drive shaft */}
+      <div className="absolute top-1/2 left-0 w-full h-2 transform -translate-y-1/2">
+        <div className="h-full bg-gradient-to-r from-transparent via-pink-200 to-transparent rounded-full" />
+            </div>
+
+      {/* Vertical drive shaft */}
+      <div className="absolute left-1/2 top-0 w-2 h-full transform -translate-x-1/2">
+        <div className="w-full h-full bg-gradient-to-b from-transparent via-pink-200 to-transparent rounded-full" />
+      </div>
+
+      {/* Connection points */}
+      {[
+        { x: '25%', y: '50%' },
+        { x: '75%', y: '50%' },
+        { x: '50%', y: '33%' },
+        { x: '50%', y: '67%' }
+      ].map((pos, i) => (
+        <div
+          key={i}
+          className="absolute w-4 h-4 transform -translate-x-1/2 -translate-y-1/2"
+          style={{ left: pos.x, top: pos.y }}
+        >
+          <div className="w-full h-full bg-gradient-to-br from-white to-pink-200 rounded-full border-2 border-pink-300 shadow-sm" />
+                            </div>
+      ))}
+                            </div>
+  );
+
+  const stats = [
+    { icon: <Target className="w-6 h-6" />, label: "Lives Transformed", value: "50,000+", color: "from-pink-500 to-rose-500" },
+    { icon: <Building className="w-6 h-6" />, label: "Organizations", value: "500+", color: "from-pink-400 to-pink-600" },
+    { icon: <Star className="w-6 h-6" />, label: "Client Rating", value: "4.9/5", color: "from-rose-400 to-pink-500" },
+    { icon: <CheckCircle className="w-6 h-6" />, label: "Success Rate", value: "99.2%", color: "from-pink-500 to-rose-400" }
+  ];
+
+  const industries = [
+    { icon: <Computer className="w-8 h-8" />, name: "Information Technology", growth: "+32%", count: "180+", color: "from-pink-400 to-pink-500" },
+    { icon: <Building className="w-8 h-8" />, name: "Financial Services", growth: "+25%", count: "75+", color: "from-pink-500 to-rose-500" },
+    { icon: <Factory className="w-8 h-8" />, name: "Manufacturing", growth: "+22%", count: "120+", color: "from-rose-400 to-pink-500" },
+    { icon: <GraduationCap className="w-8 h-8" />, name: "Education & Research", growth: "+35%", count: "65+", color: "from-pink-300 to-pink-500" }
+  ];
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-20 items-center min-h-screen py-20">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8 lg:pr-12"
-            >
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="inline-block"
-              >
-                <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-sm font-semibold border border-gray-200/50 shadow-lg rounded-full">
-                  <div className="mr-2 text-black">♀</div>
-                  India's Leading POSH Compliance Partner
-                </Badge>
-              </motion.div>
-
-              {/* Main Headline */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="space-y-4"
-              >
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
-                  Creating{" "}
-                  <span className="relative">
-                    <span className="text-black">Safe & Inclusive</span>
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
-                      className="absolute bottom-0 left-0 h-1 bg-black rounded-full"
-                    />
-                  </span>
-                  <br />
-                  Workplaces for Everyone
-                </h1>
-              </motion.div>
-
-              {/* Description */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-                className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl"
-              >
-                We transform organizational cultures through comprehensive POSH compliance, expert training, and
-                innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
-              </motion.p>
-
-              {/* CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, duration: 0.8 }}
-                className="flex flex-col sm:flex-row gap-4 pt-4"
-              >
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button
-                    size="lg"
-                    className="bg-black hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl"
-                  >
-                    <Calendar className="mr-2 h-5 w-5" />
-                    Get Free Consultation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </motion.div>
-
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-black text-black hover:bg-gray-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-gray-800 transition-all duration-300 shadow-lg rounded-xl"
-                  >
-                    <Play className="mr-2 h-5 w-5" />
-                    Watch Demo
-                  </Button>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Visual */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-              className="relative lg:pl-12 flex flex-col items-center"
-            >
-              {/* Main Image Container */}
-              <div className="relative max-w-lg w-full">
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                  <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20">
-                    <Image
-                      src="/images/5.jpg"
-                      alt="Diverse professionals in inclusive workplace"
-                      width={700}
-                      height={600}
-                      className="w-full h-full object-cover"
-                      priority
-                      loading="eager"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent"></div>
-
-                    {/* Overlay Stats */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.5, duration: 0.8 }}
-                      className="absolute bottom-6 left-6 right-6"
-                    >
-                      <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-2xl font-bold text-slate-900">50,000+</p>
-                            <p className="text-slate-600 font-medium">Lives Transformed</p>
-                          </div>
-                          <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <span className="text-white text-lg font-bold">♀</span>
+      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
+        <div className="max-w-7xl mx-auto text-center z-10">
+          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="mb-8 inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full border border-pink-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+              <Shield className="w-5 h-5 text-pink-500 mr-3" />
+              <span className="text-sm font-semibold text-gray-700">India's Leading POSH Compliance Partner</span>
+              <div className="flex ml-3 space-x-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-pink-400 text-pink-400" />
+                ))}
                           </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              </div>
 
-              {/* Trust Indicators */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.4, duration: 0.8 }}
-                className="w-full max-w-md mt-8"
+            <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-gray-800 via-pink-600 to-rose-600 bg-clip-text text-transparent leading-tight">
+              Creating Safe &
+              <br />
+              <span className="text-5xl md:text-7xl bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
+                Inclusive Workplaces
+                              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+              We transform organizational cultures through comprehensive POSH compliance, expert training, 
+              and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+              <button className="group bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-10 py-5 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center shadow-xl">
+                Get Free Consultation
+                <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                          </button>
+              
+              <button className="px-10 py-5 border-2 border-pink-300 hover:border-pink-400 text-gray-700 hover:text-pink-600 rounded-2xl font-semibold text-lg transition-all duration-300 backdrop-blur-sm hover:bg-pink-50/50 shadow-lg hover:shadow-xl flex items-center">
+                <Play className="mr-3 w-5 h-5" />
+                Watch Demo
+                          </button>
+                    </div>
+                  </div>
+
+          {/* Hero Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {stats.map((stat, index) => (
+              <div 
+                key={index}
+                className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-pink-200/50 hover:border-pink-300/70 transition-all duration-300 group hover:scale-105 shadow-xl hover:shadow-2xl"
               >
-                <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/30">
-                  <div className="space-y-6">
-                    {/* Organization Trust */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex -space-x-2">
-                          {[1, 2, 3, 4].map((i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ delay: 1.6 + i * 0.1, type: "spring" }}
-                              className="w-10 h-10 bg-gradient-to-br from-gray-600 to-slate-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm"
-                            >
-                              {String.fromCharCode(65 + i - 1)}
-                            </motion.div>
-                          ))}
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} text-white mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                  {stat.icon}
+                      </div>
+                <div className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2`}>
+                  {stat.value}
+                                </div>
+                <div className="text-gray-600 font-medium text-sm">{stat.label}</div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-lg font-bold text-slate-900">500+ Organizations</p>
-                          <p className="text-sm text-slate-600 font-medium">Trust Our Expertise</p>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Divider */}
-                    <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-
-                    {/* Client Rating */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ scale: 0, rotate: 180 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ delay: 1.8 + i * 0.05, type: "spring" }}
-                          >
-                            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                          </motion.div>
-                        ))}
-                      </div>
-                      <div>
-                        <p className="text-lg font-bold text-slate-900">4.9/5</p>
-                        <p className="text-sm text-slate-600 font-medium">Client Rating</p>
-                      </div>
-                      <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-slate-700 px-3 py-1 text-xs font-semibold border border-gray-200/50">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Verified & Trusted Partner
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-8 h-12 border-2 border-pink-300 rounded-full flex justify-center shadow-lg bg-white/50 backdrop-blur-sm">
+            <div className="w-2 h-4 bg-gradient-to-b from-pink-400 to-rose-400 rounded-full mt-2 animate-pulse" />
+                            </div>
+                            </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-24 bg-white/80 backdrop-blur-sm relative"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <Target className="w-5 h-5 mr-2" />
-              Why Choose Ureposh
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
+      {/* Optimized Gear Mechanism Section */}
+      <section className="py-32 px-6 relative bg-gradient-to-br from-pink-25 to-rose-25">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="inline-block px-4 py-2 bg-pink-100 text-pink-600 rounded-full text-sm font-semibold mb-6 shadow-md">
+              WHY CHOOSE UREPOSH
+                              </div>
+            <h2 className="text-5xl md:text-6xl font-bold mb-8 text-gray-800">
+              Your Trusted
+              <span className="bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent"> POSH Partner</span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-              We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive
-              workplace safety solutions that protect your organization and empower your people.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              We combine legal expertise, cultural understanding, and innovative technology to deliver 
+              comprehensive workplace safety solutions that protect your organization and empower your people.
+                              </p>
+                            </div>
+          
+          <div 
+            className="relative"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
           >
-            {whyChooseUs.map((reason, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
-                <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
-                  <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <reason.icon className="h-8 w-8 text-white" />
+            <ConnectingRods />
+            
+            {/* Central Master Gear */}
+            <div className="flex justify-center mb-20">
+              <div className="relative">
+                <OptimizedGear 
+                  size={200} 
+                  teeth={16} 
+                  rotation={gearRotation} 
+                  variant="primary"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-full p-6 shadow-2xl border-2 border-pink-200">
+                    <Settings className="w-8 h-8 text-pink-600" />
+                          </div>
+                          </div>
+                <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl px-6 py-3 border border-pink-200 shadow-xl">
+                    <div className="font-bold text-gray-800 text-lg">Compliance Engine</div>
+                    <div className="text-sm text-gray-600">360° Coverage System</div>
+                        </div>
+                      </div>
                     </div>
-                    <CardTitle className="text-xl text-slate-900">{reason.title}</CardTitle>
-                    <Badge variant="secondary" className="bg-gray-100 text-black mx-auto">
-                      {reason.stats}
-                    </Badge>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600 leading-relaxed">{reason.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
+                  </div>
+
+            {/* Feature Gears Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative">
+              {features.map((feature, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  {/* Optimized Gear */}
+                  <div className="relative mb-8">
+                    <OptimizedGear
+                      size={140}
+                      teeth={12}
+                      rotation={-gearRotation * (index % 2 === 0 ? 1 : -1)}
+                      variant={index % 2 === 0 ? "primary" : "secondary"}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/95 backdrop-blur-sm rounded-full p-4 shadow-xl border-2 border-pink-200">
+                        <div className="text-pink-600">
+                          {feature.icon}
+                </div>
+              </div>
         </div>
-      </motion.section>
+                    <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center w-32">
+                      <div className="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 border border-pink-200 shadow-lg">
+                        <div className="font-semibold text-xs text-gray-700">{feature.gear}</div>
+            </div>
+          </div>
+      </div>
+
+                  {/* Feature Info */}
+                  <div className="text-center mt-4">
+                    <h3 className="text-xl font-bold mb-4 text-gray-800">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {feature.desc}
+                    </p>
+                  </div>
+                        </div>
+              ))}
+                        </div>
+                    </div>
+                      </div>
+      </section>
 
       {/* Industries Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
+      <section className="py-32 px-6 bg-gradient-to-br from-pink-50/50 to-rose-50/50">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
-          >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold">
-              <Briefcase className="w-5 h-5 mr-2" />
-              Industries We Serve
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Trusted Across{" "}
-              <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
-                All Sectors
-              </span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              From innovative startups to established enterprises, we've helped organizations across diverse industries
-              create inclusive, safe workplaces that drive business success and employee wellbeing.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {industries.map((industry, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.03, y: -5 }}>
-                <Card className="bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl shadow-gray-500/10 transition-all duration-300 overflow-hidden group">
-                  <CardContent className="p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="text-5xl">{industry.icon}</div>
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">{industry.growth}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{industry.name}</h3>
-                    <p className="text-slate-600 text-sm mb-4 leading-relaxed">{industry.description}</p>
-                    <p className="text-4xl font-bold text-slate-900 mb-2">{industry.count}</p>
-                    <p className="text-sm text-slate-600 mb-4">Organizations transformed</p>
-                    <div className="space-y-2 mb-4">
-                      <p className="text-xs font-semibold text-slate-700">Key Challenges Addressed:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {industry.challenges.map((challenge, idx) => (
-                          <span key={idx} className="text-xs px-2 py-1 border border-gray-200 text-gray-700 rounded-full bg-white">{challenge}</span>
-                        ))}
+          <div className="text-center mb-16">
+            <div className="inline-block px-4 py-2 bg-pink-100 text-pink-600 rounded-full text-sm font-semibold mb-6 shadow-md">
+              INDUSTRIES WE SERVE
                       </div>
+            <h2 className="text-5xl font-bold mb-6 text-gray-800">
+              Trusted Across
+              <span className="bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent"> All Sectors</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              From innovative startups to established enterprises, we've helped organizations across 
+              diverse industries create inclusive, safe workplaces that drive business success.
+            </p>
+            </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {industries.map((industry, index) => (
+              <div key={index} className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 border border-pink-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 group hover:scale-105">
+                <div className="flex items-center justify-between mb-6">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r ${industry.color} text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                    {industry.icon}
+                      </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-600">{industry.growth}</div>
+                    <div className="text-sm text-gray-500">Growth</div>
                     </div>
-                    <div className="relative h-3 bg-gray-100 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: '85%' }}
-                        transition={{ delay: index * 0.1, duration: 1.2, ease: 'easeOut' }}
-                        className="h-full bg-gray-700 rounded-full relative"
-                      >
-                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                      </motion.div>
+                  </div>
+
+                <h3 className="text-xl font-bold mb-4 text-gray-800">{industry.name}</h3>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-3xl font-bold text-pink-600">{industry.count}</div>
+                    <div className="text-sm text-gray-600">Organizations</div>
+                      </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-500 mb-2">Transformed</div>
+                    <div className="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className={`h-full bg-gradient-to-r ${industry.color} rounded-full`} style={{ width: '85%' }} />
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+                          </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
       </section>
 
-      {/* CTA Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-slate-500/10 to-zinc-500/10"></div>
-        <div className="max-w-6xl mx-auto text-center space-y-12 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <Badge className="bg-white/90 text-gray-800 px-8 py-4 text-xl font-semibold border border-gray-200/50 shadow-lg">
-              <Sparkles className="w-6 h-6 mr-3" />
-              Ready to Transform Your Workplace?
-            </Badge>
-            <h2 className="text-6xl font-bold text-slate-900 leading-tight">
-              Start Your{" "}
-              <span className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 bg-clip-text text-transparent">
-                Transformation
-              </span>{" "}
-              Journey Today
+      {/* Testimonials Section */}
+      <section className="py-32 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-block px-4 py-2 bg-pink-100 text-pink-600 rounded-full text-sm font-semibold mb-6 shadow-md">
+              CLIENT SUCCESS STORIES
+                        </div>
+            <h2 className="text-5xl font-bold mb-6 text-gray-800">
+              Trusted by
+              <span className="bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent"> Industry Leaders</span>
             </h2>
-            <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-              Join 500+ forward-thinking organizations that have created safer, more inclusive workplaces with Ureposh.
-              Get started with a free consultation and discover how we can help you build a culture where everyone
-              thrives.
-            </p>
-          </motion.div>
+                    </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            viewport={{ once: true }}
-            className="flex flex-col lg:flex-row gap-8 justify-center items-center"
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 hover:from-gray-700 hover:via-slate-700 hover:to-zinc-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold"
+          <div className="relative h-80">
+            {testimonials.map((testimonial, index) => (
+                          <div
+                            key={index}
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  index === currentTestimonial ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                }`}
               >
-                Get Free Consultation
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-gray-500/10"
-              >
-                <FileCheck className="mr-3 h-6 w-6" />
-                Download Resources
-              </Button>
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-slate-500/10"
-              >
-                <Phone className="mr-3 h-6 w-6" />
-                Call Expert Now
-              </Button>
-            </motion.div>
-          </motion.div>
-
-          {/* Enhanced Contact Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            viewport={{ once: true }}
-            className="grid md:grid-cols-3 gap-8 pt-12"
-          >
-            {[
-              {
-                icon: Phone,
-                title: "Speak with Expert",
-                content: "+91 98765 43210",
-                subtitle: "Available Mon-Fri, 9 AM - 6 PM IST",
-                color: "from-gray-500 to-slate-600",
-                action: "Immediate consultation available",
-              },
-              {
-                icon: Mail,
-                title: "Email Consultation",
-                content: "hello@ureposh.com",
-                subtitle: "Response within 4 hours",
-                color: "from-slate-500 to-zinc-600",
-                action: "Detailed project discussion",
-              },
-              {
-                icon: MapPin,
-                title: "Visit Our Office",
-                content: "Mumbai, Maharashtra",
-                subtitle: "Schedule appointment",
-                color: "from-zinc-500 to-gray-600",
-                action: "In-person consultation",
-              },
-            ].map((contact, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl shadow-gray-500/10 border border-white/20"
-              >
-                <div
-                  className={`w-16 h-16 bg-gradient-to-br ${contact.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg`}
-                >
-                  <contact.icon className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{contact.title}</h3>
-                <p className="text-lg font-semibold text-slate-700 mb-1">{contact.content}</p>
-                <p className="text-sm text-slate-600 mb-2">{contact.subtitle}</p>
-                <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
-                  {contact.action}
-                </Badge>
-              </motion.div>
+                <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-12 border border-pink-200/50 max-w-4xl mx-auto shadow-2xl">
+                  <div className="flex justify-center mb-6">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-6 h-6 fill-pink-400 text-pink-400 mx-1" />
+                      ))}
+                    </div>
+                  <blockquote className="text-2xl mb-8 text-gray-700 italic text-center leading-relaxed">
+                    "{testimonial.text}"
+                  </blockquote>
+                  <div className="text-center">
+                    <div className="font-bold text-lg text-gray-800 mb-1">{testimonial.name}</div>
+                    <div className="text-pink-600 font-medium">{testimonial.role}</div>
+                  </div>
+                      </div>
+                    </div>
             ))}
-          </motion.div>
+                  </div>
 
-          {/* Trust Badges */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center items-center gap-12 pt-12"
-          >
-            {[
-              { icon: Shield, text: "100% Confidential", color: "text-gray-600", desc: "Secure processes" },
-              { icon: CheckCircle, text: "Legal Compliance", color: "text-slate-600", desc: "Full POSH adherence" },
-              { icon: Award, text: "Expert Team", color: "text-zinc-600", desc: "Certified professionals" },
-              { icon: Clock, text: "Quick Response", color: "text-gray-700", desc: "24-hour turnaround" },
-            ].map((badge, index) => (
-              <div key={index} className="flex items-center space-x-3 text-slate-700">
-                <badge.icon className={`w-6 h-6 ${badge.color}`} />
-                <div>
-                  <span className="font-semibold text-lg">{badge.text}</span>
-                  <p className="text-sm text-slate-600">{badge.desc}</p>
+          <div className="flex justify-center space-x-3 mt-12">
+            {testimonials.map((_, index) => (
+              <button
+                          key={index}
+                onClick={() => setCurrentTestimonial(index)}
+                className={`w-4 h-4 rounded-full transition-all duration-300 shadow-md ${
+                  index === currentTestimonial 
+                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 scale-125 shadow-lg' 
+                    : 'bg-pink-200 hover:bg-pink-300'
+                }`}
+              />
+                      ))}
+                    </div>
+                  </div>
+      </section>
+
+      {/* Contact CTA Section */}
+      <section className="py-32 px-6 bg-gradient-to-r from-pink-500 to-rose-500 relative">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl md:text-6xl font-bold mb-8 text-white leading-tight">
+              Ready to Transform
+              <br />
+              Your Workplace?
+            </h2>
+            <p className="text-xl text-pink-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Join 500+ forward-thinking organizations that have created safer, more inclusive workplaces with Ureposh. 
+              Start your transformation journey today.
+            </p>
+                  </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* Phone Contact */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center hover:bg-white/15 transition-all duration-300">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-6">
+                <Phone className="w-8 h-8 text-white" />
+                      </div>
+              <h3 className="text-xl font-bold text-white mb-4">Speak with Expert</h3>
+              <p className="text-pink-100 mb-4">+91 98765 43210</p>
+              <p className="text-sm text-pink-200">Available Mon-Fri, 9 AM - 6 PM IST</p>
+              <button className="mt-4 bg-white text-pink-600 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-all duration-300">
+                Call Now
+              </button>
+                  </div>
+
+            {/* Email Contact */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center hover:bg-white/15 transition-all duration-300">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-6">
+                <Mail className="w-8 h-8 text-white" />
+                      </div>
+              <h3 className="text-xl font-bold text-white mb-4">Email Consultation</h3>
+              <p className="text-pink-100 mb-4">hello@ureposh.com</p>
+              <p className="text-sm text-pink-200">Response within 4 hours</p>
+              <button className="mt-4 bg-white text-pink-600 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-all duration-300">
+                Send Email
+              </button>
+                  </div>
+
+            {/* Office Visit */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center hover:bg-white/15 transition-all duration-300">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-6">
+                <MapPin className="w-8 h-8 text-white" />
+                      </div>
+              <h3 className="text-xl font-bold text-white mb-4">Visit Our Office</h3>
+              <p className="text-pink-100 mb-4">Mumbai, Maharashtra</p>
+              <p className="text-sm text-pink-200">Schedule appointment</p>
+              <button className="mt-4 bg-white text-pink-600 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-all duration-300">
+                Book Visit
+              </button>
+                    </div>
+                  </div>
+
+          <div className="text-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8">
+              <button className="group bg-white text-pink-600 px-10 py-5 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center shadow-xl">
+                Get Free Consultation
+                <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                    </button>
+              
+              <button className="px-10 py-5 border-2 border-white/40 hover:border-white/60 text-white rounded-2xl font-semibold text-lg transition-all duration-300 backdrop-blur-sm hover:bg-white/10 shadow-lg flex items-center">
+                <Download className="mr-3 w-5 h-5" />
+                Download Resources
+                      </button>
+                    </div>
+            
+            <div className="flex flex-wrap justify-center items-center gap-8 text-pink-100">
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                <span>100% Confidential</span>
+                </div>
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                <span>Legal Compliance</span>
+                </div>
+              <div className="flex items-center">
+                <Users className="w-5 h-5 mr-2" />
+                <span>Expert Team</span>
+              </div>
+              <div className="flex items-center">
+                <Zap className="w-5 h-5 mr-2" />
+                <span>Quick Response</span>
+                </div>
+                </div>
                 </div>
               </div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
-    </div>
-  )
+      </section>
+            </div>
+  );
 }
-
-
