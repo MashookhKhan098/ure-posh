@@ -3,15 +3,16 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Menu, X, ChevronDown, Heart } from "lucide-react"
+import { Menu, X, ChevronDown, Heart, Coffee } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import ExpertiseDropdown from "@/components/ui/dropdown-menu"
+// Removed: import ExpertiseDropdown from "@/components/ui/dropdown-menu"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isExpertiseOpen, setIsExpertiseOpen] = useState(false)
+  const expertiseRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const [showNavbar, setShowNavbar] = useState(true)
   const [scrolled, setScrolled] = useState(false)
@@ -36,12 +37,8 @@ export default function Navbar() {
         "POSH Training for Workforce",
         "POSH Training for IC Members",
         "Quarterly Mandatory Training",
-        "Managers Level Training"
-      ]
-    },
-    {
-      title: "Remote Training (Cost Effective)",
-      items: [
+        "Managers Level Training",
+        "Remote Training (Cost Effective)",
         "POSH Training for Workforce",
         "POSH Training for IC Members",
         "Managers Level Training"
@@ -70,13 +67,17 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (isExpertiseOpen && !(event.target as Element).closest('.expertise-dropdown')) {
+      if (
+        isExpertiseOpen &&
+        expertiseRef.current &&
+        !(event.target as Element).closest(".expertise-dropdown-trigger") &&
+        !(event.target as Element).closest(".expertise-dropdown-panel")
+      ) {
         setIsExpertiseOpen(false)
       }
     }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [isExpertiseOpen])
 
   useEffect(() => {
@@ -133,16 +134,53 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
-          <ExpertiseDropdown />
+          {/* Expertise Dropdown Trigger */}
+          <div className="relative" ref={expertiseRef}>
+            <button
+              className={`expertise-dropdown-trigger flex items-center gap-2 px-2 py-1 text-base font-medium transition-colors duration-200 ${isExpertiseOpen ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}`}
+              onClick={() => setIsExpertiseOpen((v) => !v)}
+              aria-haspopup="true"
+              aria-expanded={isExpertiseOpen}
+              type="button"
+            >
+              Expertise
+              <ChevronDown className={`w-4 h-4 transition-transform ${isExpertiseOpen ? "rotate-180" : ""}`} />
+            </button>
+            <AnimatePresence>
+              {isExpertiseOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.18 }}
+                  className="expertise-dropdown-panel absolute mt-3 w-[100vw] max-w-none bg-white shadow-2xl rounded-2xl border border-gray-100 z-50 -ml-4 sm:-ml-6 lg:-ml-8"
+                  style={{ left: 0 }}
+                >
+                  <div className="flex divide-x divide-gray-100">
+                    {expertiseSubmenu.map((col, idx) => (
+                      <div key={col.title} className="w-1/3 p-6 flex flex-col items-start">
+                        <h3 className="text-lg font-bold text-gray-900 mb-4">{col.title}</h3>
+                        <ul className="space-y-2 w-full">
+                          {col.items.map((item, i) => (
+                            <li key={i} className="text-gray-700 text-sm hover:text-pink-600 cursor-pointer transition-colors">
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          {/* End Expertise Dropdown */}
           {navItems.slice(2).map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className={`text-base font-medium px-2 py-1 transition-colors duration-200 ${pathname === item.href ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}${item.name === "Connect" ? " smiley-cursor" : ""}`}
+              className={`text-base font-medium px-2 py-1 transition-colors duration-200 ${pathname === item.href ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}`}
             >
-              {item.name === "Connect" && (
-                <span className="mr-1 text-3xl">☺</span>
-              )}
               {item.name}
             </Link>
           ))}
@@ -150,8 +188,9 @@ export default function Navbar() {
 
         {/* CTA Button */}
         <div className="hidden lg:block">
-          <Link href="/contact" className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:from-pink-600 hover:to-rose-600 transition-all duration-200">
-            Get Started
+          <Link href="/contact" className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:from-pink-600 hover:to-rose-600 transition-all duration-200 flex items-center">
+            <Coffee className="w-5 h-5 mr-2" />
+            Free Coffee
           </Link>
         </div>
 
@@ -183,11 +222,8 @@ export default function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`block text-xl font-semibold py-3 px-2 rounded-lg transition-colors duration-200 ${
                     pathname === item.href ? "text-black bg-gray-100" : "text-gray-700 hover:text-black hover:bg-gray-50"
-                  } ${item.name === "☺Connect" ? "smiley-cursor" : ""}`}
+                  }`}
                 >
-                  {item.name === "Connect" && (
-                    <span className="mr-1 text-3xl">☺</span>
-                  )}
                   {item.name}
                 </Link>
               ))}

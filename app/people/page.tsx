@@ -671,7 +671,9 @@ export default function TeamPage() {
           </div>
         </div>
       </div>
-      <TeamImageBar/>
+      <div className="h-auto">
+        <TeamImageBar />
+      </div>
 
       {/* Filters and Search Section */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-pink-200 sticky top-16 z-40">
