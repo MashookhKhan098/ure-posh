@@ -62,10 +62,9 @@ const HeroSection = () => {
           className="text-center space-y-8"
         >
           <motion.div variants={fadeInUp}>
-            <Badge className="bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-black px-8 py-4 text-sm font-semibold rounded-full border border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-              <Heart className="w-4 h-4 mr-2 animate-pulse" />
+            <div className="text-4xl md:text-5xl font-extrabold text-gray-900 py-10 text-center">
               Transforming Workplaces Since 2019
-            </Badge>
+            </div>
           </motion.div>
 
           <motion.h1 
