@@ -676,47 +676,53 @@ export default function TeamPage() {
       {/* Filters and Search Section */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-pink-200 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="Search by name, expertise, or specialization..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 placeholder-gray-500"
-                />
-              </div>
-
-              <select
-                value={activeFilter}
-                onChange={(e) => setActiveFilter(e.target.value)}
-                className="px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 font-medium"
-              >
-                <option value="all">All Categories</option>
-                <option value="legal">Legal Experts</option>
-                <option value="finance">Financial Advisors</option>
-                <option value="psychology">Psychologists</option>
-              </select>
-
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 font-medium"
-              >
-                <option value="name">Sort by Name</option>
-                <option value="experience">Sort by Experience</option>
-                <option value="rating">Sort by Rating</option>
-                <option value="projects">Sort by Projects</option>
-              </select>
+          <div className="flex flex-row items-center gap-3 justify-center">
+            <span className="font-semibold text-gray-700 text-base">People</span>
+            <div className="relative w-72">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search by name, expertise, or specialization..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 placeholder-gray-500"
+              />
             </div>
-
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-600 font-medium">
-                Showing {sortedMembers.length} of {teamMembers.length} experts
-              </div>
-            </div>
+            <select
+              value={activeFilter}
+              onChange={(e) => setActiveFilter(e.target.value)}
+              className="h-12 px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 font-medium"
+            >
+              <option value="all">All Categories</option>
+              <option value="legal">Legal Experts</option>
+              <option value="finance">Financial Advisors</option>
+              <option value="psychology">Psychologists</option>
+            </select>
+            <select
+              className="h-12 px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 font-medium"
+            >
+              <option value="all">All Status</option>
+              <option value="available">Available</option>
+              <option value="busy">Busy</option>
+            </select>
+            <select
+              className="h-12 px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 font-medium"
+            >
+              <option value="all">All Expertise</option>
+              <option value="compliance">Compliance</option>
+              <option value="training">Training</option>
+              <option value="wellbeing">Well-being</option>
+            </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="h-12 px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-sm text-gray-700 font-medium"
+            >
+              <option value="name">Sort by Name</option>
+              <option value="experience">Sort by Experience</option>
+              <option value="rating">Sort by Rating</option>
+              <option value="projects">Sort by Projects</option>
+            </select>
           </div>
         </div>
       </div>
