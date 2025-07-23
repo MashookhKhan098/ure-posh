@@ -138,8 +138,11 @@ export default function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className={`text-base font-medium px-2 py-1 transition-colors duration-200 ${pathname === item.href ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}`}
+              className={`text-base font-medium px-2 py-1 transition-colors duration-200 ${pathname === item.href ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}${item.name === "Connect" ? " smiley-cursor" : ""}`}
             >
+              {item.name === "Connect" && (
+                <span className="mr-1 text-3xl">☺</span>
+              )}
               {item.name}
             </Link>
           ))}

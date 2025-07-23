@@ -672,36 +672,6 @@ export default function TeamPage() {
         </div>
       </div>
       <TeamImageBar/>
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-fuchsia-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Meet Our Expert Team
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-              Certified professionals specializing in POSH compliance and workplace safety, dedicated to transforming
-              workplaces and empowering lives
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center gap-2 text-white/90">
-                <CheckCircle className="h-5 w-5" />
-                <span className="font-medium">Certified Experts</span>
-              </div>
-              <div className="flex items-center gap-2 text-white/90">
-                <Award className="h-5 w-5" />
-                <span className="font-medium">Industry Leaders</span>
-              </div>
-              <div className="flex items-center gap-2 text-white/90">
-                <Shield className="h-5 w-5" />
-                <span className="font-medium">Trusted Partners</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Stats Section */}
       <div className="bg-white border-b border-gray-100">

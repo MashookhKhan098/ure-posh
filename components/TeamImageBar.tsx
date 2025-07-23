@@ -222,42 +222,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
         </div>
       )}
 
-      {/* Enhanced Header Section */}
-      <div className="relative z-10 text-center py-16 lg:py-20 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="inline-flex items-center gap-4 mb-8 bg-white/5 backdrop-blur-sm rounded-full px-6 lg:px-8 py-3 lg:py-4 border border-white/10 shadow-2xl transform hover:scale-105 transition-transform duration-300">
-            <Sparkles className="h-6 w-6 lg:h-7 lg:w-7 text-cyan-400 animate-pulse" />
-            <span className="text-cyan-400 font-semibold text-base lg:text-lg">Meet Our Elite Team</span>
-          </div>
-          
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white mb-6 lg:mb-8 leading-tight">
-            The Minds Behind
-            <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse">
-              Innovation
-            </span>
-          </h1>
-          
-          <p className="text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 lg:mb-12 px-4">
-            A carefully curated team of industry leaders, creative visionaries, and technical experts 
-            who transform ambitious ideas into extraordinary digital experiences
-          </p>
-          
-          <div className="flex flex-wrap justify-center gap-4 lg:gap-6 text-sm lg:text-base text-gray-400">
-            {[
-              { icon: Award, text: "50+ Awards Won", color: "text-yellow-400" },
-              { icon: Star, text: "100+ Projects Delivered", color: "text-cyan-400" },
-              { icon: Users, text: "Global Recognition", color: "text-purple-400" }
-            ].map((item, index) => (
-              <div key={index} className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-full px-4 lg:px-6 py-2 lg:py-3 border border-white/10 shadow-lg hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
-                <item.icon className={`h-4 w-4 lg:h-5 lg:w-5 ${item.color}`} />
-                <span>{item.text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Enhanced Responsive Team Slider with Balanced Hover */}
       <div className="relative z-10 w-full py-8 lg:py-12 px-4 sm:px-8">
         <div className="flex justify-center">
@@ -434,56 +398,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                   }`} />
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Responsive Team Stats Bar */}
-      <div className="relative z-10 py-12 lg:py-16 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-black/30 via-black/10 to-black/30 backdrop-blur-xl rounded-xl lg:rounded-2xl p-6 lg:p-8 border border-white/10 shadow-2xl">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 text-center">
-              {[
-                { value: "150+", label: "Projects Delivered", color: "text-cyan-400" },
-                { value: "98%", label: "Client Satisfaction", color: "text-purple-400" },
-                { value: "50+", label: "Industry Awards", color: "text-green-400" },
-                { value: "24/7", label: "Expert Support", color: "text-orange-400" }
-              ].map((stat, index) => (
-                <div key={index} className="space-y-2 transform transition-all duration-300 hover:scale-105">
-                  <div className={`text-3xl lg:text-4xl font-black ${stat.color}`}>{stat.value}</div>
-                  <div className="text-gray-300 font-medium text-sm lg:text-base">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Enhanced Responsive CTA Section */}
-      <div className="relative z-10 text-center py-16 lg:py-20 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-black/40 via-black/20 to-black/40 backdrop-blur-2xl rounded-2xl lg:rounded-3xl p-8 lg:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5" />
-            
-            <div className="relative">
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-4 mb-6 lg:mb-8">
-                <div className="p-3 lg:p-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl lg:rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-110">
-                  <Sparkles className="h-6 w-6 lg:h-8 lg:w-8 text-white" />
-                </div>
-                <h2 className="text-3xl lg:text-5xl font-black text-white text-center lg:text-left">
-                  Ready to Build the
-                  <span className="block lg:inline bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent"> Future?</span>
-                </h2>
-                <p className="text-gray-300 text-lg lg:text-xl font-medium mt-2 lg:mt-4">
-                  Let's create something amazing together.
-                </p>
-                <button className="mt-6 lg:mt-8 inline-flex items-center gap-2 px-6 py-3 lg:px-8 lg:py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold rounded-lg lg:rounded-xl transform transition-all duration-300 hover:scale-105 shadow-lg">
-                  Get Started
-                  <ArrowRight className="h-4 w-4 lg:h-6 lg:w-6" />
-                </button>
-              </div>
             </div>
           </div>
         </div>
