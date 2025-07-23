@@ -4,6 +4,9 @@ import { ChevronDown } from 'lucide-react';
 export default function ExpertiseDropdown() {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Handler for click toggle
+  const handleToggle = () => setIsOpen((prev) => !prev);
+
   return (
     <div
       className="relative"
@@ -16,6 +19,7 @@ export default function ExpertiseDropdown() {
         tabIndex={0}
         aria-haspopup="true"
         aria-expanded={isOpen}
+        onClick={handleToggle}
       >
         Expertise
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />

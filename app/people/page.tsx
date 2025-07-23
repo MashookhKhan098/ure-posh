@@ -673,30 +673,6 @@ export default function TeamPage() {
       </div>
       <TeamImageBar/>
 
-      {/* Stats Section */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-pink-600 mb-2">500+</div>
-              <div className="text-gray-600 font-medium">Projects Completed</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-rose-600 mb-2">98%</div>
-              <div className="text-gray-600 font-medium">Success Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-fuchsia-600 mb-2">50+</div>
-              <div className="text-gray-600 font-medium">Expert Team</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">24/7</div>
-              <div className="text-gray-600 font-medium">Support Available</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Filters and Search Section */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-pink-200 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
