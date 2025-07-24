@@ -7,7 +7,21 @@ import { Menu, X, ChevronDown, Heart, Coffee } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-// Removed: import ExpertiseDropdown from "@/components/ui/dropdown-menu"
+
+const expertiseServices = [
+  "Public affairs & impact", "Crisis & issues", "Transactions & transformations",
+  "Strategy & reputation", "Public relations & marketing", "Creative, design & content",
+  "Insights & analytics", "Generative AI", "YTPR Advisory"
+];
+
+const expertiseSectorsCol1 = [
+  "Health", "Food & beverage", "Financial services", "Government & public sector",
+  "Mobility & transportation", "Technology"
+];
+
+const expertiseSectorsCol2 = [
+  "Retail & CPG", "Lifestyle & leisure", "Media & entertainment", "Non-profit", "Energy", "Industry & manufacturing"
+];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -146,33 +160,6 @@ export default function Navbar() {
               Expertise
               <ChevronDown className={`w-4 h-4 transition-transform ${isExpertiseOpen ? "rotate-180" : ""}`} />
             </button>
-            <AnimatePresence>
-              {isExpertiseOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.18 }}
-                  className="expertise-dropdown-panel absolute mt-3 w-[100vw] max-w-none bg-white shadow-2xl rounded-2xl border border-gray-100 z-50 -ml-4 sm:-ml-6 lg:-ml-8"
-                  style={{ left: 0 }}
-                >
-                  <div className="flex divide-x divide-gray-100">
-                    {expertiseSubmenu.map((col, idx) => (
-                      <div key={col.title} className="w-1/3 p-6 flex flex-col items-start">
-                        <h3 className="text-lg font-bold text-gray-900 mb-4">{col.title}</h3>
-                        <ul className="space-y-2 w-full">
-                          {col.items.map((item, i) => (
-                            <li key={i} className="text-gray-700 text-sm hover:text-pink-600 cursor-pointer transition-colors">
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
           {/* End Expertise Dropdown */}
           {navItems.slice(2).map((item) => (
@@ -202,6 +189,51 @@ export default function Navbar() {
           {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
+
+      {/* Render dropdown as a direct child of nav for extreme left alignment */}
+      {isExpertiseOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ duration: 0.18 }}
+          className="expertise-dropdown-panel fixed left-0 mt-3 w-[100vw] max-w-none bg-white shadow-2xl rounded-2xl border border-gray-100 z-50"
+        >
+          <div className="relative grid gap-8 bg-white p-8 grid-cols-4">
+            <div className="pr-8 border-r border-gray-100">
+              <h2 className="text-2xl font-bold text-slate-900 inline-block border-b-2 border-teal-500 pb-2">
+                Expertise
+              </h2>
+              <p className="mt-4 text-slate-600">
+                Advising and leading businesses and brands across an array of industries
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Services</h3>
+              <ul className="space-y-3">
+                {expertiseServices.map((service: string) => (
+                  <li key={service}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{service}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-2">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Sectors</h3>
+              <div className="grid grid-cols-2 gap-8">
+                <ul className="space-y-3">
+                  {expertiseSectorsCol1.map((sector: string) => (
+                    <li key={sector}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{sector}</a></li>
+                  ))}
+                </ul>
+                <ul className="space-y-3">
+                  {expertiseSectorsCol2.map((sector: string) => (
+                    <li key={sector}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{sector}</a></li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {/* Mobile Menu */}
       <AnimatePresence>
