@@ -117,7 +117,7 @@ const expertiseGears = [
 // =================================================================================
 // Reusable Component for the Expertise Gears (Updated with detailed SVG)
 // =================================================================================
-const ExpertiseGear = ({ title, dots, isLast }: { title: string, dots: { color: string, position: React.CSSProperties }[], isLast?: boolean }) => {
+const ExpertiseGear = ({ title, dots, isLast, index }: { title: string, dots: { color: string, position: React.CSSProperties }[], isLast?: boolean, index: number }) => {
     const size = 400;
     const centerX = size / 2;
     const centerY = size / 2;
@@ -155,15 +155,21 @@ const ExpertiseGear = ({ title, dots, isLast }: { title: string, dots: { color: 
         return path;
     };
 
+    // Example: alternate direction and vary duration
+    const durations = [24, 30, 36, 42, 28, 34];
+    const duration = durations[index % durations.length];
+    const direction = index % 2 === 0 ? 1 : -1; // alternate direction
+
     return (
         <div className="flex items-center justify-center col-span-1">
             <div className="relative group w-48 h-48 flex items-center justify-center text-center">
                 {/* Animated gear rotation */}
                 <motion.div
+                    key={`gear-motion-${index}`}
                     className="absolute inset-0"
-                    animate={{ rotate: [0, 360] }}
+                    animate={{ rotate: [0, 360 * direction] }}
                     transition={{
-                        duration: 36,
+                        duration,
                         repeat: Infinity,
                         repeatType: "loop",
                         ease: "linear"
@@ -640,6 +646,7 @@ export default function HomePage() {
                         title={gear.title}
                         dots={gear.dots}
                         isLast={index === expertiseGears.length - 1}
+                        index={index}
                     />
                 ))}
             </div>
