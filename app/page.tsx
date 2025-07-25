@@ -76,55 +76,65 @@ const heroSlides = [
 ];
 
 const expertiseGears = [
-  {
-    title: "Creative, design and content",
-    dots: [
-      { color: "bg-pink-400", position: { top: '15%', left: '25%' } },
-      { color: "bg-rose-400", position: { top: '25%', left: '80%' } },
-      { color: "bg-pink-300", position: { bottom: '25%', left: '15%' } },
-      { color: "bg-rose-300", position: { bottom: '10%', left: '50%' } },
-    ]
-  },
-  {
-    title: "Public relations and Marketing",
-    dots: [
-      { color: "bg-pink-400", position: { top: '25%', left: '25%' } },
-      { color: "bg-rose-300", position: { bottom: '35%', left: '75%' } },
-      { color: "bg-pink-300", position: { bottom: '20%', left: '30%' } },
-    ]
-  },
-  {
-    title: "Strategy planning and reputation",
-    dots: [
-      { color: "bg-pink-400", position: { top: '15%', left: '65%' } },
-      { color: "bg-rose-400", position: { top: '35%', left: '20%' } },
-      { color: "bg-pink-300", position: { bottom: '35%', left: '55%' } },
-      { color: "bg-rose-300", position: { bottom: '40%', left: '20%' } },
-      { color: "bg-pink-200", position: { bottom: '15%', left: '50%' } },
-    ]
-  },
-  {
-    title: "Transaction and Transformation",
-    dots: [
-      { color: "bg-rose-400", position: { top: '20%', left: '70%' } },
-      { color: "bg-pink-300", position: { bottom: '50%', left: '75%' } },
-      { color: "bg-pink-400", position: { bottom: '30%', left: '40%' } },
-      { color: "bg-rose-300", position: { bottom: '20%', left: '60%' } },
-    ]
-  }
+    {
+        title: "Creative, design and content",
+        dots: [
+            { color: "bg-purple-400", position: { top: '15%', left: '25%' } },
+            { color: "bg-blue-400", position: { top: '25%', left: '80%' } },
+            { color: "bg-teal-400", position: { bottom: '25%', left: '15%' } },
+            { color: "bg-red-400", position: { bottom: '10%', left: '50%' } },
+        ]
+    },
+    {
+        title: "Public relations and Marketing",
+        dots: [
+            { color: "bg-yellow-400", position: { top: '25%', left: '25%' } },
+            { color: "bg-teal-300", position: { bottom: '35%', left: '75%' } },
+            { color: "bg-red-400", position: { bottom: '20%', left: '30%' } },
+        ]
+    },
+    {
+        title: "Strategy planning and reputation",
+        dots: [
+            { color: "bg-yellow-400", position: { top: '15%', left: '65%' } },
+            { color: "bg-purple-400", position: { top: '35%', left: '20%' } },
+            { color: "bg-blue-400", position: { bottom: '35%', left: '55%' } },
+            { color: "bg-teal-300", position: { bottom: '40%', left: '20%' } },
+            { color: "bg-red-400", position: { bottom: '15%', left: '50%' } },
+        ]
+    },
+    {
+        title: "Transaction and Transformation",
+        dots: [
+            { color: "bg-red-400", position: { top: '20%', left: '70%' } },
+            { color: "bg-green-400", position: { bottom: '50%', left: '75%' } },
+            { color: "bg-blue-400", position: { bottom: '30%', left: '40%' } },
+            { color: "bg-teal-300", position: { bottom: '20%', left: '60%' } },
+        ]
+    },
+    {
+        title: "Crises and issues",
+        dots: [
+            { color: "bg-yellow-400", position: { top: '20%', left: '75%' } },
+            { color: "bg-purple-400", position: { top: '30%', left: '25%' } },
+            { color: "bg-orange-400", position: { bottom: '20%', left: '55%' } },
+        ]
+    },
+    {
+        title: "Public Affairs and impact",
+        dots: [
+            { color: "bg-yellow-400", position: { top: '18%', left: '78%' } },
+            { color: "bg-purple-400", position: { top: '35%', left: '20%' } },
+            { color: "bg-blue-400", position: { bottom: '45%', left: '70%' } },
+            { color: "bg-red-400", position: { bottom: '15%', left: '55%' } },
+        ]
+    },
 ];
 
 // =================================================================================
-// Reusable Component for the Expertise Gears (Updated with detailed SVG)
+// Reusable Component for the Expertise Gears (Updated with constant rotation)
 // =================================================================================
-const ExpertiseGear = ({ title, dots, isLast, index }: { title: string, dots: { color: string, position: React.CSSProperties }[], isLast?: boolean, index: number }) => {
-    const size = 400;
-    const centerX = size / 2;
-    const centerY = size / 2;
-    const outerRadius = size / 2 - 6;
-    const toothHeight = size * 0.06;
-    const innerRadius = outerRadius * 0.4;
-
+const ExpertiseGear = ({ title, dots, index }: { title: string, dots: { color: string, position: React.CSSProperties }[], index: number }) => {
     // Generates the SVG path for a gear with a more realistic profile
     const createGearPath = (
         teeth = 24, 
@@ -155,27 +165,21 @@ const ExpertiseGear = ({ title, dots, isLast, index }: { title: string, dots: { 
         return path;
     };
 
-    // Example: alternate direction and vary duration
-    const durations = [24, 30, 36, 42, 28, 34];
-    const duration = durations[index % durations.length];
-    const direction = index % 2 === 0 ? 1 : -1; // alternate direction
+    // Alternate direction and vary duration for a more dynamic look
+    const duration = 20 + (index * 4);
+    const direction = index % 2 === 0 ? 1 : -1;
 
     return (
         <div className="flex items-center justify-center col-span-1">
-            <div className="relative group w-48 h-48 flex items-center justify-center text-center">
-                {/* Animated gear rotation */}
+            <div className="relative w-48 h-48 flex items-center justify-center text-center">
                 <motion.div
-                    key={`gear-motion-${index}`}
                     className="absolute inset-0"
-                    animate={{ rotate: [0, 360 * direction] }}
+                    animate={{ rotate: 360 * direction }}
                     transition={{
                         duration,
                         repeat: Infinity,
-                        repeatType: "loop",
-                        ease: "linear"
+                        ease: "linear",
                     }}
-                    initial={false}
-                    style={{ willChange: 'transform' }}
                 >
                     <svg
                         viewBox="0 0 100 100"
@@ -197,7 +201,6 @@ const ExpertiseGear = ({ title, dots, isLast, index }: { title: string, dots: { 
                                 </feMerge>
                             </filter>
                         </defs>
-                        {/* Gear Body with Gradient and Shadow */}
                         <path
                             d={createGearPath()}
                             fill="url(#gearGradient)"
@@ -205,9 +208,7 @@ const ExpertiseGear = ({ title, dots, isLast, index }: { title: string, dots: { 
                             strokeWidth="0.5"
                             filter="url(#shadow)"
                         />
-                         {/* Inner hole */}
                         <circle cx="50" cy="50" r="28" fill="#e9f2eb" /> 
-                         {/* Inner shadow for depth */}
                         <circle cx="50" cy="50" r="30" fill="transparent" stroke="rgba(0,0,0,0.1)" strokeWidth="4"/>
                     </svg>
 
@@ -218,7 +219,6 @@ const ExpertiseGear = ({ title, dots, isLast, index }: { title: string, dots: { 
                 </motion.div>
                 <span className="relative text-sm font-semibold text-slate-800 max-w-[120px]">{title}</span>
             </div>
-            {!isLast && <ArrowRight className="mx-2 text-slate-400 hidden xl:block" />}
         </div>
     );
 };
@@ -251,7 +251,7 @@ const Header = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuO
                     <span>{item.label}</span>
                     <ChevronRight className="w-4 h-4 ml-1 transform transition-transform duration-200 group-hover:rotate-90" />
                   </button>
-                  <div className="absolute left-0 mt-3 px-0 w-[100vw] max-w-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  <div className="absolute left-1/2 -translate-x-1/2 mt-3 px-2 w-screen max-w-5xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                     <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                       <div className="relative grid gap-8 bg-white p-8 grid-cols-4">
                         <div className="pr-8 border-r border-gray-100">
@@ -380,6 +380,12 @@ export default function HomePage() {
 
   const whyChooseUs = [
     {
+      title: "Proven Track Record",
+      description: "500+ organizations transformed across 25+ industries with 99.2% compliance success rate",
+      icon: Award,
+      stats: "99.2% Success Rate",
+    },
+    {
       title: "Expert Team",
       description: "Legal professionals, certified trainers, and compliance experts with 15+ years average experience",
       icon: Users,
@@ -487,7 +493,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      
+      <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+
       {/* Hero Section */}
       <section className="relative pt-24 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
         
@@ -501,7 +508,7 @@ export default function HomePage() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[calc(100vh-120px)] py-4">
+          <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[calc(100vh-100px)] py-10">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -509,42 +516,10 @@ export default function HomePage() {
               className="space-y-8 lg:pr-12"
             >
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
-                <Badge
-  className="
-    bg-gradient-to-r from-pink-100 via-white to-indigo-100
-    text-black
-    px-4 py-2
-    border-2 border-pink-200
-    shadow-xl
-    rounded-full
-    flex items-center justify-center
-    gap-2
-    relative
-    "
-  style={{
-    boxShadow: "0 4px 24px 0 rgba(236, 72, 153, 0.10), 0 1.5px 6px 0 rgba(99, 102, 241, 0.08)"
-  }}
->
-  <span
-    className="
-      flex items-center justify-center
-      w-8 h-8
-      rounded-full
-      bg-gradient-to-br from-pink-400 to-indigo-400
-      text-white
-      text-lg
-      font-extrabold
-      shadow-lg
-      border-4 border-white
-    "
-    style={{ boxShadow: "0 2px 8px 0 rgba(236, 72, 153, 0.15)" }}
-  >
-    ♀
-  </span>
-  <span className="text-base font-extrabold tracking-tight leading-tight">
-    India's Leading POSH Compliance Partner
-  </span>
-</Badge>
+                <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-sm font-semibold border border-gray-200/50 shadow-lg rounded-full">
+                  <div className="mr-2 text-black">♀</div>
+                  India's Leading POSH Compliance Partner
+                </Badge>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
@@ -561,7 +536,19 @@ export default function HomePage() {
                 We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
               </motion.p>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="flex flex-col sm:flex-row gap-4 pt-4">
-                {/* Removed Get Free Consultation and Watch Demo buttons as requested */}
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button size="lg" className="bg-black hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl">
+                    <Calendar className="mr-2 h-5 w-5" />
+                    Get Free Consultation
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button size="lg" variant="outline" className="border-2 border-black text-black hover:bg-gray-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-gray-800 transition-all duration-300 shadow-lg rounded-xl">
+                    <Play className="mr-2 h-5 w-5" />
+                    Watch Demo
+                  </Button>
+                </motion.div>
               </motion.div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
@@ -581,8 +568,44 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               </div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.8 }} className="w-full max-w-md mt-4">
-                {/* Removed A, B, C, D avatars, 500+ Organizations, Trust Our Expertise, 4.9/5, Client Rating, and Verified & Trusted Partner as requested */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.8 }} className="w-full max-w-md mt-8">
+                <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/30">
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3, 4].map((i) => (
+                            <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.6 + i * 0.1, type: "spring" }} className="w-10 h-10 bg-gradient-to-br from-gray-600 to-slate-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm">
+                              {String.fromCharCode(65 + i - 1)}
+                            </motion.div>
+                          ))}
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold text-slate-900">500+ Organizations</p>
+                          <p className="text-sm text-slate-600 font-medium">Trust Our Expertise</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <motion.div key={i} initial={{ scale: 0, rotate: 180 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: 1.8 + i * 0.05, type: "spring" }}>
+                            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                          </motion.div>
+                        ))}
+                      </div>
+                      <div>
+                        <p className="text-lg font-bold text-slate-900">4.9/5</p>
+                        <p className="text-sm text-slate-600 font-medium">Client Rating</p>
+                      </div>
+                      <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-slate-700 px-3 py-1 text-xs font-semibold border border-gray-200/50">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        Verified & Trusted Partner
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           </div>
@@ -605,8 +628,7 @@ export default function HomePage() {
               We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
             </p>
           </motion.div>
-          <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} 
-            className="flex flex-row justify-center items-stretch gap-6">
+          <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {whyChooseUs.map((reason, index) => (
               <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
                 <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
@@ -639,13 +661,12 @@ export default function HomePage() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-5xl font-bold text-slate-900 mb-16">Our Expertise</h2>
-            <div className="flex flex-wrap items-center justify-center gap-y-12">
+            <div className="flex flex-wrap items-center justify-center gap-y-12 gap-x-4">
                 {expertiseGears.map((gear, index) => (
                     <ExpertiseGear
                         key={index}
                         title={gear.title}
                         dots={gear.dots}
-                        isLast={index === expertiseGears.length - 1}
                         index={index}
                     />
                 ))}
@@ -702,6 +723,78 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-slate-500/10 to-zinc-500/10"></div>
+        <div className="max-w-6xl mx-auto text-center space-y-12 relative">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="space-y-8">
+            <Badge className="bg-white/90 text-gray-800 px-8 py-4 text-xl font-semibold border border-gray-200/50 shadow-lg">
+              <Sparkles className="w-6 h-6 mr-3" />
+              Ready to Transform Your Workplace?
+            </Badge>
+            <h2 className="text-6xl font-bold text-slate-900 leading-tight">
+              Start Your <span className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 bg-clip-text text-transparent">Transformation</span> Journey Today
+            </h2>
+            <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+              Join 500+ forward-thinking organizations that have created safer, more inclusive workplaces with Ureposh. Get started with a free consultation and discover how we can help you build a culture where everyone thrives.
+            </p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} viewport={{ once: true }} className="flex flex-col lg:flex-row gap-8 justify-center items-center">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 hover:from-gray-700 hover:via-slate-700 hover:to-zinc-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold">
+                Get Free Consultation
+                <ArrowRight className="ml-3 h-6 w-6" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" variant="outline" className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-gray-500/10">
+                <FileCheck className="mr-3 h-6 w-6" />
+                Download Resources
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-slate-500/10">
+                <Phone className="mr-3 h-6 w-6" />
+                Call Expert Now
+              </Button>
+            </motion.div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} viewport={{ once: true }} className="grid md:grid-cols-3 gap-8 pt-12">
+            {[
+              { icon: Phone, title: "Speak with Expert", content: "+91 98765 43210", subtitle: "Available Mon-Fri, 9 AM - 6 PM IST", color: "from-gray-500 to-slate-600", action: "Immediate consultation available" },
+              { icon: Mail, title: "Email Consultation", content: "hello@ureposh.com", subtitle: "Response within 4 hours", color: "from-slate-500 to-zinc-600", action: "Detailed project discussion" },
+              { icon: MapPin, title: "Visit Our Office", content: "Mumbai, Maharashtra", subtitle: "Schedule appointment", color: "from-zinc-500 to-gray-600", action: "In-person consultation" },
+            ].map((contact, index) => (
+              <motion.div key={index} whileHover={{ scale: 1.05, y: -5 }} className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl shadow-gray-500/10 border border-white/20">
+                <div className={`w-16 h-16 bg-gradient-to-br ${contact.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg`}>
+                  <contact.icon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">{contact.title}</h3>
+                <p className="text-lg font-semibold text-slate-700 mb-1">{contact.content}</p>
+                <p className="text-sm text-slate-600 mb-2">{contact.subtitle}</p>
+                <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">{contact.action}</Badge>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} viewport={{ once: true }} className="flex flex-wrap justify-center items-center gap-12 pt-12">
+            {[
+              { icon: Shield, text: "100% Confidential", color: "text-gray-600", desc: "Secure processes" },
+              { icon: CheckCircle, text: "Legal Compliance", color: "text-slate-600", desc: "Full POSH adherence" },
+              { icon: Award, text: "Expert Team", color: "text-zinc-600", desc: "Certified professionals" },
+              { icon: Clock, text: "Quick Response", color: "text-gray-700", desc: "24-hour turnaround" },
+            ].map((badge, index) => (
+              <div key={index} className="flex items-center space-x-3 text-slate-700">
+                <badge.icon className={`w-6 h-6 ${badge.color}`} />
+                <div>
+                  <span className="font-semibold text-lg">{badge.text}</span>
+                  <p className="text-sm text-slate-600">{badge.desc}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
     </div>
   )
 }
