@@ -159,54 +159,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-pink-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-pink-400 bg-clip-text text-transparent">
-                UREPOSH
-              </h1>
-            </div>
-            
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <a href="#home" className="text-gray-700 hover:text-pink-600 transition-colors duration-200">Home</a>
-                <a href="#about" className="text-gray-700 hover:text-pink-600 transition-colors duration-200">About</a>
-                <a href="#expertise" className="text-gray-700 hover:text-pink-600 transition-colors duration-200">Expertise</a>
-                <a href="#people" className="text-gray-700 hover:text-pink-600 transition-colors duration-200">People</a>
-                <a href="#work" className="text-gray-700 hover:text-pink-600 transition-colors duration-200">Work</a>
-                <a href="#news" className="text-gray-700 hover:text-pink-600 transition-colors duration-200">News</a>
-                <a href="#connect" className="bg-pink-600 text-white px-4 py-2 rounded-full hover:bg-pink-700 transition-colors duration-200">☺Connect</a>
-              </div>
-            </div>
-
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 hover:text-pink-600 transition-colors"
-              >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-pink-100">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#home" className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors">Home</a>
-              <a href="#about" className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors">About</a>
-              <a href="#expertise" className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors">Expertise</a>
-              <a href="#people" className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors">People</a>
-              <a href="#work" className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors">Work</a>
-              <a href="#news" className="block px-3 py-2 text-gray-700 hover:text-pink-600 transition-colors">News</a>
-              <a href="#connect" className="block px-3 py-2 text-pink-600 hover:text-pink-700 transition-colors">☺Connect</a>
-            </div>
-          </div>
-        )}
-      </nav>
+     
 
       {/* Hero Section */}
       <section id="home" className="pt-16 min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50 flex items-center">

@@ -51,7 +51,8 @@ import {
 import CreatePostForm from './components/CreatePostForm'
 import PostsList from './components/PostsList'
 
-const ADMIN_PASSWORD = 'admin123'
+// Get allowed admin public key from env (exposed via NEXT_PUBLIC_ADMIN_WALLET)
+const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET?.toLowerCase()
 
 interface DashboardStats {
   totalPosts: number
@@ -62,8 +63,6 @@ interface DashboardStats {
 }
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [stats, setStats] = useState<DashboardStats>({
@@ -74,39 +73,53 @@ export default function AdminPage() {
     monthlyGrowth: 0
   })
   const [scanningEffect, setScanningEffect] = useState(false)
+  const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  const [metamaskError, setMetamaskError] = useState<string | null>(null)
+  const [isAllowed, setIsAllowed] = useState<boolean | null>(null);
   const router = useRouter()
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
-      setScanningEffect(true)
-      setTimeout(() => {
-        setIsAuthenticated(true)
-        localStorage.setItem('adminAuthenticated', 'true')
-        setScanningEffect(false)
-      }, 1500)
-    } else {
-      alert('Incorrect password!')
+  // MetaMask connect logic
+  const connectWallet = async () => {
+    setMetamaskError(null)
+    if (typeof window === 'undefined' || !(window as any).ethereum) {
+      setMetamaskError('MetaMask is not installed. Please install MetaMask and try again.')
+      return
+    }
+    try {
+      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' })
+      if (accounts && accounts[0]) {
+        setWalletAddress(accounts[0].toLowerCase())
+      }
+    } catch (err) {
+      setMetamaskError('Failed to connect MetaMask.')
     }
   }
 
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    localStorage.removeItem('adminAuthenticated')
-  }
-
   useEffect(() => {
-    const isAuth = localStorage.getItem('adminAuthenticated')
-    if (isAuth === 'true') {
-      setIsAuthenticated(true)
+    // Auto-connect if already connected
+    if (typeof window !== 'undefined' && (window as any).ethereum && (window as any).ethereum.selectedAddress) {
+      setWalletAddress((window as any).ethereum.selectedAddress.toLowerCase())
     }
   }, [])
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchStats()
+    if (walletAddress) {
+      setIsAllowed(null);
+      fetch('/api/admin/check-wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: walletAddress }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          setIsAllowed(!!data.allowed);
+          if (data.allowed) fetchStats();
+        })
+        .catch(() => setIsAllowed(false));
+    } else {
+      setIsAllowed(null);
     }
-  }, [isAuthenticated])
+  }, [walletAddress]);
 
   const fetchStats = async () => {
     try {
@@ -114,11 +127,10 @@ export default function AdminPage() {
       if (response.ok) {
         const data = await response.json()
         const posts = data.posts || []
-        
         setStats({
           totalPosts: posts.length,
-          publishedPosts: posts.filter((p: any) => p.status === 'published').length,
-          draftPosts: posts.filter((p: any) => p.status === 'draft').length,
+          publishedPosts: posts.filter((p: any) => p.status === 'PUBLISHED').length,
+          draftPosts: posts.filter((p: any) => p.status === 'DRAFT').length,
           totalViews: posts.reduce((sum: number, p: any) => sum + (p.views || 0), 0),
           monthlyGrowth: 12.5
         })
@@ -128,120 +140,33 @@ export default function AdminPage() {
     }
   }
 
-  if (!isAuthenticated) {
+  // If not connected or not allowed, show MetaMask connect page
+  if (!walletAddress || isAllowed === false) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50 relative overflow-hidden">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(236,72,153,0.1),transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(219,39,119,0.1),transparent_50%)]"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6 w-full max-w-md items-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h2>
+          <p className="text-gray-700 text-center mb-4">Connect your MetaMask wallet to access the admin panel.</p>
+          <button
+            onClick={connectWallet}
+            className="bg-gradient-to-r from-pink-600 to-rose-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-500 hover:to-rose-500 transition-all duration-200"
+          >
+            Connect MetaMask
+          </button>
+          {metamaskError && <p className="text-red-500 text-sm mt-2">{metamaskError}</p>}
+          {walletAddress && isAllowed === false && (
+            <p className="text-red-500 text-sm mt-2">This wallet is not authorized for admin access.</p>
+          )}
         </div>
-
-        {/* Floating Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(15)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
-              }}
-            >
-              <div className="w-2 h-2 bg-pink-400 rounded-full opacity-20 blur-sm"></div>
-            </div>
-          ))}
+      </div>
+    )
+  }
+  if (isAllowed === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6 w-full max-w-md items-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Checking wallet authorization...</h2>
         </div>
-
-        {/* Loading Effect */}
-        {scanningEffect && (
-          <div className="absolute inset-0 z-50">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-pink-500/10 to-transparent animate-scan"></div>
-          </div>
-        )}
-
-        <div className="relative z-10 min-h-screen flex items-center justify-center p-8">
-          <div className="max-w-md w-full space-y-8">
-            {/* Login Card */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-pink-500/10 rounded-3xl blur-xl"></div>
-              <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-3xl p-8 shadow-2xl">
-                <div className="text-center mb-8">
-                  <div className="relative mx-auto h-20 w-20 mb-6">
-                    <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full animate-pulse"></div>
-                    <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-                      <BookOpen className="h-10 w-10 text-pink-600" />
-                    </div>
-                  </div>
-                  <h2 className="text-3xl font-bold text-black mb-2">
-                    Blog Admin
-                  </h2>
-                  <p className="text-black text-sm">
-                    Sign in to manage your blog content
-                  </p>
-                </div>
-                
-                <form className="space-y-6" onSubmit={handleLogin}>
-                  <div className="space-y-4">
-                    <div className="relative">
-                      <label htmlFor="password" className="block text-sm font-medium text-black mb-2">
-                        Admin Password
-                      </label>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-black" />
-                        <input
-                          id="password"
-                          name="password"
-                          type="password"
-                          autoComplete="current-password"
-                          required
-                          className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black placeholder-gray-500"
-                          placeholder="Enter admin password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={scanningEffect}
-                    className="w-full relative overflow-hidden bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 disabled:opacity-50 py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-105"
-                  >
-                    {scanningEffect ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Signing in...</span>
-                      </div>
-                    ) : (
-                      <span>Sign In</span>
-                    )}
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <style jsx>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-          }
-          @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
-          }
-          .animate-float {
-            animation: float 6s ease-in-out infinite;
-          }
-          .animate-scan {
-            animation: scan 1.5s linear infinite;
-          }
-        `}</style>
       </div>
     )
   }
@@ -331,7 +256,12 @@ export default function AdminPage() {
               <span className="absolute top-1 right-1 h-2 w-2 bg-pink-500 rounded-full animate-pulse"></span>
             </button>
             <button
-              onClick={handleLogout}
+              onClick={() => {
+                localStorage.removeItem('adminAuthenticated')
+                setWalletAddress(null)
+                setMetamaskError(null)
+                router.push('/')
+              }}
               className="flex items-center space-x-2 px-4 py-2 bg-pink-50 text-pink-600 rounded-xl hover:bg-pink-100 transition-colors font-medium"
             >
               <LogOut className="h-4 w-4" />

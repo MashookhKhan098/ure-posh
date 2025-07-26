@@ -48,11 +48,14 @@ export default function PostsList() {
       const response = await fetch('/api/posts')
       if (response.ok) {
         const data = await response.json()
+        // Supabase returns posts directly in the data array
         setPosts(data.posts || [])
       } else {
-        setError('Failed to fetch posts')
+        const errorData = await response.json()
+        setError(errorData.error || 'Failed to fetch posts')
       }
     } catch (error) {
+      console.error('Error fetching posts:', error)
       setError('Error fetching posts')
     } finally {
       setLoading(false)
@@ -84,7 +87,8 @@ export default function PostsList() {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'date':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          // Use created_at for Supabase
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         case 'title':
           return a.title.localeCompare(b.title)
         case 'status':
@@ -99,24 +103,24 @@ export default function PostsList() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      published: {
+      PUBLISHED: {
         label: 'Published',
         className: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-700 border-green-500/50',
         icon: CheckCircle
       },
-      draft: {
+      DRAFT: {
         label: 'Draft',
         className: 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-700 border-yellow-500/50',
         icon: PenTool
       },
-      archived: {
+      ARCHIVED: {
         label: 'Archived',
         className: 'bg-gradient-to-r from-gray-500/20 to-slate-500/20 text-gray-700 border-gray-500/50',
         icon: Database
       }
     }
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.DRAFT
     const Icon = config.icon
 
     return (
@@ -189,9 +193,9 @@ export default function PostsList() {
           className="px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
         >
           <option value="all">All Status</option>
-          <option value="published">Published</option>
-          <option value="draft">Draft</option>
-          <option value="archived">Archived</option>
+          <option value="PUBLISHED">Published</option>
+          <option value="DRAFT">Draft</option>
+          <option value="ARCHIVED">Archived</option>
         </select>
 
         <select
@@ -242,7 +246,7 @@ export default function PostsList() {
                     <div className="flex items-center space-x-2 text-gray-500">
                       <Calendar className="h-4 w-4" />
                       <span>
-                        {new Date(post.createdAt).toLocaleDateString('en-US', {
+                        {new Date(post.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric'
@@ -257,7 +261,7 @@ export default function PostsList() {
                       <Eye className="h-4 w-4" />
                       <span>{post.views || 0} views</span>
                     </div>
-                    {post.videoUrl && (
+                    {post.video_url && (
                       <div className="flex items-center space-x-2 text-green-600">
                         <Video className="h-4 w-4" />
                         <span>Video</span>

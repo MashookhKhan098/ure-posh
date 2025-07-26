@@ -6,12 +6,12 @@ export interface Post {
   author: string
   category: string
   status: string
-  createdAt: string
-  updatedAt: string
-  featuredImage?: string
-  videoUrl?: string
-  videoTitle?: string
-  videoDescription?: string
+  created_at: string
+  updated_at: string
+  featured_image?: string
+  video_url?: string
+  video_title?: string
+  video_description?: string
   tags: string
   slug: string
   views?: number
@@ -26,12 +26,12 @@ export interface PostResponse {
   author: string
   category: string
   status: string
-  createdAt: string
-  updatedAt: string
-  featuredImage?: string
-  videoUrl?: string
-  videoTitle?: string
-  videoDescription?: string
+  created_at: string
+  updated_at: string
+  featured_image?: string
+  video_url?: string
+  video_title?: string
+  video_description?: string
   tags: string[]
   slug: string
   views?: number

@@ -8,6 +8,16 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 
+// Utility function to generate slugs
+const generateSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim()
+}
+
 const expertiseServices = [
   "Public affairs & impact", "Crisis & issues", "Transactions & transformations",
   "Strategy & reputation", "Public relations & marketing", "Creative, design & content",
@@ -75,7 +85,7 @@ export default function Navbar() {
     { name: "About", href: "/about" },
     { name: "People", href: "/people" },
     { name: "Work", href: "/work" },
-    { name: "News", href: "/news" },
+    { name: "News Room", href: "/news" },
     { name: "Connect", href: "/connect" },
   ]
 
@@ -212,7 +222,14 @@ export default function Navbar() {
               <h3 className="text-lg font-bold text-slate-900 mb-4">Services</h3>
               <ul className="space-y-3">
                 {expertiseServices.map((service: string) => (
-                  <li key={service}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{service}</a></li>
+                  <li key={service}>
+                    <Link 
+                      href={`/services/${generateSlug(service)}`} 
+                      className="text-base text-slate-600 hover:text-slate-900 hover:underline"
+                    >
+                      {service}
+                    </Link>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -221,12 +238,26 @@ export default function Navbar() {
               <div className="grid grid-cols-2 gap-8">
                 <ul className="space-y-3">
                   {expertiseSectorsCol1.map((sector: string) => (
-                    <li key={sector}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{sector}</a></li>
+                    <li key={sector}>
+                      <Link 
+                        href={`/sectors/${generateSlug(sector)}`} 
+                        className="text-base text-slate-600 hover:text-slate-900 hover:underline"
+                      >
+                        {sector}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
                 <ul className="space-y-3">
                   {expertiseSectorsCol2.map((sector: string) => (
-                    <li key={sector}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{sector}</a></li>
+                    <li key={sector}>
+                      <Link 
+                        href={`/sectors/${generateSlug(sector)}`} 
+                        className="text-base text-slate-600 hover:text-slate-900 hover:underline"
+                      >
+                        {sector}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -277,7 +308,7 @@ export default function Navbar() {
                         {category.items.map((item, itemIdx) => (
                           <li key={itemIdx}>
                             <Link
-                              href="/services"
+                              href={`/services/${generateSlug(item)}`}
                               onClick={() => setIsMenuOpen(false)}
                               className="block text-sm text-gray-600 hover:text-black py-1 rounded-md transition-colors"
                             >

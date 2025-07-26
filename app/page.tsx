@@ -508,7 +508,8 @@ export default function HomePage() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="space-y-8 lg:pr-12"
             >
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block mb-6">
                 <Badge
   className="
     bg-gradient-to-r from-pink-100 via-white to-indigo-100
@@ -547,17 +548,16 @@ export default function HomePage() {
 </Badge>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
-                  Creating{" "}
-                  <span className="relative">
-                    <span className="text-black">Safe & Inclusive</span>
-                    <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }} className="absolute bottom-0 left-0 h-1 bg-black rounded-full" />
-                  </span>
-                  <br />
-                  Workplaces for Everyone
-                </h1>
+                <div className="space-y-6">
+                  <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-gray-900 max-w-6xl mb-4" style={{lineHeight: 1.15, paddingBottom: '0.5rem'}}>
+  Creating <span className="text-blue-600 font-extrabold">Safe & Inclusive</span>
+  <br />
+  <span className="text-gray-800">Workplaces for Everyone</span>
+</h1>
+
+                </div>
               </motion.div>
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl">
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-xl lg:text-2xl xl:text-3xl text-black leading-relaxed max-w-4xl">
                 We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
               </motion.p>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -565,9 +565,9 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
-              <div className="relative max-w-lg w-full">
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                  <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[600px]">
+                                <div className="relative max-w-lg w-full">
+                    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
+                      <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[400px]">
                     <AnimatePresence>
                       {heroSlides.map((slide, idx) => (
                         idx === currentSlide && (
@@ -594,14 +594,14 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <Target className="w-5 h-5 mr-2" />
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-4 py-2 text-sm font-semibold border border-gray-200/50">
+              <Target className="w-4 h-4 mr-2" />
               Why Choose Ureposh
             </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
+            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
               Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
               We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
             </p>
           </motion.div>

@@ -38,6 +38,20 @@ import {
   Tablet
 } from 'lucide-react'
 
+// Remove ethers and blockchain imports
+// import { ethers } from 'ethers';
+// // Import your contract ABI
+// import BlogABI from '../../../contracts/BlogABI.json';
+// const ABI = BlogABI;
+
+// const CONTRACT_ADDRESS = process.env.BLOG_CONTRACT_ADDRESS!;
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 export default function CreatePostForm() {
   const [formData, setFormData] = useState({
     title: '',
@@ -66,6 +80,8 @@ export default function CreatePostForm() {
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved')
   const [tagInput, setTagInput] = useState('')
   const [activeTab, setActiveTab] = useState('content')
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const categories = [
     'Technology', 'Business', 'Health', 'Travel', 'Food', 'Lifestyle', 
@@ -181,6 +197,8 @@ export default function CreatePostForm() {
       })
 
       if (response.ok) {
+        const result = await response.json()
+        
         // Reset form
         setFormData({
           title: '',
@@ -203,17 +221,57 @@ export default function CreatePostForm() {
         setImagePreview(null)
         setVideoFile(null)
         setVideoPreview(null)
+        
+        // Show success message
         alert('Post created successfully!')
+        
+        // Optionally redirect to posts list
+        // window.location.href = '/admin?tab=posts'
       } else {
-        throw new Error('Failed to create post')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create post')
       }
     } catch (error) {
       console.error('Error creating post:', error)
-      alert('Failed to create post. Please try again.')
+      alert(`Failed to create post: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsSubmitting(false)
     }
   }
+
+  // Remove all blockchain logic from the component
+  // async function handlePublishOnChain(postData: any) {
+  //   if (!window.ethereum) {
+  //     alert("MetaMask is required");
+  //     return;
+  //   }
+  //   await window.ethereum.request({ method: "eth_requestAccounts" });
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   const signer = await provider.getSigner();
+  //   const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+  //   setIsPublishing(true);
+  //   try {
+  //     const tx = await contract.publishPost(
+  //       postData.title,
+  //       postData.content,
+  //       postData.author,
+  //       postData.category,
+  //       postData.tags.join(','),
+  //       postData.featuredImage,
+  //       postData.videoUrl,
+  //       postData.videoTitle,
+  //       postData.videoDescription,
+  //       "PUBLISHED"
+  //     );
+  //     await tx.wait();
+  //     setTxHash(tx.hash);
+  //     alert('Post published on-chain! Tx: ' + tx.hash);
+  //   } catch (err) {
+  //     alert('Failed to publish post: ' + (err as Error).message);
+  //   }
+  //   setIsPublishing(false);
+  // }
 
   const getAutoSaveIcon = () => {
     switch (autoSaveStatus) {
@@ -581,9 +639,9 @@ export default function CreatePostForm() {
                       onChange={(e) => handleInputChange('status', e.target.value)}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
                     >
-                      <option value="draft">Draft</option>
-                      <option value="published">Published</option>
-                      <option value="archived">Archived</option>
+                      <option value="DRAFT">Draft</option>
+                      <option value="PUBLISHED">Published</option>
+                      <option value="ARCHIVED">Archived</option>
                     </select>
                   </div>
 

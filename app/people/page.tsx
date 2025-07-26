@@ -31,10 +31,25 @@ import {
   Menu,
   ChevronDown,
   ArrowRight,
+  CopyIcon,
 } from "lucide-react"
 import Link from "next/link"
 
 import TeamImageBar from "../../components/TeamImageBar"
+
+// 1. Add flag emoji helper for languages
+const getFlagEmoji = (lang: string) => {
+  switch (lang.toLowerCase()) {
+    case "english": return "🇬🇧";
+    case "hindi": return "🇮🇳";
+    case "punjabi": return "🇮🇳";
+    case "marathi": return "🇮🇳";
+    case "sanskrit": return "🇮🇳";
+    case "kannada": return "🇮🇳";
+    case "tamil": return "🇮🇳";
+    default: return "🌐";
+  }
+};
 
 export default function TeamPage() {
   const [activeFilter, setActiveFilter] = useState("all")
@@ -656,6 +671,16 @@ export default function TeamPage() {
     setSelectedMember(null)
   }
 
+  // Helper to split name for header
+  const getNameParts = (name: string) => {
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return { first: name, last: '' };
+    return {
+      first: parts.slice(0, -1).join(' '),
+      last: parts[parts.length - 1],
+    };
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-fuchsia-50">
       
@@ -737,9 +762,9 @@ export default function TeamPage() {
             const isFlipped = flippedCards.has(member.id)
 
             return (
-              <div key={member.id} className="perspective-1000 h-[450px]">
+              <div key={member.id} className="perspective-1000 h-[370px]">
                 <div
-                  className={`relative w-full h-full transition-transform duration-700 preserve-3d ${isFlipped ? "rotate-y-180" : ""}`}
+                  className={`relative w-full h-full transition-transform duration-700 preserve-3d will-change-transform ${isFlipped ? "rotate-y-180" : ""} overflow-hidden`}
                 >
                   {/* Front of Card - Fixed Design */}
                   <div className="absolute inset-0 backface-hidden">
@@ -786,22 +811,7 @@ export default function TeamPage() {
                           </p>
                         </div>
 
-                        {/* Rating and Stats - Fixed Height */}
-                        <div className="flex items-center gap-4 mb-3 p-2 bg-gray-50 rounded-lg">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                            <span className="text-xs font-bold text-gray-900">{member.rating}</span>
-                            <span className="text-xs text-gray-500">({member.reviewCount})</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <TrendingUp className="h-3 w-3 text-green-500" />
-                            <span className="text-xs font-medium text-gray-700">{member.projects}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Shield className="h-3 w-3 text-blue-500" />
-                            <span className="text-xs font-medium text-gray-700">{member.completionRate}%</span>
-                          </div>
-                        </div>
+                        {/* Ratings and stats removed - no gap */}
 
                         {/* Skills Preview - Fixed Height */}
                         <div className="mb-3 flex-shrink-0">
@@ -823,28 +833,7 @@ export default function TeamPage() {
                           </div>
                         </div>
 
-                        {/* Pricing - Fixed Height */}
-                        <div className="mb-3 p-3 bg-gradient-to-r from-pink-50 via-rose-50 to-fuchsia-50 rounded-xl border border-pink-200 flex-shrink-0">
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <p className="text-xs text-gray-600 font-medium">Starting from</p>
-                              <p className="text-lg font-bold text-pink-600">{member.hourlyRate}/hr</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-xs text-gray-600 font-medium">Status</p>
-                              <div className="flex items-center gap-1">
-                                <div
-                                  className={`w-2 h-2 rounded-full ${member.availability === "Available" ? "bg-green-500" : "bg-orange-500"}`}
-                                ></div>
-                                <p
-                                  className={`text-xs font-semibold ${member.availability === "Available" ? "text-green-600" : "text-orange-600"}`}
-                                >
-                                  {member.availability}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        {/* Status section removed */}
 
                         {/* Action Buttons - Fixed at Bottom */}
                         <div className="mt-auto flex gap-2">
@@ -862,77 +851,67 @@ export default function TeamPage() {
                     </div>
                   </div>
 
-                  {/* Back of Card - Fixed Design */}
+                  {/* Back of Card - Redesigned */}
                   <div className="absolute inset-0 backface-hidden rotate-y-180">
-                    <div className="h-full bg-white rounded-2xl shadow-lg border border-pink-100 overflow-hidden">
+                    <div className="h-full bg-white rounded-2xl shadow-lg border border-pink-100 overflow-hidden flex flex-col">
                       {/* Header */}
                       <div className={`h-16 bg-gradient-to-r ${member.color} flex items-center justify-between px-5`}>
-                        <h3 className="text-white font-bold text-lg line-clamp-1">{member.name}</h3>
-                        <button
-                          onClick={() => toggleCardFlip(member.id)}
-                          className="bg-white/20 backdrop-blur-sm rounded-full p-1.5 hover:bg-white/30 transition-colors border border-white/30"
-                        >
+                        <h3 className="text-white font-bold text-base truncate">{member.name}</h3>
+                        <button onClick={() => toggleCardFlip(member.id)} className="bg-white/20 rounded-full p-1.5 border border-white/30" aria-label="Close details">
                           <X className="h-4 w-4 text-white" />
                         </button>
                       </div>
-
-                      <div className="p-5 h-[calc(100%-4rem)] overflow-y-auto">
-                        {/* Skills with Progress */}
-                        <div className="mb-5">
-                          <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm">
+                      <div className="flex-1 flex flex-col gap-3 p-4 overflow-y-auto">
+                        {/* Skills */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
                             <Target className="h-4 w-4 text-pink-500" />
-                            Skills & Expertise
-                          </h4>
-                          <div className="space-y-3">
-                            {member.skills.slice(0, 3).map((skill, index) => (
-                              <div key={index}>
-                                <div className="flex justify-between text-xs mb-1">
+                            <span className="font-bold text-gray-900 text-xs">Skills & Expertise</span>
+                          </div>
+                          <div className="space-y-2">
+                            {member.skills.slice(0, 3).map((skill, idx) => (
+                              <div key={idx}>
+                                <div className="flex justify-between text-xs mb-0.5">
                                   <span className="text-gray-700 font-medium">{skill.name}</span>
                                   <span className="text-pink-600 font-bold">{skill.level}%</span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div
-                                    className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-1000"
-                                    style={{ width: `${skill.level}%` }}
-                                  ></div>
+                                  <div className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full" style={{ width: `${skill.level}%` }}></div>
                                 </div>
                               </div>
                             ))}
                           </div>
                         </div>
-
-                        {/* Contact Info */}
-                        <div className="mb-4">
-                          <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-sm">
+                        <div className="border-t border-pink-100 my-2"></div>
+                        {/* Contact */}
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
                             <Mail className="h-4 w-4 text-pink-500" />
-                            Contact
-                          </h4>
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                            <span className="font-bold text-gray-900 text-xs">Contact</span>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2 text-xs text-gray-700">
                               <Mail className="h-3 w-3 text-pink-500" />
-                              <span className="text-gray-700 text-xs line-clamp-1">{member.email}</span>
+                              <span className="truncate">{member.email}</span>
                             </div>
-                            <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                            <div className="flex items-center gap-2 text-xs text-gray-700">
                               <MapPin className="h-3 w-3 text-pink-500" />
-                              <span className="text-gray-700 text-xs">{member.location}</span>
+                              <span>{member.location}</span>
                             </div>
                           </div>
                         </div>
-
-                        {/* Latest Testimonial */}
+                        <div className="border-t border-pink-100 my-2"></div>
+                        {/* Testimonial */}
                         {member.testimonials && member.testimonials.length > 0 && (
-                          <div className="mb-4">
-                            <h4 className="font-bold text-gray-900 mb-2 flex items-center gap-2 text-sm">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
                               <MessageCircle className="h-4 w-4 text-pink-500" />
-                              Latest Review
-                            </h4>
-                            <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-3 border border-pink-200">
-                              <div className="flex items-center gap-1 mb-2">
+                              <span className="font-bold text-gray-900 text-xs">Latest Review</span>
+                            </div>
+                            <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-2 border border-pink-100">
+                              <div className="flex items-center gap-1 mb-1">
                                 {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-3 w-3 ${i < member.testimonials[0].rating ? "text-yellow-400 fill-current" : "text-gray-300"}`}
-                                  />
+                                  <Star key={i} className={`h-3 w-3 ${i < member.testimonials[0].rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
                                 ))}
                               </div>
                               <p className="text-xs text-gray-700 italic leading-relaxed line-clamp-3">
@@ -944,16 +923,16 @@ export default function TeamPage() {
                             </div>
                           </div>
                         )}
-
+                        <div className="border-t border-pink-100 my-2"></div>
                         {/* Quick Stats */}
                         <div className="grid grid-cols-2 gap-2">
-                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 text-center border border-green-200">
-                            <p className="text-sm font-bold text-green-600">{member.completionRate}%</p>
-                            <p className="text-xs text-green-700 font-medium">Success</p>
+                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 text-center border border-green-100">
+                            <p className="text-xs font-bold text-green-600">{member.completionRate}%</p>
+                            <p className="text-[10px] text-green-700 font-medium">Success</p>
                           </div>
-                          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-2 text-center border border-blue-200">
-                            <p className="text-sm font-bold text-blue-600">{member.experience}</p>
-                            <p className="text-xs text-blue-700 font-medium">Experience</p>
+                          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-2 text-center border border-blue-100">
+                            <p className="text-xs font-bold text-blue-600">{member.experience}</p>
+                            <p className="text-[10px] text-blue-700 font-medium">Experience</p>
                           </div>
                         </div>
                       </div>
@@ -989,56 +968,58 @@ export default function TeamPage() {
       {/* Enhanced Member Profile Modal */}
       {selectedMember && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden relative">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden relative flex flex-col">
             {/* Close Button */}
             <button
               onClick={closeMemberProfile}
+              aria-label="Close profile modal"
               className="absolute top-6 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200"
             >
               <X className="h-6 w-6 text-gray-600" />
             </button>
 
-            {/* Cover Image with Gradient Overlay */}
-            <div className="relative h-52 overflow-hidden">
-              <div className={`absolute inset-0 bg-gradient-to-r ${selectedMember.color}`}></div>
+            {/* Profile Header - Premium Design */}
+            <div className="relative h-40 flex items-center bg-gradient-to-r from-pink-500 via-rose-500 to-fuchsia-500 border-b-4 border-pink-200">
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
-
-              {/* Profile Header */}
-              <div className="absolute bottom-6 left-6 right-6 text-white">
-                <div className="flex items-end gap-6">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5 border border-white/30 shadow-xl">
+              <div className="relative z-10 flex flex-row items-center w-full max-w-3xl mx-auto px-4 md:h-40 h-auto py-4 md:py-0">
+                <div className={`absolute left-0 top-1/2 -translate-y-1/2 ${selectedMember.featured ? 'ring-4 ring-yellow-400' : selectedMember.verified ? 'ring-4 ring-green-400' : ''} rounded-full flex-shrink-0 ml-4 md:ml-0`} style={{alignSelf: 'flex-start'}}>
+                  {selectedMember.image ? (
+                    <img
+                      src={selectedMember.image}
+                      alt={selectedMember.name}
+                      className="h-20 w-20 rounded-full object-cover border-4 border-white shadow-xl"
+                    />
+                  ) : (
                     <selectedMember.icon className="h-20 w-20 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-4 mb-3">
-                      <h1 className="text-4xl font-bold">{selectedMember.name}</h1>
-                      {selectedMember.verified && (
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
-                          <CheckCircle className="h-6 w-6 text-white" />
-                        </div>
-                      )}
-                      {selectedMember.featured && (
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
-                          <Award className="h-6 w-6 text-white" />
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-2xl text-white/95 mb-2 font-semibold">{selectedMember.title}</p>
-                    <p className="text-white/85 text-lg">{selectedMember.specialization}</p>
-                    <div className="flex items-center gap-8 mt-4">
-                      <div className="flex items-center gap-2">
-                        <Star className="h-5 w-5 text-yellow-300 fill-current" />
-                        <span className="font-bold text-lg">{selectedMember.rating}</span>
-                        <span className="text-white/80">({selectedMember.reviewCount} reviews)</span>
+                  )}
+                  {selectedMember.featured && (
+                    <span className="absolute -top-2 -right-2 bg-yellow-400 text-white rounded-full p-1 shadow-lg" title="Featured"><Award className="h-5 w-5" /></span>
+                  )}
+                  {selectedMember.verified && (
+                    <span className="absolute -bottom-2 -right-2 bg-green-400 text-white rounded-full p-1 shadow-lg" title="Verified"><CheckCircle className="h-5 w-5" /></span>
+                  )}
+                </div>
+                <div className="flex flex-row flex-1 min-w-0 items-center text-left w-full gap-10 md:gap-20 pl-28 md:pl-32">
+                  <h1 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg leading-tight mb-0 md:mb-0 break-words">
+                    {selectedMember.name}
+                  </h1>
+                  <div className="flex flex-col items-start text-left gap-1 w-full">
+                    <p className="text-base md:text-lg text-white/90 font-semibold leading-tight truncate">{selectedMember.title}</p>
+                    <p className="text-white/80 text-sm md:text-base leading-tight truncate">{selectedMember.specialization}</p>
+                    <div className="flex flex-wrap items-center gap-6 mt-2 text-xs md:text-sm w-full">
+                      <div className="flex items-center gap-1" title="Rating">
+                        <Star className="h-4 w-4 text-yellow-300 fill-current" />
+                        <span className="font-bold text-white">{selectedMember.rating}</span>
+                        <span className="text-white/80">({selectedMember.reviewCount})</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-green-300" />
-                        <span className="text-white/90 font-medium">{selectedMember.projects} projects</span>
+                      <div className="flex items-center gap-1" title="Projects">
+                        <TrendingUp className="h-4 w-4 text-green-300" />
+                        <span className="text-white font-medium">{selectedMember.projects} projects</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Shield className="h-5 w-5 text-blue-300" />
-                        <span className="text-white/90 font-medium">{selectedMember.completionRate}% success</span>
+                      <div className="flex items-center gap-1" title="Success Rate">
+                        <Shield className="h-4 w-4 text-blue-300" />
+                        <span className="text-white font-medium">{selectedMember.completionRate}% success</span>
                       </div>
                     </div>
                   </div>
@@ -1046,413 +1027,243 @@ export default function TeamPage() {
               </div>
             </div>
 
-            {/* Modal Content */}
-            <div className="p-8 overflow-y-auto max-h-[calc(95vh-220px)]">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Modal Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-0">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-10">
                   {/* About Section */}
-                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-3xl p-8 border border-pink-200">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-pink-500 rounded-2xl p-3">
-                        <BookOpen className="h-6 w-6 text-white" />
-                      </div>
-                      <h2 className="text-3xl font-bold text-gray-900">About</h2>
+                  <section className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-3xl p-8 border border-pink-200 mb-4 shadow-md">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="bg-pink-500 rounded-2xl p-3"><BookOpen className="h-6 w-6 text-white" /></div>
+                      <h2 className="text-2xl font-bold text-gray-900">About</h2>
                     </div>
-                    <p className="text-gray-700 leading-relaxed text-lg">{selectedMember.detailedDescription}</p>
-                  </div>
+                    <blockquote className="text-gray-700 leading-relaxed text-lg italic border-l-4 border-pink-400 pl-4 mb-2">{selectedMember.detailedDescription}</blockquote>
+                    {selectedMember.philosophy && (
+                      <div className="mt-4 text-pink-700 font-semibold text-base">“{selectedMember.philosophy}”</div>
+                    )}
+                  </section>
 
                   {/* Skills & Expertise */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-8">
-                      <div className="bg-purple-500 rounded-2xl p-3">
-                        <Target className="h-6 w-6 text-white" />
-                      </div>
-                      <h2 className="text-3xl font-bold text-gray-900">Skills & Expertise</h2>
+                  <section className="bg-white rounded-3xl p-8 border border-gray-200 shadow-md mb-4">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="bg-purple-500 rounded-2xl p-3"><Target className="h-6 w-6 text-white" /></div>
+                      <h2 className="text-2xl font-bold text-gray-900">Skills & Expertise</h2>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {selectedMember.expertise.map((skill: string, idx: number) => (
+                        <span key={idx} className="px-3 py-1 bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 rounded-full text-xs font-medium border border-pink-200 shadow-sm">{skill}</span>
+                      ))}
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {selectedMember.skills.map((skill: any, index: number) => (
-                        <div
-                          key={index}
-                          className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200"
-                        >
-                          <div className="flex justify-between items-center mb-4">
-                            <span className="font-bold text-gray-900 text-xl">{skill.name}</span>
-                            <span className="text-pink-600 font-bold text-xl">{skill.level}%</span>
+                        <div key={index} className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200 shadow-sm">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="font-bold text-gray-900 text-lg">{skill.name}</span>
+                            <span className="text-pink-600 font-bold text-lg">{skill.level}%</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-4">
-                            <div
-                              className="bg-gradient-to-r from-pink-500 to-rose-500 h-4 rounded-full transition-all duration-1000 shadow-sm"
-                              style={{ width: `${skill.level}%` }}
-                            ></div>
+                          <div className="w-full bg-gray-200 rounded-full h-3">
+                            <div className="bg-gradient-to-r from-pink-500 to-rose-500 h-3 rounded-full transition-all duration-1000 shadow-sm" style={{ width: `${skill.level}%` }}></div>
                           </div>
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </section>
 
-                  {/* Education & Certifications */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Education */}
-                    <div className="bg-blue-50 rounded-3xl p-8 border border-blue-200">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="bg-blue-500 rounded-2xl p-3">
-                          <GraduationCap className="h-6 w-6 text-white" />
+                  {/* Education & Certifications Timeline */}
+                  <section className="rounded-3xl p-0 border-none mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Education Timeline */}
+                      <div className="bg-blue-50 rounded-3xl p-8 border border-blue-200 shadow-md">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="bg-blue-500 rounded-2xl p-3"><GraduationCap className="h-6 w-6 text-white" /></div>
+                          <h3 className="text-xl font-bold text-gray-900">Education</h3>
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900">Education</h3>
+                        <ol className="relative border-l-2 border-blue-200 ml-2">
+                          {selectedMember.education.map((edu: any, index: number) => (
+                            <li key={index} className="mb-6 ml-4">
+                              <div className="absolute w-3 h-3 bg-blue-400 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                              <div className="bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
+                                <h4 className="font-bold text-gray-900 text-base">{edu.degree}</h4>
+                                <p className="text-blue-600 font-semibold text-base">{edu.institution}</p>
+                                <p className="text-gray-600 text-sm">{edu.year}</p>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
                       </div>
-                      <div className="space-y-4">
-                        {selectedMember.education.map((edu: any, index: number) => (
-                          <div key={index} className="bg-white rounded-2xl p-6 border border-blue-100 shadow-sm">
-                            <h4 className="font-bold text-gray-900 text-lg">{edu.degree}</h4>
-                            <p className="text-blue-600 font-semibold text-lg">{edu.institution}</p>
-                            <p className="text-gray-600">{edu.year}</p>
-                          </div>
-                        ))}
+                      {/* Certifications as Badges */}
+                      <div className="bg-green-50 rounded-3xl p-8 border border-green-200 shadow-md">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="bg-green-500 rounded-2xl p-3"><Award className="h-6 w-6 text-white" /></div>
+                          <h3 className="text-xl font-bold text-gray-900">Certifications</h3>
+                        </div>
+                        <div className="flex flex-wrap gap-3">
+                          {selectedMember.certifications.map((cert: string, index: number) => (
+                            <span key={index} className="bg-white rounded-full px-4 py-2 border border-green-200 flex items-center gap-2 shadow-sm text-green-700 font-semibold text-sm"><CheckCircle className="h-4 w-4 text-green-500" />{cert}</span>
+                          ))}
+                        </div>
                       </div>
                     </div>
-
-                    {/* Certifications */}
-                    <div className="bg-green-50 rounded-3xl p-8 border border-green-200">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="bg-green-500 rounded-2xl p-3">
-                          <Award className="h-6 w-6 text-white" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-900">Certifications</h3>
-                      </div>
-                      <div className="space-y-4">
-                        {selectedMember.certifications.map((cert: string, index: number) => (
-                          <div
-                            key={index}
-                            className="bg-white rounded-2xl p-4 border border-green-100 flex items-center gap-4 shadow-sm"
-                          >
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                            <span className="text-gray-700 font-semibold">{cert}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  </section>
 
                   {/* Recent Projects */}
-                  <div className="bg-orange-50 rounded-3xl p-8 border border-orange-200">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-orange-500 rounded-2xl p-3">
-                        <Briefcase className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Recent Projects</h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {selectedMember.recentProjects.map((project: any, index: number) => (
-                        <div key={index} className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
-                          <h4 className="font-bold text-gray-900 mb-3 text-lg">{project.title}</h4>
-                          <p className="text-orange-600 font-semibold mb-2">{project.client}</p>
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600 font-medium">{project.duration}</span>
-                            <span
-                              className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                                project.status === "Completed"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-blue-100 text-blue-700"
-                              }`}
-                            >
-                              {project.status}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Client Testimonials */}
-                  <div className="bg-purple-50 rounded-3xl p-8 border border-purple-200">
-                    <div className="flex items-center gap-4 mb-8">
-                      <div className="bg-purple-500 rounded-2xl p-3">
-                        <MessageCircle className="h-6 w-6 text-white" />
-                      </div>
-                      <h2 className="text-3xl font-bold text-gray-900">Client Testimonials</h2>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {selectedMember.testimonials.map((testimonial: any) => (
-                        <div
-                          key={testimonial.id}
-                          className="bg-white rounded-2xl p-8 border border-purple-100 shadow-sm"
-                        >
-                          <div className="flex items-center gap-1 mb-4">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-5 w-5 ${i < testimonial.rating ? "text-yellow-400 fill-current" : "text-gray-300"}`}
-                              />
-                            ))}
-                          </div>
-                          <p className="text-gray-700 italic mb-6 leading-relaxed text-lg">"{testimonial.feedback}"</p>
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <p className="font-bold text-gray-900 text-lg">{testimonial.client}</p>
-                              <p className="text-purple-600 font-semibold">{testimonial.projectType}</p>
-                            </div>
-                            <p className="text-gray-500">{testimonial.date}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Achievements */}
-                  <div className="bg-yellow-50 rounded-3xl p-8 border border-yellow-200">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-yellow-500 rounded-2xl p-3">
-                        <Zap className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Achievements</h3>
+                  <section className="bg-orange-50 rounded-3xl p-8 border border-orange-200 mb-4 shadow-md">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="bg-orange-500 rounded-2xl p-3"><Briefcase className="h-6 w-6 text-white" /></div>
+                      <h3 className="text-xl font-bold text-gray-900">Recent Projects</h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {selectedMember.achievements.map((achievement: string, index: number) => (
-                        <div
-                          key={index}
-                          className="bg-white rounded-2xl p-6 border border-yellow-100 flex items-center gap-4 shadow-sm"
-                        >
-                          <Award className="h-6 w-6 text-yellow-500" />
-                          <span className="text-gray-700 font-semibold text-lg">{achievement}</span>
+                      {selectedMember.recentProjects.map((project: any, index: number) => (
+                        <div key={index} className="bg-white rounded-2xl p-4 border border-orange-100 shadow-sm flex flex-col gap-2">
+                          <h4 className="font-bold text-gray-900 mb-1 text-base">{project.title}</h4>
+                          <p className="text-orange-600 font-semibold mb-1">{project.client}</p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600 font-medium text-sm">{project.duration}</span>
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${project.status === "Completed" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>{project.status}</span>
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                </div>
+                  </section>
 
-                {/* Sidebar */}
-                <div className="space-y-8">
-                  {/* Contact Card */}
-                  <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-8 text-white shadow-xl">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-3">
-                        <Mail className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold">Contact Information</h3>
+                  {/* Testimonials Grid */}
+                  <section className="bg-purple-50 rounded-3xl p-8 border border-purple-200 mb-4 shadow-md">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="bg-purple-500 rounded-2xl p-3"><MessageCircle className="h-6 w-6 text-white" /></div>
+                      <h2 className="text-xl font-bold text-gray-900">Client Testimonials</h2>
                     </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                        <Mail className="h-5 w-5" />
-                        <span className="font-medium">{selectedMember.email}</span>
-                      </div>
-                      <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                        <Phone className="h-5 w-5" />
-                        <span className="font-medium">{selectedMember.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                        <MapPin className="h-5 w-5" />
-                        <span className="font-medium">{selectedMember.location}</span>
-                      </div>
-                      <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                        <Globe className="h-5 w-5" />
-                        <span className="font-medium">{selectedMember.website}</span>
-                      </div>
-                      <div className="flex items-center gap-4 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                        <Clock className="h-5 w-5" />
-                        <span className="font-medium">Responds in {selectedMember.responseTime}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pricing Card */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-green-500 rounded-2xl p-3">
-                        <Calculator className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Pricing</h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-4 bg-green-50 rounded-2xl border border-green-200">
-                        <span className="text-gray-700 font-semibold text-lg">Hourly Rate</span>
-                        <span className="font-bold text-green-600 text-2xl">{selectedMember.hourlyRate}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-4 bg-blue-50 rounded-2xl border border-blue-200">
-                        <span className="text-gray-700 font-semibold text-lg">Monthly Rate</span>
-                        <span className="font-bold text-blue-600 text-2xl">{selectedMember.monthlyRate}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-4 bg-purple-50 rounded-2xl border border-purple-200">
-                        <span className="text-gray-700 font-semibold text-lg">Project Rate</span>
-                        <span className="font-bold text-purple-600 text-2xl">{selectedMember.projectRate}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Quick Stats */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-indigo-500 rounded-2xl p-3">
-                        <TrendingUp className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Statistics</h3>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-                        <p className="text-3xl font-bold text-green-600">{selectedMember.completionRate}%</p>
-                        <p className="text-green-700 font-semibold">Success Rate</p>
-                      </div>
-                      <div className="text-center p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
-                        <p className="text-3xl font-bold text-blue-600">{selectedMember.experience}</p>
-                        <p className="text-blue-700 font-semibold">Experience</p>
-                      </div>
-                      <div className="text-center p-6 bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl border border-purple-200">
-                        <p className="text-3xl font-bold text-purple-600">{selectedMember.projects}</p>
-                        <p className="text-purple-700 font-semibold">Projects</p>
-                      </div>
-                      <div className="text-center p-6 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
-                        <p
-                          className={`text-3xl font-bold ${selectedMember.availability === "Available" ? "text-green-600" : "text-orange-600"}`}
-                        >
-                          {selectedMember.availability === "Available" ? "✓" : "⏳"}
-                        </p>
-                        <p
-                          className={`font-semibold ${selectedMember.availability === "Available" ? "text-green-700" : "text-orange-700"}`}
-                        >
-                          {selectedMember.availability}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Languages */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="bg-teal-500 rounded-2xl p-3">
-                        <Globe className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">Languages</h3>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      {selectedMember.languages.map((language: string, index: number) => (
-                        <span
-                          key={index}
-                          className="px-4 py-3 bg-teal-50 text-teal-700 rounded-2xl font-semibold border border-teal-200"
-                        >
-                          {language}
-                        </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {selectedMember.testimonials.map((testimonial: any) => (
+                        <div key={testimonial.id} className="bg-white rounded-2xl p-5 border border-purple-100 shadow-sm flex flex-col gap-2">
+                          <div className="flex items-center gap-1 mb-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className={`h-4 w-4 ${i < testimonial.rating ? "text-yellow-400 fill-current" : "text-gray-300"}`} />
+                            ))}
+                          </div>
+                          <p className="text-gray-700 italic leading-relaxed text-base">"{testimonial.feedback}"</p>
+                          <div className="flex justify-between items-center mt-2">
+                            <div>
+                              <p className="font-bold text-gray-900 text-base">{testimonial.client}</p>
+                              <p className="text-purple-600 font-semibold text-sm">{testimonial.projectType}</p>
+                            </div>
+                            <p className="text-gray-500 text-xs">{testimonial.date}</p>
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  </div>
+                  </section>
+
+                  {/* Achievements */}
+                  <section className="bg-yellow-50 rounded-3xl p-8 border border-yellow-200 mb-4 shadow-md">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="bg-yellow-500 rounded-2xl p-3"><Zap className="h-6 w-6 text-white" /></div>
+                      <h3 className="text-xl font-bold text-gray-900">Achievements</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {selectedMember.achievements.map((achievement: string, index: number) => (
+                        <div key={index} className="bg-white rounded-2xl p-4 border border-yellow-100 flex items-center gap-3 shadow-sm">
+                          <Award className="h-5 w-5 text-yellow-500" />
+                          <span className="text-gray-700 font-semibold text-base">{achievement}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+
+                {/* Sidebar - Premium Design */}
+                <aside className="space-y-6 lg:sticky lg:top-8 h-fit">
+                  {/* Contact Card */}
+                  <section className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-6 text-white shadow-xl mb-2">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-2"><Mail className="h-5 w-5 text-white" /></div>
+                      <h3 className="text-lg font-bold">Contact</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl">
+                        <Mail className="h-4 w-4" />
+                        <span className="font-medium text-sm">{selectedMember.email}</span>
+                        <button aria-label="Copy email" className="ml-auto bg-white/20 rounded-full p-1 hover:bg-white/30 transition"><CopyIcon className="h-4 w-4 text-white" /></button>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl">
+                        <Phone className="h-4 w-4" />
+                        <span className="font-medium text-sm">{selectedMember.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl">
+                        <MapPin className="h-4 w-4" />
+                        <span className="font-medium text-sm">{selectedMember.location}</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl">
+                        <Globe className="h-4 w-4" />
+                        <span className="font-medium text-sm">{selectedMember.website}</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-sm rounded-2xl">
+                        <Clock className="h-4 w-4" />
+                        <span className="font-medium text-sm">Responds in {selectedMember.responseTime}</span>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Quick Stats */}
+                  <section className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm mb-2">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-indigo-500 rounded-2xl p-2"><TrendingUp className="h-5 w-5 text-white" /></div>
+                      <h3 className="text-lg font-bold text-gray-900">Statistics</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+                        <p className="text-xl font-bold text-green-600">{selectedMember.completionRate}%</p>
+                        <p className="text-green-700 font-semibold text-sm">Success Rate</p>
+                      </div>
+                      <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
+                        <p className="text-xl font-bold text-blue-600">{selectedMember.experience}</p>
+                        <p className="text-blue-700 font-semibold text-sm">Experience</p>
+                      </div>
+                      <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl border border-purple-200">
+                        <p className="text-xl font-bold text-purple-600">{selectedMember.projects}</p>
+                        <p className="text-purple-700 font-semibold text-sm">Projects</p>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Languages */}
+                  <section className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm mb-2">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-teal-500 rounded-2xl p-2"><Globe className="h-5 w-5 text-white" /></div>
+                      <h3 className="text-lg font-bold text-gray-900">Languages</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedMember.languages.map((language: string, index: number) => (
+                        <span key={index} className="px-3 py-2 bg-teal-50 text-teal-700 rounded-2xl font-semibold border border-teal-200 text-sm flex items-center gap-1"><span className="text-sm">{getFlagEmoji(language)}</span> {language}</span>
+                      ))}
+                    </div>
+                  </section>
 
                   {/* Action Buttons */}
-                  <div className="space-y-4">
-                    <button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-pink-600 hover:to-rose-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3">
-                      <MessageCircle className="h-6 w-6" />
-                      Hire Now
+                  <section className="space-y-3">
+                    <button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 px-6 rounded-2xl font-bold text-base hover:from-pink-600 hover:to-rose-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2" aria-label="Hire Now">
+                      <MessageCircle className="h-5 w-5" /> Hire Now
                     </button>
-                    <button className="w-full bg-white border-2 border-pink-200 text-pink-600 py-4 px-6 rounded-2xl font-bold text-lg hover:bg-pink-50 transition-all duration-200 flex items-center justify-center gap-3">
-                      <Calendar className="h-6 w-6" />
-                      Schedule Consultation
+                    <button className="w-full bg-white border-2 border-pink-200 text-pink-600 py-3 px-6 rounded-2xl font-bold text-base hover:bg-pink-50 transition-all duration-200 flex items-center justify-center gap-2" aria-label="Schedule Consultation">
+                      <Calendar className="h-5 w-5" /> Schedule Consultation
                     </button>
-                    <div className="grid grid-cols-2 gap-4">
-                      <button className="bg-gray-100 text-gray-700 py-3 px-4 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2">
-                        <Share2 className="h-5 w-5" />
-                        Share
+                    <div className="grid grid-cols-2 gap-3">
+                      <button className="bg-gray-100 text-gray-700 py-2 px-3 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-1" aria-label="Share Profile">
+                        <Share2 className="h-4 w-4" /> Share
                       </button>
-                      <button className="bg-gray-100 text-gray-700 py-3 px-4 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2">
-                        <Heart className="h-5 w-5" />
-                        Save
+                      <button className="bg-gray-100 text-gray-700 py-2 px-3 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-1" aria-label="Save Profile">
+                        <Heart className="h-4 w-4" /> Save
                       </button>
                     </div>
-                  </div>
-                </div>
+                  </section>
+                </aside>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl p-3 shadow-lg">
-                  <Heart className="h-8 w-8 text-white fill-current" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                    UREPOSH
-                  </h3>
-                  <p className="text-sm text-gray-600 font-medium">Transforming Workplaces <br /> Empowering Lives</p>
-                </div>
-              </div>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Leading the way in workplace safety and POSH compliance with our team of certified experts and
-                comprehensive solutions.
-              </p>
-              <div className="flex space-x-4">
-                <div className="bg-pink-100 p-2 rounded-lg">
-                  <Mail className="h-5 w-5 text-pink-600" />
-                </div>
-                <div className="bg-pink-100 p-2 rounded-lg">
-                  <Phone className="h-5 w-5 text-pink-600" />
-                </div>
-                <div className="bg-pink-100 p-2 rounded-lg">
-                  <Globe className="h-5 w-5 text-pink-600" />
-                </div>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 mb-4">Quick Links</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    Our Team
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 mb-4">Services</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    POSH Training
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    Legal Compliance
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    Risk Assessment
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-pink-600 transition-colors duration-200">
-                    Consultation
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-200 mt-8 pt-8 text-center">
-            <p className="text-gray-600">
-              © 2024 UREPOSH. All rights reserved. Transforming workplaces, empowering lives.
-            </p>
-          </div>
-        </div>
-      </footer>
+
 
       {/* Custom Styles */}
       <style jsx>{`
@@ -1467,6 +1278,9 @@ export default function TeamPage() {
         }
         .rotate-y-180 {
           transform: rotateY(180deg);
+        }
+        .will-change-transform {
+          will-change: transform;
         }
         .line-clamp-1 {
           display: -webkit-box;
@@ -1485,6 +1299,43 @@ export default function TeamPage() {
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+      `}</style>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .md\\:flex-row {
+            flex-direction: column !important;
+          }
+          .md\\:h-40 {
+            height: auto !important;
+          }
+          .md\\:mx-0 {
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .md\\:mb-0 {
+            margin-bottom: 1rem !important;
+          }
+          .md\\:items-start {
+            align-items: flex-start !important;
+          }
+          .md\\:gap-8 {
+            gap: 1.5rem !important;
+          }
+          .whitespace-nowrap {
+            white-space: normal !important;
+          }
+          .absolute.left-0 {
+            position: static !important;
+            left: auto !important;
+            top: auto !important;
+            transform: none !important;
+            margin-left: 0 !important;
+            margin-bottom: 1rem !important;
+          }
+          .pl-28, .md\:pl-32 {
+            padding-left: 0 !important;
+          }
         }
       `}</style>
     </div>
