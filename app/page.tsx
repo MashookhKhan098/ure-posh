@@ -36,6 +36,7 @@ import {
   Briefcase,
   Calendar,
   Cog,
+  Coffee,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -46,27 +47,46 @@ import { useRouter } from "next/navigation"
 // Data for Navigation and Dropdowns
 // =================================================================================
 
+const toSlug = (text: string) => text.toLowerCase().replace(/ & /g, '-').replace(/\+/g, 'plus').replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+
 const navItems = [
+  { label: 'Home', href: '/' },
   { label: 'About', href: '#' },
-  { label: 'Work', href: '#' },
   { label: 'Expertise', href: '#', isDropdown: true },
-  { label: 'Join us', href: '#' },
+  { label: 'People', href: '#' },
+  { label: 'Work', href: '#' },
+  { label: 'News', href: '#' },
   { label: 'Connect', href: '#' }
 ];
 
-const expertiseServices = [
-  "Public affairs & impact", "Crisis & issues", "Transactions & transformations",
-  "Strategy & reputation", "Public relations & marketing", "Creative, design & content",
-  "Insights & analytics", "Generative AI", "YTPR Advisory"
-];
-
-const expertiseSectorsCol1 = [
-  "Health", "Food & beverage", "Financial services", "Government & public sector",
-  "Mobility & transportation", "Technology"
-];
-
-const expertiseSectorsCol2 = [
-  "Retail & CPG", "Lifestyle & leisure", "Media & entertainment", "Non-profit", "Energy", "Industry & manufacturing"
+const expertiseColumns = [
+    {
+        title: "Gender Equality Compliance",
+        subtopics: [
+            "POSH Compliance Initiation", "External Members from Renowned NGO", "Compliant Redressal",
+            "Complaint Handling Committee Redressal", "POSH & Workplace Harassment Compliance Reporting",
+            "Workplace Harassment & POSH Policy Disclosure", "POSH & Workplace Harassment Audits"
+        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
+    },
+    {
+        title: "POSH Adaptability and Training",
+        subtopics: [
+            "Respectful Workplace Training & Compliance", "Compliance Training for Internal Committees & Workplace Panels",
+            "Quarterly Mandatory Training", "Managers Level Training"
+        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
+    },
+    {
+        title: "Organisation Well-being",
+        subtopics: [
+            "Well Being Programmes", "Code of Conduct Training", "Mental Health Training & Counselling"
+        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
+    },
+    {
+        title: "Diversity and Inclusion",
+        subtopics: [
+            "Diversity at Work Place", "LGBTQIA++ Inclusion"
+        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
+    }
 ];
 
 const heroSlides = [
@@ -111,31 +131,13 @@ const expertiseGears = [
             { color: "bg-blue-400", position: { bottom: '30%', left: '40%' } },
             { color: "bg-teal-300", position: { bottom: '20%', left: '60%' } },
         ]
-    },
-    {
-        title: "Crises and issues",
-        dots: [
-            { color: "bg-yellow-400", position: { top: '20%', left: '75%' } },
-            { color: "bg-purple-400", position: { top: '30%', left: '25%' } },
-            { color: "bg-orange-400", position: { bottom: '20%', left: '55%' } },
-        ]
-    },
-    {
-        title: "Public Affairs and impact",
-        dots: [
-            { color: "bg-yellow-400", position: { top: '18%', left: '78%' } },
-            { color: "bg-purple-400", position: { top: '35%', left: '20%' } },
-            { color: "bg-blue-400", position: { bottom: '45%', left: '70%' } },
-            { color: "bg-red-400", position: { bottom: '15%', left: '55%' } },
-        ]
-    },
+    }
 ];
 
 // =================================================================================
-// Reusable Component for the Expertise Gears (Updated with constant rotation)
+// Reusable Components
 // =================================================================================
 const ExpertiseGear = ({ title, dots, index }: { title: string, dots: { color: string, position: React.CSSProperties }[], index: number }) => {
-    // Generates the SVG path for a gear with a more realistic profile
     const createGearPath = (
         teeth = 24, 
         innerRadius = 35, 
@@ -145,7 +147,6 @@ const ExpertiseGear = ({ title, dots, index }: { title: string, dots: { color: s
         const angle = (Math.PI * 2) / teeth;
         const toothWidth = angle * 0.4;
         let path = '';
-
         for (let i = 0; i < teeth; i++) {
             const start = i * angle;
             const p1x = Math.cos(start) * midRadius + 50;
@@ -165,7 +166,6 @@ const ExpertiseGear = ({ title, dots, index }: { title: string, dots: { color: s
         return path;
     };
 
-    // Alternate direction and vary duration for a more dynamic look
     const duration = 20 + (index * 4);
     const direction = index % 2 === 0 ? 1 : -1;
 
@@ -208,34 +208,30 @@ const ExpertiseGear = ({ title, dots, index }: { title: string, dots: { color: s
                             strokeWidth="0.5"
                             filter="url(#shadow)"
                         />
-                        <circle cx="50" cy="50" r="28" fill="#e9f2eb" /> 
+                        <circle cx="50" cy="50" r="28" className="fill-slate-900" /> 
                         <circle cx="50" cy="50" r="30" fill="transparent" stroke="rgba(0,0,0,0.1)" strokeWidth="4"/>
                     </svg>
-
-                    {/* Dots */}
                     {dots.map((dot, i) => (
                         <div key={i} className={`absolute w-3 h-3 rounded-full ${dot.color}`} style={dot.position} />
                     ))}
                 </motion.div>
-                <span className="relative text-sm font-semibold text-slate-800 max-w-[120px]">{title}</span>
+                <span className="relative text-sm font-semibold text-slate-200 max-w-[120px]">{title}</span>
             </div>
         </div>
     );
 };
 
-
-// =================================================================================
-// Header Component
-// =================================================================================
-
 const Header = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuOpen: (isOpen: boolean) => void }) => {
+  const pathname = usePathname();
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-slate-900">POSH</span>
+            <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-pink-600">
+              <span>URE</span>
+              <span className="font-extrabold">POSH</span>
             </Link>
           </div>
           <div className="lg:hidden">
@@ -243,59 +239,49 @@ const Header = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuO
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
-          <nav className="hidden lg:flex space-x-10">
-            {navItems.map((item) => (
-              item.isDropdown ? (
+          <nav className="hidden lg:flex items-center gap-x-8">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return item.isDropdown ? (
                 <div key={item.label} className="relative group">
-                  <button className="text-base font-medium text-slate-600 hover:text-slate-900 flex items-center group">
+                  <button className={`text-base font-medium flex items-center ${isActive ? 'text-pink-700 font-semibold' : 'text-slate-600 hover:text-pink-600'}`}>
                     <span>{item.label}</span>
                     <ChevronRight className="w-4 h-4 ml-1 transform transition-transform duration-200 group-hover:rotate-90" />
                   </button>
                   <div className="absolute left-1/2 -translate-x-1/2 mt-3 px-2 w-screen max-w-5xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                     <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                      <div className="relative grid gap-8 bg-white p-8 grid-cols-4">
-                        <div className="pr-8 border-r border-gray-100">
-                            <h2 className="text-2xl font-bold text-slate-900 inline-block border-b-2 border-teal-500 pb-2">
-                                Expertise
-                            </h2>
-                            <p className="mt-4 text-slate-600">
-                                Advising and leading businesses and brands across an array of industries
-                            </p>
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold text-slate-900 mb-4">Services</h3>
-                          <ul className="space-y-3">
-                            {expertiseServices.map((service) => (
-                              <li key={service}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{service}</a></li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="col-span-2">
-                           <h3 className="text-lg font-bold text-slate-900 mb-4">Sectors</h3>
-                           <div className="grid grid-cols-2 gap-8">
-                              <ul className="space-y-3">
-                                {expertiseSectorsCol1.map((sector) => (
-                                  <li key={sector}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{sector}</a></li>
-                                ))}
-                              </ul>
-                              <ul className="space-y-3">
-                                {expertiseSectorsCol2.map((sector) => (
-                                  <li key={sector}><a href="#" className="text-base text-slate-600 hover:text-slate-900 hover:underline">{sector}</a></li>
-                                ))}
-                              </ul>
-                           </div>
-                        </div>
+                      <div className="relative grid gap-x-8 gap-y-4 bg-white p-8 grid-cols-4">
+                        {expertiseColumns.map(column => (
+                            <div key={column.title}>
+                                <h3 className="text-base font-bold text-slate-900 mb-3">{column.title}</h3>
+                                <ul className="space-y-2">
+                                    {column.subtopics.map(subtopic => (
+                                        <li key={subtopic.href}>
+                                            <Link href={subtopic.href} className="text-sm text-slate-600 hover:text-pink-600 hover:underline">
+                                                {subtopic.label}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                 </div>
               ) : (
-                <Link key={item.label} href={item.href} className="text-base font-medium text-slate-600 hover:text-slate-900">
+                <Link key={item.label} href={item.href} className={`text-base font-medium ${isActive ? 'text-pink-700 font-semibold' : 'text-slate-600 hover:text-pink-600'}`}>
                   {item.label}
                 </Link>
               )
-            ))}
+            })}
           </nav>
+          <div className="hidden lg:flex items-center justify-end lg:flex-1 lg:w-0">
+            <Button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full px-6 py-2 shadow-lg hover:scale-105 transition-transform">
+                <Coffee className="w-4 h-4 mr-2" />
+                Free Coffee
+            </Button>
+          </div>
         </div>
       </div>
       <AnimatePresence>
@@ -308,10 +294,29 @@ const Header = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuO
           >
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
               {navItems.map((item) => (
-                <Link key={item.label} href={item.href} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50">
-                  {item.label}
-                </Link>
+                 item.isDropdown ? (
+                    <div key={item.label}>
+                         <h3 className="px-3 py-2 text-base font-medium text-slate-800">{item.label}</h3>
+                         <div className="pl-4">
+                             {expertiseColumns.flatMap(col => col.subtopics).map(subItem => (
+                                 <Link key={subItem.href} href={subItem.href} onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-pink-600 hover:bg-pink-50">
+                                     {subItem.label}
+                                 </Link>
+                             ))}
+                         </div>
+                    </div>
+                 ) : (
+                    <Link key={item.label} href={item.href} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-pink-600 hover:bg-pink-50">
+                        {item.label}
+                    </Link>
+                 )
               ))}
+               <div className="pt-4">
+                 <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full px-6 py-2 shadow-lg">
+                    <Coffee className="w-4 h-4 mr-2" />
+                    Free Coffee
+                 </Button>
+               </div>
             </div>
           </motion.div>
         )}
@@ -331,7 +336,6 @@ export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [currentSlide, setCurrentSlide] = useState(0);
-
 
   const testimonials = [
     {
@@ -495,306 +499,182 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
-      {/* Hero Section */}
-      <section className="relative pt-24 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
-        
-        <div className="absolute inset-0 z-0 opacity-20">
-            <div className="absolute right-0 top-0 w-1/2 h-full group">
-                <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-                <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-                <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-                <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
-            </div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[calc(100vh-100px)] py-10">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8 lg:pr-12"
-            >
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
-                <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-sm font-semibold border border-gray-200/50 shadow-lg rounded-full">
-                  <div className="mr-2 text-black">♀</div>
-                  India's Leading POSH Compliance Partner
-                </Badge>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
-                  Creating{" "}
-                  <span className="relative">
-                    <span className="text-black">Safe & Inclusive</span>
-                    <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }} className="absolute bottom-0 left-0 h-1 bg-black rounded-full" />
-                  </span>
-                  <br />
-                  Workplaces for Everyone
-                </h1>
-              </motion.div>
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl">
-                We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
-              </motion.p>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="flex flex-col sm:flex-row gap-4 pt-4">
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="bg-black hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-base font-semibold rounded-xl">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    Get Free Consultation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" variant="outline" className="border-2 border-black text-black hover:bg-gray-50 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold hover:border-gray-800 transition-all duration-300 shadow-lg rounded-xl">
-                    <Play className="mr-2 h-5 w-5" />
-                    Watch Demo
-                  </Button>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
-              <div className="relative max-w-lg w-full">
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                  <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[600px]">
-                    <AnimatePresence>
-                      {heroSlides.map((slide, idx) => (
-                        idx === currentSlide && (
-                          <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.0, ease: 'easeInOut' }} className="absolute inset-0">
-                            <Image src={slide.src} alt={slide.alt} width={700} height={600} className="w-full h-full object-cover" priority={idx === 0} loading={idx === 0 ? "eager" : "lazy"} />
-                          </motion.div>
-                        )
-                      ))}
-                    </AnimatePresence>
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent"></div>
-                  </div>
-                </motion.div>
+      <main>
+        {/* Hero Section */}
+        <section className="relative pt-24 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
+          <div className="absolute inset-0 z-0 opacity-20">
+              <div className="absolute right-0 top-0 w-1/2 h-full group">
+                  <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+                  <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+                  <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+                  <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
               </div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.8 }} className="w-full max-w-md mt-8">
-                <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/30">
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex -space-x-2">
-                          {[1, 2, 3, 4].map((i) => (
-                            <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.6 + i * 0.1, type: "spring" }} className="w-10 h-10 bg-gradient-to-br from-gray-600 to-slate-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white font-bold text-sm">
-                              {String.fromCharCode(65 + i - 1)}
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[calc(100vh-100px)] py-10">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="space-y-8 lg:pr-12"
+              >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
+                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-6 py-2 text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
+                        <span className="text-white text-lg font-bold">♀</span>
+                    </div>
+                    <span>India's Leading POSH Compliance Partner</span>
+                  </Badge>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
+                  <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
+                    Creating{" "}
+                    <span className="relative">
+                      <span className="text-black">Safe & Inclusive</span>
+                      <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }} className="absolute bottom-0 left-0 h-1 bg-black rounded-full" />
+                    </span>
+                    <br />
+                    Workplaces for Everyone
+                  </h1>
+                </motion.div>
+                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl">
+                  We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
+                </motion.p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
+                <div className="relative max-w-lg w-full">
+                  <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
+                    <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[600px]">
+                      <AnimatePresence>
+                        {heroSlides.map((slide, idx) => (
+                          idx === currentSlide && (
+                            <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.0, ease: 'easeInOut' }} className="absolute inset-0">
+                              <Image src={slide.src} alt={slide.alt} width={700} height={600} className="w-full h-full object-cover" priority={idx === 0} loading={idx === 0 ? "eager" : "lazy"} />
                             </motion.div>
-                          ))}
-                        </div>
-                        <div>
-                          <p className="text-lg font-bold text-slate-900">500+ Organizations</p>
-                          <p className="text-sm text-slate-600 font-medium">Trust Our Expertise</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <motion.div key={i} initial={{ scale: 0, rotate: 180 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: 1.8 + i * 0.05, type: "spring" }}>
-                            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                          </motion.div>
+                          )
                         ))}
-                      </div>
-                      <div>
-                        <p className="text-lg font-bold text-slate-900">4.9/5</p>
-                        <p className="text-sm text-slate-600 font-medium">Client Rating</p>
-                      </div>
-                      <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-slate-700 px-3 py-1 text-xs font-semibold border border-gray-200/50">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Verified & Trusted Partner
-                      </Badge>
+                      </AnimatePresence>
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent"></div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us Section */}
+        <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="py-24 bg-white/80 backdrop-blur-sm relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
+              <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
+                <Target className="w-5 h-5 mr-2" />
+                Why Choose Ureposh
+              </Badge>
+              <h2 className="text-5xl font-bold text-slate-900">
+                Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
+              </h2>
+              <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+                We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
+              </p>
+            </motion.div>
+            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {whyChooseUs.map((reason, index) => (
+                <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
+                  <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+                    <CardHeader>
+                      <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <reason.icon className="h-8 w-8 text-white" />
+                      </div>
+                      <CardTitle className="text-xl text-slate-900">{reason.title}</CardTitle>
+                      <Badge variant="secondary" className="bg-gray-100 text-black mx-auto">
+                        {reason.stats}
+                      </Badge>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-slate-600 leading-relaxed">{reason.description}</CardDescription>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
-        </div>
-      </section>
+        </motion.section>
 
-      {/* Why Choose Us Section */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="py-24 bg-white/80 backdrop-blur-sm relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
-              <Target className="w-5 h-5 mr-2" />
-              Why Choose Ureposh
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-              We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
-            </p>
-          </motion.div>
-          <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {whyChooseUs.map((reason, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
-                <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
-                  <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <reason.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="text-xl text-slate-900">{reason.title}</CardTitle>
-                    <Badge variant="secondary" className="bg-gray-100 text-black mx-auto">
-                      {reason.stats}
-                    </Badge>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600 leading-relaxed">{reason.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Our Expertise Section */}
-      <motion.section 
-        initial={{ opacity: 0 }} 
-        whileInView={{ opacity: 1 }} 
-        transition={{ duration: 0.8 }} 
-        viewport={{ once: true }} 
-        className="py-24 bg-green-100/70"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-5xl font-bold text-slate-900 mb-16">Our Expertise</h2>
-            <div className="flex flex-wrap items-center justify-center gap-y-12 gap-x-4">
-                {expertiseGears.map((gear, index) => (
-                    <ExpertiseGear
-                        key={index}
-                        title={gear.title}
-                        dots={gear.dots}
-                        index={index}
-                    />
-                ))}
-            </div>
-        </div>
-      </motion.section>
-
-
-      {/* Industries Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold">
-              <Briefcase className="w-5 h-5 mr-2" />
-              Industries We Serve
-            </Badge>
-            <h2 className="text-5xl font-bold text-slate-900">
-              Trusted Across <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">All Sectors</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              From innovative startups to established enterprises, we've helped organizations across diverse industries create inclusive, safe workplaces that drive business success and employee wellbeing.
-            </p>
-          </motion.div>
-          <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {industries.map((industry, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.03, y: -5 }}>
-                <Card className="bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl shadow-gray-500/10 transition-all duration-300 overflow-hidden group">
-                  <CardContent className="p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="text-5xl">{industry.icon}</div>
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">{industry.growth}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{industry.name}</h3>
-                    <p className="text-slate-600 text-sm mb-4 leading-relaxed">{industry.description}</p>
-                    <p className="text-4xl font-bold text-slate-900 mb-2">{industry.count}</p>
-                    <p className="text-sm text-slate-600 mb-4">Organizations transformed</p>
-                    <div className="space-y-2 mb-4">
-                      <p className="text-xs font-semibold text-slate-700">Key Challenges Addressed:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {industry.challenges.map((challenge, idx) => (
-                          <span key={idx} className="text-xs px-2 py-1 border border-gray-200 text-gray-700 rounded-full bg-white">{challenge}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="relative h-3 bg-gray-100 rounded-full overflow-hidden">
-                      <motion.div initial={{ width: 0 }} whileInView={{ width: '85%' }} transition={{ delay: index * 0.1, duration: 1.2, ease: 'easeOut' }} className="h-full bg-gray-700 rounded-full relative">
-                        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                      </motion.div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-500/10 via-slate-500/10 to-zinc-500/10"></div>
-        <div className="max-w-6xl mx-auto text-center space-y-12 relative">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="space-y-8">
-            <Badge className="bg-white/90 text-gray-800 px-8 py-4 text-xl font-semibold border border-gray-200/50 shadow-lg">
-              <Sparkles className="w-6 h-6 mr-3" />
-              Ready to Transform Your Workplace?
-            </Badge>
-            <h2 className="text-6xl font-bold text-slate-900 leading-tight">
-              Start Your <span className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 bg-clip-text text-transparent">Transformation</span> Journey Today
-            </h2>
-            <p className="text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
-              Join 500+ forward-thinking organizations that have created safer, more inclusive workplaces with Ureposh. Get started with a free consultation and discover how we can help you build a culture where everyone thrives.
-            </p>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} viewport={{ once: true }} className="flex flex-col lg:flex-row gap-8 justify-center items-center">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button size="lg" className="bg-gradient-to-r from-gray-600 via-slate-600 to-zinc-600 hover:from-gray-700 hover:via-slate-700 hover:to-zinc-700 shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 text-xl font-semibold">
-                Get Free Consultation
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button size="lg" variant="outline" className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-gray-500/10">
-                <FileCheck className="mr-3 h-6 w-6" />
-                Download Resources
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button size="lg" variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 bg-white/90 backdrop-blur-sm px-12 py-8 text-xl font-semibold shadow-lg shadow-slate-500/10">
-                <Phone className="mr-3 h-6 w-6" />
-                Call Expert Now
-              </Button>
-            </motion.div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} viewport={{ once: true }} className="grid md:grid-cols-3 gap-8 pt-12">
-            {[
-              { icon: Phone, title: "Speak with Expert", content: "+91 98765 43210", subtitle: "Available Mon-Fri, 9 AM - 6 PM IST", color: "from-gray-500 to-slate-600", action: "Immediate consultation available" },
-              { icon: Mail, title: "Email Consultation", content: "hello@ureposh.com", subtitle: "Response within 4 hours", color: "from-slate-500 to-zinc-600", action: "Detailed project discussion" },
-              { icon: MapPin, title: "Visit Our Office", content: "Mumbai, Maharashtra", subtitle: "Schedule appointment", color: "from-zinc-500 to-gray-600", action: "In-person consultation" },
-            ].map((contact, index) => (
-              <motion.div key={index} whileHover={{ scale: 1.05, y: -5 }} className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl shadow-gray-500/10 border border-white/20">
-                <div className={`w-16 h-16 bg-gradient-to-br ${contact.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg`}>
-                  <contact.icon className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{contact.title}</h3>
-                <p className="text-lg font-semibold text-slate-700 mb-1">{contact.content}</p>
-                <p className="text-sm text-slate-600 mb-2">{contact.subtitle}</p>
-                <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">{contact.action}</Badge>
-              </motion.div>
-            ))}
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} viewport={{ once: true }} className="flex flex-wrap justify-center items-center gap-12 pt-12">
-            {[
-              { icon: Shield, text: "100% Confidential", color: "text-gray-600", desc: "Secure processes" },
-              { icon: CheckCircle, text: "Legal Compliance", color: "text-slate-600", desc: "Full POSH adherence" },
-              { icon: Award, text: "Expert Team", color: "text-zinc-600", desc: "Certified professionals" },
-              { icon: Clock, text: "Quick Response", color: "text-gray-700", desc: "24-hour turnaround" },
-            ].map((badge, index) => (
-              <div key={index} className="flex items-center space-x-3 text-slate-700">
-                <badge.icon className={`w-6 h-6 ${badge.color}`} />
-                <div>
-                  <span className="font-semibold text-lg">{badge.text}</span>
-                  <p className="text-sm text-slate-600">{badge.desc}</p>
-                </div>
+        {/* Our Expertise Section */}
+        <motion.section 
+          initial={{ opacity: 0 }} 
+          whileInView={{ opacity: 1 }} 
+          transition={{ duration: 0.8 }} 
+          viewport={{ once: true }} 
+          className="py-24 bg-slate-900"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-5xl font-bold text-white mb-16">Our Expertise</h2>
+              <div className="flex flex-wrap items-center justify-center gap-y-12 gap-x-4">
+                  {expertiseGears.map((gear, index) => (
+                      <ExpertiseGear
+                          key={index}
+                          title={gear.title}
+                          dots={gear.dots}
+                          index={index}
+                      />
+                  ))}
               </div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
+          </div>
+        </motion.section>
+
+        {/* Industries Section */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
+              <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 px-6 py-3 text-lg font-semibold">
+                <Briefcase className="w-5 h-5 mr-2" />
+                Industries We Serve
+              </Badge>
+              <h2 className="text-5xl font-bold text-slate-900">
+                Trusted Across <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">All Sectors</span>
+              </h2>
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+                From innovative startups to established enterprises, we've helped organizations across diverse industries create inclusive, safe workplaces that drive business success and employee wellbeing.
+              </p>
+            </motion.div>
+            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {industries.map((industry, index) => (
+                <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.03, y: -5 }}>
+                  <Card className="bg-white/90 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl shadow-gray-500/10 transition-all duration-300 overflow-hidden group">
+                    <CardContent className="p-8">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="text-5xl">{industry.icon}</div>
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">{industry.growth}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-3">{industry.name}</h3>
+                      <p className="text-slate-600 text-sm mb-4 leading-relaxed">{industry.description}</p>
+                      <p className="text-4xl font-bold text-slate-900 mb-2">{industry.count}</p>
+                      <p className="text-sm text-slate-600 mb-4">Organizations transformed</p>
+                      <div className="space-y-2 mb-4">
+                        <p className="text-xs font-semibold text-slate-700">Key Challenges Addressed:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {industry.challenges.map((challenge, idx) => (
+                            <span key={idx} className="text-xs px-2 py-1 border border-gray-200 text-gray-700 rounded-full bg-white">{challenge}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="relative h-3 bg-gray-100 rounded-full overflow-hidden">
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: '85%' }} transition={{ delay: index * 0.1, duration: 1.2, ease: 'easeOut' }} className="h-full bg-gray-700 rounded-full relative">
+                          <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                        </motion.div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+      </main>
     </div>
   )
 }
