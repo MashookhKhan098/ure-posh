@@ -497,102 +497,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      
-      {/* Hero Section */}
-      <section className="relative pt-24 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
-        
-        <div className="absolute inset-0 z-0 opacity-20">
-            <div className="absolute right-0 top-0 w-1/2 h-full group">
-                <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-                <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-                <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-                <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
-            </div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[calc(100vh-120px)] py-4">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8 lg:pr-12"
-            >
-
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block mb-6">
-                <Badge
-  className="
-    bg-gradient-to-r from-pink-100 via-white to-indigo-100
-    text-black
-    px-4 py-2
-    border-2 border-pink-200
-    shadow-xl
-    rounded-full
-    flex items-center justify-center
-    gap-2
-    relative
-    "
-  style={{
-    boxShadow: "0 4px 24px 0 rgba(236, 72, 153, 0.10), 0 1.5px 6px 0 rgba(99, 102, 241, 0.08)"
-  }}
->
-  <span
-    className="
-      flex items-center justify-center
-      w-8 h-8
-      rounded-full
-      bg-gradient-to-br from-pink-400 to-indigo-400
-      text-white
-      text-lg
-      font-extrabold
-      shadow-lg
-      border-4 border-white
-    "
-    style={{ boxShadow: "0 2px 8px 0 rgba(236, 72, 153, 0.15)" }}
-  >
-    ♀
-  </span>
-  <span className="text-base font-extrabold tracking-tight leading-tight">
-    India's Leading POSH Compliance Partner
-  </span>
-</Badge>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
-                <div className="space-y-6">
-                  <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-gray-900 max-w-6xl mb-4" style={{lineHeight: 1.15, paddingBottom: '0.5rem'}}>
-  Creating <span className="text-blue-600 font-extrabold">Safe & Inclusive</span>
-  <br />
-  <span className="text-gray-800">Workplaces for Everyone</span>
-</h1>
-
-                </div>
-              </motion.div>
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-xl lg:text-2xl xl:text-3xl text-black leading-relaxed max-w-4xl">
-                We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
-              </motion.p>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="flex flex-col sm:flex-row gap-4 pt-4">
-                {/* Removed Get Free Consultation and Watch Demo buttons as requested */}
-              </motion.div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
-                                <div className="relative max-w-lg w-full">
-                    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                      <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[400px]">
-                    <AnimatePresence>
-                      {heroSlides.map((slide, idx) => (
-                        idx === currentSlide && (
-                          <motion.div key={idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.0, ease: 'easeInOut' }} className="absolute inset-0">
-                            <Image src={slide.src} alt={slide.alt} width={700} height={600} className="w-full h-full object-cover" priority={idx === 0} loading={idx === 0 ? "eager" : "lazy"} />
-                          </motion.div>
-                        )
-                      ))}
-                    </AnimatePresence>
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent"></div>
-                  </div>
-                </motion.div>
-              </div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.8 }} className="w-full max-w-md mt-4">
-                {/* Removed A, B, C, D avatars, 500+ Organizations, Trust Our Expertise, 4.9/5, Client Rating, and Verified & Trusted Partner as requested */}
       <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
       <main>
@@ -607,40 +511,67 @@ export default function HomePage() {
               </div>
           </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[calc(100vh-100px)] py-10">
+            <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[calc(100vh-120px)] py-4">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="space-y-8 lg:pr-12"
               >
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
-                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-6 py-2 text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
-                        <span className="text-white text-lg font-bold">♀</span>
-                    </div>
-                    <span>India's Leading POSH Compliance Partner</span>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block mb-6">
+                  <Badge
+                    className="
+                      bg-gradient-to-r from-pink-100 via-white to-indigo-100
+                      text-black
+                      px-4 py-2
+                      border-2 border-pink-200
+                      shadow-xl
+                      rounded-full
+                      flex items-center justify-center
+                      gap-2
+                      relative
+                      "
+                  >
+                    <span
+                      className="
+                        flex items-center justify-center
+                        w-8 h-8
+                        rounded-full
+                        bg-gradient-to-br from-pink-400 to-indigo-400
+                        text-white
+                        text-lg
+                        font-extrabold
+                        shadow-lg
+                        border-4 border-white
+                      "
+                    >
+                      ♀
+                    </span>
+                    <span className="text-base font-extrabold tracking-tight leading-tight">
+                      India's Leading POSH Compliance Partner
+                    </span>
                   </Badge>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
-                  <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
-                    Creating{" "}
-                    <span className="relative">
-                      <span className="text-black">Safe & Inclusive</span>
-                      <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }} className="absolute bottom-0 left-0 h-1 bg-black rounded-full" />
-                    </span>
-                    <br />
-                    Workplaces for Everyone
-                  </h1>
+                  <div className="space-y-6">
+                    <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-gray-900 max-w-6xl mb-4" style={{lineHeight: 1.15, paddingBottom: '0.5rem'}}>
+                      Creating <span className="text-blue-600 font-extrabold">Safe & Inclusive</span>
+                      <br />
+                      <span className="text-gray-800">Workplaces for Everyone</span>
+                    </h1>
+                  </div>
                 </motion.div>
-                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl">
+                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-xl lg:text-2xl xl:text-3xl text-black leading-relaxed max-w-4xl">
                   We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
                 </motion.p>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="flex flex-col sm:flex-row gap-4 pt-4">
+                  {/* Removed Get Free Consultation and Watch Demo buttons as requested */}
+                </motion.div>
               </motion.div>
               <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
                 <div className="relative max-w-lg w-full">
                   <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                    <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[600px]">
+                    <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[400px]">
                       <AnimatePresence>
                         {heroSlides.map((slide, idx) => (
                           idx === currentSlide && (
@@ -659,62 +590,24 @@ export default function HomePage() {
           </div>
         </section>
 
-      {/* Why Choose Us Section */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="py-24 bg-white/80 backdrop-blur-sm relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-4 py-2 text-sm font-semibold border border-gray-200/50">
-              <Target className="w-4 h-4 mr-2" />
-              Why Choose Ureposh
-            </Badge>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
-              Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
-            </p>
-          </motion.div>
-          <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} 
-            className="flex flex-row justify-center items-stretch gap-6">
-            {whyChooseUs.map((reason, index) => (
-              <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
-                <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
-                  <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <reason.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="text-xl text-slate-900">{reason.title}</CardTitle>
-                    <Badge variant="secondary" className="bg-gray-100 text-black mx-auto">
-                      {reason.stats}
-                    </Badge>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600 leading-relaxed">{reason.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
         {/* Why Choose Us Section */}
         <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="py-24 bg-white/80 backdrop-blur-sm relative">
           <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
-              <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
-                <Target className="w-5 h-5 mr-2" />
+              <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-4 py-2 text-sm font-semibold border border-gray-200/50">
+                <Target className="w-4 h-4 mr-2" />
                 Why Choose Ureposh
               </Badge>
-              <h2 className="text-5xl font-bold text-slate-900">
+              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
                 Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
               </h2>
-              <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
                 We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
               </p>
             </motion.div>
-            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} 
+              className="flex flex-row justify-center items-stretch gap-6">
               {whyChooseUs.map((reason, index) => (
                 <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
                   <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
