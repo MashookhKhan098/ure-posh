@@ -13,9 +13,8 @@
     "build": "next build",
     "start": "next start",
     "vercel-build": "next build",
-    "postinstall": "prisma generate --no-engine",
-    "prisma:generate": "prisma generate --no-engine",
-    "prisma:push": "prisma db push",
+    "postinstall": "echo 'Prisma not configured'",
+
     "writer": "node writer-server.js",
     "lint": "next lint"
   },
@@ -88,7 +87,7 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@nomicfoundation/hardhat-ethers": "^3.1.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@types/node": "^22",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
@@ -96,7 +95,7 @@
     "ethers": "^5.8.0",
     "hardhat": "^2.26.1",
     "postcss": "^8.5",
-    "prisma": "6.10.1",
+
     "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
