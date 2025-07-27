@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createWriterAdminClient } from '@/utils/supabase/writer';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     console.log('🔍 API: Fetching writers from Supabase...');
