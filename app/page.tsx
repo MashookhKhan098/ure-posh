@@ -14,8 +14,6 @@ import {
   Heart,
   CheckCircle,
   Star,
-  Menu,
-  X,
   Play,
   Building,
   Clock,
@@ -30,13 +28,11 @@ import {
   BookOpen,
   Zap,
   Scale,
-  ChevronRight,
   Quote,
   FileCheck,
   Briefcase,
   Calendar,
   Cog,
-  Coffee,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -44,50 +40,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
 
 // =================================================================================
-// Data for Navigation and Dropdowns
+// Data for Homepage Content
 // =================================================================================
 
-const toSlug = (text: string) => text.toLowerCase().replace(/ & /g, '-').replace(/\+/g, 'plus').replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
 
-const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '#' },
-  { label: 'Expertise', href: '#', isDropdown: true },
-  { label: 'People', href: '#' },
-  { label: 'Work', href: '#' },
-  { label: 'News', href: '#' },
-  { label: 'Connect', href: '#' }
-];
-
-const expertiseColumns = [
-    {
-        title: "Gender Equality Compliance",
-        subtopics: [
-            "POSH Compliance Initiation", "External Members from Renowned NGO", "Compliant Redressal",
-            "Complaint Handling Committee Redressal", "POSH & Workplace Harassment Compliance Reporting",
-            "Workplace Harassment & POSH Policy Disclosure", "POSH & Workplace Harassment Audits"
-        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
-    },
-    {
-        title: "POSH Adaptability and Training",
-        subtopics: [
-            "Respectful Workplace Training & Compliance", "Compliance Training for Internal Committees & Workplace Panels",
-            "Quarterly Mandatory Training", "Managers Level Training"
-        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
-    },
-    {
-        title: "Organisation Well-being",
-        subtopics: [
-            "Well Being Programmes", "Code of Conduct Training", "Mental Health Training & Counselling"
-        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
-    },
-    {
-        title: "Diversity and Inclusion",
-        subtopics: [
-            "Diversity at Work Place", "LGBTQIA++ Inclusion"
-        ].map(label => ({ label, href: `/expertise/${toSlug(label)}` }))
-    }
-];
 
 const heroSlides = [
   { src: '/images/5.jpg', alt: 'Diverse professionals in inclusive workplace' },
@@ -221,109 +177,7 @@ const ExpertiseGear = ({ title, dots, index }: { title: string, dots: { color: s
     );
 };
 
-const Header = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuOpen: (isOpen: boolean) => void }) => {
-  const pathname = usePathname();
 
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-pink-600">
-              <span>URE</span>
-              <span className="font-extrabold">POSH</span>
-            </Link>
-          </div>
-          <div className="lg:hidden">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 rounded-md text-slate-700 hover:text-slate-900 hover:bg-slate-100">
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-          <nav className="hidden lg:flex items-center gap-x-8">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-              return item.isDropdown ? (
-                <div key={item.label} className="relative group">
-                  <button className={`text-base font-medium flex items-center ${isActive ? 'text-pink-700 font-semibold' : 'text-slate-600 hover:text-pink-600'}`}>
-                    <span>{item.label}</span>
-                    <ChevronRight className="w-4 h-4 ml-1 transform transition-transform duration-200 group-hover:rotate-90" />
-                  </button>
-                  <div className="absolute left-1/2 -translate-x-1/2 mt-3 px-2 w-screen max-w-5xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                    <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                      <div className="relative grid gap-x-8 gap-y-4 bg-white p-8 grid-cols-4">
-                        {expertiseColumns.map(column => (
-                            <div key={column.title}>
-                                <h3 className="text-base font-bold text-slate-900 mb-3">{column.title}</h3>
-                                <ul className="space-y-2">
-                                    {column.subtopics.map(subtopic => (
-                                        <li key={subtopic.href}>
-                                            <Link href={subtopic.href} className="text-sm text-slate-600 hover:text-pink-600 hover:underline">
-                                                {subtopic.label}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Link key={item.label} href={item.href} className={`text-base font-medium ${isActive ? 'text-pink-700 font-semibold' : 'text-slate-600 hover:text-pink-600'}`}>
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
-          <div className="hidden lg:flex items-center justify-end lg:flex-1 lg:w-0">
-            <Button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full px-6 py-2 shadow-lg hover:scale-105 transition-transform">
-                <Coffee className="w-4 h-4 mr-2" />
-                Free Coffee
-            </Button>
-          </div>
-        </div>
-      </div>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
-              {navItems.map((item) => (
-                 item.isDropdown ? (
-                    <div key={item.label}>
-                         <h3 className="px-3 py-2 text-base font-medium text-slate-800">{item.label}</h3>
-                         <div className="pl-4">
-                             {expertiseColumns.flatMap(col => col.subtopics).map(subItem => (
-                                 <Link key={subItem.href} href={subItem.href} onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-pink-600 hover:bg-pink-50">
-                                     {subItem.label}
-                                 </Link>
-                             ))}
-                         </div>
-                    </div>
-                 ) : (
-                    <Link key={item.label} href={item.href} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-pink-600 hover:bg-pink-50">
-                        {item.label}
-                    </Link>
-                 )
-              ))}
-               <div className="pt-4">
-                 <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full px-6 py-2 shadow-lg">
-                    <Coffee className="w-4 h-4 mr-2" />
-                    Free Coffee
-                 </Button>
-               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-};
 
 
 // =================================================================================
@@ -333,7 +187,6 @@ const Header = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuO
 export default function HomePage() {
   const pathname = usePathname()
   const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -497,81 +350,55 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
+      
       <main>
         {/* Hero Section */}
         <section className="relative pt-24 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
-              <div className="absolute right-0 top-0 w-1/2 h-full group">
-                  <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-                  <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-                  <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-                  <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
-              </div>
+            <div className="absolute right-0 top-0 w-1/2 h-full group">
+              <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+            </div>
           </div>
+          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[calc(100vh-120px)] py-4">
+            <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[calc(100vh-100px)] py-10">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="space-y-8 lg:pr-12"
               >
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block mb-6">
-                  <Badge
-                    className="
-                      bg-gradient-to-r from-pink-100 via-white to-indigo-100
-                      text-black
-                      px-4 py-2
-                      border-2 border-pink-200
-                      shadow-xl
-                      rounded-full
-                      flex items-center justify-center
-                      gap-2
-                      relative
-                      "
-                  >
-                    <span
-                      className="
-                        flex items-center justify-center
-                        w-8 h-8
-                        rounded-full
-                        bg-gradient-to-br from-pink-400 to-indigo-400
-                        text-white
-                        text-lg
-                        font-extrabold
-                        shadow-lg
-                        border-4 border-white
-                      "
-                    >
-                      ♀
-                    </span>
-                    <span className="text-base font-extrabold tracking-tight leading-tight">
-                      India's Leading POSH Compliance Partner
-                    </span>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
+                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-6 py-2 text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">♀</span>
+                    </div>
+                    <span>India's Leading POSH Compliance Partner</span>
                   </Badge>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
-                  <div className="space-y-6">
-                    <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-gray-900 max-w-6xl mb-4" style={{lineHeight: 1.15, paddingBottom: '0.5rem'}}>
-                      Creating <span className="text-blue-600 font-extrabold">Safe & Inclusive</span>
-                      <br />
-                      <span className="text-gray-800">Workplaces for Everyone</span>
-                    </h1>
-                  </div>
+                  <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight text-black">
+                    Creating{" "}
+                    <span className="relative">
+                      <span className="text-black">Safe & Inclusive</span>
+                      <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }} className="absolute bottom-0 left-0 h-1 bg-black rounded-full" />
+                    </span>
+                    <br />
+                    Workplaces for Everyone
+                  </h1>
                 </motion.div>
-                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-xl lg:text-2xl xl:text-3xl text-black leading-relaxed max-w-4xl">
+                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-lg lg:text-xl text-black leading-relaxed max-w-2xl">
                   We transform organizational cultures through comprehensive POSH compliance, expert training, and innovative solutions that make workplaces safer, more inclusive, and legally compliant across India.
                 </motion.p>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="flex flex-col sm:flex-row gap-4 pt-4">
-                  {/* Removed Get Free Consultation and Watch Demo buttons as requested */}
-                </motion.div>
               </motion.div>
               <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
                 <div className="relative max-w-lg w-full">
                   <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                    <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[400px]">
+                    <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-gray-500/20 h-[600px]">
                       <AnimatePresence>
                         {heroSlides.map((slide, idx) => (
                           idx === currentSlide && (
@@ -595,19 +422,18 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-50/50 to-slate-50/50"></div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 mb-16">
-              <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-4 py-2 text-sm font-semibold border border-gray-200/50">
-                <Target className="w-4 h-4 mr-2" />
+              <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
+                <Target className="w-5 h-5 mr-2" />
                 Why Choose Ureposh
               </Badge>
-              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
+              <h2 className="text-5xl font-bold text-slate-900">
                 Your <span className="text-slate-900">Trusted</span> <span className="text-slate-900">POSH Partner</span>
               </h2>
-              <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
                 We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
               </p>
             </motion.div>
-            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} 
-              className="flex flex-row justify-center items-stretch gap-6">
+            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {whyChooseUs.map((reason, index) => (
                 <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.05, y: -10 }}>
                   <Card className="h-full text-center border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
@@ -639,17 +465,17 @@ export default function HomePage() {
           className="py-24 bg-slate-900"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-5xl font-bold text-white mb-16">Our Expertise</h2>
-              <div className="flex flex-wrap items-center justify-center gap-y-12 gap-x-4">
-                  {expertiseGears.map((gear, index) => (
-                      <ExpertiseGear
-                          key={index}
-                          title={gear.title}
-                          dots={gear.dots}
-                          index={index}
-                      />
-                  ))}
-              </div>
+            <h2 className="text-5xl font-bold text-white mb-16">Our Expertise</h2>
+            <div className="flex flex-wrap items-center justify-center gap-y-12 gap-x-4">
+              {expertiseGears.map((gear, index) => (
+                <ExpertiseGear
+                  key={index}
+                  title={gear.title}
+                  dots={gear.dots}
+                  index={index}
+                />
+              ))}
+            </div>
           </div>
         </motion.section>
 
@@ -701,7 +527,6 @@ export default function HomePage() {
             </motion.div>
           </div>
         </section>
-
       </main>
     </div>
   )

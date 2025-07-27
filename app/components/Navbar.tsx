@@ -85,7 +85,7 @@ export default function Navbar() {
     { name: "About", href: "/about" },
     { name: "People", href: "/people" },
     { name: "Work", href: "/work" },
-    { name: "News Room", href: "/news" },
+    { name: "News Room", href: "/posts" },
     { name: "Connect", href: "/connect" },
   ]
 

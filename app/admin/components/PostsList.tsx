@@ -21,7 +21,8 @@ import {
   Globe,
   FileText,
   PenTool,
-  Video
+  Video,
+  Star
 } from 'lucide-react'
 
 export default function PostsList() {
@@ -33,6 +34,16 @@ export default function PostsList() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [sortBy, setSortBy] = useState('date')
+
+  // Expose refresh function to parent component
+  const refreshPosts = () => {
+    fetchPosts()
+  }
+
+  // Make refreshPosts available globally for other components
+  if (typeof window !== 'undefined') {
+    (window as any).refreshPostsList = refreshPosts
+  }
 
   useEffect(() => {
     fetchPosts()
@@ -48,15 +59,36 @@ export default function PostsList() {
       const response = await fetch('/api/posts')
       if (response.ok) {
         const data = await response.json()
-        // Supabase returns posts directly in the data array
-        setPosts(data.posts || [])
+        console.log('Fetched articles data:', data) // Debug log
+        // Transform Supabase data to match Post interface (using new column names)
+        const transformedPosts = (data || []).map((post: any) => ({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          excerpt: post.excerpt || post.content.substring(0, 150),
+          author: post.author,
+          category: post.category,
+          status: post.status,
+          created_at: post.created_at,
+          updated_at: post.updated_at,
+          featured_image: post.featured_image,
+          video_url: post.video_url,
+          video_title: post.video_title,
+          video_description: post.video_description,
+          tags: post.tags || '',
+          slug: post.slug,
+          views: post.view_count || 0,
+          read_time: post.read_time,
+          likes: post.likes || 0,
+          comments: post.comments_count || 0,
+          is_featured: post.is_featured || false
+        }))
+        setPosts(transformedPosts)
       } else {
-        const errorData = await response.json()
-        setError(errorData.error || 'Failed to fetch posts')
+        setError('Failed to fetch articles')
       }
     } catch (error) {
-      console.error('Error fetching posts:', error)
-      setError('Error fetching posts')
+      setError('Error fetching articles')
     } finally {
       setLoading(false)
     }
@@ -69,7 +101,8 @@ export default function PostsList() {
     if (searchTerm) {
       filtered = filtered.filter(post =>
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.content.toLowerCase().includes(searchTerm.toLowerCase())
+        post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.author.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
@@ -84,90 +117,72 @@ export default function PostsList() {
     }
 
     // Sort
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'date':
-          // Use created_at for Supabase
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        case 'title':
-          return a.title.localeCompare(b.title)
-        case 'status':
-          return a.status.localeCompare(b.status)
-        default:
-          return 0
-      }
-    })
+    switch (sortBy) {
+      case 'title':
+        filtered.sort((a, b) => a.title.localeCompare(b.title))
+        break
+      case 'author':
+        filtered.sort((a, b) => a.author.localeCompare(b.author))
+        break
+      case 'views':
+        filtered.sort((a, b) => (b.views || 0) - (a.views || 0))
+        break
+      case 'date':
+      default:
+        filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        break
+    }
 
     setFilteredPosts(filtered)
   }
 
+  const handleDelete = async (slug: string) => {
+    try {
+      const response = await fetch(`/api/posts/${slug}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setPosts(posts.filter(post => post.slug !== slug))
+      } else {
+        console.error('Failed to delete post')
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error)
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      PUBLISHED: {
-        label: 'Published',
-        className: 'bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-700 border-green-500/50',
-        icon: CheckCircle
-      },
-      DRAFT: {
-        label: 'Draft',
-        className: 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-700 border-yellow-500/50',
-        icon: PenTool
-      },
-      ARCHIVED: {
-        label: 'Archived',
-        className: 'bg-gradient-to-r from-gray-500/20 to-slate-500/20 text-gray-700 border-gray-500/50',
-        icon: Database
-      }
+      published: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
+      draft: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
+      archived: { color: 'bg-gray-100 text-gray-800', icon: AlertCircle }
     }
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.DRAFT
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft
     const Icon = config.icon
 
     return (
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${config.className}`}>
-        <Icon className="h-3 w-3 mr-1" />
-        {config.label}
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
+        <Icon className="w-3 h-3 mr-1" />
+        {status}
       </span>
     )
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full animate-pulse"></div>
-          <div className="relative w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-        <span className="ml-4 text-gray-600 font-medium">Loading posts...</span>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <div className="mx-auto h-16 w-16 mb-4 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-full animate-pulse"></div>
-          <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-          </div>
-        </div>
-        <p className="text-red-600 font-medium">{error}</p>
-      </div>
-    )
-  }
-
-  if (filteredPosts.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <div className="mx-auto h-16 w-16 mb-4 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full animate-pulse"></div>
-          <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-            <FileText className="h-8 w-8 text-blue-600" />
-          </div>
-        </div>
-        <p className="text-gray-900 font-medium">No posts found</p>
-        <p className="text-gray-600 text-sm mt-2">Create your first blog post to get started</p>
+      <div className="text-center py-8">
+        <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-4" />
+        <p className="text-red-600">{error}</p>
       </div>
     )
   }
@@ -175,49 +190,67 @@ export default function PostsList() {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search posts..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <div className="flex flex-wrap gap-4 items-center justify-between">
+        <div className="flex flex-wrap gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Archived</option>
+          </select>
+
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Categories</option>
+            <option value="Workplace Safety">Workplace Safety</option>
+            <option value="Legal Compliance">Legal Compliance</option>
+            <option value="Women Safety">Women Safety</option>
+            <option value="POSH Compliance">POSH Compliance</option>
+            <option value="General">General</option>
+          </select>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="date">Date</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="views">Views</option>
+          </select>
         </div>
-        
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
-        >
-          <option value="all">All Status</option>
-          <option value="PUBLISHED">Published</option>
-          <option value="DRAFT">Draft</option>
-          <option value="ARCHIVED">Archived</option>
-        </select>
 
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
-        >
-          <option value="all">All Categories</option>
-          <option value="tech">Technology</option>
-          <option value="business">Business</option>
-          <option value="lifestyle">Lifestyle</option>
-        </select>
-
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
-        >
-          <option value="date">Sort by Date</option>
-          <option value="title">Sort by Title</option>
-          <option value="status">Sort by Status</option>
-        </select>
+        <div className="flex items-center space-x-4">
+          <div className="text-sm text-gray-500">
+            {filteredPosts.length} of {posts.length} articles
+          </div>
+          <button
+            onClick={fetchPosts}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+          >
+            <Zap className="w-4 h-4" />
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
       {/* Posts Grid */}
@@ -233,57 +266,65 @@ export default function PostsList() {
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
                         {post.title}
                       </h3>
-                      <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-                        {post.excerpt || post.content.substring(0, 150)}...
+                      <p className="text-gray-600 mb-4 line-clamp-2">
+                        {post.excerpt}
                       </p>
                     </div>
-                    <div className="ml-4 flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 ml-4">
                       {getStatusBadge(post.status)}
+                      {post.is_featured && (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          <Star className="w-3 h-3 mr-1" />
+                          Featured
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-6 text-sm">
-                    <div className="flex items-center space-x-2 text-gray-500">
-                      <Calendar className="h-4 w-4" />
-                      <span>
-                        {new Date(post.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </span>
+                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <div className="flex items-center space-x-1">
+                      <User className="w-4 h-4" />
+                      <span>{post.author}</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-gray-500">
-                      <User className="h-4 w-4" />
-                      <span>{post.author || 'Unknown'}</span>
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
-                    <div className="flex items-center space-x-2 text-gray-500">
-                      <Eye className="h-4 w-4" />
+                    <div className="flex items-center space-x-1">
+                      <Eye className="w-4 h-4" />
                       <span>{post.views || 0} views</span>
                     </div>
                     {post.video_url && (
-                      <div className="flex items-center space-x-2 text-green-600">
-                        <Video className="h-4 w-4" />
+                      <div className="flex items-center space-x-1">
+                        <Video className="w-4 h-4" />
                         <span>Video</span>
                       </div>
                     )}
-                    {post.category && (
-                      <div className="flex items-center space-x-2 text-gray-500">
-                        <Tag className="h-4 w-4" />
-                        <span>{post.category}</span>
-                      </div>
-                    )}
                   </div>
-                </div>
 
-                <div className="flex items-center space-x-2 ml-4">
-                  <button className="p-2 rounded-xl hover:bg-blue-50 transition-colors group">
-                    <Eye className="h-4 w-4 text-blue-600 group-hover:text-blue-700" />
-                  </button>
-                  <button className="p-2 rounded-xl hover:bg-purple-50 transition-colors group">
-                    <Edit className="h-4 w-4 text-purple-600 group-hover:text-purple-700" />
-                  </button>
-                  <DeleteButton slug={post.slug} title={post.title} />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-gray-700">{post.category}</span>
+                      {post.tags && (
+                        <div className="flex items-center space-x-1">
+                          <Tag className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-gray-500">
+                            {post.tags.split(',').length} tags
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <DeleteButton slug={post.slug} onDelete={() => handleDelete(post.slug)} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -291,12 +332,12 @@ export default function PostsList() {
         ))}
       </div>
 
-      {/* Results Summary */}
-      <div className="text-center py-6">
-        <p className="text-gray-600 font-medium">
-          Showing {filteredPosts.length} of {posts.length} posts
-        </p>
-      </div>
+      {filteredPosts.length === 0 && (
+        <div className="text-center py-12">
+          <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500">No articles found</p>
+        </div>
+      )}
     </div>
   )
 }

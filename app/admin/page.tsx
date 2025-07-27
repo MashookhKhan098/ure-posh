@@ -1,566 +1,752 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Lock, 
   Users, 
   FileText, 
-  BarChart3, 
   Settings, 
-  LogOut, 
-  Plus, 
-  Search, 
-  Filter,
-  Calendar,
-  Eye,
+  CheckCircle, 
+  XCircle, 
+  Clock, 
+  TrendingUp,
+  UserPlus,
   Edit,
   Trash2,
-  TrendingUp,
-  Activity,
+  Eye,
+  BarChart3,
   Shield,
-  Database,
-  Upload,
   Bell,
-  Menu,
-  X,
-  Zap,
-  Cpu,
-  Globe,
-  Rocket,
+  Activity,
+  Calendar,
+  Mail,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Star,
+  Award,
   Target,
-  Sparkles,
-  Hexagon,
-  Satellite,
-  Atom,
-  Brain,
-  Fingerprint,
-  Key,
-  Scan,
-  Grid,
-  Layers,
-  Clock,
-  BookOpen,
-  PenTool,
-  Image,
-  Tag,
-  User,
-  CheckCircle,
-  AlertCircle
-} from 'lucide-react'
-import CreatePostForm from './components/CreatePostForm'
-import PostsList from './components/PostsList'
+  Zap,
+  Hash,
+  MessageSquare
+} from 'lucide-react';
+import CreateWriterForm from './components/CreateWriterForm';
+import NotificationToast from './components/NotificationToast';
+import WriterManagement from './components/WriterManagement';
 
-// Get allowed admin public key from env (exposed via NEXT_PUBLIC_ADMIN_WALLET)
-const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET?.toLowerCase()
-
-interface DashboardStats {
-  totalPosts: number
-  publishedPosts: number
-  draftPosts: number
-  totalViews: number
-  monthlyGrowth: number
+interface Writer {
+  id: string;
+  name: string;
+  email: string;
+  status: 'active' | 'inactive' | 'pending';
+  postsCount: number;
+  joinDate: string;
+  lastActive: string;
 }
 
-export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState('dashboard')
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [stats, setStats] = useState<DashboardStats>({
+interface Post {
+  id: string;
+  title: string;
+  writer: string;
+  status: 'draft' | 'published' | 'rejected';
+  createdAt: string;
+  category: string;
+  viewCount: number;
+  content?: string;
+}
+
+interface PerformanceMetrics {
+  totalWriters: number;
+  totalPosts: number;
+  pendingApprovals: number;
+  approvedPosts: number;
+  totalViews: number;
+  avgResponseTime: string;
+}
+
+export default function AdminDashboard() {
+  const [activeTab, setActiveTab] = useState('writers');
+  const [writers, setWriters] = useState<Writer[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [showCreateWriter, setShowCreateWriter] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: 'success' | 'error' | 'warning' | 'info';
+  } | null>(null);
+  const [metrics, setMetrics] = useState<PerformanceMetrics>({
+    totalWriters: 0,
     totalPosts: 0,
-    publishedPosts: 0,
-    draftPosts: 0,
+    pendingApprovals: 0,
+    approvedPosts: 0,
     totalViews: 0,
-    monthlyGrowth: 0
-  })
-  const [scanningEffect, setScanningEffect] = useState(false)
-  const [walletAddress, setWalletAddress] = useState<string | null>(null)
-  const [metamaskError, setMetamaskError] = useState<string | null>(null)
-  const [isAllowed, setIsAllowed] = useState<boolean | null>(null);
-  const router = useRouter()
+    avgResponseTime: '2.5h'
+  });
 
-  // MetaMask connect logic
-  const connectWallet = async () => {
-    setMetamaskError(null)
-    if (typeof window === 'undefined' || !(window as any).ethereum) {
-      setMetamaskError('MetaMask is not installed. Please install MetaMask and try again.')
-      return
-    }
-    try {
-      const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' })
-      if (accounts && accounts[0]) {
-        setWalletAddress(accounts[0].toLowerCase())
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await fetch('/api/admin/dashboard');
+        if (response.ok) {
+          const data = await response.json();
+          setWriters(data.writers || []);
+          setPosts(data.posts || []);
+          setMetrics(data.metrics || {
+            totalWriters: 0,
+            totalPosts: 0,
+            pendingApprovals: 0,
+            approvedPosts: 0,
+            totalViews: 0,
+            avgResponseTime: '0h'
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
       }
-    } catch (err) {
-      setMetamaskError('Failed to connect MetaMask.')
-    }
-  }
+    };
 
-  useEffect(() => {
-    // Auto-connect if already connected
-    if (typeof window !== 'undefined' && (window as any).ethereum && (window as any).ethereum.selectedAddress) {
-      setWalletAddress((window as any).ethereum.selectedAddress.toLowerCase())
-    }
-  }, [])
+    fetchDashboardData();
+  }, []);
 
-  useEffect(() => {
-    if (walletAddress) {
-      setIsAllowed(null);
-      fetch('/api/admin/check-wallet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: walletAddress }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          setIsAllowed(!!data.allowed);
-          if (data.allowed) fetchStats();
-        })
-        .catch(() => setIsAllowed(false));
-    } else {
-      setIsAllowed(null);
-    }
-  }, [walletAddress]);
-
-  const fetchStats = async () => {
+  const handleApprovePost = async (postId: string) => {
     try {
-      const response = await fetch('/api/posts')
+      const response = await fetch(`/api/posts/${postId}/approve`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'approve' })
+      });
+      
       if (response.ok) {
-        const data = await response.json()
-        const posts = data.posts || []
-        setStats({
-          totalPosts: posts.length,
-          publishedPosts: posts.filter((p: any) => p.status === 'PUBLISHED').length,
-          draftPosts: posts.filter((p: any) => p.status === 'DRAFT').length,
-          totalViews: posts.reduce((sum: number, p: any) => sum + (p.views || 0), 0),
-          monthlyGrowth: 12.5
-        })
+        setPosts(posts.map(post => 
+          post.id === postId ? { ...post, status: 'published' } : post
+        ));
+        showNotification('Post approved successfully!', 'success');
       }
     } catch (error) {
-      console.error('Failed to fetch stats:', error)
+      console.error('Error approving post:', error);
+      showNotification('Failed to approve post', 'error');
     }
-  }
+  };
 
-  // If not connected or not allowed, show MetaMask connect page
-  if (!walletAddress || isAllowed === false) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6 w-full max-w-md items-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h2>
-          <p className="text-gray-700 text-center mb-4">Connect your MetaMask wallet to access the admin panel.</p>
-          <button
-            onClick={connectWallet}
-            className="bg-gradient-to-r from-pink-600 to-rose-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-500 hover:to-rose-500 transition-all duration-200"
-          >
-            Connect MetaMask
-          </button>
-          {metamaskError && <p className="text-red-500 text-sm mt-2">{metamaskError}</p>}
-          {walletAddress && isAllowed === false && (
-            <p className="text-red-500 text-sm mt-2">This wallet is not authorized for admin access.</p>
-          )}
-        </div>
-      </div>
-    )
-  }
-  if (isAllowed === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col gap-6 w-full max-w-md items-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Checking wallet authorization...</h2>
-        </div>
-      </div>
-    )
-  }
+  const handleRejectPost = async (postId: string, reason: string) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/approve`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reject', reason })
+      });
+      
+      if (response.ok) {
+        setPosts(posts.map(post => 
+          post.id === postId ? { ...post, status: 'rejected' } : post
+        ));
+        showNotification('Post rejected successfully!', 'success');
+      }
+    } catch (error) {
+      console.error('Error rejecting post:', error);
+      showNotification('Failed to reject post', 'error');
+    }
+  };
 
-  const StatCard = ({ title, value, icon: Icon, color, change, gradient }: any) => (
-    <div className="relative group">
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-pink-500/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
-      <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl p-6 hover:border-pink-300/70 transition-all duration-300 shadow-lg">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-black mb-2">{title}</p>
-            <p className="text-3xl font-bold text-black">{value}</p>
-            {change && (
-              <p className="text-sm text-pink-600 mt-2 flex items-center">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                +{change}%
-              </p>
-            )}
-          </div>
-          <div className={`p-4 rounded-xl ${gradient} relative overflow-hidden`}>
-            <Icon className="h-8 w-8 text-white relative z-10" />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  const handleDeletePost = async (postId: string) => {
+    const post = posts.find(p => p.id === postId);
+    if (!confirm(`Are you sure you want to delete "${post?.title}"? This action cannot be undone.`)) {
+      return;
+    }
 
-  const SidebarItem = ({ id, label, icon: Icon, isActive }: any) => (
-    <button
-      onClick={() => setActiveTab(id)}
-      className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 relative overflow-hidden ${
-        isActive 
-          ? 'bg-gradient-to-r from-pink-500/20 to-rose-500/20 text-pink-700 border border-pink-300/50' 
-          : 'text-black hover:text-black hover:bg-gray-100/50'
-      }`}
-    >
-      <Icon className="h-5 w-5 mr-3" />
-      {label}
-    </button>
-  )
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        setPosts(posts.filter(post => post.id !== postId));
+        showNotification(`Post "${post?.title}" deleted successfully!`, 'success');
+      } else {
+        const data = await response.json();
+        showNotification(data.error || 'Failed to delete post', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      showNotification('Network error. Please try again.', 'error');
+    }
+  };
+
+  const handleUpdateWriter = async (writerId: string, updates: Partial<Writer>) => {
+    try {
+      const response = await fetch(`/api/admin/writers/${writerId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      
+      if (response.ok) {
+        setWriters(writers.map(writer => 
+          writer.id === writerId ? { ...writer, ...updates } : writer
+        ));
+      }
+    } catch (error) {
+      console.error('Error updating writer:', error);
+    }
+  };
+
+  const handleDeleteWriter = async (writerId: string) => {
+    if (!confirm('Are you sure you want to delete this writer? This will also delete all their posts.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/writers/${writerId}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        const writer = writers.find(w => w.id === writerId);
+        setWriters(writers.filter(writer => writer.id !== writerId));
+        showNotification(`Writer "${writer?.name}" deleted successfully!`, 'success');
+      } else {
+        const data = await response.json();
+        showNotification(data.error || 'Failed to delete writer', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting writer:', error);
+      showNotification('Network error. Please try again.', 'error');
+    }
+  };
+
+  const handleWriterCreated = (newWriter: Writer) => {
+    setWriters(prev => [newWriter, ...prev]);
+    setMetrics(prev => ({
+      ...prev,
+      totalWriters: prev.totalWriters + 1
+    }));
+    setNotification({
+      message: `Writer "${newWriter.name}" created successfully!`,
+      type: 'success'
+    });
+  };
+
+  const showNotification = (message: string, type: 'success' | 'error' | 'warning' | 'info') => {
+    setNotification({ message, type });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants = {
+      active: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      inactive: 'bg-gray-100 text-gray-800 border-gray-200',
+      pending: 'bg-amber-100 text-amber-800 border-amber-200',
+      approved: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      rejected: 'bg-red-100 text-red-800 border-red-200'
+    };
+    return <Badge className={`${variants[status as keyof typeof variants]} border`}>{status}</Badge>;
+  };
+
+  const getMetricIcon = (metric: string) => {
+    const icons = {
+      writers: <Users className="w-5 h-5" />,
+      posts: <FileText className="w-5 h-5" />,
+      pending: <Clock className="w-5 h-5" />,
+      views: <TrendingUp className="w-5 h-5" />
+    };
+    return icons[metric as keyof typeof icons] || <Activity className="w-5 h-5" />;
+  };
+
+  const getMetricColor = (metric: string) => {
+    const colors = {
+      writers: 'from-blue-500 to-blue-600',
+      posts: 'from-purple-500 to-purple-600',
+      pending: 'from-amber-500 to-amber-600',
+      views: 'from-emerald-500 to-emerald-600'
+    };
+    return colors[metric as keyof typeof colors] || 'from-gray-500 to-gray-600';
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(236,72,153,0.05),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(219,39,119,0.05),transparent_50%)]"></div>
-      </div>
-
-      {/* Subtle Grid Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(236, 72, 153, 0.3) 1px, transparent 0)`,
-          backgroundSize: '50px 50px'
-        }}></div>
-      </div>
-
-      {/* Header */}
-      <header className="relative z-10 bg-white/80 backdrop-blur-xl border-b border-pink-200/50 shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              {isSidebarOpen ? <X className="h-5 w-5 text-black" /> : <Menu className="h-5 w-5 text-black" />}
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Enhanced Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/60 px-6 py-6">
+        <div className="flex items-center justify-between">
+          <div>
             <div className="flex items-center space-x-3">
-              <div className="relative h-10 w-10">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 rounded-xl"></div>
-                <div className="absolute inset-1 bg-white rounded-lg flex items-center justify-center">
-                  <BookOpen className="h-6 w-6 text-pink-600" />
-                </div>
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-black">
-                  Blog Admin Dashboard
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                  Admin Dashboard
                 </h1>
-                <p className="text-xs text-black">Content Management System</p>
+                <p className="text-slate-600 mt-1">Manage writers, posts, and platform settings</p>
               </div>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-4">
-            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors relative">
-              <Bell className="h-5 w-5 text-black" />
-              <span className="absolute top-1 right-1 h-2 w-2 bg-pink-500 rounded-full animate-pulse"></span>
-            </button>
-            <button
-              onClick={() => {
-                localStorage.removeItem('adminAuthenticated')
-                setWalletAddress(null)
-                setMetamaskError(null)
-                router.push('/')
-              }}
-              className="flex items-center space-x-2 px-4 py-2 bg-pink-50 text-pink-600 rounded-xl hover:bg-pink-100 transition-colors font-medium"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Sign Out</span>
-            </button>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" size="sm" className="bg-white/50 backdrop-blur-sm">
+              <Bell className="w-4 h-4 mr-2" />
+              Notifications
+            </Button>
+            <Button variant="outline" size="sm" className="bg-white/50 backdrop-blur-sm">
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
           </div>
         </div>
-      </header>
-
-      <div className="flex relative z-10">
-        {/* Sidebar */}
-        <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white/80 backdrop-blur-xl border-r border-pink-200/50 transform transition-transform duration-300 ease-in-out shadow-lg`}>
-          <div className="p-6">
-            <nav className="space-y-3">
-              <SidebarItem 
-                id="dashboard" 
-                label="Dashboard" 
-                icon={BarChart3} 
-                isActive={activeTab === 'dashboard'} 
-              />
-              <SidebarItem 
-                id="posts" 
-                label="All Posts" 
-                icon={FileText} 
-                isActive={activeTab === 'posts'} 
-              />
-              <SidebarItem 
-                id="create" 
-                label="New Post" 
-                icon={Plus} 
-                isActive={activeTab === 'create'} 
-              />
-              <SidebarItem 
-                id="analytics" 
-                label="Analytics" 
-                icon={Activity} 
-                isActive={activeTab === 'analytics'} 
-              />
-              <SidebarItem 
-                id="settings" 
-                label="Settings" 
-                icon={Settings} 
-                isActive={activeTab === 'settings'} 
-              />
-            </nav>
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          {activeTab === 'dashboard' && (
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold text-black mb-2">
-                  Welcome back, Admin!
-                </h2>
-                <p className="text-black">
-                  Here's what's happening with your blog today.
-                </p>
-              </div>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard
-                  title="Total Posts"
-                  value={stats.totalPosts}
-                  icon={FileText}
-                  gradient="bg-gradient-to-br from-pink-500 to-pink-600"
-                  change={stats.monthlyGrowth}
-                />
-                <StatCard
-                  title="Published"
-                  value={stats.publishedPosts}
-                  icon={CheckCircle}
-                  gradient="bg-gradient-to-br from-rose-500 to-rose-600"
-                />
-                <StatCard
-                  title="Drafts"
-                  value={stats.draftPosts}
-                  icon={PenTool}
-                  gradient="bg-gradient-to-br from-pink-400 to-pink-500"
-                />
-                <StatCard
-                  title="Total Views"
-                  value={stats.totalViews.toLocaleString()}
-                  icon={Eye}
-                  gradient="bg-gradient-to-br from-rose-400 to-rose-500"
-                />
-              </div>
-
-              {/* Quick Actions */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-2xl blur-xl"></div>
-                  <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl p-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-black mb-6">Quick Actions</h3>
-                    <div className="space-y-4">
-                      <button
-                        onClick={() => setActiveTab('create')}
-                        className="w-full flex items-center justify-between p-4 border border-pink-200 rounded-xl hover:border-pink-300 hover:bg-pink-50 transition-all group"
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div className="p-3 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl">
-                            <Plus className="h-6 w-6 text-white" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-black">Create New Post</p>
-                            <p className="text-sm text-black">Start writing a new blog post</p>
-                          </div>
-                        </div>
-                        <div className="w-2 h-2 bg-pink-500 rounded-full group-hover:animate-pulse"></div>
-                      </button>
-                      <button
-                        onClick={() => setActiveTab('posts')}
-                        className="w-full flex items-center justify-between p-4 border border-pink-200 rounded-xl hover:border-pink-300 hover:bg-pink-50 transition-all group"
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div className="p-3 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl">
-                            <FileText className="h-6 w-6 text-white" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-black">Manage Posts</p>
-                            <p className="text-sm text-black">Edit and organize your content</p>
-                          </div>
-                        </div>
-                        <div className="w-2 h-2 bg-rose-500 rounded-full group-hover:animate-pulse"></div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-2xl blur-xl"></div>
-                  <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl p-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-black mb-6">Recent Activity</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="h-2 w-2 bg-pink-500 rounded-full animate-pulse"></div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-black">New post published</p>
-                          <p className="text-xs text-black">2 hours ago</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="h-2 w-2 bg-rose-500 rounded-full animate-pulse"></div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-black">Post updated</p>
-                          <p className="text-xs text-black">5 hours ago</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="h-2 w-2 bg-pink-400 rounded-full animate-pulse"></div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-black">Draft saved</p>
-                          <p className="text-xs text-black">1 day ago</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'posts' && (
-            <div className="space-y-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-3xl font-bold text-black mb-2">
-                    Content Management
-                  </h2>
-                  <p className="text-black">Manage and organize your blog content</p>
-                </div>
-                <button
-                  onClick={() => setActiveTab('create')}
-                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-xl hover:from-pink-500 hover:to-rose-500 transition-all font-medium"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>New Post</span>
-                </button>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-2xl blur-xl"></div>
-                <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl shadow-lg">
-                  <div className="p-6 border-b border-pink-200/50">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-black" />
-                        <input
-                          type="text"
-                          placeholder="Search posts..."
-                          className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-black placeholder-gray-500"
-                        />
-                      </div>
-                      <button className="flex items-center space-x-2 px-4 py-3 border border-gray-300 text-black rounded-xl hover:bg-gray-50 transition-colors">
-                        <Filter className="h-4 w-4" />
-                        <span>Filter</span>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <PostsList />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'create' && (
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold text-black mb-2">
-                  Create New Post
-                </h2>
-                <p className="text-black">Write and publish your next blog post</p>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-2xl blur-xl"></div>
-                <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl shadow-lg">
-                  <CreatePostForm />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'analytics' && (
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold text-black mb-2">
-                  Analytics & Insights
-                </h2>
-                <p className="text-black">Track your blog performance and audience insights</p>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-2xl blur-xl"></div>
-                <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl p-8">
-                  <div className="text-center">
-                    <div className="mx-auto h-32 w-32 mb-6 relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full animate-pulse"></div>
-                      <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center">
-                        <Activity className="h-16 w-16 text-pink-600" />
-                      </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black mb-2">Analytics Dashboard</h3>
-                    <p className="text-black">Coming soon - Track your blog performance</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold text-black mb-2">
-                  Settings & Configuration
-                </h2>
-                <p className="text-black">Configure your blog preferences and settings</p>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-2xl blur-xl"></div>
-                <div className="relative bg-white/80 backdrop-blur-xl border border-pink-200/50 rounded-2xl p-8">
-                  <div className="text-center">
-                    <div className="mx-auto h-32 w-32 mb-6 relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full animate-pulse"></div>
-                      <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center">
-                        <Settings className="h-16 w-16 text-pink-600" />
-                      </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-black mb-2">Settings Panel</h3>
-                    <p className="text-black">Coming soon - Configure your blog settings</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </main>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        @keyframes scan {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100vh); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .animate-scan {
-          animation: scan 1.5s linear infinite;
-        }
-      `}</style>
+      {/* Enhanced Metrics Overview */}
+      <div className="px-6 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {[
+            { key: 'writers', label: 'Total Writers', value: metrics.totalWriters, change: '+2', period: 'from last month' },
+            { key: 'posts', label: 'Total Posts', value: metrics.totalPosts, change: '+12', period: 'from last week' },
+            { key: 'pending', label: 'Pending Approvals', value: metrics.pendingApprovals, change: '', period: 'Requires attention' },
+            { key: 'views', label: 'Total Views', value: metrics.totalViews.toLocaleString(), change: '+8%', period: 'from last month' }
+          ].map((metric) => (
+            <Card key={metric.key} className="group hover:shadow-lg transition-all duration-300 border-0 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-sm font-medium text-slate-700">{metric.label}</CardTitle>
+                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${getMetricColor(metric.key)} flex items-center justify-center text-white`}>
+                  {getMetricIcon(metric.key)}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-slate-900 mb-1">{metric.value}</div>
+                <p className="text-xs text-slate-500 flex items-center">
+                  {metric.change && <span className="text-emerald-600 font-medium mr-1">{metric.change}</span>}
+                  {metric.period}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Enhanced Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-white/50 backdrop-blur-sm border border-slate-200/50">
+            <TabsTrigger value="writers" className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">
+              <Users className="w-4 h-4" />
+              <span>Writer Management</span>
+            </TabsTrigger>
+            <TabsTrigger value="approvals" className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-500 data-[state=active]:text-white">
+              <FileText className="w-4 h-4" />
+              <span>Post Approval</span>
+            </TabsTrigger>
+            <TabsTrigger value="performance" className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-500 data-[state=active]:text-white">
+              <BarChart3 className="w-4 h-4" />
+              <span>Performance & Settings</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Enhanced Writer Management Tab */}
+          <TabsContent value="writers" className="space-y-6">
+            <WriterManagement />
+          </TabsContent>
+
+          {/* Enhanced Post Approval Tab */}
+          <TabsContent value="approvals" className="space-y-6">
+            {/* Approval Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card className="border-0 bg-gradient-to-br from-amber-50 to-orange-50 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-amber-700">Pending Review</p>
+                      <p className="text-2xl font-bold text-amber-900">{posts.filter(p => p.status === 'draft').length}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-amber-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 bg-gradient-to-br from-emerald-50 to-green-50 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-emerald-700">Approved</p>
+                      <p className="text-2xl font-bold text-emerald-900">{posts.filter(p => p.status === 'published').length}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-6 h-6 text-emerald-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 bg-gradient-to-br from-red-50 to-pink-50 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-red-700">Rejected</p>
+                      <p className="text-2xl font-bold text-red-900">{posts.filter(p => p.status === 'rejected').length}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                      <XCircle className="w-6 h-6 text-red-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-700">Total Posts</p>
+                      <p className="text-2xl font-bold text-blue-900">{posts.length}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-blue-600" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Enhanced Post Approval Interface */}
+            <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-2xl font-bold text-slate-900 flex items-center">
+                      <Shield className="w-6 h-6 mr-3 text-slate-700" />
+                      Content Approval Center
+                    </CardTitle>
+                    <CardDescription className="text-slate-600">
+                      Review, approve, or reject submitted content. Ensure quality and compliance.
+                    </CardDescription>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex space-x-2">
+                      <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {posts.filter(p => p.status === 'draft').length} Pending
+                      </Badge>
+                      <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                        <CheckCircle className="w-3 h-3 mr-1" />
+                        {posts.filter(p => p.status === 'published').length} Approved
+                      </Badge>
+                      <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                        <XCircle className="w-3 h-3 mr-1" />
+                        {posts.filter(p => p.status === 'rejected').length} Rejected
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {posts.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <FileText className="w-8 h-8 text-slate-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">No Posts to Review</h3>
+                    <p className="text-slate-600">All posts have been reviewed and processed.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {posts.map((post) => (
+                      <div key={post.id} className="group border border-slate-200/50 rounded-xl bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:shadow-lg overflow-hidden">
+                        <div className="p-6">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-3">
+                                <h3 className="font-bold text-slate-900 text-xl">{post.title}</h3>
+                                {getStatusBadge(post.status)}
+                              </div>
+                              
+                              {/* Post Meta Information */}
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                  <Users className="w-4 h-4" />
+                                  <span className="font-medium">{post.writer}</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                  <Target className="w-4 h-4" />
+                                  <span className="font-medium">{post.category}</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                  <TrendingUp className="w-4 h-4" />
+                                  <span className="font-medium">{post.viewCount} views</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-sm text-slate-600">
+                                  <Calendar className="w-4 h-4" />
+                                  <span className="font-medium">
+                                    {new Date(post.createdAt).toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'short',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Content Preview */}
+                              <div className="bg-slate-50 rounded-lg p-4 mb-4">
+                                <p className="text-sm text-slate-700 line-clamp-3">
+                                  {post.content || 'Content preview not available...'}
+                                </p>
+                              </div>
+
+                              {/* Quality Indicators */}
+                              <div className="flex items-center space-x-4 text-xs text-slate-500">
+                                <span className="flex items-center">
+                                  <Clock className="w-3 h-3 mr-1" />
+                                  {Math.ceil((post.content?.length || 0) / 200)} min read
+                                </span>
+                                <span className="flex items-center">
+                                  <Hash className="w-3 h-3 mr-1" />
+                                  {post.category} • {post.writer}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                            <div className="flex items-center space-x-3">
+                              {post.status === 'draft' && (
+                                <>
+                                  <Button 
+                                    size="sm" 
+                                    onClick={() => handleApprovePost(post.id)}
+                                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg"
+                                  >
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Approve & Publish
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    onClick={() => handleRejectPost(post.id, 'Content does not meet quality standards')}
+                                    className="border-red-200 text-red-600 hover:bg-red-50"
+                                  >
+                                    <XCircle className="w-4 h-4 mr-2" />
+                                    Reject
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    className="border-slate-200 text-slate-600 hover:bg-slate-50"
+                                  >
+                                    <MessageSquare className="w-4 h-4 mr-2" />
+                                    Request Changes
+                                  </Button>
+                                </>
+                              )}
+                              {post.status === 'published' && (
+                                <div className="flex items-center space-x-2">
+                                  <Badge className="bg-emerald-100 text-emerald-800">
+                                    <CheckCircle className="w-3 h-3 mr-1" />
+                                    Published
+                                  </Badge>
+                                  <span className="text-sm text-slate-500">
+                                    Approved on {new Date(post.createdAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              )}
+                              {post.status === 'rejected' && (
+                                <div className="flex items-center space-x-2">
+                                  <Badge className="bg-red-100 text-red-800">
+                                    <XCircle className="w-3 h-3 mr-1" />
+                                    Rejected
+                                  </Badge>
+                                  <span className="text-sm text-slate-500">
+                                    Rejected on {new Date(post.createdAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                              <Button variant="outline" size="sm" className="hover:bg-slate-50">
+                                <Eye className="w-4 h-4 mr-2" />
+                                Preview
+                              </Button>
+                              <Button variant="outline" size="sm" className="hover:bg-slate-50">
+                                <Edit className="w-4 h-4 mr-2" />
+                                Edit
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => handleDeletePost(post.id)}
+                                className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                              </Button>
+                              <Button variant="outline" size="sm" className="hover:bg-slate-50">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Enhanced Performance & Settings Tab */}
+          <TabsContent value="performance" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Enhanced Performance Metrics */}
+              <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold text-slate-900 flex items-center">
+                    <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+                    Performance Metrics
+                  </CardTitle>
+                  <CardDescription className="text-slate-600">Platform performance overview</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                    <span className="text-sm font-medium text-slate-700">Average Response Time</span>
+                    <span className="text-sm font-semibold text-blue-600">{metrics.avgResponseTime}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg">
+                    <span className="text-sm font-medium text-slate-700">Approval Rate</span>
+                    <span className="text-sm font-semibold text-emerald-600">
+                      {Math.round((metrics.approvedPosts / metrics.totalPosts) * 100)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg">
+                    <span className="text-sm font-medium text-slate-700">Active Writers</span>
+                    <span className="text-sm font-semibold text-amber-600">
+                      {writers.filter(w => w.status === 'active').length}/{metrics.totalWriters}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Enhanced Platform Settings */}
+              <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold text-slate-900 flex items-center">
+                    <Settings className="w-5 h-5 mr-2 text-purple-600" />
+                    Platform Settings
+                  </CardTitle>
+                  <CardDescription className="text-slate-600">Configure platform behavior</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Auto-approval</h4>
+                      <p className="text-sm text-slate-600">Automatically approve posts from trusted writers</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Configure</Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Content Moderation</h4>
+                      <p className="text-sm text-slate-600">Set up content filtering rules</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Configure</Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Writer Permissions</h4>
+                      <p className="text-sm text-slate-600">Manage writer access levels</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Configure</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Enhanced Security Settings */}
+              <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold text-slate-900 flex items-center">
+                    <Shield className="w-5 h-5 mr-2 text-red-600" />
+                    Security & Access
+                  </CardTitle>
+                  <CardDescription className="text-slate-600">Manage security settings</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-pink-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Two-Factor Authentication</h4>
+                      <p className="text-sm text-slate-600">Enhanced security for admin accounts</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Enable</Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">API Access</h4>
+                      <p className="text-sm text-slate-600">Manage API keys and permissions</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Manage</Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-slate-50 to-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Audit Logs</h4>
+                      <p className="text-sm text-slate-600">View admin activity logs</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">View</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Enhanced Notification Settings */}
+              <Card className="border-0 bg-white/70 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold text-slate-900 flex items-center">
+                    <Bell className="w-5 h-5 mr-2 text-green-600" />
+                    Notifications
+                  </CardTitle>
+                  <CardDescription className="text-slate-600">Configure notification preferences</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">New Post Alerts</h4>
+                      <p className="text-sm text-slate-600">Get notified when new posts are submitted</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Configure</Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">Writer Activity</h4>
+                      <p className="text-sm text-slate-600">Monitor writer login and activity</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Configure</Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg">
+                    <div>
+                      <h4 className="font-medium text-slate-900">System Alerts</h4>
+                      <p className="text-sm text-slate-600">Critical system notifications</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="bg-white/50">Configure</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Create Writer Modal */}
+      {showCreateWriter && (
+        <CreateWriterForm
+          onClose={() => setShowCreateWriter(false)}
+          onWriterCreated={handleWriterCreated}
+        />
+      )}
+
+      {/* Notification Toast */}
+      {notification && (
+        <NotificationToast
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
     </div>
-  )
+  );
 }

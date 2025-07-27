@@ -20,6 +20,10 @@ const nextConfig = {
     }
     return config
   },
+  // Custom server configuration
+  experimental: {
+    serverComponentsExternalPackages: [],
+  },
 }
 
 export default nextConfig

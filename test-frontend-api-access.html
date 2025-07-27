@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Frontend API Test</h1>
+    <button onclick="testLogin()">Test Login API</button>
+    <button onclick="testUsers()">Test Users API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing login...';
+            
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'ureposh2024'
+                    })
+                });
+
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Login Test Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Success: ${data.success}</p>
+                    <p>Message: ${data.message}</p>
+                    <p>Has Token: ${data.token ? 'Yes' : 'No'}</p>
+                    <p>User: ${data.user?.username || 'None'}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testUsers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing users...';
+            
+            try {
+                const response = await fetch('/api/admin/users');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Users Test Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Success: ${data.success}</p>
+                    <p>Users Found: ${data.admins?.length || 0}</p>
+                    <p>First User: ${data.admins?.[0]?.username || 'None'}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -55,7 +55,6 @@ declare global {
 export default function CreatePostForm() {
   const [formData, setFormData] = useState({
     title: '',
-    subtitle: '',
     content: '',
     excerpt: '',
     author: '',
@@ -66,17 +65,15 @@ export default function CreatePostForm() {
     metaTitle: '',
     metaDescription: '',
     readTime: '',
-    language: 'en',
-    videoTitle: '',
-    videoDescription: ''
+    language: 'en'
   })
 
   const [featuredImage, setFeaturedImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [videoFile, setVideoFile] = useState<File | null>(null)
-  const [videoPreview, setVideoPreview] = useState<string | null>(null)
+  const [videoTitle, setVideoTitle] = useState('')
+  const [videoDescription, setVideoDescription] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isPreviewMode, setIsPreviewMode] = useState(false)
+  const [previewMode, setPreviewMode] = useState(false)
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved')
   const [tagInput, setTagInput] = useState('')
   const [activeTab, setActiveTab] = useState('content')
@@ -111,8 +108,20 @@ export default function CreatePostForm() {
     return () => clearTimeout(autoSaveTimer)
   }, [formData.title, formData.content])
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tags = e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag)
+    setFormData(prev => ({
+      ...prev,
+      tags
+    }))
   }
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,70 +179,56 @@ export default function CreatePostForm() {
 
     try {
       const submitFormData = new FormData()
-      
-      // Add text fields
+      // Add all text fields from formData
       submitFormData.append('title', formData.title)
       submitFormData.append('content', formData.content)
+      submitFormData.append('excerpt', formData.excerpt)
       submitFormData.append('author', formData.author)
       submitFormData.append('category', formData.category)
       submitFormData.append('tags', formData.tags.join(','))
-      submitFormData.append('slug', formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
-      
+      submitFormData.append('status', formData.status)
+      submitFormData.append('publishDate', formData.publishDate)
+      submitFormData.append('metaTitle', formData.metaTitle)
+      submitFormData.append('metaDescription', formData.metaDescription)
+      submitFormData.append('readTime', formData.readTime)
+      submitFormData.append('language', formData.language)
+      // Generate slug from title
+      const slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      submitFormData.append('slug', slug)
       // Add image file
       if (featuredImage) {
         submitFormData.append('featuredImage', featuredImage)
       }
-      
       // Add video file and metadata
       if (videoFile) {
         submitFormData.append('videoFile', videoFile)
-        submitFormData.append('videoTitle', formData.videoTitle)
-        submitFormData.append('videoDescription', formData.videoDescription)
+        submitFormData.append('videoTitle', videoTitle)
+        submitFormData.append('videoDescription', videoDescription)
       }
 
       const response = await fetch('/api/posts', {
         method: 'POST',
-        body: submitFormData,
+        body: submitFormData
       })
 
       if (response.ok) {
-        const result = await response.json()
-        
-        // Reset form
-        setFormData({
-          title: '',
-          subtitle: '',
-          content: '',
-          excerpt: '',
-          author: '',
-          category: '',
-          tags: [],
-          status: 'draft',
-          publishDate: '',
-          metaTitle: '',
-          metaDescription: '',
-          readTime: '',
-          language: 'en',
-          videoTitle: '',
-          videoDescription: ''
-        })
-        setFeaturedImage(null)
-        setImagePreview(null)
-        setVideoFile(null)
-        setVideoPreview(null)
-        
         // Show success message
-        alert('Post created successfully!')
+        alert('Article created successfully!')
+        
+        // Refresh the posts list
+        if (typeof window !== 'undefined' && (window as any).refreshPostsList) {
+          (window as any).refreshPostsList()
+        }
         
         // Optionally redirect to posts list
         // window.location.href = '/admin?tab=posts'
       } else {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to create post')
+        alert(`Error creating article: ${errorData.error}`)
       }
     } catch (error) {
-      console.error('Error creating post:', error)
-      alert(`Failed to create post: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('Error creating article:', error)
+      alert('Error creating article. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -320,15 +315,15 @@ export default function CreatePostForm() {
             <div className="flex items-center space-x-3">
               <button
                 type="button"
-                onClick={() => setIsPreviewMode(!isPreviewMode)}
+                onClick={() => setPreviewMode(!previewMode)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
-                  isPreviewMode 
+                  previewMode 
                     ? 'bg-purple-100 text-purple-700 border border-purple-300' 
                     : 'bg-blue-100 text-blue-700 border border-blue-300'
                 }`}
               >
-                {isPreviewMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                <span className="hidden sm:inline">{isPreviewMode ? 'Edit Mode' : 'Preview Mode'}</span>
+                {previewMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                <span className="hidden sm:inline">{previewMode ? 'Edit Mode' : 'Preview Mode'}</span>
               </button>
               
               <button
@@ -394,7 +389,7 @@ export default function CreatePostForm() {
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 text-lg"
                     placeholder="Enter your post title..."
                     required
@@ -409,7 +404,7 @@ export default function CreatePostForm() {
                   </label>
                   <textarea
                     value={formData.content}
-                    onChange={(e) => handleInputChange('content', e.target.value)}
+                    onChange={handleInputChange}
                     rows={20}
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 resize-none text-base leading-relaxed"
                     placeholder="Write your blog post content..."
@@ -433,7 +428,7 @@ export default function CreatePostForm() {
                       <input
                         type="text"
                         value={formData.author}
-                        onChange={(e) => handleInputChange('author', e.target.value)}
+                        onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
                         placeholder="Enter author name..."
                         required
@@ -444,7 +439,7 @@ export default function CreatePostForm() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                       <select
                         value={formData.category}
-                        onChange={(e) => handleInputChange('category', e.target.value)}
+                        onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
                         required
                       >
@@ -597,8 +592,8 @@ export default function CreatePostForm() {
                       </label>
                       <input
                         type="text"
-                        value={formData.videoTitle}
-                        onChange={(e) => handleInputChange('videoTitle', e.target.value)}
+                        value={videoTitle}
+                        onChange={(e) => setVideoTitle(e.target.value)}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-900 placeholder-gray-500"
                         placeholder="Enter video title..."
                       />
@@ -608,8 +603,8 @@ export default function CreatePostForm() {
                         Video Description
                       </label>
                       <textarea
-                        value={formData.videoDescription}
-                        onChange={(e) => handleInputChange('videoDescription', e.target.value)}
+                        value={videoDescription}
+                        onChange={(e) => setVideoDescription(e.target.value)}
                         rows={3}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-900 placeholder-gray-500 resize-none"
                         placeholder="Enter video description..."
@@ -636,7 +631,7 @@ export default function CreatePostForm() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                     <select
                       value={formData.status}
-                      onChange={(e) => handleInputChange('status', e.target.value)}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
                     >
                       <option value="DRAFT">Draft</option>
@@ -650,7 +645,7 @@ export default function CreatePostForm() {
                     <input
                       type="datetime-local"
                       value={formData.publishDate}
-                      onChange={(e) => handleInputChange('publishDate', e.target.value)}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
                     />
                   </div>
@@ -659,7 +654,7 @@ export default function CreatePostForm() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
                     <select
                       value={formData.language}
-                      onChange={(e) => handleInputChange('language', e.target.value)}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900"
                     >
                       {languages.map(lang => (
@@ -678,22 +673,13 @@ export default function CreatePostForm() {
                 </h3>
                 
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
-                    <input
-                      type="text"
-                      value={formData.subtitle}
-                      onChange={(e) => handleInputChange('subtitle', e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
-                      placeholder="Enter subtitle..."
-                    />
-                  </div>
+
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
                     <textarea
                       value={formData.excerpt}
-                      onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                      onChange={handleInputChange}
                       rows={3}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 resize-none"
                       placeholder="Enter excerpt..."
@@ -705,7 +691,7 @@ export default function CreatePostForm() {
                     <input
                       type="number"
                       value={formData.readTime}
-                      onChange={(e) => handleInputChange('readTime', e.target.value)}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
                       placeholder="Estimated read time..."
                     />
@@ -730,7 +716,7 @@ export default function CreatePostForm() {
                     <input
                       type="text"
                       value={formData.metaTitle || ''}
-                      onChange={e => handleInputChange('metaTitle', e.target.value)}
+                      onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500"
                       placeholder="SEO title..."
                     />
@@ -739,7 +725,7 @@ export default function CreatePostForm() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
                     <textarea
                       value={formData.metaDescription || ''}
-                      onChange={e => handleInputChange('metaDescription', e.target.value)}
+                      onChange={handleInputChange}
                       rows={3}
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 resize-none"
                       placeholder="SEO description..."
@@ -778,7 +764,7 @@ export default function CreatePostForm() {
               </h3>
               <div className="prose max-w-none">
                 <h1>{formData.title || 'Your post title will appear here'}</h1>
-                {formData.subtitle && <h2 className="text-lg text-gray-600">{formData.subtitle}</h2>}
+
                 {formData.excerpt && <p className="text-lg text-gray-600">{formData.excerpt}</p>}
                 <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
                   <span>By {formData.author || 'Author'}</span>

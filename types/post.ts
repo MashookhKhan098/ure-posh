@@ -6,6 +6,7 @@ export interface Post {
   author: string
   category: string
   status: string
+  post_status?: string
   created_at: string
   updated_at: string
   featured_image?: string
@@ -15,6 +16,11 @@ export interface Post {
   tags: string
   slug: string
   views?: number
+  read_time?: number
+  likes?: number
+  comments?: number
+  is_featured?: boolean
+  rejection_reason?: string
 }
 
 // Helper type for API response
@@ -35,4 +41,8 @@ export interface PostResponse {
   tags: string[]
   slug: string
   views?: number
+  read_time?: number
+  likes?: number
+  comments?: number
+  is_featured?: boolean
 }

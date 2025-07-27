@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import NavbarWrapper from './components/NavbarWrapper'
+import { headers } from 'next/headers'
 // import Footer from "./components/Footer"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -17,6 +18,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const headersList = headers()
+  const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || ''
+  const isWriterPage = pathname.startsWith('/writer')
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -26,7 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavbarWrapper />
+          {!isWriterPage && <NavbarWrapper />}
           <main className="min-h-screen">{children}</main>
           {/* <Footer /> */}
         </ThemeProvider>

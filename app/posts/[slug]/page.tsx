@@ -158,7 +158,22 @@ export default function ProfessionalBlogPost() {
       }
 
       const data = await response.json()
-      setPost(data)
+      
+      // Transform the post data to match the expected interface
+      const transformedPost = {
+        ...data,
+        tags: Array.isArray(data.tags) ? data.tags : (data.tags ? data.tags.split(',') : []),
+        createdAt: data.created_at,
+        featuredImage: data.featured_image,
+        videoUrl: data.video_url,
+        videoTitle: data.video_title,
+        videoDescription: data.video_description,
+        readTime: data.read_time,
+        authorAvatar: data.author_avatar,
+        authorBio: data.author_bio
+      }
+      
+      setPost(transformedPost)
       
       // Fetch comments and related posts in parallel
       await Promise.all([
@@ -745,7 +760,7 @@ export default function ProfessionalBlogPost() {
                 Tags
               </h3>
               <div className="flex items-center gap-3 flex-wrap">
-                {post.tags.map((tag, index) => (
+                {Array.isArray(post.tags) && post.tags.map((tag, index) => (
                   <span
                     key={index}
                     className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition-colors cursor-pointer"
