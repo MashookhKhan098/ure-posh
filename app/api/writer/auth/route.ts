@@ -3,6 +3,9 @@ import { createWriterAdminClient } from '@/utils/supabase/writer';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 export async function POST(req: NextRequest) {
