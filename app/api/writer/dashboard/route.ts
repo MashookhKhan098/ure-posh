@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createWriterAdminClient } from '@/utils/supabase/writer';
 import { verifyWriterAuth, getWriterIdFromHeaders } from '@/utils/auth/writer';
 
-// Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
