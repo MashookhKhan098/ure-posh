@@ -18,6 +18,39 @@ const generateSlug = (text: string): string => {
     .trim()
 }
 
+// Expertise content with proper slugs and placeholders
+const expertiseContent = {
+  "gender-equality-compliance": {
+    title: "Gender Equality Compliance",
+    items: [
+      { name: "POSH Compliance Initiation", slug: "posh-compliance-initiation", placeholder: "Establish comprehensive POSH compliance framework" },
+      { name: "External Members from Renowned NGO", slug: "external-members-renowned-ngo", placeholder: "Expert external committee members" },
+      { name: "Compliant Redressal", slug: "compliant-redressal", placeholder: "Effective complaint resolution system" },
+      { name: "Complaint Handling Committee Redressal", slug: "complaint-handling-committee-redressal", placeholder: "Specialized committee for complaint management" },
+      { name: "POSH & Workplace Harassment Compliance Reporting", slug: "posh-workplace-harassment-compliance-reporting", placeholder: "Comprehensive compliance reporting system" },
+      { name: "Workplace Harassment & POSH Policy Disclosure", slug: "workplace-harassment-posh-policy-disclosure", placeholder: "Transparent policy disclosure framework" },
+      { name: "POSH & Workplace Harassment Audits", slug: "posh-workplace-harassment-audits", placeholder: "Regular compliance audits and assessments" }
+    ]
+  },
+  "posh-adaptability-training": {
+    title: "POSH Adaptability and Training",
+    items: [
+      { name: "Respectful Workplace Training & Compliance", slug: "respectful-workplace-training-compliance", placeholder: "Comprehensive workplace respect training" },
+      { name: "Compliance Training for Internal Committees & Workplace Panels", slug: "compliance-training-internal-committees-workplace-panels", placeholder: "Specialized training for internal committees" },
+      { name: "Quarterly Mandatory Training", slug: "quarterly-mandatory-training", placeholder: "Regular mandatory compliance training" },
+      { name: "Managers Level Training", slug: "managers-level-training", placeholder: "Leadership-focused compliance training" }
+    ]
+  },
+  "organisation-well-being": {
+    title: "Organisation Well-being",
+    items: [
+      { name: "Well Being Programmes", slug: "well-being-programmes", placeholder: "Comprehensive employee wellness programs" },
+      { name: "Code of Conduct Training", slug: "code-of-conduct-training", placeholder: "Ethical workplace behavior training" },
+      { name: "Mental Health Training & Counselling", slug: "mental-health-training-counselling", placeholder: "Mental health support and counseling services" }
+    ]
+  }
+}
+
 const expertiseServices = [
   "Public affairs & impact", "Crisis & issues", "Transactions & transformations",
   "Strategy & reputation", "Public relations & marketing", "Creative, design & content",
@@ -44,38 +77,24 @@ export default function Navbar() {
 
   const expertiseSubmenu = [
     {
-      title: "Compliance at ALL Work Place",
+      title: "Gender Equality Compliance",
       items: [
-        "POSH Compliance Initiation",
-        "External Members from Renowned NGO",
-        "Compliant Redressal",
-        "Order Writing",
-        "Annual Report",
-        "Organisation Disclosure",
-        "POSH Audit"
+        "POSH Compliance Initiation", "External Members from Renowned NGO", "Compliant Redressal",
+        "Complaint Handling Committee Redressal", "POSH & Workplace Harassment Compliance Reporting",
+        "Workplace Harassment & POSH Policy Disclosure", "POSH & Workplace Harassment Audits"
       ]
     },
     {
-      title: "Trainings and Adaptability",
+      title: "POSH Adaptability and Training",
       items: [
-        "POSH Training for Workforce",
-        "POSH Training for IC Members",
-        "Quarterly Mandatory Training",
-        "Managers Level Training",
-        "Remote Training (Cost Effective)",
-        "POSH Training for Workforce",
-        "POSH Training for IC Members",
-        "Managers Level Training"
+        "Respectful Workplace Training & Compliance", "Compliance Training for Internal Committees & Workplace Panels",
+        "Quarterly Mandatory Training", "Managers Level Training"
       ]
     },
     {
-      title: "Organisation Counselling and Well-being",
+      title: "Organisation Well-being",
       items: [
-        "Well Being Programmes",
-        "Code of Conduct Training",
-        "Mental Health Training",
-        "Inclusion at Work Place",
-        "LGBTQIA++ Inclusion"
+        "Well Being Programmes", "Code of Conduct Training", "Mental Health Training & Counselling"
       ]
     }
   ]
@@ -207,59 +226,42 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.18 }}
-          className="expertise-dropdown-panel fixed left-0 mt-3 w-[100vw] max-w-none bg-white shadow-2xl rounded-2xl border border-gray-100 z-50"
+          className="expertise-dropdown-panel fixed left-0 mt-3 w-full bg-white shadow-2xl border-b border-gray-100 z-50"
         >
-          <div className="relative grid gap-8 bg-white p-8 grid-cols-4">
-            <div className="pr-8 border-r border-gray-100">
-              <h2 className="text-2xl font-bold text-slate-900 inline-block border-b-2 border-teal-500 pb-2">
-                Expertise
-              </h2>
-              <p className="mt-4 text-slate-600">
-                Advising and leading businesses and brands across an array of industries
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Services</h3>
-              <ul className="space-y-3">
-                {expertiseServices.map((service: string) => (
-                  <li key={service}>
-                    <Link 
-                      href={`/services/${generateSlug(service)}`} 
-                      className="text-base text-slate-600 hover:text-slate-900 hover:underline"
-                    >
-                      {service}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="col-span-2">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Sectors</h3>
-              <div className="grid grid-cols-2 gap-8">
-                <ul className="space-y-3">
-                  {expertiseSectorsCol1.map((sector: string) => (
-                    <li key={sector}>
-                      <Link 
-                        href={`/sectors/${generateSlug(sector)}`} 
-                        className="text-base text-slate-600 hover:text-slate-900 hover:underline"
-                      >
-                        {sector}
-                      </Link>
-                    </li>
+          <div className="max-w-7xl mx-auto px-8 py-6">
+            <div className="grid grid-cols-4 gap-8">
+              <div className="pr-6 border-r border-gray-200">
+                <h2 className="text-xl font-bold text-slate-900 mb-2">
+                  Expertise
+                </h2>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Advising and leading businesses and brands across an array of industries
+                </p>
+              </div>
+              <div className="col-span-3">
+                <div className="grid grid-cols-3 gap-8">
+                  {Object.entries(expertiseContent).map(([key, category]) => (
+                    <div key={key}>
+                      <h3 className="text-sm font-semibold text-slate-900 mb-3 border-b border-gray-100 pb-2">
+                        {category.title}
+                      </h3>
+                      <ul className="space-y-2">
+                        {category.items.map((item, itemIdx) => (
+                          <li key={itemIdx}>
+                            <Link 
+                              href={`/services/${item.slug}`} 
+                              className="text-sm text-slate-600 hover:text-slate-900 hover:text-pink-600 transition-colors duration-200 block"
+                              title={item.placeholder}
+                              onClick={() => setIsExpertiseOpen(false)}
+                            >
+                              {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
-                </ul>
-                <ul className="space-y-3">
-                  {expertiseSectorsCol2.map((sector: string) => (
-                    <li key={sector}>
-                      <Link 
-                        href={`/sectors/${generateSlug(sector)}`} 
-                        className="text-base text-slate-600 hover:text-slate-900 hover:underline"
-                      >
-                        {sector}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                </div>
               </div>
             </div>
           </div>

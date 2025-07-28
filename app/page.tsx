@@ -39,17 +39,53 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Footer from "./components/Footer"
+import { TeamSliceCarousel } from "./people/TeamSliceCarousel"
 
 // =================================================================================
 // Data for Homepage Content
 // =================================================================================
 
+const teamMembers = [
+  {
+    name: "CS Anchal Chopra",
+    role: "Company Secretary & Legal Expert",
+    bio: "Expert in corporate governance and legal compliance with extensive experience in POSH implementation and workplace safety regulations.",
+    image: "/images/1.jpg",
+    expertise: ["Corporate Governance", "Legal Compliance", "POSH Implementation"],
+    achievements: ["10+ Years Experience", "500+ Organizations", "99% Success Rate"]
+  },
+  {
+    name: "Dr. Priya Sharma",
+    role: "HR & Compliance Specialist",
+    bio: "Specialized in human resources management and compliance with deep understanding of workplace culture transformation.",
+    image: "/images/2.jpg",
+    expertise: ["HR Management", "Compliance Training", "Culture Transformation"],
+    achievements: ["15+ Years Experience", "300+ Training Sessions", "Expert Trainer"]
+  },
+  {
+    name: "Adv. Rajesh Kumar",
+    role: "Employment Law Expert",
+    bio: "Leading employment law specialist with focus on workplace safety and employee rights protection.",
+    image: "/images/3.jpg",
+    expertise: ["Employment Law", "Legal Advisory", "Policy Development"],
+    achievements: ["12+ Years Experience", "200+ Legal Cases", "Certified Expert"]
+  },
+  {
+    name: "Dr. Anjali Mehta",
+    role: "Organizational Psychologist",
+    bio: "Expert in organizational behavior and workplace psychology with specialization in inclusive workplace design.",
+    image: "/images/4.jpg",
+    expertise: ["Psychology", "Behavioral Training", "Inclusive Design"],
+    achievements: ["8+ Years Experience", "150+ Organizations", "PhD Psychology"]
+  }
+]
+
 
 
 const heroSlides = [
   { src: '/images/5.jpg', alt: 'Diverse professionals in inclusive workplace' },
-  { src: 'https://i.postimg.cc/xTBwKRM9/istockphoto-1216554355-612x612.jpg', alt: 'Diverse group of professionals collaborating' },
-  { src: 'https://i.postimg.cc/FHc2GLV3/istockphoto-1765053017-612x612.jpg', alt: 'Supportive hands' }
+  { src: '/images/2.jpg', alt: 'Diverse group of professionals collaborating' },
+  { src: '/images/3.jpg', alt: 'Supportive hands' }
 ];
 
 const expertiseGears = [
@@ -142,41 +178,8 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
 
     return (
         <div className="flex flex-col items-center justify-center col-span-1 group">
-            {/* Enhanced Gear Container */}
-            <div className="relative w-64 h-64 flex items-center justify-center mb-6">
-                {/* Blurred Background Shadow */}
-                <div className="absolute inset-0 rounded-full bg-black/2 blur-md scale-110"></div>
-                <div className="absolute inset-0 rounded-full bg-black/1 blur-lg scale-125"></div>
-                
-                {/* Animated Background Ring */}
-                <motion.div
-                    className={`absolute inset-0 rounded-full bg-gradient-to-r ${color} opacity-20 blur-xl`}
-                    animate={{ 
-                        scale: [1, 1.1, 1],
-                        opacity: [0.2, 0.4, 0.2]
-                    }}
-                    transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                />
-                
-                {/* Outer Glow Ring */}
-                <motion.div
-                    className={`absolute inset-0 rounded-full bg-gradient-to-r ${color} opacity-10`}
-                    animate={{ 
-                        scale: [1, 1.05, 1],
-                        opacity: [0.1, 0.2, 0.1]
-                    }}
-                    transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1
-                    }}
-                />
-                
+            {/* Enhanced Gear Container - Mobile Responsive */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center mb-4 sm:mb-6 z-20">
                 {/* Main Gear */}
                 <motion.div
                     className="absolute inset-0"
@@ -198,21 +201,12 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                                 <stop offset="50%" style={{ stopColor: '#BDBDBD' }} />
                                 <stop offset="100%" style={{ stopColor: '#E0E0E0' }} />
                             </linearGradient>
-                            <filter id={`shadow${index}`} x="-20%" y="-20%" width="140%" height="140%">
-                                <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
-                                <feOffset in="blur" dx="1" dy="1" result="offsetBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="offsetBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
                         </defs>
                         <path
                             d={createGearPath()}
                             fill={`url(#gearGradient${index})`}
                             stroke="#AFAFAF"
                             strokeWidth="0.5"
-                            filter={`url(#shadow${index})`}
                         />
                         <circle cx="50" cy="50" r="28" className="fill-slate-900" /> 
                         <circle cx="50" cy="50" r="30" fill="transparent" stroke="rgba(255,255,255,0.2)" strokeWidth="4"/>
@@ -220,7 +214,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                     {dots.map((dot, i) => (
                         <motion.div 
                             key={i} 
-                            className={`absolute w-4 h-4 rounded-full ${dot.color} shadow-lg`} 
+                            className={`absolute w-3 h-3 sm:w-4 sm:h-4 rounded-full ${dot.color}`} 
                             style={dot.position}
                             animate={{ 
                                 scale: [1, 1.3, 1],
@@ -236,9 +230,9 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                     ))}
                 </motion.div>
                 
-                {/* Center Content */}
+                {/* Center Content - Mobile Optimized */}
                 <motion.div 
-                    className="relative z-10 text-center px-2"
+                    className="relative z-10 text-center px-1 sm:px-2"
                     animate={{ 
                         scale: [1, 1.02, 1],
                     }}
@@ -248,23 +242,23 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                         ease: "easeInOut"
                     }}
                 >
-                    <div className="text-white text-xs font-medium leading-tight">
+                    <div className="text-white text-xs sm:text-xs font-medium leading-tight">
                         {content.split('\n').map((line, idx) => (
-                            <div key={idx} className="mb-1">{line}</div>
+                            <div key={idx} className="mb-0.5 sm:mb-1">{line}</div>
                         ))}
                     </div>
                 </motion.div>
             </div>
 
-            {/* Title */}
+            {/* Title - Mobile Responsive */}
             <motion.div 
-                className="text-center"
+                className="text-center px-2"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
                 viewport={{ once: true }}
             >
-                <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-2">{title}</h3>
             </motion.div>
         </div>
     );
@@ -282,6 +276,11 @@ export default function HomePage() {
   const router = useRouter()
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const testimonials = [
     {
@@ -339,7 +338,7 @@ export default function HomePage() {
       title: "Comprehensive Solutions",
       description: "End-to-end services from policy development to ongoing support and continuous improvement",
       icon: CheckCircle,
-      stats: "360° Coverage",
+      stats:"peoples table",
     },
     {
       title: "Cultural Sensitivity",
@@ -353,54 +352,36 @@ export default function HomePage() {
     {
       name: "Information Technology & Software",
       icon: "💻",
-      count: "180+",
-      growth: "+32%",
-      color: "from-gray-500 to-slate-600",
       description: "From startups to tech giants, ensuring safe digital workspaces",
       challenges: ["Remote work policies", "Digital harassment", "Rapid scaling"],
     },
     {
       name: "Healthcare & Life Sciences",
       icon: "🏥",
-      count: "95+",
-      growth: "+28%",
-      color: "from-slate-500 to-gray-600",
       description: "Protecting healthcare workers and maintaining patient care standards",
       challenges: ["High-stress environments", "Hierarchical structures", "Patient interaction protocols"],
     },
     {
       name: "Financial Services & Banking",
       icon: "🏦",
-      count: "75+",
-      growth: "+25%",
-      color: "from-zinc-500 to-gray-600",
       description: "Ensuring compliance in regulated financial environments",
       challenges: ["Regulatory compliance", "Client-facing roles", "Performance pressure"],
     },
     {
       name: "Manufacturing & Engineering",
       icon: "🏭",
-      count: "120+",
-      growth: "+22%",
-      color: "from-gray-600 to-slate-700",
       description: "Creating safe environments in industrial settings",
       challenges: ["Blue-collar workforce", "Multiple shifts", "Safety integration"],
     },
     {
       name: "Education & Research Institutions",
       icon: "🎓",
-      count: "65+",
-      growth: "+35%",
-      color: "from-slate-400 to-gray-600",
       description: "Fostering safe learning and research environments",
       challenges: ["Student-faculty dynamics", "Research collaborations", "Campus safety"],
     },
     {
       name: "Professional Services & Consulting",
       icon: "💼",
-      count: "85+",
-      growth: "+20%",
-      color: "from-gray-500 to-zinc-600",
       description: "Maintaining professional standards in client-service environments",
       challenges: ["Client interactions", "Travel policies", "Project-based teams"],
     },
@@ -435,45 +416,54 @@ export default function HomePage() {
     },
   }
 
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-
-      
       <main>
         {/* Hero Section */}
-        <section className="relative pt-24 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
+        <section className="relative pt-16 sm:pt-20 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
-              <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 text-6xl sm:text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 text-7xl sm:text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 right-1/4 text-4xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[calc(100vh-100px)] py-10">
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-20 items-center min-h-[calc(100vh-80px)] sm:min-h-[calc(100vh-100px)] py-8 sm:py-10 lg:py-10">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="space-y-8 lg:pr-12"
+                className="space-y-4 sm:space-y-6 lg:space-y-8 lg:pr-12 order-2 lg:order-1"
               >
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
-                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-6 py-2 text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
-                      <span className="text-white text-lg font-bold">♀</span>
+                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-1.5 sm:space-x-2 lg:space-x-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
+                      <span className="text-white text-xs sm:text-sm lg:text-lg font-bold">♀</span>
                     </div>
-                    <span>India's Leading POSH Compliance Partner</span>
+                    <span className="text-xs sm:text-sm lg:text-base leading-tight">India's Leading POSH Compliance Partner</span>
                   </Badge>
                 </motion.div>
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-4">
-                  <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-2 sm:space-y-3 lg:space-y-4">
+                  <h1 className="text-lg sm:text-xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
                     <motion.span 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.6, duration: 0.8 }}
-                      className="block mb-2 text-slate-600 font-medium"
+                      className="block mb-1 sm:mb-2 text-slate-600 font-medium text-sm sm:text-base lg:text-lg"
                     >
                       Creating
                     </motion.span>
@@ -481,7 +471,7 @@ export default function HomePage() {
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.8, duration: 0.8 }}
-                      className="relative inline-block mb-2"
+                      className="relative inline-block mb-1 sm:mb-2"
                     >
                       <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
                         Safe & Inclusive
@@ -490,68 +480,63 @@ export default function HomePage() {
                         initial={{ width: 0 }} 
                         animate={{ width: "100%" }} 
                         transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
-                        className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
+                        className="absolute bottom-0 left-0 h-0.5 sm:h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
                       />
                     </motion.span>
                     <motion.span 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 1.0, duration: 0.8 }}
-                      className="block text-slate-700 font-semibold"
+                      className="block text-slate-700 font-semibold text-sm sm:text-base lg:text-lg"
                     >
                       Workplaces for Everyone
                     </motion.span>
                   </h1>
                 </motion.div>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="space-y-6">
-                  <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-3xl font-medium">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="space-y-3 sm:space-y-4 lg:space-y-6">
+                  <p className="text-xs sm:text-sm lg:text-lg xl:text-xl text-slate-600 leading-relaxed max-w-3xl font-medium">
                     We transform organizational cultures through comprehensive{" "}
-                    <span className="font-bold text-slate-800 bg-yellow-100 px-2 py-1 rounded-md">POSH compliance</span>, expert training, and innovative solutions that make workplaces{" "}
-                    <span className="font-bold text-slate-800 bg-green-100 px-2 py-1 rounded-md">safer, more inclusive</span>, and legally compliant across India.
+                    <span className="font-bold text-slate-800 bg-yellow-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">POSH compliance</span>, expert training, and innovative solutions that make workplaces{" "}
+                    <span className="font-bold text-slate-800 bg-green-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">safer, more inclusive</span>, and legally compliant across India.
                   </p>
-                  <div className="flex flex-wrap gap-4">
-                    <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
+                    <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-xs sm:text-sm lg:text-base">
                       Get Started
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                      <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1.5 sm:ml-2" />
                     </Button>
-                    <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-8 py-3 rounded-xl font-semibold transition-all duration-300">
+                    <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base">
                       Learn More
                     </Button>
                   </div>
                 </motion.div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center">
-                <div className="relative max-w-md w-full">
+              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center order-1 lg:order-2 mb-8 lg:mb-0">
+                <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-md">
                   {/* Simplified Background Effects */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-2xl scale-110"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl lg:rounded-3xl blur-xl lg:blur-2xl scale-110"></div>
                   
                   <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                    <div className="relative overflow-hidden rounded-3xl shadow-2xl shadow-black/50 h-[450px] border border-white/30">
+                    <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl shadow-black/50 h-[300px] sm:h-[350px] lg:h-[450px] border border-white/30">
                       {/* Image Container */}
                       <div className="relative w-full h-full">
-                        <AnimatePresence mode="wait">
-                          {heroSlides.map((slide, idx) => (
-                            idx === currentSlide && (
-                              <motion.div 
-                                key={idx} 
-                                initial={{ opacity: 0, scale: 1.1 }} 
-                                animate={{ opacity: 1, scale: 1 }} 
-                                exit={{ opacity: 0, scale: 0.9 }} 
-                                transition={{ duration: 0.8, ease: 'easeInOut' }} 
-                                className="absolute inset-0"
-                              >
-                                <Image 
-                                  src={slide.src} 
-                                  alt={slide.alt} 
-                                  fill
-                                  className="object-cover" 
-                                  priority={idx === 0} 
-                                  sizes="(max-width: 768px) 100vw, 50vw"
-                                />
-                              </motion.div>
-                            )
-                          ))}
-                        </AnimatePresence>
+                        {heroSlides.map((slide, idx) => (
+                          idx === currentSlide && (
+                            <div 
+                              key={idx} 
+                              className="absolute inset-0"
+                            >
+                              <Image 
+                                src={slide.src} 
+                                alt={slide.alt} 
+                                fill
+                                className="object-cover" 
+                                priority={idx === 0} 
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                loading={idx === 0 ? "eager" : "lazy"}
+                              />
+                            </div>
+                          )
+                        ))}
                       </div>
                       
                       {/* Enhanced Overlay */}
@@ -559,12 +544,12 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
                       
                       {/* Slide Indicators */}
-                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                      <div className="absolute bottom-3 lg:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1.5 lg:space-x-2">
                         {heroSlides.map((_, idx) => (
                           <motion.button
                             key={idx}
                             onClick={() => setCurrentSlide(idx)}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                            className={`w-2.5 h-2.5 lg:w-3 lg:h-3 rounded-full transition-all duration-300 ${
                               idx === currentSlide 
                                 ? 'bg-white shadow-lg scale-125' 
                                 : 'bg-white/50 hover:bg-white/75'
@@ -576,8 +561,8 @@ export default function HomePage() {
                       </div>
                       
                       {/* Corner Accents */}
-                      <div className="absolute top-4 left-4 w-3 h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
-                      <div className="absolute bottom-4 right-4 w-3 h-3 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+                      <div className="absolute top-3 lg:top-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
+                      <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
                     </div>
                   </motion.div>
                 </div>
@@ -586,147 +571,50 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Why Choose Us Section */}
-        <section className="relative py-24 flex items-center justify-center overflow-hidden bg-white">
-          <div className="absolute inset-0 z-0 opacity-20">
-            <div className="absolute left-0 top-0 w-1/2 h-full group">
-              <Cog className="absolute -top-12 -left-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -left-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -left-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 left-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
-            </div>
-          </div>
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-8 mb-20">
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
-                <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-6 py-2 text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
-                    <Target className="w-4 h-4 text-white" />
-                  </div>
-                  <span>Why Choose Ureposh</span>
-                </Badge>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-4">
-                <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
-                  <motion.span 
-                    initial={{ opacity: 0, y: 20 }} 
-                    whileInView={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: 0.6, duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="block mb-2 text-slate-600 font-medium"
-                  >
-                    Your
-                  </motion.span>
-                  <motion.span 
-                    initial={{ opacity: 0, y: 20 }} 
-                    whileInView={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: 0.8, duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="relative inline-block mb-2"
-                  >
-                    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
-                      Trusted POSH Partner
-                    </span>
-                    <motion.div 
-                      initial={{ width: 0 }} 
-                      whileInView={{ width: "100%" }} 
-                      transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
-                      viewport={{ once: true }}
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
-                    />
-                  </motion.span>
-                </h2>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.8 }} viewport={{ once: true }} className="space-y-6">
-                <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-4xl mx-auto font-medium">
-                  We combine legal expertise, cultural understanding, and innovative technology to deliver comprehensive workplace safety solutions that protect your organization and empower your people.
-                </p>
-              </motion.div>
-            </motion.div>
-            
-            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {whyChooseUs.map((reason, index) => (
-                <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <Card className="h-full text-center border-0 bg-white/90 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden group relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/10 via-transparent to-purple-50/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <CardHeader className="relative pb-6 pt-8">
-                      <div className="w-20 h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-110">
-                        <reason.icon className="h-10 w-10 text-white" />
-                      </div>
-                      <CardTitle className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-slate-800 transition-colors duration-300">{reason.title}</CardTitle>
-                      <Badge className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 border border-blue-200 px-4 py-2 rounded-full font-semibold text-sm shadow-lg">
-                        {reason.stats}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent className="relative pt-0 pb-8">
-                      <CardDescription className="text-slate-600 leading-relaxed text-base font-medium px-4">{reason.description}</CardDescription>
-                    </CardContent>
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
+        
 
         {/* Our Expertise Section */}
-        <section className="relative py-24 flex items-center justify-center overflow-hidden bg-slate-900">
+        <section className="relative pt-8 sm:pt-10 pb-16 sm:pb-20 lg:pb-24 flex items-center justify-center overflow-hidden bg-slate-900">
           <div className="absolute inset-0 z-0 opacity-10">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
-              <Cog className="absolute -top-12 -right-12 text-[12rem] text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -right-24 text-8xl text-slate-600 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -right-10 text-9xl text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 right-1/4 text-6xl text-slate-600 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute -top-12 -right-12 text-[6rem] sm:text-[8rem] lg:text-[12rem] text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 text-4xl sm:text-6xl lg:text-8xl text-slate-600 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 text-5xl sm:text-7xl lg:text-9xl text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 right-1/4 text-3xl sm:text-4xl lg:text-6xl text-slate-600 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-8 mb-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-2 w-full">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-4 sm:space-y-6 mb-12 sm:mb-16">
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
-                <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-6 py-2 text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-300 to-gray-300 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-slate-700" />
+                <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
+                    <Cog className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-white" />
                   </div>
-                  <span>Our Expertise</span>
+                  <span className="text-xs sm:text-sm lg:text-base">Our Expertise</span>
                 </Badge>
               </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-4">
-                <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-white">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-2 sm:space-y-3 lg:space-y-4">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-white">
                   <motion.span 
                     initial={{ opacity: 0, y: 20 }} 
                     whileInView={{ opacity: 1, y: 0 }} 
                     transition={{ delay: 0.6, duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="block mb-2 text-slate-300 font-medium"
+                    className="relative inline-block mb-2 sm:mb-3 lg:mb-4"
                   >
-                    Comprehensive
-                  </motion.span>
-                  <motion.span 
-                    initial={{ opacity: 0, y: 20 }} 
-                    whileInView={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: 0.8, duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="relative inline-block mb-2"
-                  >
-                    <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-bold">
-                      POSH Solutions
-                    </span>
+                    
                     <motion.div 
                       initial={{ width: 0 }} 
                       whileInView={{ width: "100%" }} 
                       transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
                       viewport={{ once: true }}
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-md"
+                      className="absolute bottom-0 left-0 h-1 sm:h-1.5 lg:h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-lg"
                     />
                   </motion.span>
                 </h2>
               </motion.div>
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.8 }} viewport={{ once: true }} className="space-y-6">
-                <p className="text-lg lg:text-xl text-slate-300 leading-relaxed max-w-4xl mx-auto font-medium">
-                  From creative design to strategic transformation, we deliver end-to-end POSH compliance solutions that adapt to your organization's unique needs and industry requirements.
-                </p>
-              </motion.div>
+             
             </motion.div>
             
             <motion.div 
@@ -734,13 +622,14 @@ export default function HomePage() {
               initial="initial" 
               whileInView="animate" 
               viewport={{ once: true }} 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 max-w-7xl mx-auto"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 max-w-7xl mx-auto"
             >
               {expertiseGears.map((gear, index) => (
                 <motion.div
                   key={index}
                   variants={fadeInUp}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.3 }}
                 >
                   <ExpertiseGear
@@ -756,47 +645,116 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Industries Section */}
-        <section className="relative py-24 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+        {/* Team Carousel Section */}
+        <section className="relative py-12 sm:py-16 lg:py-20 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
           <div className="absolute inset-0 z-0 opacity-20">
-            <div className="absolute left-0 top-0 w-1/2 h-full group">
-              <Cog className="absolute -top-12 -left-12 text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -left-24 text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -left-10 text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 left-1/4 text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+            <div className="absolute right-0 top-0 w-1/2 h-full group">
+              <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 text-6xl sm:text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 text-7xl sm:text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 right-1/4 text-4xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-8 mb-20">
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
-                <Badge className="bg-gradient-to-r from-blue-100 via-purple-50 to-pink-100 text-slate-800 px-6 py-2 text-base font-bold border border-white/50 shadow-lg shadow-blue-200/50 rounded-full flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-300 to-purple-300 flex items-center justify-center">
-                    <Briefcase className="w-4 h-4 text-white" />
-                  </div>
-                  <span>Industries We Serve</span>
-                </Badge>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-4">
-                <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
+            {/* Team Section Heading */}
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-3 sm:space-y-4">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-tight text-slate-900">
                   <motion.span 
                     initial={{ opacity: 0, y: 20 }} 
                     whileInView={{ opacity: 1, y: 0 }} 
                     transition={{ delay: 0.6, duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="block mb-2 text-slate-600 font-medium"
+                    className="relative inline-block mb-2 sm:mb-4"
                   >
-                    Trusted Across
+                    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
+                      World's Leading POSH Partner
+                    </span>
+                    <motion.div 
+                      initial={{ width: 0 }} 
+                      whileInView={{ width: "100%" }} 
+                      transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
+                      viewport={{ once: true }}
+                      className="absolute bottom-0 left-0 h-1 sm:h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
+                    />
                   </motion.span>
+                </h2>
+              </motion.div>
+            </motion.div>
+            
+            {/* Enhanced Carousel Container */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.8 }} 
+              viewport={{ once: true }}
+              className="relative"
+            >
+              {/* Carousel Background Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl sm:rounded-3xl blur-2xl sm:blur-3xl scale-110"></div>
+              
+              {/* Carousel Container with Enhanced Styling */}
+              <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 lg:p-12 border border-slate-200/50 shadow-xl sm:shadow-2xl hover:shadow-2xl sm:hover:shadow-3xl transition-all duration-500">
+                {/* Decorative Corner Elements */}
+                <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
+                <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+                <div className="absolute -bottom-1 sm:-bottom-2 -left-1 sm:-left-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-pink-400 to-blue-400 rounded-full shadow-lg"></div>
+                <div className="absolute -bottom-1 sm:-bottom-2 -right-1 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
+                
+                {/* Carousel Content */}
+                <TeamSliceCarousel teamMembers={teamMembers} />
+              </div>
+            </motion.div>
+            
+            {/* Bottom CTA */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ delay: 0.8, duration: 0.6 }} 
+              viewport={{ once: true }}
+              className="text-center mt-6 sm:mt-8"
+            >
+              <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 border-0 text-sm sm:text-base">
+                Meet Our Full Team
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Industries Section */}
+        <section className="relative py-12 sm:py-16 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+          <div className="absolute inset-0 z-0 opacity-20">
+            <div className="absolute left-0 top-0 w-1/2 h-full group">
+              <Cog className="absolute -top-12 -left-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -left-24 text-6xl sm:text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -left-10 text-7xl sm:text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 left-1/4 text-4xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+            </div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 sm:space-y-8 mb-12 sm:mb-20">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
+                <Badge className="bg-gradient-to-r from-blue-100 via-purple-50 to-pink-100 text-slate-800 px-4 sm:px-6 py-2 text-sm sm:text-base font-bold border border-white/50 shadow-lg shadow-blue-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-300 to-purple-300 flex items-center justify-center">
+                    <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                  </div>
+                  <span className="text-xs sm:text-base">Industries We Serve</span>
+                </Badge>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-3 sm:space-y-4">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
                   <motion.span 
                     initial={{ opacity: 0, y: 20 }} 
                     whileInView={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: 0.8, duration: 0.8 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="relative inline-block mb-2"
+                    className="relative inline-block mb-2 sm:mb-4"
                   >
                     <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
-                      All Sectors
+                      Sectors
                     </span>
                     <motion.div 
                       initial={{ width: 0 }} 
@@ -808,76 +766,29 @@ export default function HomePage() {
                   </motion.span>
                 </h2>
               </motion.div>
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 1.0, duration: 0.8 }} viewport={{ once: true }} className="space-y-6">
-                <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-4xl mx-auto font-medium">
-                  From innovative startups to established enterprises, we've helped organizations across diverse industries create inclusive, safe workplaces that drive business success and employee wellbeing.
-                </p>
-              </motion.div>
             </motion.div>
             
-            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
               {industries.map((industry, index) => (
-                <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.02, y: -8 }} transition={{ duration: 0.3 }}>
-                  <Card className="h-full border-0 shadow-2xl hover:shadow-3xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden group relative">
+                <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.01, y: -4 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.3 }}>
+                  <Card className="h-full border-0 shadow-lg sm:shadow-2xl hover:shadow-2xl sm:hover:shadow-3xl bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl overflow-hidden group relative">
                     {/* Card Background Effects */}
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-purple-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                     
-                    <CardContent className="relative p-8">
-                      {/* Header with Icon and Growth Badge */}
-                      <div className="flex items-center justify-between mb-8">
+                    <CardContent className="relative p-4 sm:p-6 lg:p-8">
+                      {/* Header with Icon */}
+                      <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
                         <div className="relative">
-                          <div className="text-6xl mb-2">{industry.icon}</div>
-                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                          </div>
+                          <div className="text-4xl sm:text-5xl lg:text-6xl mb-2">{industry.icon}</div>
                         </div>
-                        <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200 px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                          {industry.growth}
-                        </Badge>
                       </div>
                       
                       {/* Industry Title */}
-                      <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-slate-800 transition-colors duration-300">{industry.name}</h3>
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 sm:mb-4 group-hover:text-slate-800 transition-colors duration-300">{industry.name}</h3>
                       
                       {/* Description */}
-                      <p className="text-slate-600 text-sm mb-6 leading-relaxed font-medium">{industry.description}</p>
-                      
-                      {/* Stats */}
-                      <div className="mb-6">
-                        <p className="text-4xl font-bold text-slate-900 mb-1">{industry.count}</p>
-                        <p className="text-sm text-slate-500 font-medium">Organizations transformed</p>
-                      </div>
-                      
-                      {/* Challenges */}
-                      <div className="space-y-3 mb-6">
-                        <p className="text-xs font-bold text-slate-700 uppercase tracking-wide">Key Challenges Addressed:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {industry.challenges.map((challenge, idx) => (
-                            <span key={idx} className="text-xs px-3 py-1 border border-slate-200 text-slate-700 rounded-full bg-white/80 backdrop-blur-sm font-medium shadow-sm">
-                              {challenge}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Progress Bar */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-semibold text-slate-600">
-                          <span>Success Rate</span>
-                          <span>85%</span>
-                        </div>
-                        <div className="relative h-3 bg-slate-100 rounded-full overflow-hidden">
-                          <motion.div 
-                            initial={{ width: 0 }} 
-                            whileInView={{ width: '85%' }} 
-                            transition={{ delay: index * 0.1, duration: 1.2, ease: 'easeOut' }} 
-                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full relative"
-                          >
-                            <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
-                          </motion.div>
-                        </div>
-                      </div>
+                      <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed font-medium">{industry.description}</p>
                       
                       {/* Bottom Accent */}
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
@@ -892,4 +803,4 @@ export default function HomePage() {
       <Footer />
     </div>
   )
-}
+}  
