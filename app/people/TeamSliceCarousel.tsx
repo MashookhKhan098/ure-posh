@@ -206,22 +206,7 @@ export const TeamSliceCarousel: React.FC<TeamSliceCarouselProps> = ({ teamMember
         })}
       </div>
       
-      {/* Navigation Dots */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3 z-50">
-        {teamMembers.map((_, idx) => (
-          <motion.button
-            key={idx}
-            onClick={() => setActiveIdx(idx)}
-            className={`w-3 h-3 rounded-full transition-all duration-500 ${
-              activeIdx === idx 
-                ? 'bg-white shadow-lg scale-125' 
-                : 'bg-white/50 hover:bg-white/75'
-            }`}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-          />
-        ))}
-      </div>
+
     </div>
   )
 } 

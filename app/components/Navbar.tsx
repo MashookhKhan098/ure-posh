@@ -103,7 +103,6 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "People", href: "/people" },
-    { name: "Work", href: "/work" },
     { name: "News Room", href: "/posts" },
     { name: "Connect", href: "/connect" },
   ]
@@ -152,6 +151,19 @@ export default function Navbar() {
     return () => { document.head.removeChild(style) }
   }, [])
 
+  // Listen for custom event to open expertise dropdown
+  useEffect(() => {
+    const handleOpenExpertiseDropdown = () => {
+      setIsExpertiseOpen(true);
+    };
+
+    window.addEventListener('openExpertiseDropdown', handleOpenExpertiseDropdown);
+    
+    return () => {
+      window.removeEventListener('openExpertiseDropdown', handleOpenExpertiseDropdown);
+    };
+  }, []);
+
   return (
     <motion.nav
       initial={{ y: 0 }}
@@ -167,7 +179,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center space-x-1 ml-auto mr-4">
           {navItems.slice(0, 2).map((item) => (
             <Link
               key={item.name}
@@ -195,16 +207,16 @@ export default function Navbar() {
             <Link
               key={item.name}
               href={item.href}
-              className={`text-base font-medium px-2 py-1 transition-colors duration-200 ${pathname === item.href ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}`}
+              className={`text-base font-medium px-1 py-1 transition-colors duration-200 ${pathname === item.href ? "text-pink-600" : "text-gray-700 hover:text-pink-600"} ${item.name === "Connect" ? "smiley-cursor" : ""}`}
             >
-              {item.name}
+              {item.name === "Connect" ? `:) ${item.name}` : item.name}
             </Link>
           ))}
         </div>
 
         {/* CTA Button */}
-        <div className="hidden lg:block">
-          <Link href="/contact" className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:from-pink-600 hover:to-rose-600 transition-all duration-200 flex items-center">
+        <div className="hidden lg:block ml-0">
+          <Link href="/contact" className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-1.5 rounded-full font-semibold shadow hover:from-pink-600 hover:to-rose-600 transition-all duration-200 flex items-center">
             <Coffee className="w-5 h-5 mr-2" />
             Free Coffee
           </Link>
@@ -287,9 +299,9 @@ export default function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`block text-xl font-semibold py-3 px-2 rounded-lg transition-colors duration-200 ${
                     pathname === item.href ? "text-black bg-gray-100" : "text-gray-700 hover:text-black hover:bg-gray-50"
-                  }`}
+                  } ${item.name === "Connect" ? "smiley-cursor" : ""}`}
                 >
-                  {item.name}
+                  {item.name === "Connect" ? `:) ${item.name}` : item.name}
                 </Link>
               ))}
 

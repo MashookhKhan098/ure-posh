@@ -132,6 +132,17 @@ const expertiseGears = [
             { color: "bg-blue-400", position: { bottom: '30%', left: '40%' } },
             { color: "bg-teal-300", position: { bottom: '20%', left: '60%' } },
         ]
+    },
+    {
+        title: "Legal & Compliance",
+        content: "Legal Advisory\nCompliance Training\nPolicy Development\nRisk Management",
+        color: "from-indigo-500 to-purple-500",
+        dots: [
+            { color: "bg-indigo-400", position: { top: '20%', left: '30%' } },
+            { color: "bg-purple-400", position: { top: '35%', left: '70%' } },
+            { color: "bg-blue-400", position: { bottom: '25%', left: '25%' } },
+            { color: "bg-teal-300", position: { bottom: '40%', left: '65%' } },
+        ]
     }
 ];
 
@@ -179,7 +190,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
     return (
         <div className="flex flex-col items-center justify-center col-span-1 group">
             {/* Enhanced Gear Container - Mobile Responsive */}
-            <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center mb-4 sm:mb-6 z-20">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center mb-4 sm:mb-6 z-30">
                 {/* Main Gear */}
                 <motion.div
                     className="absolute inset-0"
@@ -458,36 +469,38 @@ export default function HomePage() {
                   </Badge>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-2 sm:space-y-3 lg:space-y-4">
-                  <h1 className="text-lg sm:text-xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
-                    <motion.span 
+                  <h1 className="text-lg sm:text-xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
+                    <motion.div 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.6, duration: 0.8 }}
-                      className="block mb-1 sm:mb-2 text-slate-600 font-medium text-sm sm:text-base lg:text-lg"
+                      className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 mb-1 sm:mb-2"
                     >
-                      Creating
-                    </motion.span>
-                    <motion.span 
-                      initial={{ opacity: 0, y: 20 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      transition={{ delay: 0.8, duration: 0.8 }}
-                      className="relative inline-block mb-1 sm:mb-2"
-                    >
-                      <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
-                        Safe & Inclusive
+                      <span className="text-slate-600 font-medium text-lg sm:text-xl lg:text-3xl xl:text-4xl">
+                        Creating
                       </span>
-                      <motion.div 
-                        initial={{ width: 0 }} 
-                        animate={{ width: "100%" }} 
-                        transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
-                        className="absolute bottom-0 left-0 h-0.5 sm:h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
-                      />
-                    </motion.span>
+                      <motion.span 
+                        initial={{ opacity: 0, y: 20 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        transition={{ delay: 0.8, duration: 0.8 }}
+                        className="relative inline-block"
+                      >
+                        <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
+                          Safe & Inclusive
+                        </span>
+                        <motion.div 
+                          initial={{ width: 0 }} 
+                          animate={{ width: "100%" }} 
+                          transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
+                          className="absolute bottom-0 left-0 h-0.5 sm:h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
+                        />
+                      </motion.span>
+                    </motion.div>
                     <motion.span 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 1.0, duration: 0.8 }}
-                      className="block text-slate-700 font-semibold text-sm sm:text-base lg:text-lg"
+                      className="block text-slate-700 font-semibold text-lg sm:text-xl lg:text-3xl xl:text-4xl"
                     >
                       Workplaces for Everyone
                     </motion.span>
@@ -500,13 +513,17 @@ export default function HomePage() {
                     <span className="font-bold text-slate-800 bg-green-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">safer, more inclusive</span>, and legally compliant across India.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
-                    <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-xs sm:text-sm lg:text-base">
-                      Get Started
-                      <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1.5 sm:ml-2" />
-                    </Button>
-                    <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base">
-                      Learn More
-                    </Button>
+                    <Link href="/contact">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-xs sm:text-sm lg:text-base">
+                        Get Started
+                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1.5 sm:ml-2" />
+                      </Button>
+                    </Link>
+                    <Link href="#expertise">
+                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base">
+                        Learn More
+                      </Button>
+                    </Link>
                   </div>
                 </motion.div>
               </motion.div>
@@ -516,7 +533,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl lg:rounded-3xl blur-xl lg:blur-2xl scale-110"></div>
                   
                   <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }} className="relative z-20">
-                    <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl shadow-black/50 h-[300px] sm:h-[350px] lg:h-[450px] border border-white/30">
+                    <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl shadow-black/50 h-[300px] sm:h-[350px] lg:h-[450px]">
                       {/* Image Container */}
                       <div className="relative w-full h-full">
                         {heroSlides.map((slide, idx) => (
@@ -543,26 +560,13 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
                       
-                      {/* Slide Indicators */}
-                      <div className="absolute bottom-3 lg:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1.5 lg:space-x-2">
-                        {heroSlides.map((_, idx) => (
-                          <motion.button
-                            key={idx}
-                            onClick={() => setCurrentSlide(idx)}
-                            className={`w-2.5 h-2.5 lg:w-3 lg:h-3 rounded-full transition-all duration-300 ${
-                              idx === currentSlide 
-                                ? 'bg-white shadow-lg scale-125' 
-                                : 'bg-white/50 hover:bg-white/75'
-                            }`}
-                            whileHover={{ scale: 1.2 }}
-                            whileTap={{ scale: 0.9 }}
-                          />
-                        ))}
-                      </div>
+
                       
                       {/* Corner Accents */}
                       <div className="absolute top-3 lg:top-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
-                      <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+                      <div className="absolute top-3 lg:top-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+                      <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-pink-400 to-blue-400 rounded-full shadow-lg"></div>
+                      <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
                     </div>
                   </motion.div>
                 </div>
@@ -574,7 +578,7 @@ export default function HomePage() {
         
 
         {/* Our Expertise Section */}
-        <section className="relative pt-8 sm:pt-10 pb-16 sm:pb-20 lg:pb-24 flex items-center justify-center overflow-hidden bg-slate-900">
+        <section id="expertise" className="relative pt-8 sm:pt-10 pb-16 sm:pb-20 lg:pb-24 flex items-center justify-center overflow-hidden bg-slate-900">
           <div className="absolute inset-0 z-0 opacity-10">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 text-[6rem] sm:text-[8rem] lg:text-[12rem] text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -585,13 +589,11 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-2 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-4 sm:space-y-6 mb-12 sm:mb-16">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-4 sm:space-y-6 mb-8 sm:mb-12">
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
                 <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
-                    <Cog className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-white" />
-                  </div>
-                  <span className="text-xs sm:text-sm lg:text-base">Our Expertise</span>
+                  
+                  <span className="text-lg sm:text-xl lg:text-3xl xl:text-4xl">Expertise</span>
                 </Badge>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-2 sm:space-y-3 lg:space-y-4">
@@ -622,25 +624,49 @@ export default function HomePage() {
               initial="initial" 
               whileInView="animate" 
               viewport={{ once: true }} 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 max-w-7xl mx-auto"
+              className="max-w-7xl mx-auto"
             >
-              {expertiseGears.map((gear, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={{ scale: 1.01, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ExpertiseGear
-                    title={gear.title}
-                    content={gear.content}
-                    color={gear.color}
-                    dots={gear.dots}
-                    index={index}
-                  />
-                </motion.div>
-              ))}
+              {/* Top Row - 3 Gears */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mb-3 sm:mb-4">
+                {expertiseGears.slice(0, 3).map((gear, index) => (
+                  <motion.div
+                    key={index}
+                    variants={fadeInUp}
+                    whileHover={{ scale: 1.01, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ExpertiseGear
+                      title={gear.title}
+                      content={gear.content}
+                      color={gear.color}
+                      dots={gear.dots}
+                      index={index}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+              
+              {/* Bottom Row - 2 Gears */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 max-w-4xl mx-auto">
+                {expertiseGears.slice(3, 5).map((gear, index) => (
+                  <motion.div
+                    key={index + 3}
+                    variants={fadeInUp}
+                    whileHover={{ scale: 1.01, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ExpertiseGear
+                      title={gear.title}
+                      content={gear.content}
+                      color={gear.color}
+                      dots={gear.dots}
+                      index={index + 3}
+                    />
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </section>
@@ -658,28 +684,11 @@ export default function HomePage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
             {/* Team Section Heading */}
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-4 sm:space-y-6 mb-6 sm:mb-8">
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-3 sm:space-y-4">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-tight text-slate-900">
-                  <motion.span 
-                    initial={{ opacity: 0, y: 20 }} 
-                    whileInView={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: 0.6, duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="relative inline-block mb-2 sm:mb-4"
-                  >
-                    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
-                      World's Leading POSH Partner
-                    </span>
-                    <motion.div 
-                      initial={{ width: 0 }} 
-                      whileInView={{ width: "100%" }} 
-                      transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
-                      viewport={{ once: true }}
-                      className="absolute bottom-0 left-0 h-1 sm:h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
-                    />
-                  </motion.span>
-                </h2>
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
+                <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
+                  <span className="text-lg sm:text-xl lg:text-3xl xl:text-4xl">World's Leading POSH Partner</span>
+                </Badge>
               </motion.div>
             </motion.div>
             
@@ -691,20 +700,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="relative"
             >
-              {/* Carousel Background Glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl sm:rounded-3xl blur-2xl sm:blur-3xl scale-110"></div>
-              
-              {/* Carousel Container with Enhanced Styling */}
-              <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 lg:p-12 border border-slate-200/50 shadow-xl sm:shadow-2xl hover:shadow-2xl sm:hover:shadow-3xl transition-all duration-500">
-                {/* Decorative Corner Elements */}
-                <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
-                <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
-                <div className="absolute -bottom-1 sm:-bottom-2 -left-1 sm:-left-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-pink-400 to-blue-400 rounded-full shadow-lg"></div>
-                <div className="absolute -bottom-1 sm:-bottom-2 -right-1 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
-                
-                {/* Carousel Content */}
-                <TeamSliceCarousel teamMembers={teamMembers} />
-              </div>
+              {/* Carousel Content */}
+              <TeamSliceCarousel teamMembers={teamMembers} />
             </motion.div>
             
             {/* Bottom CTA */}
@@ -735,36 +732,12 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-center space-y-6 sm:space-y-8 mb-12 sm:mb-20">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-6 sm:space-y-8 mb-12 sm:mb-20">
+
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
-                <Badge className="bg-gradient-to-r from-blue-100 via-purple-50 to-pink-100 text-slate-800 px-4 sm:px-6 py-2 text-sm sm:text-base font-bold border border-white/50 shadow-lg shadow-blue-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-300 to-purple-300 flex items-center justify-center">
-                    <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  </div>
-                  <span className="text-xs sm:text-base">Industries We Serve</span>
+                <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
+                  <span className="text-lg sm:text-xl lg:text-3xl xl:text-4xl">Sectors</span>
                 </Badge>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-3 sm:space-y-4">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900">
-                  <motion.span 
-                    initial={{ opacity: 0, y: 20 }} 
-                    whileInView={{ opacity: 1, y: 0 }} 
-                    transition={{ delay: 0.6, duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="relative inline-block mb-2 sm:mb-4"
-                  >
-                    <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-bold">
-                      Sectors
-                    </span>
-                    <motion.div 
-                      initial={{ width: 0 }} 
-                      whileInView={{ width: "100%" }} 
-                      transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }} 
-                      viewport={{ once: true }}
-                      className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full shadow-md"
-                    />
-                  </motion.span>
-                </h2>
               </motion.div>
             </motion.div>
             
@@ -800,7 +773,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <Footer />
+      
     </div>
   )
 }  

@@ -163,34 +163,7 @@ export default function Footer() {
 
 
 
-          {/* Newsletter Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-slate-700"
-          >
-            <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-slate-600/30">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-center">
-                <div className="text-center lg:text-left">
-                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3">Stay Updated</h3>
-                  <p className="text-slate-300 text-xs sm:text-sm lg:text-base leading-relaxed">
-                    Get the latest insights on workplace safety, compliance updates, and industry best practices.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-800 border border-slate-600 rounded-lg sm:rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                  />
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base">
-                    Subscribe
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+
         </div>
 
         {/* Bottom Bar */}

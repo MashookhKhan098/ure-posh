@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -39,6 +39,21 @@ import { motion, AnimatePresence } from "framer-motion"
 
 export default function ServicesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // Function to open expertise dropdown
+  const openExpertiseDropdown = () => {
+    // Dispatch a custom event that the navbar can listen to
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('openExpertiseDropdown'));
+    }
+  };
+
+  // Make the function globally available
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).openExpertiseDropdown = openExpertiseDropdown;
+    }
+  }, []);
 
   const expertiseCategories = [
     {
@@ -418,6 +433,7 @@ export default function ServicesPage() {
                               variant="outline"
                               size="sm"
                               className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                              onClick={openExpertiseDropdown}
                             >
                               Learn More
                               <ArrowRight className="ml-2 h-3 w-3" />

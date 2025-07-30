@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -27,6 +27,21 @@ import {
 import Link from "next/link"
 
 export default function SectorsPage() {
+  // Function to open expertise dropdown
+  const openExpertiseDropdown = () => {
+    // Dispatch a custom event that the navbar can listen to
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('openExpertiseDropdown'));
+    }
+  };
+
+  // Make the function globally available
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).openExpertiseDropdown = openExpertiseDropdown;
+    }
+  }, []);
+
   const sectors = [
     {
       name: "Health",
@@ -255,6 +270,7 @@ export default function SectorsPage() {
                     <Button
                       variant="outline"
                       className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent mt-4"
+                      onClick={openExpertiseDropdown}
                     >
                       Learn More
                       <ArrowRight className="ml-2 h-4 w-4" />
