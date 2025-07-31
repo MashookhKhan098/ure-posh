@@ -31,8 +31,6 @@ export default function AboutPage() {
       {/* CTA Section */}
       <CTASection />
       
-      {/* Contact Section */}
-      <ContactSection />
     </div>
   )
 }

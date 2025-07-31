@@ -94,10 +94,10 @@ const expertiseGears = [
         content: "Brand Identity\nDigital Content\nTraining Materials\nVisual Campaigns",
         color: "from-purple-500 to-pink-500",
         dots: [
-            { color: "bg-purple-400", position: { top: '15%', left: '25%' } },
-            { color: "bg-blue-400", position: { top: '25%', left: '80%' } },
-            { color: "bg-teal-400", position: { bottom: '25%', left: '15%' } },
-            { color: "bg-red-400", position: { bottom: '10%', left: '50%' } },
+            { color: "bg-black", position: { top: '15%', left: '25%' } },
+            { color: "bg-black", position: { top: '25%', left: '80%' } },
+            { color: "bg-black", position: { bottom: '25%', left: '15%' } },
+            { color: "bg-black", position: { bottom: '10%', left: '50%' } },
         ]
     },
     {
@@ -105,9 +105,9 @@ const expertiseGears = [
         content: "PR Strategy\nDigital Marketing\nCrisis Communication\nBrand Messaging",
         color: "from-blue-500 to-cyan-500",
         dots: [
-            { color: "bg-yellow-400", position: { top: '25%', left: '25%' } },
-            { color: "bg-teal-300", position: { bottom: '35%', left: '75%' } },
-            { color: "bg-red-400", position: { bottom: '20%', left: '30%' } },
+            { color: "bg-black", position: { top: '25%', left: '25%' } },
+            { color: "bg-black", position: { bottom: '35%', left: '75%' } },
+            { color: "bg-black", position: { bottom: '20%', left: '30%' } },
         ]
     },
     {
@@ -115,11 +115,11 @@ const expertiseGears = [
         content: "Strategic Planning\nReputation Management\nPolicy Development\nRisk Assessment",
         color: "from-green-500 to-emerald-500",
         dots: [
-            { color: "bg-yellow-400", position: { top: '15%', left: '65%' } },
-            { color: "bg-purple-400", position: { top: '35%', left: '20%' } },
-            { color: "bg-blue-400", position: { bottom: '35%', left: '55%' } },
-            { color: "bg-teal-300", position: { bottom: '40%', left: '20%' } },
-            { color: "bg-red-400", position: { bottom: '15%', left: '50%' } },
+            { color: "bg-black", position: { top: '15%', left: '65%' } },
+            { color: "bg-black", position: { top: '35%', left: '20%' } },
+            { color: "bg-black", position: { bottom: '35%', left: '55%' } },
+            { color: "bg-black", position: { bottom: '40%', left: '20%' } },
+            { color: "bg-black", position: { bottom: '15%', left: '50%' } },
         ]
     },
     {
@@ -127,10 +127,10 @@ const expertiseGears = [
         content: "Change Management\nProcess Optimization\nCultural Transformation\nImplementation Support",
         color: "from-orange-500 to-red-500",
         dots: [
-            { color: "bg-red-400", position: { top: '20%', left: '70%' } },
-            { color: "bg-green-400", position: { bottom: '50%', left: '75%' } },
-            { color: "bg-blue-400", position: { bottom: '30%', left: '40%' } },
-            { color: "bg-teal-300", position: { bottom: '20%', left: '60%' } },
+            { color: "bg-black", position: { top: '20%', left: '70%' } },
+            { color: "bg-black", position: { bottom: '50%', left: '75%' } },
+            { color: "bg-black", position: { bottom: '30%', left: '40%' } },
+            { color: "bg-black", position: { bottom: '20%', left: '60%' } },
         ]
     },
     {
@@ -138,10 +138,10 @@ const expertiseGears = [
         content: "Legal Advisory\nCompliance Training\nPolicy Development\nRisk Management",
         color: "from-indigo-500 to-purple-500",
         dots: [
-            { color: "bg-indigo-400", position: { top: '20%', left: '30%' } },
-            { color: "bg-purple-400", position: { top: '35%', left: '70%' } },
-            { color: "bg-blue-400", position: { bottom: '25%', left: '25%' } },
-            { color: "bg-teal-300", position: { bottom: '40%', left: '65%' } },
+            { color: "bg-black", position: { top: '20%', left: '30%' } },
+            { color: "bg-black", position: { top: '35%', left: '70%' } },
+            { color: "bg-black", position: { bottom: '25%', left: '25%' } },
+            { color: "bg-black", position: { bottom: '40%', left: '65%' } },
         ]
     }
 ];
@@ -189,9 +189,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
 
     return (
         <div className="flex flex-col items-center justify-center col-span-1 group">
-            {/* Enhanced Gear Container - Mobile Responsive */}
-            <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center mb-4 sm:mb-6 z-30">
-                {/* Main Gear */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center z-30">
                 <motion.div
                     className="absolute inset-0"
                     animate={{ rotate: 360 * direction }}
@@ -241,7 +239,6 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                     ))}
                 </motion.div>
                 
-                {/* Center Content - Mobile Optimized */}
                 <motion.div 
                     className="relative z-10 text-center px-1 sm:px-2"
                     animate={{ 
@@ -261,7 +258,6 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                 </motion.div>
             </div>
 
-            {/* Title - Mobile Responsive */}
             <motion.div 
                 className="text-center px-2"
                 initial={{ opacity: 0, y: 20 }}
@@ -442,7 +438,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <main>
         {/* Hero Section */}
-        <section className="relative pt-16 sm:pt-20 lg:pt-28 flex items-center justify-center overflow-hidden bg-white">
+        <section className="relative pt-8 sm:pt-12 lg:pt-16 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -453,7 +449,7 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-20 items-center min-h-[calc(100vh-80px)] sm:min-h-[calc(100vh-100px)] py-8 sm:py-10 lg:py-10">
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-screen py-8 sm:py-10 lg:py-10">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -527,8 +523,8 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-12 flex flex-col items-center order-1 lg:order-2 mb-8 lg:mb-0">
-                <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-md">
+              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-4 flex flex-col items-center order-1 lg:order-2 mb-8 lg:mb-0">
+                <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl">
                   {/* Simplified Background Effects */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl lg:rounded-3xl blur-xl lg:blur-2xl scale-110"></div>
                   
@@ -563,10 +559,10 @@ export default function HomePage() {
 
                       
                       {/* Corner Accents */}
-                      <div className="absolute top-3 lg:top-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
-                      <div className="absolute top-3 lg:top-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full shadow-lg"></div>
-                      <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-pink-400 to-blue-400 rounded-full shadow-lg"></div>
-                      <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-lg"></div>
+                      <div className="absolute top-3 lg:top-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
+                      <div className="absolute top-3 lg:top-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
+                      <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
+                      <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
                     </div>
                   </motion.div>
                 </div>
@@ -776,4 +772,4 @@ export default function HomePage() {
       
     </div>
   )
-}  
+}

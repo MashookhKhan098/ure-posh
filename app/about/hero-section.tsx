@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Heart, Coffee, Users, BookOpen, Shield, Award } from "lucide-react";
+import Image from "next/image";
 
 const HeroSection = () => {
   const fadeInUp = {
@@ -35,6 +36,18 @@ const HeroSection = () => {
           variants={staggerContainer}
           className="text-center space-y-8"
         >
+          {/* Logo */}
+          <motion.div variants={fadeInUp} className="flex justify-center mb-8">
+            <Image 
+              src="/images/ureph.svg" 
+              alt="UREPOSH Logo" 
+              width={200} 
+              height={80} 
+              className="h-16 w-auto opacity-90 hover:opacity-100 transition-opacity duration-300"
+              priority
+            />
+          </motion.div>
+          
           {/* Main Hero Message */}
           <motion.div variants={fadeInUp}>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-900 leading-tight mb-6">
