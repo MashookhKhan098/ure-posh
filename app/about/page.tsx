@@ -1,4 +1,5 @@
 import HeroSection from './hero-section'
+import ImpactSection from './impact-section'
 import MissionVisionSection from './mission-vision-section'
 import CoreValuesSection from './core-values-section'
 import PeopleSection from './people-section'
@@ -12,6 +13,9 @@ export default function AboutPage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <HeroSection />
+      
+      {/* Impact Section */}
+      <ImpactSection />
       
       {/* Mission & Vision Section */}
       <MissionVisionSection />

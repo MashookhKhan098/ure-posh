@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Users } from "lucide-react"
+import { Users, Search } from "lucide-react"
 
 interface TeamMember {
   name: string
@@ -25,14 +25,75 @@ const overlayColors = [
 ]
 
 export const TeamSliceCarousel: React.FC<TeamSliceCarouselProps> = ({ teamMembers }) => {
+  const [searchQuery, setSearchQuery] = useState("")
   const [activeIdx, setActiveIdx] = useState<number | null>(null)
   const sliceCount = teamMembers.length
   const baseWidth = 100 / sliceCount // equal width for all slices
   const expandedWidth = 50 // expanded width when hovered
   const collapsedWidth = (100 - expandedWidth) / (sliceCount - 1) // remaining width distributed among others
 
+  // Filter team members based on search query
+  const filteredMembers = teamMembers.filter(member =>
+    member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    member.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    member.expertise.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+  )
+
   return (
-    <div className="relative w-full max-w-6xl mx-auto h-80 sm:h-96 md:h-[28rem] lg:h-[32rem] xl:h-[36rem] flex items-center select-none px-4 sm:px-6 lg:px-8">
+    <div className="relative w-full max-w-6xl mx-auto h-80 sm:h-96 md:h-[28rem] lg:h-[32rem] xl:h-[36rem] flex flex-col items-center select-none px-4 sm:px-6 lg:px-8">
+      {/* Search Bar */}
+      <div className="w-full max-w-md mb-6 relative">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search people by name, role, or expertise..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/90 backdrop-blur-sm shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Search Results */}
+      {searchQuery && (
+        <div className="w-full max-w-4xl mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredMembers.map((member, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-gray-200"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 truncate">{member.name}</h3>
+                    <p className="text-sm text-gray-600 truncate">{member.role}</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {member.expertise.slice(0, 2).map((skill, i) => (
+                        <span key={i} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Carousel - With hover effects */}
       <div className="relative w-full h-full">
         {teamMembers.map((member, idx) => {
           // Calculate positions and widths based on hover state
@@ -62,7 +123,7 @@ export const TeamSliceCarousel: React.FC<TeamSliceCarouselProps> = ({ teamMember
             <motion.div
               key={idx}
               className="absolute top-0 h-full transition-all duration-700 cursor-pointer rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl group"
-              style={{ left, width, zIndex }}
+              style={{ left, width, zIndex: 20 + idx }}
               animate={{
                 left,
                 width,
@@ -77,11 +138,9 @@ export const TeamSliceCarousel: React.FC<TeamSliceCarouselProps> = ({ teamMember
               }}
               onMouseEnter={() => setActiveIdx(idx)}
               onMouseLeave={() => setActiveIdx(null)}
-              onTouchStart={() => setActiveIdx(idx)}
-              onTouchEnd={() => setActiveIdx(null)}
               whileHover={{ 
-                scale: activeIdx === idx ? 1.01 : 1.005,
-                y: activeIdx === idx ? -3 : -1
+                scale: 1.01,
+                y: -3
               }}
             >
               {/* Image */}
@@ -103,92 +162,85 @@ export const TeamSliceCarousel: React.FC<TeamSliceCarouselProps> = ({ teamMember
                 />
               </div>
               
-              {/* Name & Role (always visible) */}
+                            {/* Name & Role (always visible) */}
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center w-11/12 z-10">
-                <motion.div 
-                  className="text-white font-bold text-lg md:text-xl lg:text-2xl drop-shadow-lg tracking-wide mb-1"
-                  animate={{ y: activeIdx === idx ? 0 : 0 }}
-                  transition={{ duration: 0.5 }}
-                >
+                <div className="text-white font-bold text-lg md:text-xl lg:text-2xl drop-shadow-lg tracking-wide mb-1">
                   {member.name}
-                </motion.div>
-                <motion.div 
-                  className="text-white/90 text-sm md:text-base font-medium drop-shadow"
-                  animate={{ y: activeIdx === idx ? 0 : 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                >
+                </div>
+                <div className="text-white/90 text-sm md:text-base font-medium drop-shadow">
                   {member.role}
-                </motion.div>
+                </div>
               </div>
               
-              {/* Expanded info on hover/tap - Lighter background */}
+              {/* Small Info on Hover */}
               <AnimatePresence>
                 {activeIdx === idx && (
                   <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 20, scale: 0.98 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="absolute inset-0 flex flex-col justify-center items-center bg-black/60 backdrop-blur-md px-6 py-8 text-center"
+                    exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="absolute inset-0 flex flex-col justify-center items-center px-4 py-6 text-center"
                     style={{ zIndex: 40 }}
                   >
                     <motion.div
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.1, duration: 0.4 }}
+                      transition={{ delay: 0.1, duration: 0.3 }}
+                      className="mb-3"
                     >
-                      <Users className="w-10 h-10 text-white mb-4 mx-auto" />
+                      <Users className="w-8 h-8 text-white mx-auto" />
                     </motion.div>
                     
                     <motion.div 
-                      className="text-white text-xl lg:text-2xl font-bold mb-2"
-                      initial={{ y: 20, opacity: 0 }}
+                      className="text-white text-lg lg:text-xl font-bold mb-2"
+                      initial={{ y: 15, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.2, duration: 0.4 }}
+                      transition={{ delay: 0.2, duration: 0.3 }}
                     >
                       {member.name}
                     </motion.div>
                     
                     <motion.div 
-                      className="text-fuchsia-200 text-base lg:text-lg font-semibold mb-4"
-                      initial={{ y: 20, opacity: 0 }}
+                      className="text-blue-200 text-sm lg:text-base font-semibold mb-3"
+                      initial={{ y: 15, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.3, duration: 0.4 }}
+                      transition={{ delay: 0.3, duration: 0.3 }}
                     >
                       {member.role}
                     </motion.div>
                     
                     <motion.div 
-                      className="text-white/90 text-sm lg:text-base mb-6 line-clamp-3 leading-relaxed"
-                      initial={{ y: 20, opacity: 0 }}
+                      className="text-white/90 text-xs lg:text-sm mb-4 line-clamp-2 leading-relaxed"
+                      initial={{ y: 15, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.4, duration: 0.4 }}
+                      transition={{ delay: 0.4, duration: 0.3 }}
                     >
                       {member.bio}
                     </motion.div>
                     
                     <motion.div 
-                      className="flex flex-wrap justify-center gap-2 mb-4"
-                      initial={{ y: 20, opacity: 0 }}
+                      className="flex flex-wrap justify-center gap-1.5 mb-3"
+                      initial={{ y: 15, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.5, duration: 0.4 }}
+                      transition={{ delay: 0.5, duration: 0.3 }}
                     >
-                      {member.expertise.map((skill, i) => (
-                        <span key={i} className="bg-white/25 text-white text-xs lg:text-sm rounded-full px-3 py-1.5 backdrop-blur-sm font-medium shadow-lg border border-white/30 hover:bg-white/35 transition-all duration-300">
+                      {member.expertise.slice(0, 2).map((skill, i) => (
+                        <span key={i} className="bg-white/20 text-white text-xs rounded-full px-2 py-1 backdrop-blur-sm font-medium border border-white/30">
                           {skill}
                         </span>
                       ))}
                     </motion.div>
                     
                     <motion.div 
-                      className="flex flex-col items-center gap-2"
-                      initial={{ y: 20, opacity: 0 }}
+                      className="flex flex-col items-center gap-1"
+                      initial={{ y: 15, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.6, duration: 0.4 }}
+                      transition={{ delay: 0.6, duration: 0.3 }}
                     >
-                      {member.achievements.map((ach, i) => (
-                        <span key={i} className="text-green-200 text-sm lg:text-base flex items-center gap-2 font-medium">
-                          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" className="text-green-300">
+                      {member.achievements.slice(0, 1).map((ach, i) => (
+                        <span key={i} className="text-green-200 text-xs flex items-center gap-1 font-medium">
+                          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" className="text-green-300">
                             <path stroke="currentColor" strokeWidth="2" d="M5 13l4 4L19 7"/>
                           </svg>
                           {ach}
@@ -205,8 +257,6 @@ export const TeamSliceCarousel: React.FC<TeamSliceCarouselProps> = ({ teamMember
           )
         })}
       </div>
-      
-
     </div>
   )
 } 

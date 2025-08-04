@@ -438,7 +438,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <main>
         {/* Hero Section */}
-        <section className="relative pt-8 sm:pt-12 lg:pt-16 flex items-center justify-center overflow-hidden bg-white">
+        <section className="relative pt-4 sm:pt-6 lg:pt-8 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -515,7 +515,7 @@ export default function HomePage() {
                         <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1.5 sm:ml-2" />
                       </Button>
                     </Link>
-                    <Link href="#expertise">
+                    <Link href="/about">
                       <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base">
                         Learn More
                       </Button>
@@ -574,7 +574,7 @@ export default function HomePage() {
         
 
         {/* Our Expertise Section */}
-        <section id="expertise" className="relative pt-8 sm:pt-10 pb-16 sm:pb-20 lg:pb-24 flex items-center justify-center overflow-hidden bg-slate-900">
+        <section id="expertise" className="relative pt-4 sm:pt-6 pb-8 sm:pb-12 lg:pb-16 flex items-center justify-center overflow-hidden bg-slate-900">
           <div className="absolute inset-0 z-0 opacity-10">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 text-[6rem] sm:text-[8rem] lg:text-[12rem] text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -623,7 +623,7 @@ export default function HomePage() {
               className="max-w-7xl mx-auto"
             >
               {/* Top Row - 3 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4 mb-3 sm:mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-0.5 lg:gap-1 mb-1 sm:mb-2">
                 {expertiseGears.slice(0, 3).map((gear, index) => (
                   <motion.div
                     key={index}
@@ -644,7 +644,7 @@ export default function HomePage() {
               </div>
               
               {/* Bottom Row - 2 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-0.5 lg:gap-1 max-w-4xl mx-auto">
                 {expertiseGears.slice(3, 5).map((gear, index) => (
                   <motion.div
                     key={index + 3}
@@ -668,7 +668,7 @@ export default function HomePage() {
         </section>
 
         {/* Team Carousel Section */}
-        <section className="relative py-12 sm:py-16 lg:py-20 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+        <section className="relative py-6 sm:py-8 lg:py-10 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -706,7 +706,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.8, duration: 0.6 }} 
               viewport={{ once: true }}
-              className="text-center mt-6 sm:mt-8"
+              className="text-center mt-2 sm:mt-4"
             >
               <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 border-0 text-sm sm:text-base">
                 Meet Our Full Team
@@ -717,7 +717,7 @@ export default function HomePage() {
         </section>
 
         {/* Industries Section */}
-        <section className="relative py-12 sm:py-16 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+        <section className="relative py-6 sm:py-8 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute left-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -left-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />

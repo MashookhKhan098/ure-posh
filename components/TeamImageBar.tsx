@@ -250,7 +250,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       className="h-[400px] lg:h-[500px] w-full bg-cover bg-center bg-no-repeat relative"
                       style={{ backgroundImage: `url(${member.image})` }}
                     >
-                      <div className={`absolute inset-0 bg-gradient-to-t ${member.color} opacity-50 group-hover:opacity-30 transition-all duration-700`} />
+                      <div className={`absolute inset-0 bg-gradient-to-t ${member.color} opacity-50 transition-all duration-700`} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                       
                       {/* Hover Enhancement Lines */}
@@ -275,10 +275,10 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                         <div className={`w-6 lg:w-8 h-0.5 lg:h-1 ${member.accentColor} rounded-full mx-auto`} />
                       </div>
                       
-                      {/* Vertical Name */}
-                      <div className={`transform transition-transform duration-300 ${hoveredId === null ? 'rotate-90' : 'rotate-0'} origin-center`}>
-                        <h3 className="text-white text-sm lg:text-lg font-bold whitespace-nowrap tracking-wider">
-                          {member.name.toUpperCase()}
+                      {/* Name - Horizontal Only */}
+                      <div>
+                        <h3 className="text-white text-sm lg:text-lg font-bold tracking-wider">
+                          {member.name}
                         </h3>
                         <p className="text-gray-300 text-xs lg:text-sm font-medium">
                           {member.title}
@@ -297,7 +297,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                         <div className={`w-12 lg:w-20 h-1 lg:h-2 ${member.accentColor} rounded-full shadow-lg transform origin-left transition-all duration-500 ${hoveredId === member.id ? 'scale-x-100' : 'scale-x-0'}`} />
                         <div className="flex gap-1 lg:gap-2">
                           {member.achievements.slice(0, 2).map((achievement, i) => (
-                            <div key={i} className="bg-yellow-500/20 backdrop-blur-sm rounded-full p-1.5 lg:p-2 transform transition-all duration-300 hover:scale-110">
+                            <div key={i} className="bg-yellow-500/20 backdrop-blur-sm rounded-full p-1.5 lg:p-2 transform transition-all duration-300">
                               <Trophy className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400" />
                             </div>
                           ))}
@@ -306,7 +306,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       
                       {/* Professional Icon */}
                       <div className="flex items-center gap-3 lg:gap-4">
-                        <div className={`p-2.5 lg:p-4 ${member.accentColor} rounded-xl lg:rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-110`}>
+                        <div className={`p-2.5 lg:p-4 ${member.accentColor} rounded-xl lg:rounded-2xl shadow-xl transform transition-all duration-300`}>
                           <member.icon className="h-5 w-5 lg:h-8 lg:w-8 text-white" />
                         </div>
                         <div className="text-white">
@@ -343,7 +343,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       {/* Skills Tags */}
                       <div className="flex flex-wrap gap-1.5 lg:gap-2">
                         {member.skills.slice(0, 3).map((skill, i) => (
-                          <span key={i} className="bg-white/10 backdrop-blur-sm text-white px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs font-medium border border-white/20 transform transition-all duration-200 hover:scale-105">
+                          <span key={i} className="bg-white/10 backdrop-blur-sm text-white px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs font-medium border border-white/20 transform transition-all duration-200">
                             {skill}
                           </span>
                         ))}

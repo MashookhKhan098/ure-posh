@@ -222,13 +222,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA Button */}
-        <div className="hidden lg:block ml-0">
-          <Link href="/contact" className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-1.5 rounded-full font-semibold shadow hover:from-pink-600 hover:to-rose-600 transition-all duration-200 flex items-center">
-            <Coffee className="w-5 h-5 mr-2" />
-            Free Coffee
-          </Link>
-        </div>
+        {/* CTA Button - Removed Free Coffee */}
 
         {/* Mobile Menu Button */}
         <button
