@@ -43,8 +43,12 @@ export default function Footer() {
               className="lg:col-span-2 space-y-6"
             >
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Heart className="h-8 w-8 text-white" />
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-xl overflow-hidden">
+                  <img 
+                    src="/images/logo.jpg" 
+                    alt="URE POSH Logo" 
+                    className="w-12 h-12 object-contain"
+                  />
                 </div>
                 <div>
                   <span className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">UREPOSH</span>
