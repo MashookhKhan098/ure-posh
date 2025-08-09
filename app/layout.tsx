@@ -3,7 +3,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import NavbarWrapper from './components/NavbarWrapper'
-import Footer from "./components/Footer"
+import ConditionalFooter from "./components/ConditionalFooter"
 import { headers } from 'next/headers'
 
 const inter = Inter({ subsets: ["latin"] })
@@ -21,9 +21,13 @@ export default function RootLayout({
   const headersList = headers()
   const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || ''
   const isWriterPage = pathname.startsWith('/writer')
+  const isAdminPage = pathname.startsWith('/admin')
+
+  // Debug logging (will show in server console)
+  console.log('Layout Debug:', { pathname, isWriterPage, isAdminPage })
 
   return (
-    <html lang="en">
+    <html lang="en" data-admin={isAdminPage ? "true" : "false"}>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
@@ -31,9 +35,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {!isWriterPage && <NavbarWrapper />}
+          {/* Navbar - hidden for admin and writer pages */}
+          {!isWriterPage && !isAdminPage && <NavbarWrapper />}
+          
+          {/* Main content */}
           <main className="min-h-screen">{children}</main>
-          {!isWriterPage && <Footer />}
+          
+          {/* Footer - Conditionally rendered based on path */}
+          <ConditionalFooter />
         </ThemeProvider>
       </body>
     </html>

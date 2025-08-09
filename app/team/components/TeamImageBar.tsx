@@ -52,7 +52,7 @@ const mockMembers: TeamMember[] = [
     color: "from-blue-500 via-cyan-500 to-teal-500",
     accentColor: "bg-blue-500",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face",
-    achievements: ["Tech Lead", "Open Source Contributor", "AWS Certified"],
+    achievements: ["Tech Lead", "Open Source Contributor", "Cloud Architecture Expert"],
     skills: ["React", "Node.js", "Python", "Cloud Architecture"],
     experience: "10+ Years",
     location: "Austin, TX",

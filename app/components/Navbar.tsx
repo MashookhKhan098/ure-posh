@@ -26,8 +26,12 @@ const expertiseContent = {
     items: [
       { name: "POSH Compliance Initiation", slug: "posh-compliance-initiation", placeholder: "Establish comprehensive POSH compliance framework" },
       { name: "External Members from Renowned NGO", slug: "external-members-renowned-ngo", placeholder: "Expert external committee members" },
-      { name: "Compliant Redressal", slug: "compliant-redressal", placeholder: "Effective complaint resolution system" },
-      { name: "Complaint Handling Committee Redressal", slug: "complaint-handling-committee-redressal", placeholder: "Specialized committee for complaint management" },
+      { name: "Compliant Redressal", slug: "compliant-redressal", placeholder: "Effective complaint resolution system" }
+    ]
+  },
+  "disclosure-and-audit": {
+    title: "Disclosure and Audit",
+    items: [
       { name: "POSH & Workplace Harassment Compliance Reporting", slug: "posh-workplace-harassment-compliance-reporting", placeholder: "Comprehensive compliance reporting system" },
       { name: "Workplace Harassment & POSH Policy Disclosure", slug: "workplace-harassment-posh-policy-disclosure", placeholder: "Transparent policy disclosure framework" },
       { name: "POSH & Workplace Harassment Audits", slug: "posh-workplace-harassment-audits", placeholder: "Regular compliance audits and assessments" }
@@ -37,7 +41,7 @@ const expertiseContent = {
     title: "POSH Adaptability and Training",
     items: [
       { name: "Respectful Workplace Training & Compliance", slug: "respectful-workplace-training-compliance", placeholder: "Comprehensive workplace respect training" },
-      { name: "Compliance Training for Internal Committees & Workplace Panels", slug: "compliance-training-internal-committees-workplace-panels", placeholder: "Specialized training for internal committees" },
+      { name: "Training for Internal Committees & Workplace Panels", slug: "compliance-training-internal-committees-workplace-panels", placeholder: "Specialized training for internal committees" },
       { name: "Quarterly Mandatory Training", slug: "quarterly-mandatory-training", placeholder: "Regular mandatory compliance training" },
       { name: "Managers Level Training", slug: "managers-level-training", placeholder: "Leadership-focused compliance training" }
     ]
@@ -48,6 +52,13 @@ const expertiseContent = {
       { name: "Well Being Programmes", slug: "well-being-programmes", placeholder: "Comprehensive employee wellness programs" },
       { name: "Code of Conduct Training", slug: "code-of-conduct-training", placeholder: "Ethical workplace behavior training" },
       { name: "Mental Health Training & Counselling", slug: "mental-health-training-counselling", placeholder: "Mental health support and counseling services" }
+    ]
+  },
+  "diversity-and-inclusion": {
+    title: "Diversity and Inclusion",
+    items: [
+      { name: "Diversity at Work Place", slug: "diversity-at-work-place", placeholder: "Creating inclusive workplace environments" },
+      { name: "LGBTQIA++ Inclusion", slug: "lgbtqia-inclusion", placeholder: "Comprehensive LGBTQIA+ workplace inclusion" }
     ]
   }
 }
@@ -70,35 +81,14 @@ const expertiseSectorsCol2 = [
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isExpertiseOpen, setIsExpertiseOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<string>('gender-equality-compliance')
   const expertiseRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const [showNavbar, setShowNavbar] = useState(true)
   const [scrolled, setScrolled] = useState(false)
   const lastScrollY = useRef(0)
 
-  const expertiseSubmenu = [
-    {
-      title: "Gender Equality Compliance",
-      items: [
-        "POSH Compliance Initiation", "External Members from Renowned NGO", "Compliant Redressal",
-        "Complaint Handling Committee Redressal", "POSH & Workplace Harassment Compliance Reporting",
-        "Workplace Harassment & POSH Policy Disclosure", "POSH & Workplace Harassment Audits"
-      ]
-    },
-    {
-      title: "POSH Adaptability and Training",
-      items: [
-        "Respectful Workplace Training & Compliance", "Compliance Training for Internal Committees & Workplace Panels",
-        "Quarterly Mandatory Training", "Managers Level Training"
-      ]
-    },
-    {
-      title: "Organisation Well-being",
-      items: [
-        "Well Being Programmes", "Code of Conduct Training", "Mental Health Training & Counselling"
-      ]
-    }
-  ]
+
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -117,6 +107,7 @@ export default function Navbar() {
         !(event.target as Element).closest(".expertise-dropdown-panel")
       ) {
         setIsExpertiseOpen(false)
+        setActiveTab('gender-equality-compliance') // Reset to first tab when closing
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -222,7 +213,63 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA Button - Removed Free Coffee */}
+        {/* CTA Button - Free Coffee */}
+        <div className="hidden lg:flex items-center">
+          <Button 
+            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 group"
+            asChild
+          >
+            <Link href="/connect">
+              {/* Custom Coffee Cup with Filling Animation */}
+              <div className="relative w-4 h-4">
+                {/* Coffee Cup */}
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  {/* Cup Body - Main Container */}
+                  <path d="M6 4h12c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="currentColor"/>
+                  
+                  {/* Cup Rim - Top Edge */}
+                  <path d="M4 4h16v1.5c0 .8-.7 1.5-1.5 1.5h-13C5.7 7 5 6.3 5 5.5V4z" fill="currentColor" opacity="0.9"/>
+                  
+                  {/* Handle - Curved Handle */}
+                  <path d="M18 8c0-1.1.9-2 2-2s2 .9 2 2v4c0 1.1-.9 2-2 2s-2-.9-2-2V8z" fill="currentColor"/>
+                  <path d="M20 6c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2V8c0-1.1-.9-2-2-2z" fill="currentColor"/>
+                  
+                  {/* Saucer - Base Plate */}
+                  <ellipse cx="12" cy="20" rx="10" ry="2" fill="currentColor" opacity="0.8"/>
+                  
+                  {/* Inner Cup - For Depth */}
+                  <path d="M7 5h10c.6 0 1 .4 1 1v9c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V6c0-.6.4-1 1-1z" fill="currentColor" opacity="0.7"/>
+                </svg>
+                
+                {/* Coffee Filling Animation */}
+                <div className="absolute bottom-1 left-1 right-1 bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm transition-all duration-700 ease-out group-hover:h-2.5 h-0 overflow-hidden">
+                  <div className="w-full h-full bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm relative">
+                    {/* Coffee Surface Effect */}
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-300 rounded-t-sm opacity-80"></div>
+                  </div>
+                </div>
+                
+                {/* Steam Effect - Multiple Steam Lines */}
+                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                  <div className="flex space-x-0.5">
+                    <div className="w-0.5 h-1.5 bg-white/70 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
+                    <div className="w-0.5 h-1 bg-white/60 rounded-full animate-pulse" style={{animationDelay: '200ms'}}></div>
+                    <div className="w-0.5 h-1.5 bg-white/50 rounded-full animate-pulse" style={{animationDelay: '400ms'}}></div>
+                  </div>
+                </div>
+                
+                {/* Coffee Aroma Lines */}
+                <div className="absolute -top-0.5 -left-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                  <div className="w-0.5 h-1 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '100ms'}}></div>
+                </div>
+                <div className="absolute -top-0.5 -right-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                  <div className="w-0.5 h-1 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+                </div>
+              </div>
+              Free Coffee
+            </Link>
+          </Button>
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -240,43 +287,114 @@ export default function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.18 }}
-          className="expertise-dropdown-panel fixed left-0 mt-3 w-full bg-white shadow-2xl border-b border-gray-100 z-50"
+          className="expertise-dropdown-panel absolute left-0 right-0 top-full mt-1 bg-white shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto"
         >
-          <div className="max-w-7xl mx-auto px-8 py-6">
-            <div className="grid grid-cols-4 gap-8">
-              <div className="pr-6 border-r border-gray-200">
-                <h2 className="text-xl font-bold text-slate-900 mb-2">
-                  Expertise
-                </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Advising and leading businesses and brands across an array of industries
-                </p>
-              </div>
-              <div className="col-span-3">
-                <div className="grid grid-cols-3 gap-8">
-                  {Object.entries(expertiseContent).map(([key, category]) => (
-                    <div key={key}>
-                      <h3 className="text-sm font-semibold text-slate-900 mb-3 border-b border-gray-100 pb-2">
-                        {category.title}
-                      </h3>
-                      <ul className="space-y-2">
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            {/* Tab Headings - Moved to Right */}
+            <div className="flex justify-end space-x-0.5 mb-4 border-b border-gray-200 pr-0">
+              {Object.entries(expertiseContent).map(([key, category], index) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`px-2 py-2 text-xs font-medium rounded-t-md transition-all duration-200 ${
+                    activeTab === key
+                      ? 'bg-pink-50 text-pink-700 border-b-2 border-pink-500'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  {category.title}
+                </button>
+              ))}
+            </div>
+            
+            {/* Tab Content */}
+            <div className="min-h-64">
+              {Object.entries(expertiseContent).map(([key, category]) => (
+                <div
+                  key={key}
+                  className={`${activeTab === key ? 'block' : 'hidden'}`}
+                >
+                  <div className="grid grid-cols-3 gap-6">
+                    {/* Left Text Section */}
+                    <div className="p-4 max-w-xs">
+                      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg p-4 border border-slate-200">
+                        <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center">
+                          <span className="w-2 h-2 bg-pink-500 rounded-full mr-2"></span>
+                          Expertise
+                        </h3>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          Advising and leading businesses and brands across an array of industries
+                        </p>
+                      </div>
+                      
+                      {/* Tab-related Thought Text */}
+                      <div className="mt-4 p-3 bg-white rounded-lg border border-gray-200">
+                        {activeTab === 'gender-equality-compliance' && (
+                          <p className="text-xs text-gray-700 italic leading-relaxed">
+                            "Equality is not a privilege, it's a fundamental right that creates workplaces where everyone can thrive."
+                          </p>
+                        )}
+                        {activeTab === 'disclosure-and-audit' && (
+                          <p className="text-xs text-gray-700 italic leading-relaxed">
+                            "Transparency builds trust, and trust is the foundation of every successful organization."
+                          </p>
+                        )}
+                        {activeTab === 'posh-adaptability-training' && (
+                          <p className="text-xs text-gray-700 italic leading-relaxed">
+                            "Knowledge empowers change. Training transforms workplaces into respectful environments."
+                          </p>
+                        )}
+                        {activeTab === 'organisation-well-being' && (
+                          <p className="text-xs text-gray-700 italic leading-relaxed">
+                            "A healthy workplace nurtures healthy minds, creating a culture of care and growth."
+                          </p>
+                        )}
+                        {activeTab === 'diversity-and-inclusion' && (
+                          <p className="text-xs text-gray-700 italic leading-relaxed">
+                            "Diversity is our strength. Inclusion is our commitment to making every voice heard."
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Content Grid */}
+                    <div className="col-span-2">
+                      <div className="grid grid-cols-2 gap-4">
                         {category.items.map((item, itemIdx) => (
-                          <li key={itemIdx}>
+                          <div key={itemIdx} className="group">
                             <Link 
                               href={`/services/${item.slug}`} 
-                              className="text-sm text-slate-600 hover:text-slate-900 hover:text-pink-600 transition-colors duration-200 block"
+                              className="block bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md hover:border-pink-200 transition-all duration-200"
                               title={item.placeholder}
                               onClick={() => setIsExpertiseOpen(false)}
                             >
-                              {item.name}
+                              <div className="flex items-start space-x-3">
+                                <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="text-sm font-semibold text-gray-900 mb-2 group-hover:text-pink-700 transition-colors duration-200">
+                                    {item.name}
+                                  </h4>
+                                  <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
+                                    {item.placeholder}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="mt-3 pt-2 border-t border-gray-100">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-pink-600 font-medium">Learn More</span>
+                                  <svg className="w-3 h-3 text-pink-500 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </div>
+                              </div>
                             </Link>
-                          </li>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </motion.div>
@@ -314,7 +432,7 @@ export default function Navbar() {
                   <ChevronDown className="w-5 h-5 ml-2" />
                 </summary>
                 <div className="pl-2 space-y-3 mt-2">
-                  {expertiseSubmenu.map((category, idx) => (
+                  {Object.entries(expertiseContent).map(([key, category], idx) => (
                     <details key={idx} className="mb-2 group" open>
                       <summary className="flex items-center justify-between text-base font-semibold text-gray-900 py-2 px-2 rounded-lg bg-gray-50 group-open:bg-gray-100 cursor-pointer transition-all">
                         {category.title}
@@ -324,11 +442,11 @@ export default function Navbar() {
                         {category.items.map((item, itemIdx) => (
                           <li key={itemIdx}>
                             <Link
-                              href={`/services/${generateSlug(item)}`}
+                              href={`/services/${item.slug}`}
                               onClick={() => setIsMenuOpen(false)}
                               className="block text-sm text-gray-600 hover:text-black py-1 rounded-md transition-colors"
                             >
-                              {item}
+                              {item.name}
                             </Link>
                           </li>
                         ))}
@@ -338,7 +456,61 @@ export default function Navbar() {
                 </div>
               </details>
 
-              <div className="pt-6">
+              <div className="pt-6 space-y-3">
+                <Button 
+                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-3 rounded-xl text-lg font-bold flex items-center justify-center gap-2 group"
+                  asChild
+                >
+                  <Link href="/connect" onClick={() => setIsMenuOpen(false)}>
+                    {/* Custom Coffee Cup with Filling Animation */}
+                    <div className="relative w-5 h-5">
+                      {/* Coffee Cup */}
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        {/* Cup Body - Main Container */}
+                        <path d="M6 4h12c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="currentColor"/>
+                        
+                        {/* Cup Rim - Top Edge */}
+                        <path d="M4 4h16v1.5c0 .8-.7 1.5-1.5 1.5h-13C5.7 7 5 6.3 5 5.5V4z" fill="currentColor" opacity="0.9"/>
+                        
+                        {/* Handle - Curved Handle */}
+                        <path d="M18 8c0-1.1.9-2 2-2s2 .9 2 2v4c0 1.1-.9 2-2 2s-2-.9-2-2V8z" fill="currentColor"/>
+                        <path d="M20 6c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2V8c0-1.1-.9-2-2-2z" fill="currentColor"/>
+                        
+                        {/* Saucer - Base Plate */}
+                        <ellipse cx="12" cy="20" rx="10" ry="2" fill="currentColor" opacity="0.8"/>
+                        
+                        {/* Inner Cup - For Depth */}
+                        <path d="M7 5h10c.6 0 1 .4 1 1v9c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V6c0-.6.4-1 1-1z" fill="currentColor" opacity="0.7"/>
+                      </svg>
+                      
+                      {/* Coffee Filling Animation */}
+                      <div className="absolute bottom-1.5 left-1.5 right-1.5 bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm transition-all duration-700 ease-out group-hover:h-3 h-0 overflow-hidden">
+                        <div className="w-full h-full bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm relative">
+                          {/* Coffee Surface Effect */}
+                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-300 rounded-t-sm opacity-80"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Steam Effect - Multiple Steam Lines */}
+                      <div className="absolute -top-1.5 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                        <div className="flex space-x-0.5">
+                          <div className="w-0.5 h-2 bg-white/70 rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
+                          <div className="w-0.5 h-1.5 bg-white/60 rounded-full animate-pulse" style={{animationDelay: '200ms'}}></div>
+                          <div className="w-0.5 h-2 bg-white/50 rounded-full animate-pulse" style={{animationDelay: '400ms'}}></div>
+                        </div>
+                      </div>
+                      
+                      {/* Coffee Aroma Lines */}
+                      <div className="absolute -top-1 -left-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                        <div className="w-0.5 h-1.5 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '100ms'}}></div>
+                      </div>
+                      <div className="absolute -top-1 -right-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                        <div className="w-0.5 h-1.5 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+                      </div>
+                    </div>
+                    Free Coffee
+                  </Link>
+                </Button>
                 <Button className="w-full bg-black hover:bg-gray-800 text-white py-3 rounded-xl text-lg font-bold">
                   Get Started
                 </Button>

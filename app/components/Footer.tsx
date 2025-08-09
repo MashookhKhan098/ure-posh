@@ -140,22 +140,21 @@ export default function Footer() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="space-y-6"
+                className="space-y-6 text-center"
               >
-                <h3 className="font-bold text-lg text-white flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"></div>
+                <h3 className="font-bold text-xl text-white mb-6 border-b border-slate-700 pb-2 text-center">
                   {section.title}
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {section.links.map((link) => (
-                    <li key={link}>
+                    <li key={link} className="text-center">
                       <Link
                         href="#"
-                        className="text-slate-400 hover:text-white transition-all duration-300 text-sm hover:translate-x-2 inline-block group"
+                        className="text-slate-400 hover:text-white transition-all duration-300 text-sm hover:translate-x-2 inline-block group text-center"
                       >
-                        <span className="flex items-center space-x-2">
-                          <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <span className="flex items-center space-x-2 justify-center">
                           <span>{link}</span>
+                          <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </span>
                       </Link>
                     </li>
@@ -164,10 +163,6 @@ export default function Footer() {
               </motion.div>
             ))}
           </div>
-
-
-
-
         </div>
 
         {/* Bottom Bar */}

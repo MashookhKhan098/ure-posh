@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 import { createAdminClient } from '@/utils/supabase/admin';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const secretKey = new TextEncoder().encode(JWT_SECRET);
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Require admin auth
+    const token = req.cookies.get('admin_token')?.value || req.headers.get('authorization')?.replace('Bearer ', '');
+    if (!token) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+    try {
+      await jwtVerify(token, secretKey);
+    } catch (e) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    }
+
     const { id } = params;
     const { action, reason } = await req.json();
 

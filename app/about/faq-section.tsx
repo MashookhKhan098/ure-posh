@@ -221,11 +221,11 @@ const FAQ_DATA: FAQ[] = [
   {
     id: "6",
     question: "What security measures do you have in place to protect our data?",
-    answer: "We implement enterprise-grade security measures including end-to-end encryption, regular security audits, and compliance with SOC 2 Type II standards. Our infrastructure is hosted on AWS with 99.9% uptime guarantee, and we maintain comprehensive backup and disaster recovery procedures. We also provide detailed security documentation and can accommodate custom security requirements for enterprise clients.",
+    answer: "We implement enterprise-grade security measures including end-to-end encryption, regular security audits, and compliance with SOC 2 Type II standards. Our infrastructure is hosted on enterprise cloud services with 99.9% uptime guarantee, and we maintain comprehensive backup and disaster recovery procedures. We also provide detailed security documentation and can accommodate custom security requirements for enterprise clients.",
     category: "compliance",
     difficulty: "advanced",
     readTime: "5 min read",
-    tags: ["security", "encryption", "AWS", "backup"],
+    tags: ["security", "encryption", "cloud", "backup"],
     popularity: 78,
     lastUpdated: "4 days ago",
     views: 567,

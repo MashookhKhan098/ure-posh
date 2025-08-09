@@ -14,7 +14,7 @@ import {
   export interface CoreValue {
     title: string;
     description: string;
-    icon: React.ComponentType<any>;
+    icon: string;
     color: string;
     stats?: string;
     details: string[];
@@ -73,11 +73,11 @@ import {
     growth?: string;
   }
   
-  export const coreValues: CoreValue[] = [
+  export const coreValues = [
     {
       title: "Inclusion as Foundation",
       description: "We approach every partnership understanding that inclusion isn't optional—it's the cornerstone of thriving organizations. Our methodology ensures authentic representation and belonging.",
-      icon: Users,
+      icon: "users",
       color: "from-violet-500 via-purple-500 to-fuchsia-500",
       stats: "98% satisfaction rate",
       details: [
@@ -90,7 +90,7 @@ import {
     {
       title: "Safety Without Compromise",
       description: "Every workplace should be a sanctuary of respect and dignity. We don't just implement policies—we cultivate cultures where safety is lived, not just documented.",
-      icon: Shield,
+      icon: "shield",
       color: "from-rose-500 via-pink-500 to-red-500",
       stats: "Zero tolerance success",
       details: [
@@ -103,7 +103,7 @@ import {
     {
       title: "Innovation in Tradition",
       description: "We revolutionize compliance by making it meaningful, engaging, and transformative. Traditional training becomes immersive experiences that create lasting behavioral change.",
-      icon: Lightbulb,
+      icon: "lightbulb",
       color: "from-emerald-500 via-teal-500 to-cyan-500",
       stats: "300% engagement increase",
       details: [
@@ -116,7 +116,7 @@ import {
     {
       title: "Diversity as Power",
       description: "We honor the full spectrum of human experience and identity. Our approach recognizes that true strength comes from authentic diversity across all dimensions of identity.",
-      icon: Sparkles,
+      icon: "sparkles",
       color: "from-amber-500 via-orange-500 to-yellow-500",
       stats: "40+ identity dimensions",
       details: [
@@ -129,7 +129,7 @@ import {
     {
       title: "Impact Over Activity",
       description: "We measure success not by hours trained or policies created, but by cultural transformation and sustained behavioral change that creates lasting organizational impact.",
-      icon: Target,
+      icon: "target",
       color: "from-blue-500 via-indigo-500 to-purple-500",
       stats: "85% culture transformation",
       details: [

@@ -1,12 +1,18 @@
 "use client";
 
+import React from 'react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, Heart, Award, Shield, Target, Sparkles, ArrowRight } from "lucide-react";
+import { TeamMember } from './about-data';
 
-const PeopleSection = () => {
+interface PeopleProps {
+  teamMembers: TeamMember[];
+}
+
+const PeopleSection: React.FC<PeopleProps> = ({ teamMembers }) => {
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     animate: { opacity: 1, y: 0 },
@@ -21,41 +27,6 @@ const PeopleSection = () => {
       }
     }
   };
-
-  const teamMembers = [
-    {
-      name: "Dr. Priya Sharma",
-      role: "Founder & CEO",
-      image: "/images/2.jpg",
-      description: "Leading workplace transformation with 15+ years of experience in organizational psychology and compliance.",
-      expertise: ["Organizational Psychology", "Compliance Strategy", "Leadership Development"],
-      stats: "500+ Organizations Transformed"
-    },
-    {
-      name: "Rajesh Kumar",
-      role: "Head of Legal & Compliance",
-      image: "/images/3.jpg",
-      description: "Expert in POSH Act implementation with deep understanding of Indian workplace regulations.",
-      expertise: ["Legal Compliance", "Policy Development", "Risk Management"],
-      stats: "99.2% Compliance Rate"
-    },
-    {
-      name: "Anjali Mehta",
-      role: "Director of Training",
-      image: "/images/4.jpg",
-      description: "Specialist in creating engaging, culturally-sensitive training programs for diverse workplaces.",
-      expertise: ["Training Design", "Cultural Sensitivity", "Adult Learning"],
-      stats: "75,000+ Professionals Trained"
-    },
-    {
-      name: "Suresh Patel",
-      role: "Head of Technology",
-      image: "/images/5.jpg",
-      description: "Driving innovation in compliance technology with AI-powered solutions for workplace safety.",
-      expertise: ["Technology Innovation", "AI Solutions", "Digital Transformation"],
-      stats: "24/7 Support System"
-    }
-  ];
 
   return (
     <section className="py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-gray-50/50 to-white relative overflow-hidden">

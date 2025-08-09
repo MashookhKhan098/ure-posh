@@ -31,11 +31,13 @@ import {
   Target,
   Zap,
   Hash,
-  MessageSquare
+  MessageSquare,
+  LogOut
 } from 'lucide-react';
 import CreateWriterForm from './components/CreateWriterForm';
 import NotificationToast from './components/NotificationToast';
 import WriterManagement from './components/WriterManagement';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 interface Writer {
   id: string;
@@ -68,6 +70,7 @@ interface PerformanceMetrics {
 }
 
 export default function AdminDashboard() {
+  const { user, logout } = useAdminAuth();
   const [activeTab, setActiveTab] = useState('writers');
   const [writers, setWriters] = useState<Writer[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -282,6 +285,9 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 text-sm text-slate-600">
+              <span>Welcome, {user?.username || 'Admin'}</span>
+            </div>
             <Button variant="outline" size="sm" className="bg-white/50 backdrop-blur-sm">
               <Bell className="w-4 h-4 mr-2" />
               Notifications
@@ -289,6 +295,15 @@ export default function AdminDashboard() {
             <Button variant="outline" size="sm" className="bg-white/50 backdrop-blur-sm">
               <Settings className="w-4 h-4 mr-2" />
               Settings
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={logout}
+              className="bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
             </Button>
           </div>
         </div>

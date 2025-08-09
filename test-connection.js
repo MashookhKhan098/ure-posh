@@ -1,66 +1,74 @@
-const { DynamoDBClient, ListTablesCommand } = require("@aws-sdk/client-dynamodb");
-const { S3Client, ListBucketsCommand } = require("@aws-sdk/client-s3");
-
+const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config({ path: '.env.local' });
 
-async function testAWSConnection() {
-  console.log('🔍 Testing AWS Connection...\n');
-
-  // Test DynamoDB
+async function testConnection() {
   try {
-    const ddbClient = new DynamoDBClient({ 
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      }
-    });
-
-    const tables = await ddbClient.send(new ListTablesCommand({}));
-    console.log('✅ DynamoDB Connection Successful!');
-    console.log('📋 Available Tables:', tables.TableNames);
+    console.log('🔍 Testing Supabase connection...');
     
-    if (tables.TableNames.includes(process.env.AWS_POSTS_TABLE)) {
-      console.log(`✅ Posts table "${process.env.AWS_POSTS_TABLE}" exists`);
-    } else {
-      console.log(`❌ Posts table "${process.env.AWS_POSTS_TABLE}" not found`);
-    }
-  } catch (error) {
-    console.log('❌ DynamoDB Connection Failed:', error.message);
-  }
-
-  console.log('\n' + '='.repeat(50) + '\n');
-
-  // Test S3
-  try {
-    const s3Client = new S3Client({ 
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      }
-    });
-
-    const buckets = await s3Client.send(new ListBucketsCommand({}));
-    console.log('✅ S3 Connection Successful!');
-    console.log('📦 Available Buckets:', buckets.Buckets.map(b => b.Name));
+    // Check environment variables
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
-    if (buckets.Buckets.some(b => b.Name === process.env.AWS_S3_BUCKET)) {
-      console.log(`✅ S3 bucket "${process.env.AWS_S3_BUCKET}" exists`);
-    } else {
-      console.log(`❌ S3 bucket "${process.env.AWS_S3_BUCKET}" not found`);
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('❌ Missing Supabase credentials in .env.local');
+      console.log('Please update your .env.local file with:');
+      console.log('- NEXT_PUBLIC_SUPABASE_URL');
+      console.log('- SUPABASE_SERVICE_ROLE_KEY');
+      return;
     }
+    
+    console.log('✅ Environment variables found');
+    
+    // Create Supabase client
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    
+    // Test admin table
+    console.log('\n🔍 Testing admin table...');
+    const { data: adminData, error: adminError } = await supabase
+      .from('admin')
+      .select('*')
+      .limit(1);
+    
+    if (adminError) {
+      console.error('❌ Admin table error:', adminError.message);
+    } else {
+      console.log('✅ Admin table connected');
+      console.log('   Found', adminData?.length || 0, 'admin users');
+    }
+    
+    // Test writer_profiles table
+    console.log('\n🔍 Testing writer_profiles table...');
+    const { data: writerData, error: writerError } = await supabase
+      .from('writer_profiles')
+      .select('*')
+      .limit(1);
+    
+    if (writerError) {
+      console.error('❌ Writer profiles table error:', writerError.message);
+    } else {
+      console.log('✅ Writer profiles table connected');
+      console.log('   Found', writerData?.length || 0, 'writer profiles');
+    }
+    
+    // Test posts table
+    console.log('\n🔍 Testing posts table...');
+    const { data: postsData, error: postsError } = await supabase
+      .from('posts')
+      .select('*')
+      .limit(1);
+    
+    if (postsError) {
+      console.error('❌ Posts table error:', postsError.message);
+    } else {
+      console.log('✅ Posts table connected');
+      console.log('   Found', postsData?.length || 0, 'posts');
+    }
+    
+    console.log('\n🎉 Database connection test completed!');
+    
   } catch (error) {
-    console.log('❌ S3 Connection Failed:', error.message);
+    console.error('❌ Connection test failed:', error.message);
   }
-
-  console.log('\n' + '='.repeat(50) + '\n');
-  console.log('📝 Environment Variables Check:');
-  console.log('AWS_REGION:', process.env.AWS_REGION || '❌ Not set');
-  console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID ? '✅ Set' : '❌ Not set');
-  console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY ? '✅ Set' : '❌ Not set');
-  console.log('AWS_POSTS_TABLE:', process.env.AWS_POSTS_TABLE || '❌ Not set');
-  console.log('AWS_S3_BUCKET:', process.env.AWS_S3_BUCKET || '❌ Not set');
 }
 
-testAWSConnection().catch(console.error);
+testConnection(); 

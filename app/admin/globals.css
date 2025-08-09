@@ -1,0 +1,18 @@
+/* Admin-specific styles to ensure no footer is shown */
+.admin-page footer,
+.admin-page .footer,
+[data-admin-page="true"] footer,
+[data-admin-page="true"] .footer {
+  display: none !important;
+}
+
+/* Ensure admin pages take full height */
+.admin-page {
+  min-height: 100vh;
+}
+
+/* Hide any footer elements that might be rendered */
+body:has([data-admin-page="true"]) footer,
+body:has([data-admin-page="true"]) .footer {
+  display: none !important;
+} 

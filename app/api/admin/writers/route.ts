@@ -1,59 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import bcrypt from 'bcryptjs';
 
 export async function GET(req: NextRequest) {
   try {
     const supabase = createAdminClient();
 
-    // Get all posts to extract writer information
-    const { data: posts, error } = await supabase
-      .from('posts')
-      .select('author, created_at')
+    const { data: writerProfiles, error } = await supabase
+      .from('writer_profiles')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching posts:', error);
-      return NextResponse.json(
-        { error: 'Database error' },
-        { status: 500 }
-      );
+      console.error('Error fetching writer_profiles:', error);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
-    // Extract unique authors from posts
-    const uniqueAuthors = [...new Set(posts?.map(p => p.author).filter(Boolean) || [])];
-    
-    // Create writer profiles from posts data
-    const writers = uniqueAuthors.map(author => {
-      const authorPosts = posts?.filter(p => p.author === author) || [];
-      const firstPost = authorPosts[0];
-      const lastPost = authorPosts[authorPosts.length - 1];
-      
-      return {
-        writer_id: author, // Use author name as ID
-        username: author.toLowerCase().replace(/\s+/g, '_'),
-        email: `${author.toLowerCase().replace(/\s+/g, '.')}@example.com`,
-        full_name: author,
-        specialization: 'General',
-        experience_level: 'Intermediate',
-        is_verified: true,
-        is_active: true,
-        created_at: firstPost?.created_at || new Date().toISOString(),
-        updated_at: lastPost?.created_at || new Date().toISOString(),
-        posts_count: authorPosts.length
-      };
-    });
-
     return NextResponse.json({
-      users: [], // No users table exists
-      writerProfiles: writers
+      users: [],
+      writerProfiles: writerProfiles || [],
     });
-
   } catch (error) {
     console.error('Writers API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -78,37 +47,68 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Basic email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
+    }
+
+    // Username fallback and normalization
+    const normalizedUsername = (username && String(username).trim()) || String(name).toLowerCase().replace(/[^a-z0-9_]/g, '_');
+
+    // Password minimum length
+    if (String(password).length < 6) {
+      return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 });
+    }
+
     const supabase = createAdminClient();
 
-    // Since we don't have a users table, we'll just return success
-    // The actual writer creation would happen when they create their first post
-    const mockUser = {
-      id: name.toLowerCase().replace(/\s+/g, '_'),
-      name,
-      email,
-      role,
-      created_at: new Date().toISOString()
+    // Ensure unique username/email
+    const [{ data: existingByUsername }, { data: existingByEmail }] = await Promise.all([
+      supabase.from('writer_profiles').select('writer_id').eq('username', normalizedUsername).maybeSingle(),
+      supabase.from('writer_profiles').select('writer_id').eq('email', email.toLowerCase()).maybeSingle(),
+    ]);
+
+    if (existingByUsername) {
+      return NextResponse.json({ error: 'Username already exists' }, { status: 409 });
+    }
+    if (existingByEmail) {
+      return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
+    }
+
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Insert writer profile
+    const insertPayload: any = {
+      username: normalizedUsername,
+      email: email.toLowerCase(),
+      password_hash: passwordHash,
+      full_name: fullName || name,
+      expertise: specialization || 'General',
+      experience_level: experienceLevel || 'Beginner',
+      is_active: true,
+      is_verified: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
-    const mockWriterProfile = {
-      writer_id: mockUser.id,
-      username: username || name.toLowerCase().replace(/\s+/g, '_'),
-      email,
-      full_name: fullName || name,
-      specialization: specialization || 'General',
-      experience_level: experienceLevel || 'Beginner',
-      is_verified: true,
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+    const { data: createdProfile, error: insertError } = await supabase
+      .from('writer_profiles')
+      .insert(insertPayload)
+      .select('*')
+      .single();
+
+    if (insertError) {
+      console.error('Insert writer_profile error:', insertError);
+      return NextResponse.json({ error: 'Failed to create writer' }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
-      user: mockUser,
-      writerProfile: mockWriterProfile,
-      message: 'Writer profile created successfully (mock - no users table exists)'
-    });
+      writerProfile: createdProfile,
+      message: 'Writer profile created successfully',
+    }, { status: 201 });
 
   } catch (error) {
     console.error('Create writer API error:', error);

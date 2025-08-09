@@ -1,10 +1,12 @@
 "use client";
 
+import React from 'react';
 import { motion } from "framer-motion";
-import { Shield, Users, Award, Heart, CheckCircle, Star, TrendingUp, Target } from "lucide-react";
-import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Users, Shield, Lightbulb, Target, Sparkles, TrendingUp, Award, Star } from "lucide-react";
 
-const ImpactSection = () => {
+const ImpactSection: React.FC = () => {
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     animate: { opacity: 1, y: 0 },
@@ -15,142 +17,192 @@ const ImpactSection = () => {
     initial: {},
     animate: {
       transition: {
-        staggerChildren: 0.2
+        staggerChildren: 0.15
       }
     }
   };
 
-  const impactCards = [
+  const slideInLeft = {
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  };
+
+  const slideInRight = {
+    initial: { opacity: 0, x: 100 },
+    animate: { opacity: 1, x: 0 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  };
+
+  const coreValues = [
     {
-      title: "Expert Team",
-      description: "Legal professionals, certified trainers, and compliance experts with 15+ years average experience",
+      title: "Inclusion as Foundation",
+      description: "We approach every partnership understanding that inclusion isn't optional—it's the cornerstone of thriving organizations.",
       icon: Users,
-      color: "from-blue-500 to-blue-600",
-      stats: "15+ Years Experience"
-    },
-    {
-      title: "Comprehensive Solutions",
-      description: "End-to-end services from policy development to ongoing support and continuous improvement",
-      icon: CheckCircle,
-      color: "from-green-500 to-green-600",
-      stats: "500+ Organizations"
-    },
-    {
-      title: "Cultural Sensitivity",
-      description: "Deep understanding of Indian workplace culture with solutions adapted for regional diversity",
-      icon: Heart,
       color: "from-pink-500 to-pink-600",
-      stats: "15+ Languages"
+      stats: "98% satisfaction rate"
     },
     {
-      title: "Proven Results",
-      description: "Track record of successful POSH implementations and workplace culture transformations",
+      title: "Safety Without Compromise",
+      description: "Every workplace should be a sanctuary of respect and dignity. We cultivate cultures where safety is lived, not just documented.",
+      icon: Shield,
+      color: "from-pink-500 to-pink-600",
+      stats: "Zero tolerance success"
+    },
+    {
+      title: "Innovation in Tradition",
+      description: "We revolutionize compliance by making it meaningful, engaging, and transformative. Traditional training becomes immersive experiences.",
+      icon: Lightbulb,
+      color: "from-pink-500 to-pink-600",
+      stats: "300% engagement increase"
+    },
+    {
+      title: "Diversity as Power",
+      description: "We honor the full spectrum of human experience and identity. True strength comes from authentic diversity across all dimensions.",
+      icon: Sparkles,
+      color: "from-pink-500 to-pink-600",
+      stats: "40+ identity dimensions"
+    },
+    {
+      title: "Impact Over Activity",
+      description: "We measure success not by hours trained or policies created, but by cultural transformation and sustained behavioral change.",
+      icon: Target,
+      color: "from-pink-500 to-pink-600",
+      stats: "85% culture transformation"
+    },
+  ];
+
+  const achievements = [
+    {
       icon: Award,
-      color: "from-purple-500 to-purple-600",
-      stats: "99% Success Rate"
+      number: "500+",
+      label: "Organizations Transformed",
+      description: "From startups to Fortune 500 companies"
+    },
+    {
+      icon: Users,
+      number: "75,000+",
+      label: "Professionals Trained",
+      description: "Creating safer workplaces"
+    },
+    {
+      icon: Star,
+      number: "99.2%",
+      label: "Client Satisfaction",
+      description: "Consistently exceeding expectations"
+    },
+    {
+      icon: Shield,
+      number: "24/7",
+      label: "Expert Support",
+      description: "Always available when you need us"
     }
   ];
 
-  const renderCard = (card: any, index: number) => {
-    const IconComponent = card.icon;
-    const positionClasses = [
-      "lg:col-start-1 lg:row-start-1", // Position 1
-      "lg:col-start-3 lg:row-start-1", // Position 3
-      "lg:col-start-1 lg:row-start-3", // Position 7
-      "lg:col-start-3 lg:row-start-3"  // Position 9
-    ];
-    
-    return (
-      <motion.div 
-        key={index}
-        variants={fadeInUp}
-        className={positionClasses[index]}
-      >
-        <div className={`bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-l-4 ${card.color.split(' ')[1]} border-l-4 max-w-sm`}>
-          <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${card.color} flex items-center justify-center mb-3`}>
-            <IconComponent className="w-5 h-5 text-white" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">{card.title}</h3>
-          <p className="text-sm text-gray-600 mb-2">{card.description}</p>
-          <div className={`text-xs font-semibold ${index === 0 ? 'text-blue-600' : index === 1 ? 'text-green-600' : index === 2 ? 'text-pink-600' : 'text-purple-600'}`}>
-            {card.stats}
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
-
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-white to-slate-50 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-br from-pink-100/40 to-blue-100/40 rounded-full blur-3xl" />
+    <section className="py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-gray-50/50 to-pink-50/30 relative overflow-hidden">
+      {/* Enhanced Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-32 w-64 h-64 bg-gradient-to-br from-pink-100/40 to-pink-200/30 rounded-full blur-2xl animate-pulse" />
+        <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-br from-pink-200/40 to-pink-100/30 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-pink-50/20 to-pink-100/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-1/3 w-32 h-32 bg-gradient-to-br from-pink-100/30 to-pink-200/20 rounded-full blur-xl animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
-      
+
       <div className="max-w-7xl mx-auto relative">
+        {/* Enhanced Section Header */}
         <motion.div
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="relative"
+          className="text-center space-y-8 mb-20"
         >
-          {/* 3x3 Grid Layout with Logo in Center */}
-          <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 max-w-3xl mx-auto">
-            {/* Card 1 - Position 1 */}
-            <motion.div variants={fadeInUp}>
-              {renderCard(impactCards[0], 0)}
-            </motion.div>
-            
-            {/* Empty space - Position 2 */}
-            <div className="hidden lg:block"></div>
-            
-            {/* Card 2 - Position 3 */}
-            <motion.div variants={fadeInUp}>
-              {renderCard(impactCards[1], 1)}
-            </motion.div>
-            
-            {/* Empty space - Position 4 */}
-            <div className="hidden lg:block"></div>
-            
-            {/* Central Logo - Position 5 */}
-            <motion.div 
+          <motion.div variants={slideInLeft}>
+            <Badge className="bg-gradient-to-r from-pink-100 to-pink-200 text-pink-800 px-6 py-3 text-sm font-semibold rounded-full shadow-lg border border-pink-200">
+              <TrendingUp className="w-5 h-5 mr-2" />
+              Our Impact
+            </Badge>
+          </motion.div>
+          <motion.h2 
+            variants={slideInRight}
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-black leading-tight"
+          >
+            Our Impact & Values
+          </motion.h2>
+          <motion.p 
+            variants={fadeInUp}
+            className="text-2xl text-gray-600 max-w-5xl mx-auto leading-relaxed font-light"
+          >
+            These fundamental principles guide our approach to workplace transformation and compliance excellence.
+          </motion.p>
+        </motion.div>
+
+        {/* Enhanced Core Values Grid */}
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mb-24"
+        >
+          {coreValues.map((value, index) => {
+            const Icon = value.icon;
+            return (
+              <motion.div key={index} variants={fadeInUp} className="group relative">
+                <Card className="border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 bg-white/90 backdrop-blur-sm overflow-hidden">
+                  <CardContent className="p-10">
+                    {/* Enhanced Icon */}
+                    <div className="flex items-center gap-6 mb-8">
+                      <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${value.color} flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-black group-hover:text-gray-700 transition-colors duration-300">
+                        {value.title}
+                      </h3>
+                    </div>
+                    {/* Enhanced Description */}
+                    <p className="text-gray-700 leading-relaxed text-base font-light mb-6">
+                      {value.description}
+                    </p>
+                    {/* Stats */}
+                    <div className="pt-4 border-t border-gray-100">
+                      <div className="text-sm font-semibold text-pink-600">
+                        {value.stats}
+                      </div>
+                    </div>
+                  </CardContent>
+                  {/* Enhanced Hover Effect Border */}
+                  <motion.div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${value.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none`} />
+                </Card>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Enhanced Achievements Grid */}
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="grid grid-cols-2 md:grid-cols-4 gap-8"
+        >
+          {achievements.map((achievement, index) => (
+            <motion.div
+              key={index}
               variants={fadeInUp}
-              className="flex items-center justify-center"
+              whileHover={{ y: -10, scale: 1.05 }}
+              className="text-center p-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-500"
             >
-              <div className="relative">
-                              <Image 
-                src="/images/ureph.svg" 
-                alt="UREPOSH Logo" 
-                width={500} 
-                height={200} 
-                className="h-40 w-auto opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-105"
-                priority
-              />
-                {/* Glow effect around logo */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-full blur-xl scale-110 -z-10"></div>
+              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                <achievement.icon className="w-8 h-8 text-white" />
               </div>
+              <div className="text-3xl md:text-4xl font-bold text-pink-600 mb-3">{achievement.number}</div>
+              <div className="text-lg font-semibold text-black mb-2">{achievement.label}</div>
+              <div className="text-sm text-gray-500 font-light">{achievement.description}</div>
             </motion.div>
-            
-            {/* Empty space - Position 6 */}
-            <div className="hidden lg:block"></div>
-            
-            {/* Card 3 - Position 7 */}
-            <motion.div variants={fadeInUp}>
-              {renderCard(impactCards[2], 2)}
-            </motion.div>
-            
-            {/* Empty space - Position 8 */}
-            <div className="hidden lg:block"></div>
-            
-            {/* Card 4 - Position 9 */}
-            <motion.div variants={fadeInUp}>
-              {renderCard(impactCards[3], 3)}
-            </motion.div>
-          </div>
-
-
+          ))}
         </motion.div>
       </div>
     </section>

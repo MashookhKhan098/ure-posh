@@ -26,6 +26,36 @@ import {
 } from 'lucide-react'
 
 export default function PostsList() {
+  const [revertModalOpen, setRevertModalOpen] = useState(false);
+  const [revertTarget, setRevertTarget] = useState<Post | null>(null);
+  const [revertMessage, setRevertMessage] = useState('');
+  const [revertLoading, setRevertLoading] = useState(false);
+
+  const handleRevert = async () => {
+    if (!revertTarget) return;
+    setRevertLoading(true);
+    try {
+      const response = await fetch(`/api/posts/${revertTarget.id}/revert`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: revertMessage })
+      });
+      if (response.ok) {
+        setRevertModalOpen(false);
+        setRevertTarget(null);
+        setRevertMessage('');
+        fetchPosts();
+        setNotification({ type: 'success', message: 'Post reverted to writer.' });
+      } else {
+        setNotification({ type: 'error', message: 'Failed to revert post.' });
+      }
+    } catch (error) {
+      setNotification({ type: 'error', message: 'Network error.' });
+    } finally {
+      setRevertLoading(false);
+    }
+  };
+
   const [posts, setPosts] = useState<Post[]>([])
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
@@ -34,6 +64,7 @@ export default function PostsList() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [sortBy, setSortBy] = useState('date')
+  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Expose refresh function to parent component
   const refreshPosts = () => {
@@ -137,45 +168,46 @@ export default function PostsList() {
   }
 
   const handleDelete = async (slug: string) => {
+    if (!window.confirm('Are you sure you want to permanently delete this post? This cannot be undone.')) return;
     try {
       const response = await fetch(`/api/posts/${slug}`, {
-        method: 'DELETE'
-      })
-
+        method: 'DELETE',
+      });
       if (response.ok) {
-        setPosts(posts.filter(post => post.slug !== slug))
+        fetchPosts();
+        setNotification({ type: 'success', message: 'Post deleted successfully.' });
       } else {
-        console.error('Failed to delete post')
+        setNotification({ type: 'error', message: 'Failed to delete post.' });
       }
     } catch (error) {
-      console.error('Error deleting post:', error)
+      setNotification({ type: 'error', message: 'Error deleting post.' });
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      published: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      draft: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
-      archived: { color: 'bg-gray-100 text-gray-800', icon: AlertCircle }
-    }
-
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft
-    const Icon = config.icon
-
+    const statusConfig: Record<string, { color: string; icon: any; label: string }> = {
+      published: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Published' },
+      draft: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle, label: 'Draft' },
+      archived: { color: 'bg-gray-100 text-gray-800', icon: AlertCircle, label: 'Archived' },
+      reverted: { color: 'bg-orange-100 text-orange-800', icon: PenTool, label: 'Reverted' },
+      pending: { color: 'bg-blue-100 text-blue-800', icon: Clock, label: 'Pending' }
+    };
+    const config = statusConfig[status] || statusConfig.draft;
+    const Icon = config.icon;
     return (
       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
         <Icon className="w-3 h-3 mr-1" />
-        {status}
+        {config.label}
       </span>
-    )
-  }
+    );
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -184,7 +216,7 @@ export default function PostsList() {
         <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-4" />
         <p className="text-red-600">{error}</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -314,15 +346,48 @@ export default function PostsList() {
                         </div>
                       )}
                     </div>
-
                     <div className="flex items-center space-x-2">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <DeleteButton slug={post.slug} onDelete={() => handleDelete(post.slug)} />
+                      {/* Approve Button */}
+                      {post.status === 'pending' && (
+                        <button
+                          className="px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600 text-xs"
+                          onClick={async () => {
+                            if (!window.confirm('Approve this post for publishing?')) return;
+                            try {
+                              const response = await fetch(`/api/posts/${post.id}/approve`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ action: 'approve' })
+                              });
+                              if (response.ok) {
+                                fetchPosts();
+                                setNotification({ type: 'success', message: 'Post approved and published.' });
+                              } else {
+                                setNotification({ type: 'error', message: 'Failed to approve post.' });
+                              }
+                            } catch {
+                              setNotification({ type: 'error', message: 'Network error.' });
+                            }
+                          }}
+                        >Approve</button>
+                      )}
+
+                      {/* Revert Button */}
+                      {post.status === 'pending' && (
+                        <button
+                          className="px-3 py-1 rounded bg-yellow-500 text-white hover:bg-yellow-600 text-xs"
+                          onClick={() => {
+                            setRevertTarget(post);
+                            setRevertModalOpen(true);
+                          }}
+                        >Revert</button>
+                      )}
+
+                      {/* Delete Button */}
+                      <button
+                        className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 text-xs"
+                        onClick={() => handleDelete(post.slug)}
+                      >Delete</button>
                     </div>
                   </div>
                 </div>
@@ -338,6 +403,34 @@ export default function PostsList() {
           <p className="text-gray-500">No articles found</p>
         </div>
       )}
+      {/* Revert Modal */}
+      {revertModalOpen && revertTarget && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30">
+          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <h2 className="text-lg font-bold mb-4 text-gray-900">Revert Post: {revertTarget.title}</h2>
+            <textarea
+              className="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-yellow-500"
+              rows={4}
+              placeholder="Enter message for the writer..."
+              value={revertMessage}
+              onChange={e => setRevertMessage(e.target.value)}
+              disabled={revertLoading}
+            />
+            <div className="flex justify-end space-x-2">
+              <button
+                className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                onClick={() => { setRevertModalOpen(false); setRevertTarget(null); setRevertMessage(''); }}
+                disabled={revertLoading}
+              >Cancel</button>
+              <button
+                className="px-4 py-2 rounded bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-60"
+                onClick={handleRevert}
+                disabled={revertLoading || !revertMessage.trim()}
+              >{revertLoading ? 'Reverting...' : 'Send Revert'}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }

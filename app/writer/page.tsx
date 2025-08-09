@@ -45,8 +45,7 @@ import {
   Image,
   Tag,
   User,
-  CheckCircle,
-  AlertCircle
+  CheckCircle
 } from 'lucide-react'
 import CreatePostForm from './components/CreatePostForm'
 import PostsList from './components/PostsList'
@@ -85,11 +84,9 @@ export default function WriterPage() {
   // Check if user is already authenticated
   useEffect(() => {
     if (!authLoading) {
-      if (!isAuthenticated) {
-        fetchWriterUsers()
-      } else {
+      if (isAuthenticated) {
         fetchStats()
-        fetchWriterUsers() // Also fetch writers when authenticated
+        fetchWriterUsers()
       }
     }
   }, [authLoading, isAuthenticated])
@@ -268,102 +265,6 @@ export default function WriterPage() {
             onClear={() => setLoginError(null)} 
           />
 
-          {/* Show available writer users */}
-          {adminUsers.length > 0 && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
-              <div className="flex items-center space-x-2 mb-4">
-                <Users className="h-5 w-5 text-blue-600" />
-                <p className="text-blue-700 text-sm font-semibold">Available Writer Accounts ({adminUsers.length})</p>
-              </div>
-              <div className="space-y-3">
-                {adminUsers.map((user, index) => (
-                  <div key={user.writer_id} className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-blue-100 hover:border-blue-200 transition-all duration-200 shadow-sm">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <div className="text-sm font-semibold text-gray-800">
-                            {user.username}
-                          </div>
-                          {user.is_verified && (
-                            <div className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                              ✓ Verified
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-xs text-gray-600 mb-1">
-                          {user.full_name || user.email}
-                        </div>
-                        <div className="flex items-center space-x-3 text-xs">
-                          <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-                            {user.specialization || 'General'}
-                          </span>
-                          <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">
-                            {user.experience_level || 'Intermediate'}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => {
-                          setUsername(user.username);
-                          setPassword(''); // Clear password when switching users
-                        }}
-                        className="text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1.5 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 font-medium"
-                      >
-                        Use Account
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 p-3 bg-blue-100 rounded-lg">
-                <div className="flex items-start space-x-2">
-                  <div className="text-blue-600 text-sm">💡</div>
-                  <div className="text-xs text-blue-700">
-                    <p className="font-medium mb-1">How to login:</p>
-                    <p>1. Click "Use Account" to auto-fill the username</p>
-                    <p>2. Enter your password (contact admin if you don't have one)</p>
-                    <p>3. Click "Sign In" to access your writer dashboard</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Writer Statistics */}
-          {adminUsers.length > 0 && (
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4">
-              <div className="flex items-center space-x-2 mb-3">
-                <BarChart3 className="h-4 w-4 text-green-600" />
-                <p className="text-green-700 text-sm font-semibold">Writer Community Stats</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="bg-white/60 rounded-lg p-2 text-center">
-                  <div className="text-lg font-bold text-green-700">{adminUsers.length}</div>
-                  <div className="text-green-600">Active Writers</div>
-                </div>
-                <div className="bg-white/60 rounded-lg p-2 text-center">
-                  <div className="text-lg font-bold text-green-700">
-                    {adminUsers.filter(u => u.is_verified).length}
-                  </div>
-                  <div className="text-green-600">Verified</div>
-                </div>
-                <div className="bg-white/60 rounded-lg p-2 text-center">
-                  <div className="text-lg font-bold text-green-700">
-                    {adminUsers.filter(u => u.experience_level === 'expert').length}
-                  </div>
-                  <div className="text-green-600">Experts</div>
-                </div>
-                <div className="bg-white/60 rounded-lg p-2 text-center">
-                  <div className="text-lg font-bold text-green-700">
-                    {adminUsers.filter(u => u.experience_level === 'beginner').length}
-                  </div>
-                  <div className="text-green-600">Beginners</div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Security notice */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
             <div className="flex items-center space-x-2 mb-2">
@@ -378,31 +279,7 @@ export default function WriterPage() {
             </div>
           </div>
 
-          {isLoadingUsers && (
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-pink-600 mx-auto mb-2"></div>
-              <p className="text-xs text-gray-500">Loading writer accounts...</p>
-            </div>
-          )}
-
-          {!isLoadingUsers && adminUsers.length === 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-              <div className="flex items-center space-x-2 mb-2">
-                <AlertCircle className="h-4 w-4 text-yellow-600" />
-                <p className="text-yellow-600 text-sm font-medium">No Writers Found</p>
-              </div>
-              <div className="text-xs text-yellow-700">
-                <p>No active writer accounts found in the database.</p>
-                <p className="mt-1">This could mean:</p>
-                <ul className="mt-1 ml-4 list-disc">
-                  <li>No writers have been created yet</li>
-                  <li>All writers are marked as inactive</li>
-                  <li>Database connection issues</li>
-                </ul>
-                <p className="mt-2">Check the browser console for detailed error messages.</p>
-              </div>
-            </div>
-          )}
+          {/* Removed writers list and stats on login page for privacy */}
 
           {/* Clear cache button for testing */}
           <div className="text-center">
