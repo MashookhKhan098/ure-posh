@@ -33,6 +33,8 @@ import {
   Briefcase,
   Calendar,
   Cog,
+  Search,
+  ChevronDown,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -570,8 +572,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        
 
         {/* Our Expertise Section */}
         <section id="expertise" className="relative pt-4 sm:pt-6 pb-8 sm:pb-12 lg:pb-16 flex items-center justify-center overflow-hidden bg-slate-900">
