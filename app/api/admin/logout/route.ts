@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+// Mark this route as dynamic since it uses request headers
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {

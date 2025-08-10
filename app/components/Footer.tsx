@@ -15,21 +15,7 @@ export default function Footer() {
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900/20 to-slate-900/20"></div>
       <div className="absolute inset-0 bg-[url('/placeholder.svg?height=400&width=1200')] bg-cover bg-center opacity-5"></div>
       
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <motion.div
-          animate={{ rotate: -360, scale: [1, 1.1, 1] }}
-          transition={{ duration: 40, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="absolute top-20 right-20 w-32 h-32 border border-blue-400/20 rounded-full"
-        ></motion.div>
-        <motion.div
-          animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-          transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="absolute bottom-20 left-20 w-24 h-24 border border-purple-400/20 rounded-full"
-        ></motion.div>
-        <div className="absolute top-1/3 left-1/3 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-60"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-3 h-3 bg-purple-400 rounded-full animate-pulse opacity-40"></div>
-      </div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Main Footer Content */}
@@ -140,19 +126,19 @@ export default function Footer() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="space-y-6 text-center"
+                className="space-y-6 text-left"
               >
-                <h3 className="font-bold text-xl text-white mb-6 border-b border-slate-700 pb-2 text-center">
+                <h3 className="font-bold text-xl text-white mb-6 border-b border-slate-700 pb-2 text-left">
                   {section.title}
                 </h3>
                 <ul className="space-y-4">
                   {section.links.map((link) => (
-                    <li key={link} className="text-center">
+                    <li key={link} className="text-left">
                       <Link
                         href="#"
-                        className="text-slate-400 hover:text-white transition-all duration-300 text-sm hover:translate-x-2 inline-block group text-center"
+                        className="text-slate-400 hover:text-white transition-all duration-300 text-sm hover:translate-x-2 inline-block group text-left"
                       >
-                        <span className="flex items-center space-x-2 justify-center">
+                        <span className="flex items-center space-x-2 justify-start">
                           <span>{link}</span>
                           <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </span>

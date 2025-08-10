@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { createAdminClient } from '@/utils/supabase/admin';
+import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const secretKey = new TextEncoder().encode(JWT_SECRET);
+
+// Mark this route as dynamic since it uses request headers
+export const dynamic = 'force-dynamic';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {

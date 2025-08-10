@@ -81,7 +81,6 @@ const expertiseSectorsCol2 = [
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isExpertiseOpen, setIsExpertiseOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<string>('gender-equality-compliance')
   const expertiseRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const [showNavbar, setShowNavbar] = useState(true)
@@ -107,7 +106,6 @@ export default function Navbar() {
         !(event.target as Element).closest(".expertise-dropdown-panel")
       ) {
         setIsExpertiseOpen(false)
-        setActiveTab('gender-equality-compliance') // Reset to first tab when closing
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -282,122 +280,41 @@ export default function Navbar() {
 
       {/* Render dropdown as a direct child of nav for extreme left alignment */}
       {isExpertiseOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.18 }}
-          className="expertise-dropdown-panel absolute left-0 right-0 top-full mt-1 bg-white shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto"
-        >
-          <div className="max-w-6xl mx-auto px-4 py-4">
-            {/* Tab Headings - Moved to Right */}
-            <div className="flex justify-end space-x-0.5 mb-4 border-b border-gray-200 pr-0">
+        <div className="absolute left-0 right-0 top-full mt-1 bg-white shadow-lg border border-gray-200 z-50">
+          <div className="px-6 py-4">
+            <div className="grid grid-cols-6 gap-1">
+              {/* Expertise Header Column */}
+              <div className="w-48 pr-3">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">Expertise</h2>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Advising and leading businesses and brands across an array of industries
+                </p>
+              </div>
+              
+              {/* 5 Expertise Category Columns */}
               {Object.entries(expertiseContent).map(([key, category], index) => (
-                <button
-                  key={key}
-                  onClick={() => setActiveTab(key)}
-                  className={`px-2 py-2 text-xs font-medium rounded-t-md transition-all duration-200 ${
-                    activeTab === key
-                      ? 'bg-pink-50 text-pink-700 border-b-2 border-pink-500'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  {category.title}
-                </button>
-              ))}
-            </div>
-            
-            {/* Tab Content */}
-            <div className="min-h-64">
-              {Object.entries(expertiseContent).map(([key, category]) => (
-                <div
-                  key={key}
-                  className={`${activeTab === key ? 'block' : 'hidden'}`}
-                >
-                  <div className="grid grid-cols-3 gap-6">
-                    {/* Left Text Section */}
-                    <div className="p-4 max-w-xs">
-                      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg p-4 border border-slate-200">
-                        <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center">
-                          <span className="w-2 h-2 bg-pink-500 rounded-full mr-2"></span>
-                          Expertise
-                        </h3>
-                        <p className="text-sm text-slate-600 leading-relaxed">
-                          Advising and leading businesses and brands across an array of industries
-                        </p>
+                <div key={key} className="border-r border-gray-100 last:border-r-0 pr-2 last:pr-0 w-44">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-3 pb-2 border-b border-gray-200">
+                    {category.title}
+                  </h3>
+                  <div className="space-y-1">
+                    {category.items.map((item, itemIdx) => (
+                      <div key={itemIdx}>
+                        <Link 
+                          href={`/services/${item.slug}`} 
+                          onClick={() => setIsExpertiseOpen(false)}
+                          className="text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 block py-1 px-2 rounded transition-colors duration-200"
+                        >
+                          {item.name}
+                        </Link>
                       </div>
-                      
-                      {/* Tab-related Thought Text */}
-                      <div className="mt-4 p-3 bg-white rounded-lg border border-gray-200">
-                        {activeTab === 'gender-equality-compliance' && (
-                          <p className="text-xs text-gray-700 italic leading-relaxed">
-                            "Equality is not a privilege, it's a fundamental right that creates workplaces where everyone can thrive."
-                          </p>
-                        )}
-                        {activeTab === 'disclosure-and-audit' && (
-                          <p className="text-xs text-gray-700 italic leading-relaxed">
-                            "Transparency builds trust, and trust is the foundation of every successful organization."
-                          </p>
-                        )}
-                        {activeTab === 'posh-adaptability-training' && (
-                          <p className="text-xs text-gray-700 italic leading-relaxed">
-                            "Knowledge empowers change. Training transforms workplaces into respectful environments."
-                          </p>
-                        )}
-                        {activeTab === 'organisation-well-being' && (
-                          <p className="text-xs text-gray-700 italic leading-relaxed">
-                            "A healthy workplace nurtures healthy minds, creating a culture of care and growth."
-                          </p>
-                        )}
-                        {activeTab === 'diversity-and-inclusion' && (
-                          <p className="text-xs text-gray-700 italic leading-relaxed">
-                            "Diversity is our strength. Inclusion is our commitment to making every voice heard."
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* Content Grid */}
-                    <div className="col-span-2">
-                      <div className="grid grid-cols-2 gap-4">
-                        {category.items.map((item, itemIdx) => (
-                          <div key={itemIdx} className="group">
-                            <Link 
-                              href={`/services/${item.slug}`} 
-                              className="block bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md hover:border-pink-200 transition-all duration-200"
-                              title={item.placeholder}
-                              onClick={() => setIsExpertiseOpen(false)}
-                            >
-                              <div className="flex items-start space-x-3">
-                                <div className="w-2 h-2 bg-pink-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="min-w-0 flex-1">
-                                  <h4 className="text-sm font-semibold text-gray-900 mb-2 group-hover:text-pink-700 transition-colors duration-200">
-                                    {item.name}
-                                  </h4>
-                                  <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">
-                                    {item.placeholder}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="mt-3 pt-2 border-t border-gray-100">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-pink-600 font-medium">Learn More</span>
-                                  <svg className="w-3 h-3 text-pink-500 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                  </svg>
-                                </div>
-                              </div>
-                            </Link>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Mobile Menu */}
