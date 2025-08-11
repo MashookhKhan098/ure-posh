@@ -92,19 +92,18 @@ const heroSlides = [
 
 const expertiseGears = [
     {
-        title: "Creative, Design & Content",
-        content: "Brand Identity\nDigital Content\nTraining Materials\nVisual Campaigns",
+        title: "Gender Equality Compliance",
+        content: "POSH Compliance Initiation\nExternal Members from Renowned NGO\nCompliant Redressal",
         color: "from-purple-500 to-pink-500",
         dots: [
             { color: "bg-black", position: { top: '15%', left: '25%' } },
             { color: "bg-black", position: { top: '25%', left: '80%' } },
             { color: "bg-black", position: { bottom: '25%', left: '15%' } },
-            { color: "bg-black", position: { bottom: '10%', left: '50%' } },
         ]
     },
     {
-        title: "Public Relations & Marketing",
-        content: "PR Strategy\nDigital Marketing\nCrisis Communication\nBrand Messaging",
+        title: "Disclosure and Audit",
+        content: "POSH & Workplace Harassment Compliance Reporting\nWorkplace Harassment & POSH Policy Disclosure\nPOSH & Workplace Harassment Audits",
         color: "from-blue-500 to-cyan-500",
         dots: [
             { color: "bg-black", position: { top: '25%', left: '25%' } },
@@ -113,37 +112,33 @@ const expertiseGears = [
         ]
     },
     {
-        title: "Strategy Planning & Reputation",
-        content: "Strategic Planning\nReputation Management\nPolicy Development\nRisk Assessment",
+        title: "POSH Adaptability Training",
+        content: "Respectful Workplace Training & Compliance\nTraining for Internal Committees & Workplace Panels\nQuarterly Mandatory Training\nManagers Level Training",
         color: "from-green-500 to-emerald-500",
         dots: [
             { color: "bg-black", position: { top: '15%', left: '65%' } },
             { color: "bg-black", position: { top: '35%', left: '20%' } },
             { color: "bg-black", position: { bottom: '35%', left: '55%' } },
             { color: "bg-black", position: { bottom: '40%', left: '20%' } },
-            { color: "bg-black", position: { bottom: '15%', left: '50%' } },
         ]
     },
     {
-        title: "Transaction & Transformation",
-        content: "Change Management\nProcess Optimization\nCultural Transformation\nImplementation Support",
+        title: "Organisation Well-being",
+        content: "Well Being Programmes\nCode of Conduct Training\nMental Health Training & Counselling",
         color: "from-orange-500 to-red-500",
         dots: [
             { color: "bg-black", position: { top: '20%', left: '70%' } },
             { color: "bg-black", position: { bottom: '50%', left: '75%' } },
             { color: "bg-black", position: { bottom: '30%', left: '40%' } },
-            { color: "bg-black", position: { bottom: '20%', left: '60%' } },
         ]
     },
     {
-        title: "Legal & Compliance",
-        content: "Legal Advisory\nCompliance Training\nPolicy Development\nRisk Management",
+        title: "Diversity and Inclusion",
+        content: "Diversity at Work Place\nLGBTQIA++ Inclusion",
         color: "from-indigo-500 to-purple-500",
         dots: [
             { color: "bg-black", position: { top: '20%', left: '30%' } },
             { color: "bg-black", position: { top: '35%', left: '70%' } },
-            { color: "bg-black", position: { bottom: '25%', left: '25%' } },
-            { color: "bg-black", position: { bottom: '40%', left: '65%' } },
         ]
     }
 ];
@@ -573,107 +568,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* About Us (Added) */}
-        <section id="about" className="relative py-12 sm:py-14 lg:py-16 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-pink-50/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl">
-              <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-4 py-1.5 text-sm font-bold border border-white/60 shadow rounded-full">About Us</Badge>
-              <h2 className="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">Welcome to URE POSH</h2>
-              <p className="mt-4 text-slate-700 leading-relaxed">
-                Welcome to URE POSH – your trusted partner in fostering safe, inclusive, and harassment-free workplaces. We specialize in Prevention of Sexual Harassment (POSH) compliance, offering tailored solutions for businesses of all sizes. Our services help organizations create a culture of respect, equality, and safety, ensuring adherence to POSH regulations and empowering every individual to thrive in a secure environment.
-              </p>
-            </div>
-          </div>
-        </section>
 
-        {/* Mission & Vision (Added) */}
-        <section className="py-12 sm:py-14 lg:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-6 lg:gap-8 lg:grid-cols-2">
-              <div className="rounded-2xl border border-pink-100 bg-white p-6 sm:p-8 shadow-sm">
-                <h3 className="text-2xl font-bold text-slate-900">Mission</h3>
-                <p className="mt-4 text-slate-700 leading-relaxed">
-                  At URE POSH, our mission is to empower organizations with expert POSH compliance solutions that promote mutual respect and safety in the workplace. We provide training, policy development, and strategic guidance that not only meet legal requirements but also encourage an environment where dignity, inclusivity, and equality are at the forefront.
-                </p>
-                <p className="mt-4 text-slate-700 leading-relaxed">
-                  We are dedicated to supporting businesses in creating a workplace where everyone feels protected, valued, and free from harassment, discrimination, or bias.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6 sm:p-8 shadow-sm">
-                <h3 className="text-2xl font-bold text-slate-900">Vision</h3>
-                <p className="mt-4 text-slate-700 leading-relaxed">
-                  Our vision is to lead the way in POSH compliance, known for our commitment to advancing workplace equality, safety, and integrity. We aim to offer world-class training, customized solutions, and effective consultation services that help organizations maintain the highest standards of professionalism and respect.
-                </p>
-                <p className="mt-4 text-slate-700 leading-relaxed">
-                  We envision a future where every workplace is a safe space for all, where sexual harassment no longer exists, and where respect is the foundation of every workplace culture.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Values (Added) */}
-        <section className="py-12 sm:py-14 lg:py-16 bg-pink-50/60">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 className="text-3xl font-extrabold text-slate-900">Values</h3>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-xl border border-pink-100 bg-white p-6"><p className="font-semibold text-slate-900">Integrity</p><p className="mt-2 text-slate-700">Always doing what’s right.</p></div>
-              <div className="rounded-xl border border-pink-100 bg-white p-6"><p className="font-semibold text-slate-900">Respect</p><p className="mt-2 text-slate-700">Treating everyone with dignity.</p></div>
-              <div className="rounded-xl border border-pink-100 bg-white p-6"><p className="font-semibold text-slate-900">Inclusivity</p><p className="mt-2 text-slate-700">Embracing diversity and equality.</p></div>
-              <div className="rounded-xl border border-pink-100 bg-white p-6"><p className="font-semibold text-slate-900">Excellence</p><p className="mt-2 text-slate-700">Striving for the best.</p></div>
-              <div className="rounded-xl border border-pink-100 bg-white p-6"><p className="font-semibold text-slate-900">Empowerment</p><p className="mt-2 text-slate-700">Giving businesses the tools to succeed.</p></div>
-            </div>
-          </div>
-        </section>
-
-        {/* Approach: Six Foundational Pillars (Added) */}
-        <section className="py-12 sm:py-14 lg:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl">
-            <h3 className="text-3xl font-extrabold text-slate-900">Approach: Six Foundational Pillars</h3>
-            <p className="mt-3 text-slate-700">URE POSH’s work is guided by six foundational pillars—ensuring holistic support for organizations and individuals. These pillars shape our strategies and services, empowering workplaces at every level.</p>
-            </div>
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-2xl border border-pink-100 bg-white p-6"><div className="text-pink-600 font-bold">1</div><p className="mt-2 font-semibold text-slate-900">Workplace Education & Awareness</p><p className="mt-2 text-slate-700">Interactive gender sensitization workshops, e-learning modules, and policy orientation for all employees and leadership.</p></div>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6"><div className="text-pink-600 font-bold">2</div><p className="mt-2 font-semibold text-slate-900">Digital Compliance & Learning</p><p className="mt-2 text-slate-700">Technology-enabled compliance processes, digital policy handbooks, and access to online POSH training resources.</p></div>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6"><div className="text-pink-600 font-bold">3</div><p className="mt-2 font-semibold text-slate-900">Health, Well-being & Support</p><p className="mt-2 text-slate-700">Psychological counseling, mental wellness sessions, and safe reporting channels to support holistic well-being.</p></div>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6"><div className="text-pink-600 font-bold">4</div><p className="mt-2 font-semibold text-slate-900">Remedial Support & Interventions</p><p className="mt-2 text-slate-700">Targeted remediation, investigation, and support for individuals impacted by harassment, including conflict resolution and restorative practices.</p></div>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6"><div className="text-pink-600 font-bold">5</div><p className="mt-2 font-semibold text-slate-900">Legal & Regulatory Guidance</p><p className="mt-2 text-slate-700">Comprehensive legal advisory, Internal Committee constitution, and support in regulatory filings, audits, and impact assessment.</p></div>
-              <div className="rounded-2xl border border-pink-100 bg-white p-6"><div className="text-pink-600 font-bold">6</div><p className="mt-2 font-semibold text-slate-900">Career Growth & Empowerment</p><p className="mt-2 text-slate-700">Training for professional development, leadership programs, and access to resources for upskilling and career advancement.</p></div>
-            </div>
-          </div>
-        </section>
-
-        {/* Why Choose (Added) */}
-        <section className="py-12 sm:py-14 lg:py-16 bg-slate-900 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 className="text-3xl font-extrabold">Why Choose URE POSH?</h3>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-6"><p className="font-semibold text-pink-200">End-to-End Expertise</p><p className="mt-2 text-white/90">Legal, practical, and psychological support under one roof</p></div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-6"><p className="font-semibold text-pink-200">Global Best Practices</p><p className="mt-2 text-white/90">Alignment with international standards and Indian law</p></div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-6"><p className="font-semibold text-pink-200">Trusted by Industry Leaders</p><p className="mt-2 text-white/90">Serving Fortune 500s, SMEs, educational institutions, and NGOs</p></div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-6"><p className="font-semibold text-pink-200">Results-Driven Approach</p><p className="mt-2 text-white/90">Focus on real impact, not just paperwork</p></div>
-            </div>
-          </div>
-        </section>
-
-        {/* Empowering Workplace Rights CTA (Added) */}
-        <section className="py-12 sm:py-14 lg:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-8 items-center">
-            <div className="lg:col-span-2">
-              <h3 className="text-3xl font-extrabold text-slate-900">URE Posh – Empowering Workplace Rights</h3>
-              <p className="mt-4 text-slate-700 leading-relaxed">
-                URE Posh is specializing in Prevention of Sexual Harassment (POSH), gender sensitization, and workplace rights. We offer holistic solutions to protect employees, ensure regulatory compliance, and build a culture of respect. Our commitment is to make every organization a safe space for all.
-              </p>
-              <p className="mt-4 text-slate-700 leading-relaxed">Ready to transform your workplace? Contact URE POSH for a consultation or to schedule a training session.</p>
-            </div>
-            <div className="flex lg:justify-end">
-              <Link href="/contact">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl">Contact Us</Button>
-              </Link>
-            </div>
-          </div>
-        </section>
 
         {/* Our Expertise Section */}
         <section id="expertise" className="relative pt-4 sm:pt-6 pb-8 sm:pb-12 lg:pb-16 flex items-center justify-center overflow-hidden bg-slate-900">
@@ -870,6 +766,8 @@ export default function HomePage() {
             </motion.div>
           </div>
         </section>
+
+      
       </main>
       
     </div>
