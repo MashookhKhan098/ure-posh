@@ -93,7 +93,7 @@ const heroSlides = [
 const expertiseGears = [
     {
         title: "Gender Equality Compliance",
-        content: "POSH Compliance Initiation\nExternal Members from Renowned NGO\nCompliant Redressal",
+        content: "POSH Compliance\nExternal Members\nCompliant Redressal",
         color: "from-purple-500 to-pink-500",
         dots: [
             { color: "bg-black", position: { top: '15%', left: '25%' } },
@@ -103,7 +103,7 @@ const expertiseGears = [
     },
     {
         title: "Disclosure and Audit",
-        content: "POSH & Workplace Harassment Compliance Reporting\nWorkplace Harassment & POSH Policy Disclosure\nPOSH & Workplace Harassment Audits",
+        content: "POSH Reporting\nPolicy Disclosure\nCompliance Audits",
         color: "from-blue-500 to-cyan-500",
         dots: [
             { color: "bg-black", position: { top: '25%', left: '25%' } },
@@ -113,7 +113,7 @@ const expertiseGears = [
     },
     {
         title: "POSH Adaptability Training",
-        content: "Respectful Workplace Training & Compliance\nTraining for Internal Committees & Workplace Panels\nQuarterly Mandatory Training\nManagers Level Training",
+        content: "Respectful Workplace\nInternal Committees\nQuarterly Training",
         color: "from-green-500 to-emerald-500",
         dots: [
             { color: "bg-black", position: { top: '15%', left: '65%' } },
@@ -124,7 +124,7 @@ const expertiseGears = [
     },
     {
         title: "Organisation Well-being",
-        content: "Well Being Programmes\nCode of Conduct Training\nMental Health Training & Counselling",
+        content: "Well-being Programs\nCode of Conduct\nMental Health Support",
         color: "from-orange-500 to-red-500",
         dots: [
             { color: "bg-black", position: { top: '20%', left: '70%' } },
@@ -134,7 +134,7 @@ const expertiseGears = [
     },
     {
         title: "Diversity and Inclusion",
-        content: "Diversity at Work Place\nLGBTQIA++ Inclusion",
+        content: "Workplace Diversity\nLGBTQIA+ Inclusion\nInclusive Culture",
         color: "from-indigo-500 to-purple-500",
         dots: [
             { color: "bg-black", position: { top: '20%', left: '30%' } },
@@ -621,7 +621,7 @@ export default function HomePage() {
               className="max-w-7xl mx-auto"
             >
               {/* Top Row - 3 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-0.5 lg:gap-1 mb-1 sm:mb-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
                 {expertiseGears.slice(0, 3).map((gear, index) => (
                   <motion.div
                     key={index}
@@ -642,7 +642,7 @@ export default function HomePage() {
               </div>
               
               {/* Bottom Row - 2 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-0.5 lg:gap-1 max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 max-w-4xl mx-auto">
                 {expertiseGears.slice(3, 5).map((gear, index) => (
                   <motion.div
                     key={index + 3}
