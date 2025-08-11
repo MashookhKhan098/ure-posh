@@ -5,7 +5,7 @@ import { ArrowLeft, Phone, Mail, MapPin, CheckCircle, Users, Shield, TrendingUp,
 
 // Service content mapping with all services
 const serviceContent = {
-  // Gender Equality Compliance
+  // Equality Compliance
   "posh-compliance-initiation": {
     title: "POSH Compliance Initiation",
     description: "Establish comprehensive POSH compliance framework for your organization",
@@ -22,7 +22,7 @@ const serviceContent = {
       "Risk mitigation",
       "Professional reputation protection"
     ],
-    category: "Gender Equality Compliance",
+    category: "Equality Compliance",
     icon: Shield,
     color: "pink"
   },
@@ -42,7 +42,7 @@ const serviceContent = {
       "Credible outcomes",
       "Legal compliance"
     ],
-    category: "Gender Equality Compliance",
+    category: "Equality Compliance",
     icon: Users,
     color: "blue"
   },
@@ -62,7 +62,7 @@ const serviceContent = {
       "Employee satisfaction",
       "Legal compliance"
     ],
-    category: "Gender Equality Compliance",
+    category: "Equality Compliance",
     icon: CheckCircle,
     color: "green"
   },

@@ -78,8 +78,8 @@ export default function ConnectPage() {
                      <MessageCircle className="w-3 h-3 text-white" />
                    </div>
                    <div>
-                     <h2 className="text-sm font-bold">Send us a message</h2>
-                     <p className="text-pink-100 text-xs">We'll get back to you within 24 hours</p>
+              <h2 className="text-sm font-bold">Request for Proposal</h2>
+                      
                    </div>
                  </div>
                </div>
@@ -278,7 +278,7 @@ export default function ConnectPage() {
                       </div>
                      <div>
                        <h4 className="font-semibold text-gray-900 text-lg">Email</h4>
-                       <p className="text-gray-600 text-base">hello@ureposh.com</p>
+                        <p className="text-gray-600 text-base">ea@ureposh.com</p>
                      </div>
                    </motion.div>
 
@@ -291,7 +291,7 @@ export default function ConnectPage() {
                       </div>
                      <div>
                        <h4 className="font-semibold text-gray-900 text-lg">Phone</h4>
-                       <p className="text-gray-600 text-base">+91 98765 43210</p>
+                        <p className="text-gray-600 text-base">+91 99999 44807</p>
                      </div>
                    </motion.div>
 
@@ -304,21 +304,10 @@ export default function ConnectPage() {
                       </div>
                      <div>
                        <h4 className="font-semibold text-gray-900 text-lg">Office</h4>
-                       <p className="text-gray-600 text-base">Mumbai, Maharashtra, India</p>
+                        <p className="text-gray-600 text-base">C 84, Sector 2, Noida, 201301</p>
                      </div>
                    </motion.div>
-                   <motion.div
-                     whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-4 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-purple-200 transition-all duration-300"
-                   >
-                                           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
-                        <MapPin className="w-4 h-4 text-white" />
-                      </div>
-                     <div>
-                      <h4 className="font-semibold text-gray-900 text-lg">Response</h4>
-                       <p className="text-gray-600 text-base">Within 24 hours</p>
-                     </div>
-                   </motion.div>
+                   
 
                  </div>
                </div>

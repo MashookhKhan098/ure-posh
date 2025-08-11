@@ -167,7 +167,7 @@ export default function ContactPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -220,8 +220,8 @@ export default function ContactPage() {
                       <MessageSquare className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold">Send us a message</h2>
-                      <p className="text-gray-300">We'll get back to you within 24 hours</p>
+                      <h2 className="text-2xl font-bold">Request for Proposal</h2>
+                      <p className="text-gray-300">&nbsp;</p>
                     </div>
                   </div>
                 </div>
@@ -738,7 +738,7 @@ export default function ContactPage() {
               className="space-y-8"
             >
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Get in touch</h2>
+                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Get in touch</h2>
                 <p className="text-gray-600 mb-8 leading-relaxed">
                   Ready to transform your workplace culture? Our team of experts is here to help you create a safe, inclusive, and compliant environment.
                 </p>
@@ -754,7 +754,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">hello@ureposh.com</p>
+                    <p className="text-gray-600">ea@ureposh.com</p>
                   </div>
                 </motion.div>
 
@@ -767,7 +767,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-600">+91 98765 43210</p>
+                    <p className="text-gray-600">+91 99999 44807</p>
                   </div>
                 </motion.div>
 
@@ -780,7 +780,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Office</h3>
-                    <p className="text-gray-600">Mumbai, Maharashtra, India</p>
+                    <p className="text-gray-600">C 84, Sector 2, Noida, 201301</p>
                   </div>
                 </motion.div>
               </div>
@@ -823,13 +823,11 @@ export default function ContactPage() {
               </div>
 
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                   <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
                   <Calendar className="w-5 h-5 mr-2 text-green-600" />
-                  Quick Response
+                   Quick Response
                 </h3>
-                <p className="text-sm text-gray-600">
-                  We typically respond within 2-4 hours during business days. For urgent matters, please call us directly.
-                </p>
+                 <p className="text-sm text-gray-600">&nbsp;</p>
               </div>
             </motion.div>
           </div>

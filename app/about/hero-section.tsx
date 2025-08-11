@@ -181,7 +181,7 @@ const HeroSection: React.FC = () => {
             <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
               <span className="text-white text-xs sm:text-sm lg:text-lg font-bold">♀</span>
             </div>
-            <span className="text-xs sm:text-sm lg:text-base leading-tight">India's Leading POSH Compliance Partner</span>
+            <span className="text-xs sm:text-sm lg:text-base leading-tight">World's Leading POSH Partner</span>
           </Badge>
         </motion.div>
 

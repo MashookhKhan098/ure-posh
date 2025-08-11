@@ -22,7 +22,7 @@ const generateSlug = (text: string): string => {
 // Expertise content with proper slugs and placeholders
 const expertiseContent = {
   "gender-equality-compliance": {
-    title: "Gender Equality Compliance",
+    title: "Equality Compliance",
     items: [
       { name: "POSH Compliance Initiation", slug: "posh-compliance-initiation", placeholder: "Establish comprehensive POSH compliance framework" },
       { name: "External Members from Renowned NGO", slug: "external-members-renowned-ngo", placeholder: "Expert external committee members" },
@@ -38,7 +38,7 @@ const expertiseContent = {
     ]
   },
   "posh-adaptability-training": {
-    title: "POSH Adaptability and Training",
+    title: "POSH Adaptability",
     items: [
       { name: "Respectful Workplace Training & Compliance", slug: "respectful-workplace-training-compliance", placeholder: "Comprehensive workplace respect training" },
       { name: "Training for Internal Committees & Workplace Panels", slug: "compliance-training-internal-committees-workplace-panels", placeholder: "Specialized training for internal committees" },
@@ -214,7 +214,7 @@ export default function Navbar() {
         {/* CTA Button - Free Coffee */}
         <div className="hidden lg:flex items-center">
           <Button 
-            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 group"
+            className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-6 py-2 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 group"
             asChild
           >
             <Link href="/connect">
@@ -239,11 +239,11 @@ export default function Navbar() {
                   <path d="M7 5h10c.6 0 1 .4 1 1v9c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V6c0-.6.4-1 1-1z" fill="currentColor" opacity="0.7"/>
                 </svg>
                 
-                {/* Coffee Filling Animation */}
-                <div className="absolute bottom-1 left-1 right-1 bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm transition-all duration-700 ease-out group-hover:h-2.5 h-0 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm relative">
+                {/* Coffee Filling Animation (Pink) */}
+                <div className="absolute bottom-1 left-1 right-1 bg-gradient-to-t from-pink-700 via-pink-500 to-pink-400 rounded-sm transition-all duration-700 ease-out group-hover:h-2.5 h-0 overflow-hidden">
+                  <div className="w-full h-full bg-gradient-to-t from-pink-700 via-pink-500 to-pink-400 rounded-sm relative">
                     {/* Coffee Surface Effect */}
-                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-300 rounded-t-sm opacity-80"></div>
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-300 to-pink-200 rounded-t-sm opacity-80"></div>
                   </div>
                 </div>
                 
@@ -256,12 +256,12 @@ export default function Navbar() {
                   </div>
                 </div>
                 
-                {/* Coffee Aroma Lines */}
+                {/* Coffee Aroma Lines (Pink) */}
                 <div className="absolute -top-0.5 -left-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                  <div className="w-0.5 h-1 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '100ms'}}></div>
+                  <div className="w-0.5 h-1 bg-pink-300/40 rounded-full animate-pulse" style={{animationDelay: '100ms'}}></div>
                 </div>
                 <div className="absolute -top-0.5 -right-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                  <div className="w-0.5 h-1 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+                  <div className="w-0.5 h-1 bg-pink-300/40 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
                 </div>
               </div>
               Free Coffee
@@ -375,7 +375,7 @@ export default function Navbar() {
 
               <div className="pt-6 space-y-3">
                 <Button 
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-3 rounded-xl text-lg font-bold flex items-center justify-center gap-2 group"
+                  className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3 rounded-xl text-lg font-bold flex items-center justify-center gap-2 group"
                   asChild
                 >
                   <Link href="/connect" onClick={() => setIsMenuOpen(false)}>
@@ -400,11 +400,11 @@ export default function Navbar() {
                         <path d="M7 5h10c.6 0 1 .4 1 1v9c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V6c0-.6.4-1 1-1z" fill="currentColor" opacity="0.7"/>
                       </svg>
                       
-                      {/* Coffee Filling Animation */}
-                      <div className="absolute bottom-1.5 left-1.5 right-1.5 bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm transition-all duration-700 ease-out group-hover:h-3 h-0 overflow-hidden">
-                        <div className="w-full h-full bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-sm relative">
+                      {/* Coffee Filling Animation (Pink) */}
+                      <div className="absolute bottom-1.5 left-1.5 right-1.5 bg-gradient-to-t from-pink-700 via-pink-500 to-pink-400 rounded-sm transition-all duration-700 ease-out group-hover:h-3 h-0 overflow-hidden">
+                        <div className="w-full h-full bg-gradient-to-t from-pink-700 via-pink-500 to-pink-400 rounded-sm relative">
                           {/* Coffee Surface Effect */}
-                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-300 rounded-t-sm opacity-80"></div>
+                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-300 to-pink-200 rounded-t-sm opacity-80"></div>
                         </div>
                       </div>
                       
@@ -417,12 +417,12 @@ export default function Navbar() {
                         </div>
                       </div>
                       
-                      {/* Coffee Aroma Lines */}
+                      {/* Coffee Aroma Lines (Pink) */}
                       <div className="absolute -top-1 -left-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                        <div className="w-0.5 h-1.5 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '100ms'}}></div>
+                        <div className="w-0.5 h-1.5 bg-pink-300/40 rounded-full animate-pulse" style={{animationDelay: '100ms'}}></div>
                       </div>
                       <div className="absolute -top-1 -right-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                        <div className="w-0.5 h-1.5 bg-amber-400/40 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+                        <div className="w-0.5 h-1.5 bg-pink-300/40 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
                       </div>
                     </div>
                     Free Coffee
