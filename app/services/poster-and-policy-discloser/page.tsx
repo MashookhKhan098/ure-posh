@@ -13,6 +13,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
+// Temporarily disabled QRCode import to fix 500 error
+// import QRCode from 'qrcode'
 
 export default function PosterAndPolicyDiscloserPage() {
   const [cartItems, setCartItems] = useState<{id: number, quantity: number}[]>([])
@@ -24,6 +26,17 @@ export default function PosterAndPolicyDiscloserPage() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('')
   const [purchaseLoading, setPurchaseLoading] = useState(false)
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'processing' | 'completed' | 'failed'>('pending')
+  const [upiDetails, setUpiDetails] = useState({
+    upiId: '9871586017@pthdfc',
+    merchantName: 'Ureposh',
+    amount: 0,
+    transactionId: '',
+    qrCodeData: '',
+    qrCodeUrl: '/images/image.png'
+  })
+  const [showUpiPayment, setShowUpiPayment] = useState(false)
+  const [paymentTimer, setPaymentTimer] = useState(300) // 5 minutes
   const [customerDetails, setCustomerDetails] = useState({
     name: '',
     email: '',
@@ -296,19 +309,35 @@ export default function PosterAndPolicyDiscloserPage() {
   const handlePurchase = async () => {
     if (!selectedProduct) return
     
+    if (selectedPaymentMethod === 'upi') {
+      // Initialize UPI payment
+      const transactionId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      const amount = selectedProduct.price
+      const qrCodeData = `upi://pay?pa=${upiDetails.upiId}&pn=${upiDetails.merchantName}&am=${amount}&tn=${transactionId}&cu=INR`
+      
+      setUpiDetails(prev => ({
+        ...prev,
+        amount,
+        transactionId,
+        qrCodeData
+      }))
+      
+      setShowUpiPayment(true)
+      setShowPurchaseDialog(false)
+      startPaymentTimer()
+      return
+    }
+    
+    // For other payment methods, proceed with existing logic
     setPurchaseLoading(true)
     try {
-      // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000))
       
-      // Generate mock transaction details
       const transactionId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       const downloadUrl = `/api/posters/${selectedProduct.id}/download?order=${transactionId}`
       
-      // Add to downloads
       addToDownloads(selectedProduct, customerDetails)
       
-      // Set purchase result
       setPurchaseResult({
         transactionId,
         downloadUrl,
@@ -316,7 +345,6 @@ export default function PosterAndPolicyDiscloserPage() {
         customerDetails
       })
       
-      // Show success dialog
       setShowSuccessDialog(true)
       setShowPurchaseDialog(false)
       
@@ -326,6 +354,77 @@ export default function PosterAndPolicyDiscloserPage() {
     } finally {
       setPurchaseLoading(false)
     }
+  }
+
+  // UPI Payment Functions
+  const startPaymentTimer = () => {
+    setPaymentTimer(300) // 5 minutes
+    const interval = setInterval(() => {
+      setPaymentTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          setPaymentStatus('failed')
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }
+
+  const generateQRCode = async (data: string) => {
+    try {
+      // Return the static QR code image from public folder
+      return '/images/image.png'
+    } catch (error) {
+      console.error('QR code generation error:', error)
+      return '/images/image.png'
+    }
+  }
+
+  const verifyPayment = async () => {
+    setPaymentStatus('processing')
+    
+    try {
+      // Simulate payment verification
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      
+      // In real implementation, this would call your backend to verify payment
+      const isPaymentSuccessful = Math.random() > 0.3 // 70% success rate for demo
+      
+      if (isPaymentSuccessful) {
+        setPaymentStatus('completed')
+        
+        // Add to downloads
+        addToDownloads(selectedProduct!, customerDetails)
+        
+        // Set purchase result
+        setPurchaseResult({
+          transactionId: upiDetails.transactionId,
+          downloadUrl: `/api/posters/${selectedProduct!.id}/download?order=${upiDetails.transactionId}`,
+          product: selectedProduct,
+          customerDetails
+        })
+        
+        // Show success dialog after a delay
+        setTimeout(() => {
+          setShowUpiPayment(false)
+          setShowSuccessDialog(true)
+        }, 2000)
+        
+      } else {
+        setPaymentStatus('failed')
+      }
+    } catch (error) {
+      console.error('Payment verification error:', error)
+      setPaymentStatus('failed')
+    }
+  }
+
+  const cancelUpiPayment = () => {
+    setShowUpiPayment(false)
+    setPaymentStatus('pending')
+    setPaymentTimer(300)
+    setShowPurchaseDialog(true)
   }
 
   const renderStars = (rating: number) => {
@@ -414,7 +513,7 @@ export default function PosterAndPolicyDiscloserPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-12 pr-4 py-3 bg-white/10 border-white/20 text-white placeholder:text-white/70 rounded-xl text-lg focus:bg-white/20 focus:border-white/40 transition-all"
                   />
-            </div>
+                </div>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger className="w-full lg:w-48 bg-white/10 border-white/20 text-white rounded-xl py-3 text-lg">
                     <SelectValue placeholder="All Categories" />
@@ -427,12 +526,12 @@ export default function PosterAndPolicyDiscloserPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button 
+                <button 
                   className="w-full lg:w-auto bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-xl text-lg font-semibold transition-all"
                 >
                   <Search className="w-5 h-5 mr-2" />
                   Search Posters
-              </Button>
+                </button>
               </div>
             </div>
             
@@ -526,10 +625,10 @@ export default function PosterAndPolicyDiscloserPage() {
                   </Select>
                   <Dialog open={showCart} onOpenChange={setShowCart}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" size="lg" className="px-6">
+                        <button className="px-6">
                         <ShoppingCart className="w-5 h-5 mr-3" />
                         Cart ({getCartCount()})
-                      </Button>
+                      </button>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
@@ -562,28 +661,25 @@ export default function PosterAndPolicyDiscloserPage() {
                                   <h4 className="font-semibold">{product.name}</h4>
                                   <p className="text-sm text-gray-600">₹{product.price}</p>
                                   <div className="flex items-center gap-2 mt-2">
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
+                                    <button
+                                      className="px-6"
                                       onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
                                     >
                                       -
-                                    </Button>
+                                    </button>
                                     <span className="w-8 text-center">{item.quantity}</span>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
+                                    <button
+                                      className="px-6"
                                       onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
                                     >
                                       +
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="destructive"
+                                    </button>
+                                    <button
+                                      className="px-6"
                                       onClick={() => removeFromCart(item.id)}
                                     >
                                       <X className="w-4 h-4" />
-                                    </Button>
+                                    </button>
                                   </div>
                                 </div>
                                 <div className="text-right">
@@ -600,7 +696,7 @@ export default function PosterAndPolicyDiscloserPage() {
                               <p className="text-lg font-semibold">Total: ₹{getCartTotal()}</p>
                               <p className="text-sm text-gray-600">{getCartCount()} items</p>
                             </div>
-                            <Button 
+                            <button 
                               onClick={() => {
                                 setShowCart(false)
                                 setShowPurchaseDialog(true)
@@ -609,7 +705,7 @@ export default function PosterAndPolicyDiscloserPage() {
                             >
                               <CreditCard className="w-4 h-4 mr-2" />
                               Checkout
-                            </Button>
+                            </button>
                           </div>
                         </div>
                       )}
@@ -638,12 +734,12 @@ export default function PosterAndPolicyDiscloserPage() {
                       </Badge>
                     )}
                     <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button size="sm" variant="secondary" className="w-10 h-10 p-0 rounded-full shadow-lg">
+                      <button className="w-10 h-10 p-0 rounded-full shadow-lg">
                         <Heart className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="secondary" className="w-10 h-10 p-0 rounded-full shadow-lg">
+                      </button>
+                      <button className="w-10 h-10 p-0 rounded-full shadow-lg">
                         <Eye className="w-4 h-4" />
-                      </Button>
+                      </button>
                     </div>
                     {product.discount > 0 && (
                       <Badge className="absolute bottom-4 left-4 bg-red-500 text-white px-3 py-1 text-sm font-semibold shadow-lg">
@@ -723,24 +819,23 @@ export default function PosterAndPolicyDiscloserPage() {
                            </span>
                          </div>
                        ) : (
-                      <Button 
+                      <button 
                         onClick={() => addToCart(product.id)}
                            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                         disabled={!product.inStock}
                       >
                            <ShoppingCart className="w-4 h-4 mr-2" />
                         Add to Cart
-                      </Button>
+                      </button>
                        )}
-                      <Button 
+                      <button 
                          onClick={() => handleBuyNow(product)}
-                        variant="outline" 
                          className="px-6"
                         disabled={!product.inStock}
                       >
                          <Download className="w-4 h-4 mr-2" />
                         Buy Now
-                      </Button>
+                        </button>
                     </div>
                   </CardContent>
                 </Card>
@@ -773,12 +868,12 @@ export default function PosterAndPolicyDiscloserPage() {
                   <Download className="w-16 h-16 mx-auto text-gray-300 mb-4" />
                   <h3 className="text-2xl font-semibold text-gray-600 mb-2">No downloads yet</h3>
                   <p className="text-gray-500 mb-6">Purchase some posters to see them here</p>
-                  <Button 
+                  <button 
                     onClick={() => setActiveTab('browse')}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   >
                     Browse Posters
-                  </Button>
+                  </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -873,17 +968,16 @@ export default function PosterAndPolicyDiscloserPage() {
 
                           {/* Action Buttons */}
                           <div className="flex gap-3">
-                            <Button 
+                            <button 
                               onClick={() => window.open(poster.downloadUrl, '_blank')}
                               disabled={isExpired || poster.downloadCount >= poster.maxDownloads}
                               className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                             >
                               <Download className="w-4 h-4 mr-2" />
                               {isExpired ? 'Expired' : poster.downloadCount >= poster.maxDownloads ? 'Limit Reached' : 'Download'}
-                            </Button>
+                            </button>
                             
-                            <Button 
-                              variant="outline"
+                            <button 
                               className="px-4"
                               onClick={() => {
                                 // Copy download link to clipboard
@@ -892,7 +986,7 @@ export default function PosterAndPolicyDiscloserPage() {
                               }}
                             >
                               <Link className="w-4 h-4" href={poster.downloadUrl} />
-                            </Button>
+                              </button>
                           </div>
                         </CardContent>
                       </Card>
@@ -987,27 +1081,35 @@ export default function PosterAndPolicyDiscloserPage() {
               {/* Payment Method Selection */}
               <div className="space-y-4">
                 <h4 className="font-semibold">Payment Method</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[
-                    { id: 'card', label: 'Credit/Debit Card', icon: CreditCard },
-                    { id: 'wallet', label: 'Digital Wallet', icon: Wallet },
-                    { id: 'upi', label: 'UPI Payment', icon: Lock }
-                  ].map((method) => (
-                    <div
-                      key={method.id}
-                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                        selectedPaymentMethod === method.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                      onClick={() => setSelectedPaymentMethod(method.id)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <method.icon className="w-6 h-6 text-gray-600" />
-                        <span className="font-medium">{method.label}</span>
+                <div className="grid grid-cols-1 gap-4">
+                  <div
+                    className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
+                      selectedPaymentMethod === 'upi'
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setSelectedPaymentMethod('upi')}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center">
+                        <Lock className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-lg">UPI Payment</h5>
+                        <p className="text-gray-600">Pay securely using UPI apps like Google Pay, PhonePe, Paytm</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                            <Check className="w-3 h-3 mr-1" />
+                            Instant Payment
+                          </Badge>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                            <Shield className="w-3 h-3 mr-1" />
+                            Secure
+                          </Badge>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
 
@@ -1028,17 +1130,16 @@ export default function PosterAndPolicyDiscloserPage() {
 
               {/* Action Buttons */}
               <div className="flex gap-4 pt-4">
-                <Button
-                  variant="outline"
+                <button
                   onClick={() => setShowPurchaseDialog(false)}
                   className="flex-1"
                 >
                   Cancel
-                </Button>
-                <Button
+                </button>
+                <button
                   onClick={handlePurchase}
-                  disabled={purchaseLoading || !customerDetails.name || !customerDetails.email || !selectedPaymentMethod}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  disabled={purchaseLoading || !customerDetails.name || !customerDetails.email || selectedPaymentMethod !== 'upi'}
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800"
                 >
                   {purchaseLoading ? (
                     <>
@@ -1051,10 +1152,235 @@ export default function PosterAndPolicyDiscloserPage() {
                       Complete Purchase
                     </>
                   )}
-                </Button>
+                </button>
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* UPI Payment Dialog */}
+      <Dialog open={showUpiPayment} onOpenChange={setShowUpiPayment}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader className="text-center mb-6">
+            <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-3">
+              <Lock className="w-6 h-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-xl font-bold text-gray-900">UPI Payment</DialogTitle>
+            <DialogDescription className="text-base text-gray-600">
+              Complete your payment securely
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Side - QR Code */}
+            <div className="space-y-4">
+              {/* Payment Summary */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-100">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <CreditCard className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <span className="font-semibold text-gray-900">Amount: ₹{upiDetails.amount}</span>
+                  </div>
+                  <span className="text-xs text-gray-500 font-mono bg-white px-2 py-1 rounded">
+                    {upiDetails.transactionId.slice(-8)}
+                  </span>
+                </div>
+              </div>
+
+              {/* QR Code */}
+              <div className="text-center">
+                <div className="bg-white rounded-xl p-4 shadow-lg border-2 border-gray-100 inline-block">
+                  <img 
+                    src="/images/image.png" 
+                    alt="UPI QR Code"
+                    className="w-40 h-40 mx-auto object-contain"
+                  />
+                </div>
+                <p className="text-sm text-gray-600 mt-2 font-medium">📱 Scan with any UPI app</p>
+              </div>
+
+              {/* UPI ID */}
+              <div className="bg-blue-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-gray-600 mb-1">Pay to UPI ID:</p>
+                <p className="text-lg font-mono font-bold text-blue-700">
+                  {upiDetails.upiId}
+                </p>
+                <p className="text-xs text-gray-500">{upiDetails.merchantName}</p>
+              </div>
+            </div>
+
+            {/* Right Side - Text & Controls */}
+            <div className="space-y-4">
+              {/* Auto Payment Status */}
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 border border-green-200">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Zap className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-green-800">Auto Payment Detection</h3>
+                    <p className="text-sm text-green-600">We'll automatically detect your payment</p>
+                  </div>
+                </div>
+                
+                {paymentStatus === 'pending' && (
+                  <div className="bg-white rounded-lg p-3 border border-green-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Status:</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm font-medium text-yellow-700">Waiting for Payment</span>
+                      </div>
+                    </div>
+                                  <div className="mt-2 text-xs text-gray-500">
+                Time remaining: {Math.floor(paymentTimer / 60)}:{(paymentTimer % 60).toString().padStart(2, '0')}
+              </div>
+                  </div>
+                )}
+
+                {paymentStatus === 'processing' && (
+                  <div className="bg-white rounded-lg p-3 border border-blue-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Status:</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                        <span className="text-sm font-medium text-blue-700">Verifying Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {paymentStatus === 'completed' && (
+                  <div className="bg-white rounded-lg p-3 border border-green-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Status:</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                          <Check className="w-3 h-3 text-white" />
+                        </div>
+                        <span className="text-sm font-medium text-green-700">Payment Successful!</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                                {paymentStatus === 'failed' && (
+                  <div className="bg-white rounded-lg p-3 border border-red-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Status:</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                          <X className="w-3 h-3 text-white" />
+                        </div>
+                        <span className="text-sm font-medium text-red-700">Payment Failed</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              {paymentStatus === 'pending' && (
+                <div className="space-y-3">
+                  <button
+                    onClick={verifyPayment}
+                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                  >
+                    <Check className="w-4 h-4 mr-2" />
+                    I've Made the Payment
+                  </button>
+                  
+                  <button
+                    onClick={cancelUpiPayment}
+                    className="w-full"
+                  >
+                    Cancel Payment
+                  </button>
+                </div>
+              )}
+
+              {/* Instructions */}
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 border border-amber-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
+                    <FileText className="w-3 h-3 text-amber-600" />
+                  </div>
+                  <h4 className="font-semibold text-amber-800">Quick Steps:</h4>
+                </div>
+                <div className="space-y-2 text-sm text-amber-700">
+                  <div>1. Open any UPI app</div>
+                  <div>2. Scan the QR code</div>
+                  <div>3. Verify details & pay</div>
+                  <div>4. Wait for auto-detection</div>
+                </div>
+              </div>
+            </div>
+          </div>
+            {paymentStatus === 'pending' && (
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600 mb-2">Waiting for payment...</p>
+                <p className="text-sm text-gray-500">
+                  Time remaining: {Math.floor(paymentTimer / 60)}:{(paymentTimer % 60).toString().padStart(2, '0')}
+                </p>
+              </div>
+            )}
+
+            {paymentStatus === 'processing' && (
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-yellow-200 border-t-yellow-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Verifying payment...</p>
+              </div>
+            )}
+
+            {paymentStatus === 'completed' && (
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-8 h-8 text-green-600" />
+                </div>
+                <p className="text-green-600 font-semibold">Payment Successful!</p>
+                <p className="text-sm text-gray-500">Redirecting to download...</p>
+              </div>
+            )}
+
+            {paymentStatus === 'failed' && (
+              <div className="text-center">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <X className="w-8 h-8 text-red-600" />
+                </div>
+                <p className="text-red-600 font-semibold">Payment Failed</p>
+                <p className="text-sm text-gray-500 mb-4">Please try again or contact support</p>
+                <Button onClick={cancelUpiPayment} className="px-6" variant="outline" >
+                  Try Again
+                </Button>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            {paymentStatus === 'pending' && (
+              <div className="space-y-3">
+                <button
+                  onClick={verifyPayment}
+                  className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                >
+                  <Check className="w-4 h-4 mr-2" />
+                  I've Made the Payment
+                </button>
+                
+                <button
+                  onClick={cancelUpiPayment}
+                  className="w-full"
+                >
+                  Cancel Payment
+                </button>
+              </div>
+            )}
+
+
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -1078,16 +1404,15 @@ export default function PosterAndPolicyDiscloserPage() {
               </div>
               
               <div className="space-y-3">
-                <Button
+                <button
                   onClick={() => window.open(purchaseResult.downloadUrl, '_blank')}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download Poster
-                </Button>
+                </button>
                 
-                <Button
-                  variant="outline"
+                <button
                   onClick={() => {
                     setShowSuccessDialog(false)
                     setActiveTab('downloads')
@@ -1095,7 +1420,7 @@ export default function PosterAndPolicyDiscloserPage() {
                   className="w-full"
                 >
                   View My Downloads
-                </Button>
+                  </button>
               </div>
             </div>
           )}

@@ -1,0 +1,11 @@
+# Shiprocket API Configuration
+# Get these credentials from your Shiprocket dashboard at https://app.shiprocket.in/
+
+SHIPROCKET_EMAIL=your_shiprocket_email@example.com
+SHIPROCKET_PASSWORD=your_shiprocket_password
+
+# Optional: Shiprocket API URL (usually doesn't need to change)
+# SHIPROCKET_API_URL=https://apiv2.shiprocket.in/v1/external
+
+# Note: Add these variables to your .env.local file
+# Make sure to never commit the actual credentials to version control

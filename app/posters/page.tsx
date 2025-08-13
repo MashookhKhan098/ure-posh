@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { CheckoutForm } from '@/components/CheckoutForm';
+import { ShiprocketPayment } from '../components/ShiprocketPayment';
 import { Search, Filter, ShoppingCart, Eye, Download, Star } from 'lucide-react';
 
 // Sample poster data (you can replace this with database data later)
@@ -193,15 +193,12 @@ export default function PostersPage() {
     setShowPaymentDialog(true);
   };
 
-  const handlePayment = async (paymentMethod, customerDetails) => {
+  const handlePayment = async (paymentResult) => {
     if (!selectedPoster) return;
 
-    setPaymentLoading(true);
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      alert('Payment successful! Your poster is ready for download.');
+    if (paymentResult.success) {
+      // Payment successful
+      alert(`Order placed successfully! Order ID: ${paymentResult.orderId}`);
       setShowPaymentDialog(false);
       setSelectedPoster(null);
       
@@ -211,11 +208,9 @@ export default function PostersPage() {
           ? { ...p, download_count: p.download_count + 1 }
           : p
       ));
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment failed. Please try again.');
-    } finally {
-      setPaymentLoading(false);
+    } else {
+      // Payment failed
+      alert(paymentResult.error || 'Payment failed. Please try again.');
     }
   };
 
@@ -359,7 +354,7 @@ export default function PostersPage() {
       <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedPoster && (
-            <CheckoutForm
+            <ShiprocketPayment
               poster={selectedPoster}
               onPayment={handlePayment}
               onCancel={() => setShowPaymentDialog(false)}
