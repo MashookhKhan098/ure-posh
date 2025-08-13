@@ -216,12 +216,10 @@ export default function ContactPage() {
                 {/* Form Header */}
                 <div className="bg-gradient-to-r from-gray-900 to-black text-white p-8">
                   <div className="flex items-center">
-                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4">
-                      <MessageSquare className="w-6 h-6 text-white" />
-                    </div>
+                    
                     <div>
                       <h2 className="text-2xl font-bold">Request for Proposal</h2>
-                      <p className="text-gray-300">&nbsp;</p>
+                     
                     </div>
                   </div>
                 </div>

@@ -150,8 +150,8 @@ const serviceContent = {
     icon: Users,
     color: "emerald"
   },
-  "compliance-training-internal-committees-workplace-panels": {
-    title: "Compliance Training for Internal Committees & Workplace Panels",
+  "training-internal-committees-workplace-panels": {
+    title: "Training for Internal Committees & Workplace Panels",
     description: "Specialized training for internal committees",
     content: "Provide specialized training for internal committees and workplace panels to ensure they can effectively handle harassment cases. Our expert-led programs cover investigation techniques, legal compliance, and decision-making skills.",
     features: [

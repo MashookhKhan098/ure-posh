@@ -1,8 +1,8 @@
--- Essential Database Tables for Admin Login System
--- Run these commands in your Supabase SQL editor
+-- Safe Database Setup Script
+-- This script can be run multiple times without errors
 
 -- 1. Admin Table for Authentication
-CREATE TABLE admin (
+CREATE TABLE IF NOT EXISTS admin (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE admin (
 );
 
 -- 2. Writer Profiles Table for Writer Management
-CREATE TABLE writer_profiles (
+CREATE TABLE IF NOT EXISTS writer_profiles (
   writer_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE writer_profiles (
 );
 
 -- 3. Posts Table for Content Management
-CREATE TABLE posts (
+CREATE TABLE IF NOT EXISTS posts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE posts (
 );
 
 -- 4. Posters Table for Poster Management
-CREATE TABLE posters (
+CREATE TABLE IF NOT EXISTS posters (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
@@ -75,7 +75,7 @@ CREATE TABLE posters (
 );
 
 -- 5. Poster Orders Table for Payment Tracking
-CREATE TABLE poster_orders (
+CREATE TABLE IF NOT EXISTS poster_orders (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   poster_id UUID REFERENCES posters(id) ON DELETE CASCADE,
   customer_name TEXT NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE poster_orders (
 );
 
 -- 6. Poster Categories Table
-CREATE TABLE poster_categories (
+CREATE TABLE IF NOT EXISTS poster_categories (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
   description TEXT,
@@ -104,7 +104,7 @@ CREATE TABLE poster_categories (
 );
 
 -- 7. Payment Transactions Table
-CREATE TABLE payment_transactions (
+CREATE TABLE IF NOT EXISTS payment_transactions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   order_id UUID REFERENCES poster_orders(id) ON DELETE CASCADE,
   payment_gateway TEXT NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE payment_transactions (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Insert sample admin user (password: admin123)
+-- Insert sample admin user only if it doesn't exist
 INSERT INTO admin (username, email, password_hash, full_name, role) 
 VALUES (
   'admin',
@@ -124,9 +124,9 @@ VALUES (
   '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
   'System Administrator',
   'admin'
-);
+) ON CONFLICT (username) DO NOTHING;
 
--- Insert sample poster categories
+-- Insert sample poster categories only if they don't exist
 INSERT INTO poster_categories (name, description, icon, color) VALUES
 ('Motivational', 'Inspirational and motivational posters', '💪', '#FF6B6B'),
 ('Business', 'Professional business posters', '💼', '#4ECDC4'),
@@ -135,12 +135,14 @@ INSERT INTO poster_categories (name, description, icon, color) VALUES
 ('Technology', 'Tech-related posters', '💻', '#FFEAA7'),
 ('Health', 'Health and wellness posters', '🏥', '#DDA0DD'),
 ('Sports', 'Sports and fitness posters', '⚽', '#98D8C8'),
-('Nature', 'Nature and environmental posters', '🌿', '#F7DC6F');
+('Nature', 'Nature and environmental posters', '🌿', '#F7DC6F')
+ON CONFLICT (name) DO NOTHING;
 
--- Insert sample posters
+-- Insert sample posters only if they don't exist (checking by title)
 INSERT INTO posters (title, description, image_url, category, tags, price, featured) VALUES
 ('Success Mindset', 'Powerful motivational poster for achieving success', '/images/posters/success-mindset.jpg', 'Motivational', ARRAY['motivation', 'success', 'mindset'], 299.00, true),
 ('Business Strategy', 'Professional business strategy poster', '/images/posters/business-strategy.jpg', 'Business', ARRAY['business', 'strategy', 'professional'], 399.00, true),
 ('Digital Innovation', 'Modern technology innovation poster', '/images/posters/digital-innovation.jpg', 'Technology', ARRAY['technology', 'innovation', 'digital'], 349.00, false),
 ('Health & Wellness', 'Comprehensive health and wellness guide', '/images/posters/health-wellness.jpg', 'Health', ARRAY['health', 'wellness', 'fitness'], 249.00, false),
-('Creative Design', 'Artistic and creative design poster', '/images/posters/creative-design.jpg', 'Artistic', ARRAY['art', 'design', 'creative'], 199.00, true); 
+('Creative Design', 'Artistic and creative design poster', '/images/posters/creative-design.jpg', 'Artistic', ARRAY['art', 'design', 'creative'], 199.00, true)
+ON CONFLICT DO NOTHING;

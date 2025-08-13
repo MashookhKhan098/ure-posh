@@ -21,7 +21,7 @@ const generateSlug = (text: string): string => {
 
 // Expertise content with proper slugs and placeholders
 const expertiseContent = {
-  "gender-equality-compliance": {
+  "equality-compliance": {
     title: "Equality Compliance",
     items: [
       { name: "POSH Compliance Initiation", slug: "posh-compliance-initiation", placeholder: "Establish comprehensive POSH compliance framework" },
@@ -33,15 +33,15 @@ const expertiseContent = {
     title: "Disclosure and Audit",
     items: [
       { name: "POSH & Workplace Harassment Compliance Reporting", slug: "posh-workplace-harassment-compliance-reporting", placeholder: "Comprehensive compliance reporting system" },
-      { name: "Workplace Harassment & POSH Policy Disclosure", slug: "workplace-harassment-posh-policy-disclosure", placeholder: "Transparent policy disclosure framework" },
+             { name: "Poster and Policy Discloser", slug: "poster-and-policy-discloser", placeholder: "Transparent policy disclosure framework" },
       { name: "POSH & Workplace Harassment Audits", slug: "posh-workplace-harassment-audits", placeholder: "Regular compliance audits and assessments" }
     ]
   },
-  "posh-adaptability-training": {
+  "posh-adaptability": {
     title: "POSH Adaptability",
     items: [
-      { name: "Respectful Workplace Training & Compliance", slug: "respectful-workplace-training-compliance", placeholder: "Comprehensive workplace respect training" },
-      { name: "Training for Internal Committees & Workplace Panels", slug: "compliance-training-internal-committees-workplace-panels", placeholder: "Specialized training for internal committees" },
+      { name: "Workplace Respect Training", slug: "respectful-workplace-training-compliance", placeholder: "Comprehensive workplace respect training" },
+      { name: "Internal Committees Training", slug: "training-internal-committees-workplace-panels", placeholder: "Specialized training for internal committees" },
       { name: "Quarterly Mandatory Training", slug: "quarterly-mandatory-training", placeholder: "Regular mandatory compliance training" },
       { name: "Managers Level Training", slug: "managers-level-training", placeholder: "Leadership-focused compliance training" }
     ]
@@ -63,20 +63,7 @@ const expertiseContent = {
   }
 }
 
-const expertiseServices = [
-  "Public affairs & impact", "Crisis & issues", "Transactions & transformations",
-  "Strategy & reputation", "Public relations & marketing", "Creative, design & content",
-  "Insights & analytics", "Generative AI", "YTPR Advisory"
-];
 
-const expertiseSectorsCol1 = [
-  "Health", "Food & beverage", "Financial services", "Government & public sector",
-  "Mobility & transportation", "Technology"
-];
-
-const expertiseSectorsCol2 = [
-  "Retail & CPG", "Lifestyle & leisure", "Media & entertainment", "Non-profit", "Energy", "Industry & manufacturing"
-];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -94,23 +81,11 @@ export default function Navbar() {
     { name: "About", href: "/about" },
     { name: "People", href: "/people" },
     { name: "News Room", href: "/posts" },
+    { name: "Posters", href: "/posters" },
     { name: "Connect", href: "/connect" },
   ]
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        isExpertiseOpen &&
-        expertiseRef.current &&
-        !(event.target as Element).closest(".expertise-dropdown-trigger") &&
-        !(event.target as Element).closest(".expertise-dropdown-panel")
-      ) {
-        setIsExpertiseOpen(false)
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [isExpertiseOpen])
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -281,30 +256,39 @@ export default function Navbar() {
       {/* Render dropdown as a direct child of nav for extreme left alignment */}
       {isExpertiseOpen && (
         <div className="absolute left-0 right-0 top-full mt-1 bg-white shadow-lg border border-gray-200 z-50">
-          <div className="px-6 py-4">
-            <div className="grid grid-cols-6 gap-1">
-              {/* Expertise Header Column */}
-              <div className="w-48 pr-3">
-                <h2 className="text-lg font-bold text-gray-900 mb-2">Expertise</h2>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Advising and leading businesses and brands across an array of industries
-                </p>
-              </div>
-              
-              {/* 5 Expertise Category Columns */}
-              {Object.entries(expertiseContent).map(([key, category], index) => (
-                <div key={key} className="border-r border-gray-100 last:border-r-0 pr-2 last:pr-0 w-44">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3 pb-2 border-b border-gray-200">
+                     <div className="px-6 py-4">
+                         <div className="grid grid-cols-6 gap-4">
+                               {/* Expertise Header Column */}
+                                 <div className="w-48 pr-4">
+                   <h2 className="text-base font-bold text-gray-900 mb-2 pr-2">Expertise</h2>
+                   <p className="text-xs text-gray-600 leading-relaxed">
+                     Advising and leading businesses and brands across an array of industries
+                   </p>
+                 </div>
+               
+               {/* 5 Expertise Category Columns */}
+               {Object.entries(expertiseContent).map(([key, category], index) => (
+                 <div key={key} className={`border-r border-gray-100 last:border-r-0 pr-4 last:pr-0 ${
+                   key === "posh-adaptability" ? "w-72" : "w-56"
+                 }`}>
+                  <h3 className={`mb-3 pb-2 border-b border-gray-200 ${
+                    key === "posh-adaptability" 
+                      ? "text-sm font-bold text-pink-600 border-pink-200" 
+                      : "text-xs font-semibold text-gray-900 border-gray-200"
+                  }`}>
                     {category.title}
                   </h3>
                   <div className="space-y-1">
                     {category.items.map((item, itemIdx) => (
                       <div key={itemIdx}>
-                        <Link 
-                          href={`/services/${item.slug}`} 
-                          onClick={() => setIsExpertiseOpen(false)}
-                          className="text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 block py-1 px-2 rounded transition-colors duration-200"
-                        >
+                                                 <Link 
+                           href={`/services/${item.slug}`} 
+                                                       className={`block py-1 px-2 rounded transition-colors duration-200 text-left w-full ${
+                              item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
+                                ? 'text-xs font-medium text-gray-800 hover:text-pink-600 hover:bg-pink-50'
+                                : 'text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                            }`}
+                         >
                           {item.name}
                         </Link>
                       </div>
@@ -358,10 +342,9 @@ export default function Navbar() {
                       <ul className="pl-4 py-2 space-y-1">
                         {category.items.map((item, itemIdx) => (
                           <li key={itemIdx}>
-                            <Link
+                                                                                                                 <Link
                               href={`/services/${item.slug}`}
-                              onClick={() => setIsMenuOpen(false)}
-                              className="block text-sm text-gray-600 hover:text-black py-1 rounded-md transition-colors"
+                              className="block text-sm text-gray-600 hover:text-black py-1 rounded-md transition-colors text-left w-full"
                             >
                               {item.name}
                             </Link>

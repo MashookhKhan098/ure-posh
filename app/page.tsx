@@ -186,7 +186,11 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
 
     return (
         <div className="flex flex-col items-center justify-center col-span-1 group">
-            <div className="relative w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center z-30">
+            <div className={`relative flex items-center justify-center z-30 ${
+                title === "POSH Adaptability Training" 
+                    ? "w-56 h-56 sm:w-64 sm:h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96" 
+                    : "w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80"
+            }`}>
                 <motion.div
                     className="absolute inset-0"
                     animate={{ rotate: 360 * direction }}
@@ -237,7 +241,11 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                 </motion.div>
                 
                 <motion.div 
-                    className="relative z-10 text-center px-1 sm:px-2"
+                    className={`relative z-10 text-center ${
+                        title === "POSH Adaptability Training" 
+                            ? "px-2 sm:px-4 lg:px-6" 
+                            : "px-1 sm:px-2"
+                    }`}
                     animate={{ 
                         scale: [1, 1.02, 1],
                     }}
@@ -247,9 +255,19 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                         ease: "easeInOut"
                     }}
                 >
-                    <div className="text-white text-xs sm:text-xs font-medium leading-tight">
+                    <div className={`text-white font-medium leading-tight ${
+                        title === "POSH Adaptability Training" 
+                            ? "text-sm sm:text-base lg:text-lg xl:text-xl" 
+                            : "text-xs sm:text-sm lg:text-base xl:text-lg"
+                    }`}>
                         {content.split('\n').map((line, idx) => (
-                            <div key={idx} className="mb-0.5 sm:mb-1">{line}</div>
+                            <div key={idx} className={`mb-0.5 sm:mb-1 lg:mb-1.5 ${
+                                line.includes('Internal Committees') || line.includes('Quarterly Training') 
+                                    ? 'text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold tracking-wide' 
+                                    : ''
+                            }`}>
+                                {line}
+                            </div>
                         ))}
                     </div>
                 </motion.div>
@@ -262,7 +280,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                 transition={{ delay: 0.5, duration: 0.6 }}
                 viewport={{ once: true }}
             >
-                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-2">{title}</h3>
+                <h3 className="text-sm sm:text-base lg:text-lg xl:text-xl font-bold text-white mb-2">{title}</h3>
             </motion.div>
         </div>
     );
@@ -642,7 +660,7 @@ export default function HomePage() {
               </div>
               
               {/* Bottom Row - 2 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 max-w-6xl mx-auto">
                 {expertiseGears.slice(3, 5).map((gear, index) => (
                   <motion.div
                     key={index + 3}
@@ -650,6 +668,7 @@ export default function HomePage() {
                     whileHover={{ scale: 1.01, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.3 }}
+                    className={index === 0 ? "sm:col-span-2" : ""}
                   >
                     <ExpertiseGear
                       title={gear.title}
