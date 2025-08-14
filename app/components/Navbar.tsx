@@ -164,14 +164,16 @@ export default function Navbar() {
           {/* Expertise Dropdown Trigger */}
           <div className="relative" ref={expertiseRef}>
             <button
-              className={`expertise-dropdown-trigger flex items-center gap-2 px-2 py-1 text-base font-medium transition-colors duration-200 ${isExpertiseOpen ? "text-pink-600" : "text-gray-700 hover:text-pink-600"}`}
+              className={`expertise-dropdown-trigger flex items-center gap-2 px-3 py-2 text-base font-medium transition-all duration-300 rounded-lg hover:bg-pink-50 hover:shadow-md ${
+                isExpertiseOpen ? "text-pink-600 bg-pink-50 shadow-md" : "text-gray-700 hover:text-pink-600"
+              }`}
               onClick={() => setIsExpertiseOpen((v) => !v)}
               aria-haspopup="true"
               aria-expanded={isExpertiseOpen}
               type="button"
             >
               Expertise
-              <ChevronDown className={`w-4 h-4 transition-transform ${isExpertiseOpen ? "rotate-180" : ""}`} />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isExpertiseOpen ? "rotate-180" : ""}`} />
             </button>
           </div>
           {/* End Expertise Dropdown */}
@@ -255,41 +257,47 @@ export default function Navbar() {
 
       {/* Render dropdown as a direct child of nav for extreme left alignment */}
       {isExpertiseOpen && (
-        <div className="absolute left-0 right-0 top-full mt-1 bg-white shadow-lg border border-gray-200 z-50">
-                     <div className="px-6 py-4">
-                         <div className="grid grid-cols-6 gap-4">
-                               {/* Expertise Header Column */}
-                                 <div className="w-48 pr-4">
-                   <h2 className="text-base font-bold text-gray-900 mb-2 pr-2">Expertise</h2>
-                   <p className="text-xs text-gray-600 leading-relaxed">
-                     Advising and leading businesses and brands across an array of industries
-                   </p>
-                 </div>
-               
-               {/* 5 Expertise Category Columns */}
-               {Object.entries(expertiseContent).map(([key, category], index) => (
-                 <div key={key} className={`border-r border-gray-100 last:border-r-0 pr-4 last:pr-0 ${
-                   key === "posh-adaptability" ? "w-72" : "w-56"
-                 }`}>
-                  <h3 className={`mb-3 pb-2 border-b border-gray-200 ${
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white shadow-xl border border-gray-200 z-50 transition-all duration-300 hover:shadow-2xl">
+          <div className="px-8 py-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-6 gap-12">
+              {/* Expertise Header Column */}
+              <div className="w-56 pr-6">
+                <h2 className="text-[22px] font-bold text-gray-900 mb-4 pr-2 transition-colors duration-300 hover:text-pink-600">Expertise</h2>
+                <p className="text-[12px] text-gray-600 leading-relaxed">
+                  Advising and leading businesses and brands across an array of industries
+                </p>
+              </div>
+              
+              {/* 5 Expertise Category Columns */}
+              {Object.entries(expertiseContent).map(([key, category], index) => (
+                <div key={key} className={`border-r border-gray-100 last:border-r-0 last:pr-0 ${
+                  key === "posh-adaptability" ? "w-72 pr-14" : key === "equality-compliance" ? "w-64 pr-14" : "w-64 pr-8"
+                }`}>
+                  <h3 className={`mb-4 pb-3 border-b transition-all duration-300 ${
                     key === "posh-adaptability" 
-                      ? "text-sm font-bold text-pink-600 border-pink-200" 
-                      : "text-xs font-semibold text-gray-900 border-gray-200"
+                      ? "text-[16px] font-bold text-black border-gray-300 hover:text-black hover:border-gray-400" 
+                      : "text-[14px] font-semibold text-gray-900 border-gray-200 hover:text-pink-600 hover:border-pink-300"
                   }`}>
                     {category.title}
                   </h3>
-                  <div className="space-y-1">
+                  <div className="space-y-3">
                     {category.items.map((item, itemIdx) => (
                       <div key={itemIdx}>
-                                                 <Link 
-                           href={`/services/${item.slug}`} 
-                                                       className={`block py-1 px-2 rounded transition-colors duration-200 text-left w-full ${
-                              item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
-                                ? 'text-xs font-medium text-gray-800 hover:text-pink-600 hover:bg-pink-50'
-                                : 'text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                            }`}
-                         >
-                          {item.name}
+                        <Link 
+                          href={`/services/${item.slug}`} 
+                          className={`group block py-2 px-3 rounded-lg transition-all duration-300 text-left w-full hover:shadow-lg hover:shadow-pink-100/50 ${
+                            item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
+                              ? 'text-[12px] font-medium text-gray-800 hover:text-pink-600 hover:bg-gradient-to-r hover:from-pink-50 hover:to-pink-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-pink-200'
+                              : 'text-[12px] text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-gray-200'
+                          }`}
+                        >
+                          <span className="relative z-10">{item.name}</span>
+                          {/* Hover background effect */}
+                          <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                            item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
+                              ? 'bg-gradient-to-r from-pink-50 to-pink-100'
+                              : 'bg-gradient-to-r from-gray-50 to-gray-100'
+                          }`}></div>
                         </Link>
                       </div>
                     ))}
@@ -328,23 +336,23 @@ export default function Navbar() {
 
               {/* Expertise as a main tab with sub-tabs */}
               <details className="w-full" open>
-                <summary className="text-lg font-bold text-gray-800 py-2 cursor-pointer flex items-center justify-between">
+                <summary className="text-xl font-bold text-gray-800 py-4 cursor-pointer flex items-center justify-between">
                   Expertise
-                  <ChevronDown className="w-5 h-5 ml-2" />
+                  <ChevronDown className="w-6 h-6 ml-2" />
                 </summary>
-                <div className="pl-2 space-y-3 mt-2">
+                <div className="pl-6 space-y-5 mt-4">
                   {Object.entries(expertiseContent).map(([key, category], idx) => (
-                    <details key={idx} className="mb-2 group" open>
-                      <summary className="flex items-center justify-between text-base font-semibold text-gray-900 py-2 px-2 rounded-lg bg-gray-50 group-open:bg-gray-100 cursor-pointer transition-all">
+                    <details key={idx} className="mb-4 group" open>
+                      <summary className="flex items-center justify-between text-lg font-semibold text-gray-900 py-4 px-4 rounded-lg bg-gray-50 group-open:bg-gray-100 cursor-pointer transition-all">
                         {category.title}
-                        <ChevronDown className="w-4 h-4 ml-2 transition-transform group-open:rotate-180" />
+                        <ChevronDown className="w-5 h-5 ml-2 transition-transform group-open:rotate-180" />
                       </summary>
-                      <ul className="pl-4 py-2 space-y-1">
+                      <ul className="pl-6 py-4 space-y-3">
                         {category.items.map((item, itemIdx) => (
                           <li key={itemIdx}>
-                                                                                                                 <Link
+                            <Link
                               href={`/services/${item.slug}`}
-                              className="block text-sm text-gray-600 hover:text-black py-1 rounded-md transition-colors text-left w-full"
+                              className="block text-base text-gray-600 hover:text-black py-3 px-4 rounded-lg transition-all text-left w-full hover:bg-gray-100"
                             >
                               {item.name}
                             </Link>
