@@ -6,20 +6,18 @@ import { useRouter } from 'next/navigation'
 interface Writer {
   id: string
   name: string
-  email: string
+  username: string
   bio?: string
-  specialization?: string
-  expertise_areas?: string[]
-  status?: string
-  is_featured?: boolean
-  verification_status?: string
+  field_allotted?: string
+  expertise?: string
+  phone?: string
 }
 
 interface WriterAuthContextType {
   writer: Writer | null
   isAuthenticated: boolean
   loading: boolean
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
+  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
 }
@@ -64,7 +62,7 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     try {
       const response = await fetch('/api/writer/auth/login', {
         method: 'POST',
@@ -72,7 +70,7 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       })
 
       const data = await response.json()

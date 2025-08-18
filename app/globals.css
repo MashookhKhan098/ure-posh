@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -110,6 +112,229 @@
   opacity: 0 !important;
   height: 0 !important;
   overflow: hidden !important;
+}
+
+/* Writer Dashboard Design System - Creative & Clean */
+
+@layer base {
+  :root {
+    /* Core Colors - Purple/Indigo Theme */
+    --background: 250 100% 99%;
+    --foreground: 230 20% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 230 20% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 20% 15%;
+
+    /* Primary - Creative Purple */
+    --primary: 260 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 260 85% 65%;
+
+    /* Secondary - Soft Purple */
+    --secondary: 250 25% 96%;
+    --secondary-foreground: 260 15% 35%;
+
+    /* Muted - Clean Grays */
+    --muted: 245 15% 97%;
+    --muted-foreground: 230 10% 55%;
+
+    /* Accent - Bright Accent */
+    --accent: 280 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 145 85% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 95% 55%;
+    --warning-foreground: 45 30% 15%;
+
+    /* Borders & Inputs */
+    --border: 245 20% 90%;
+    --input: 245 20% 92%;
+    --ring: 260 70% 55%;
+
+    /* Design Elements */
+    --radius: 0.75rem;
+    --shadow-soft: 0 2px 10px -2px hsl(260 50% 15% / 0.1);
+    --shadow-medium: 0 4px 20px -4px hsl(260 50% 15% / 0.15);
+    --shadow-strong: 0 8px 30px -8px hsl(260 50% 15% / 0.2);
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(250 50% 98%));
+    --gradient-hero: linear-gradient(135deg, hsl(260 70% 55%), hsl(280 85% 60%), hsl(240 75% 65%));
+
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Mode - Purple Theme */
+    --background: 240 15% 8%;
+    --foreground: 250 15% 92%;
+
+    --card: 240 12% 10%;
+    --card-foreground: 250 15% 92%;
+
+    --popover: 240 12% 10%;
+    --popover-foreground: 250 15% 92%;
+
+    --primary: 260 70% 65%;
+    --primary-foreground: 240 15% 8%;
+    --primary-glow: 260 85% 75%;
+
+    --secondary: 240 8% 15%;
+    --secondary-foreground: 250 15% 85%;
+
+    --muted: 240 8% 12%;
+    --muted-foreground: 240 8% 65%;
+
+    --accent: 280 85% 70%;
+    --accent-foreground: 240 15% 8%;
+
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 145 85% 55%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 95% 65%;
+    --warning-foreground: 45 30% 15%;
+
+    --border: 240 8% 18%;
+    --input: 240 8% 15%;
+    --ring: 260 70% 65%;
+
+    --shadow-soft: 0 2px 10px -2px hsl(240 80% 5% / 0.3);
+    --shadow-medium: 0 4px 20px -4px hsl(240 80% 5% / 0.4);
+    --shadow-strong: 0 8px 30px -8px hsl(240 80% 5% / 0.5);
+
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-card: linear-gradient(145deg, hsl(240 12% 10%), hsl(240 8% 12%));
+    --gradient-hero: linear-gradient(135deg, hsl(260 70% 65%), hsl(280 85% 70%), hsl(240 75% 75%));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-[var(--font-body)];
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-[var(--font-heading)];
+  }
+}
+
+@layer components {
+  /* Writer-focused utilities */
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-strong);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  /* Writer Dashboard specific animations */
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.5s ease-out forwards;
+  }
+
+  .hover-lift {
+    @apply transition-smooth hover:-translate-y-1 hover:shadow-medium;
+  }
+
+  .writer-card {
+    @apply gradient-card shadow-soft rounded-xl border border-border/50 hover-lift transition-smooth;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* Ensure admin pages take full height */

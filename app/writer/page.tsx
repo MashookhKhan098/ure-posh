@@ -1,21 +1,21 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useWriterAuth } from '@/hooks/useWriterAuth'
 
-export default function WriterPage() {
-  const router = useRouter()
+export default function WriterIndexPage() {
+  const { isAuthenticated, loading } = useWriterAuth()
 
   useEffect(() => {
-    router.push('/writer/login')
-  }, [router])
+    if (loading) return
+    if (isAuthenticated) {
+      window.location.replace('/writer/dashboard')
+    } else {
+      window.location.replace('/writer/login')
+    }
+  }, [isAuthenticated, loading])
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Redirecting to writer login...</p>
-      </div>
-    </div>
-  )
+  return null
 }
+
+

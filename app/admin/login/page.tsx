@@ -1,50 +1,65 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { Eye, EyeOff, PenTool } from 'lucide-react';
-import { useWriterAuth } from '@/hooks/useWriterAuth'
 
-export default function WriterLoginPage() {
+import React, { useEffect, useState } from 'react';
+import { Eye, EyeOff, Shield } from 'lucide-react';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
+import { useRouter } from 'next/navigation';
+
+export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, isAuthenticated, loading } = useWriterAuth()
+  const { login, isAuthenticated, loading } = useAdminAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
-      window.location.replace('/writer/dashboard')
+      router.push('/admin/dashboard');
     }
-  }, [loading, isAuthenticated])
+  }, [loading, isAuthenticated, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
-      const result = await login(username, password)
+      const result = await login(username, password);
       if (!result.success) {
-        setError(result.error || 'Login failed')
+        setError(result.error || 'Login failed');
       }
     } catch (e) {
-      setError('Network error')
+      setError('Network error');
     } finally {
       setIsLoading(false);
     }
   };
 
+  if (loading || isAuthenticated) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        <div className="flex items-center gap-3 text-gray-600">
+          <div className="w-5 h-5 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+          <span>Loading...</span>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-rose-50 to-pink-100">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="w-full max-w-md">
         {/* Login Card */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-pink-100 p-8 mx-4 text-black">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-blue-100 p-8 mx-4 text-black">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full mb-4">
-              <PenTool className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mb-4">
+              <Shield className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
-            <p className="text-black">Sign in to your writer's workspace</p>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Admin Access</h1>
+            <p className="text-black">Sign in to your admin dashboard</p>
           </div>
 
           {/* Login Form */}
@@ -54,6 +69,7 @@ export default function WriterLoginPage() {
                 {error}
               </div>
             )}
+            
             {/* Username Field */}
             <div>
               <label htmlFor="username" className="block text-sm font-semibold text-black mb-2">
@@ -65,7 +81,7 @@ export default function WriterLoginPage() {
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl focus:border-pink-500 focus:ring-0 transition-colors bg-white/50 placeholder-gray-400 text-black"
+                className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors bg-white/50 placeholder-gray-400 text-black"
                 placeholder="Enter your username"
                 required
               />
@@ -83,39 +99,25 @@ export default function WriterLoginPage() {
                   name="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border-2 border-pink-200 rounded-xl focus:border-pink-500 focus:ring-0 transition-colors bg-white/50 placeholder-gray-400 text-black"
+                  className="w-full px-4 py-3 pr-12 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors bg-white/50 placeholder-gray-400 text-black"
                   placeholder="Enter your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center text-black">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-pink-500 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2 mr-2"
-                />
-                Remember me
-              </label>
-              <a href="#" className="text-pink-600 hover:text-pink-800 font-medium transition-colors">
-                Forgot password?
-              </a>
-            </div>
-
             {/* Login Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-semibold text-lg hover:from-pink-600 hover:to-rose-600 focus:outline-none focus:ring-4 focus:ring-pink-200 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -127,6 +129,13 @@ export default function WriterLoginPage() {
               )}
             </button>
           </form>
+
+          {/* Footer */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-gray-500">
+              Secure admin access • Protected by JWT authentication
+            </p>
+          </div>
         </div>
       </div>
     </main>

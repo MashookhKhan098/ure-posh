@@ -1,0 +1,712 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
+import { useRouter } from 'next/navigation';
+import { 
+  Users, FileText, Plus, Check, X, RotateCcw, Search, Filter, Eye, 
+  LogOut, Bell, Settings, MoreVertical, Calendar, TrendingUp, 
+  ChevronDown, Menu, Shield, Activity, BarChart3, Download,
+  UserPlus, Edit3, Trash2, Mail
+} from 'lucide-react';
+
+export default function AdminDashboardPage() {
+  const { admin, isAuthenticated, loading: authLoading, logout } = useAdminAuth();
+  const router = useRouter();
+  
+  // Sample data
+  const [writers, setWriters] = useState([
+    { id: 1, name: 'John Doe', username: 'john', status: 'Active', joinDate: '2024-01-15', postsCount: 12, avatar: 'JD' },
+    { id: 2, name: 'Jane Smith', username: 'jane', status: 'Active', joinDate: '2024-02-20', postsCount: 8, avatar: 'JS' },
+    { id: 3, name: 'Mike Johnson', username: 'mike', status: 'Inactive', joinDate: '2024-03-10', postsCount: 5, avatar: 'MJ' }
+  ]);
+
+  const [posts, setPosts] = useState([
+    { id: 1, title: 'The Future of AI Technology', author: 'John Doe', status: 'Pending', submittedDate: '2024-08-15', category: 'Technology', readTime: '5 min', views: 234 },
+    { id: 2, title: 'Climate Change Solutions', author: 'Jane Smith', status: 'Approved', submittedDate: '2024-08-14', category: 'Environment', readTime: '8 min', views: 892 },
+    { id: 3, title: 'Digital Marketing Trends', author: 'Mike Johnson', status: 'Rejected', submittedDate: '2024-08-13', category: 'Marketing', readTime: '6 min', views: 156 },
+    { id: 4, title: 'Sustainable Living Tips', author: 'Jane Smith', status: 'Pending', submittedDate: '2024-08-16', category: 'Lifestyle', readTime: '4 min', views: 67 },
+    { id: 5, title: 'Machine Learning Basics', author: 'John Doe', status: 'Reverted', submittedDate: '2024-08-12', category: 'Technology', readTime: '12 min', views: 445 }
+  ]);
+
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [showAddWriter, setShowAddWriter] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  // Authentication guard
+  useEffect(() => {
+    if (authLoading) return;
+    if (!isAuthenticated) {
+      router.push('/admin/login');
+      return;
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  // New writer form state
+  const [newWriter, setNewWriter] = useState({
+    name: '',
+    username: '',
+    password: '',
+    bio: '',
+    field_allotted: '',
+    expertise: '',
+    phone: ''
+  });
+
+  // Add new writer
+  const handleAddWriter = async () => {
+    if (newWriter.name && newWriter.username && newWriter.password) {
+      const res = await fetch('/api/admin/writers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          name: newWriter.name, 
+          username: newWriter.username, 
+          password: newWriter.password, 
+          bio: newWriter.bio,
+          field_allotted: newWriter.field_allotted,
+          expertise: newWriter.expertise,
+          phone: newWriter.phone
+        })
+      })
+      if (res.ok) {
+        const { writer } = await res.json()
+        const local = {
+          id: writer.id || writers.length + 1,
+          name: newWriter.name,
+          username: newWriter.username,
+          status: 'Active',
+          joinDate: new Date().toISOString().split('T')[0],
+          postsCount: 0,
+          avatar: newWriter.name.split(' ').map(n => n[0]).join('').toUpperCase()
+        }
+        setWriters([...writers, local])
+        setNewWriter({ name: '', username: '', password: '', bio: '', field_allotted: '', expertise: '', phone: '' })
+        setShowAddWriter(false)
+      } else {
+        const data = await res.json()
+        alert(data?.error || 'Failed to create writer')
+      }
+    }
+  };
+
+  // Post management functions
+  const handlePostAction = (postId: number, action: string) => {
+    setPosts(posts.map(post => 
+      post.id === postId 
+        ? { ...post, status: action === 'approve' ? 'Approved' : action === 'reject' ? 'Rejected' : 'Reverted' }
+        : post
+    ));
+  };
+
+  // Filter posts
+  const filteredPosts = posts.filter(post => {
+    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         post.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'All' || post.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  // Filter writers
+  const filteredWriters = writers.filter(writer => 
+    writer.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    writer.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case 'Pending': return 'bg-amber-500/10 text-amber-700 border border-amber-200';
+      case 'Approved': return 'bg-emerald-500/10 text-emerald-700 border border-emerald-200';
+      case 'Rejected': return 'bg-red-500/10 text-red-700 border border-red-200';
+      case 'Reverted': return 'bg-purple-500/10 text-purple-700 border border-purple-200';
+      case 'Active': return 'bg-emerald-500/10 text-emerald-700 border border-emerald-200';
+      case 'Inactive': return 'bg-gray-500/10 text-gray-600 border border-gray-200';
+      default: return 'bg-gray-500/10 text-gray-600 border border-gray-200';
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const sidebarItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+    { id: 'posts', label: 'Posts', icon: FileText },
+    { id: 'writers', label: 'Writers', icon: Users },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'settings', label: 'Settings', icon: Settings }
+  ];
+
+  // Show loading state while checking authentication
+  if (authLoading || !isAuthenticated) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        <div className="flex items-center gap-3 text-gray-600">
+          <div className="w-5 h-5 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+          <span>Loading admin dashboard...</span>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Modern Sidebar */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+        <div className="flex flex-col h-full">
+          {/* Logo Section */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">AdminPro</h1>
+                <p className="text-xs text-gray-500">Content Management</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 p-4 space-y-2">
+            {sidebarItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    activeTab === item.id
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25'
+                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
+                  }`}
+                >
+                  <IconComponent className="w-5 h-5 mr-3" />
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* User Profile & Logout */}
+          <div className="p-4 border-t border-gray-200/50">
+            <div className="relative">
+              <button
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="w-full flex items-center p-3 rounded-xl hover:bg-gray-50/50 transition-colors"
+              >
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                  {admin?.username?.charAt(0).toUpperCase() || 'A'}
+                </div>
+                <div className="ml-3 flex-1 text-left">
+                  <p className="text-sm font-medium text-gray-900">{admin?.username || 'Admin User'}</p>
+                  <p className="text-xs text-gray-500">{admin?.email || 'admin@example.com'}</p>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-400" />
+              </button>
+              
+              {showDropdown && (
+                <div className="absolute bottom-full left-0 right-0 mb-2 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl border border-gray-200/50 py-2">
+                  <button className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    <Settings className="w-4 h-4 mr-3" />
+                    Profile Settings
+                  </button>
+                  <div className="border-t border-gray-100 my-1"></div>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4 mr-3" />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="lg:ml-64">
+        {/* Enhanced Header */}
+        <header className="bg-white/70 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-40">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <Menu className="w-5 h-5" />
+                </button>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {activeTab === 'dashboard' && 'Dashboard Overview'}
+                    {activeTab === 'posts' && 'Posts Management'}
+                    {activeTab === 'writers' && 'Writers Management'}
+                    {activeTab === 'analytics' && 'Analytics'}
+                    {activeTab === 'settings' && 'Settings'}
+                  </h1>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {activeTab === 'dashboard' && 'Monitor your content platform performance'}
+                    {activeTab === 'posts' && 'Review and manage submitted posts'}
+                    {activeTab === 'writers' && 'Manage your writing team'}
+                    {activeTab === 'analytics' && 'View detailed platform analytics'}
+                    {activeTab === 'settings' && 'Configure platform settings'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <button className="relative p-2 rounded-xl hover:bg-gray-100/50 transition-colors">
+                  <Bell className="w-5 h-5 text-gray-600" />
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+                  </span>
+                </button>
+                <div className="hidden sm:flex items-center space-x-3 bg-gray-50/50 rounded-xl px-4 py-2">
+                  <Calendar className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">{new Date().toLocaleDateString()}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="p-6">
+          {/* Dashboard Tab */}
+          {activeTab === 'dashboard' && (
+            <div className="space-y-6">
+              {/* Enhanced Statistics Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="group bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white hover:shadow-xl hover:shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-blue-100 text-sm font-medium">Total Posts</p>
+                      <p className="text-3xl font-bold mt-2">{posts.length}</p>
+                      <p className="text-blue-100 text-xs mt-1">+12% from last month</p>
+                    </div>
+                    <div className="bg-white/20 p-3 rounded-xl">
+                      <FileText className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-emerald-100 text-sm font-medium">Active Writers</p>
+                      <p className="text-3xl font-bold mt-2">{writers.filter(w => w.status === 'Active').length}</p>
+                      <p className="text-emerald-100 text-xs mt-1">+2 new this week</p>
+                    </div>
+                    <div className="bg-white/20 p-3 rounded-xl">
+                      <Users className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl p-6 text-white hover:shadow-xl hover:shadow-amber-500/25 transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-amber-100 text-sm font-medium">Pending Review</p>
+                      <p className="text-3xl font-bold mt-2">{posts.filter(p => p.status === 'Pending').length}</p>
+                      <p className="text-amber-100 text-xs mt-1">Requires attention</p>
+                    </div>
+                    <div className="bg-white/20 p-3 rounded-xl">
+                      <Activity className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group bg-gradient-to-br from-rose-500 to-red-500 rounded-2xl p-6 text-white hover:shadow-xl hover:shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-rose-100 text-sm font-medium">Reverted Posts</p>
+                      <p className="text-3xl font-bold mt-2">{posts.filter(p => p.status === 'Reverted').length}</p>
+                      <p className="text-rose-100 text-xs mt-1">Action needed</p>
+                    </div>
+                    <div className="bg-white/20 p-3 rounded-xl">
+                      <RotateCcw className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <button 
+                    onClick={() => setShowAddWriter(true)}
+                    className="flex items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-200/50 group"
+                  >
+                    <UserPlus className="w-5 h-5 text-blue-600 mr-3 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium text-blue-700">Add Writer</span>
+                  </button>
+                  <button className="flex items-center p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl hover:from-emerald-100 hover:to-green-100 transition-all duration-200 border border-emerald-200/50 group">
+                    <Download className="w-5 h-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium text-emerald-700">Export Data</span>
+                  </button>
+                  <button className="flex items-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-200 border border-purple-200/50 group">
+                    <BarChart3 className="w-5 h-5 text-purple-600 mr-3 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium text-purple-700">View Reports</span>
+                  </button>
+                  <button className="flex items-center p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl hover:from-orange-100 hover:to-red-100 transition-all duration-200 border border-orange-200/50 group">
+                    <Mail className="w-5 h-5 text-orange-600 mr-3 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium text-orange-700">Send Notices</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Recent Activity */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                  <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                </div>
+                <div className="space-y-3">
+                  {posts.slice(0, 3).map((post, index) => (
+                    <div key={post.id} className="flex items-center p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">{post.title}</p>
+                        <p className="text-xs text-gray-500">by {post.author} • {post.submittedDate}</p>
+                      </div>
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(post.status)}`}>
+                        {post.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Posts Management Tab */}
+          {activeTab === 'posts' && (
+            <div className="space-y-6">
+              {/* Enhanced Controls */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <div className="flex flex-col lg:flex-row gap-4">
+                  <div className="relative flex-1">
+                    <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search posts by title or author..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all"
+                    />
+                  </div>
+                  <div className="relative">
+                    <Filter className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="pl-12 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm appearance-none cursor-pointer"
+                    >
+                      <option value="All">All Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Approved">Approved</option>
+                      <option value="Rejected">Rejected</option>
+                      <option value="Reverted">Reverted</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced Posts Grid */}
+              <div className="space-y-4">
+                {filteredPosts.map((post, index) => (
+                  <div key={post.id} className="group bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg hover:shadow-xl hover:shadow-gray-500/10 transition-all duration-300 hover:-translate-y-1">
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{post.title}</h3>
+                              <span className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(post.status)}`}>
+                                {post.status}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                                  {post.author.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <span>{post.author}</span>
+                              </div>
+                              <span>•</span>
+                              <span className="bg-gray-100 px-2 py-1 rounded-lg text-xs">{post.category}</span>
+                              <span>•</span>
+                              <span>{post.readTime}</span>
+                              <span>•</span>
+                              <span>{post.views} views</span>
+                              <span>•</span>
+                              <span>{post.submittedDate}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handlePostAction(post.id, 'approve')}
+                          className="flex items-center px-4 py-2 bg-emerald-500/10 text-emerald-600 rounded-xl hover:bg-emerald-500/20 transition-all duration-200 border border-emerald-200/50 group/btn"
+                        >
+                          <Check className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => handlePostAction(post.id, 'reject')}
+                          className="flex items-center px-4 py-2 bg-red-500/10 text-red-600 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-red-200/50 group/btn"
+                        >
+                          <X className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
+                          Reject
+                        </button>
+                        <button
+                          onClick={() => handlePostAction(post.id, 'revert')}
+                          className="flex items-center px-4 py-2 bg-purple-500/10 text-purple-600 rounded-xl hover:bg-purple-500/20 transition-all duration-200 border border-purple-200/50 group/btn"
+                        >
+                          <RotateCcw className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
+                          Revert
+                        </button>
+                        <button className="p-2 bg-gray-500/10 text-gray-600 rounded-xl hover:bg-gray-500/20 transition-all duration-200 border border-gray-200/50">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button className="p-2 bg-gray-500/10 text-gray-600 rounded-xl hover:bg-gray-500/20 transition-all duration-200 border border-gray-200/50">
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Writers Management Tab */}
+          {activeTab === 'writers' && (
+            <div className="space-y-6">
+              {/* Enhanced Writers Header */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900">Writers Management</h2>
+                    <p className="text-sm text-gray-500 mt-1">Manage your content creation team</p>
+                  </div>
+                  <div className="flex gap-3 w-full lg:w-auto">
+                    <div className="relative flex-1 lg:flex-initial lg:w-80">
+                      <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search writers..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm"
+                      />
+                    </div>
+                    <button
+                      onClick={() => setShowAddWriter(true)}
+                      className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
+                    >
+                      <Plus className="w-5 h-5 mr-2" />
+                      Add Writer
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced Writers Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {filteredWriters.map((writer) => (
+                  <div key={writer.id} className="group bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg hover:shadow-xl hover:shadow-gray-500/10 transition-all duration-300 hover:-translate-y-1">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                          {writer.avatar}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{writer.name}</h3>
+                          <p className="text-sm text-gray-500">@{writer.username}</p>
+                        </div>
+                      </div>
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(writer.status)}`}>
+                        {writer.status}
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="bg-gray-50/50 rounded-lg p-3 border border-gray-200/50">
+                        <p className="text-xs text-gray-500 mb-1">Posts</p>
+                        <p className="text-lg font-bold text-gray-900">{writer.postsCount}</p>
+                      </div>
+                      <div className="bg-gray-50/50 rounded-lg p-3 border border-gray-200/50">
+                        <p className="text-xs text-gray-500 mb-1">Joined</p>
+                        <p className="text-sm font-medium text-gray-900">{writer.joinDate}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-500/10 text-blue-600 rounded-lg hover:bg-blue-500/20 transition-all duration-200 text-sm border border-blue-200/50">
+                        <Edit3 className="w-4 h-4 mr-2" />
+                        Edit
+                      </button>
+                      <button className="flex-1 flex items-center justify-center px-3 py-2 bg-gray-500/10 text-gray-600 rounded-lg hover:bg-gray-500/20 transition-all duration-200 text-sm border border-gray-200/50">
+                        {writer.status === 'Active' ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button className="p-2 bg-red-500/10 text-red-600 rounded-lg hover:bg-red-500/20 transition-all duration-200 border border-red-200/50">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Analytics Tab */}
+          {activeTab === 'analytics' && (
+            <div className="space-y-6">
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 shadow-lg text-center">
+                <BarChart3 className="w-16 h-16 mx-auto text-blue-500 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Analytics Dashboard</h3>
+                <p className="text-gray-500">Detailed analytics and reporting features coming soon...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div className="space-y-6">
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 shadow-lg text-center">
+                <Settings className="w-16 h-16 mx-auto text-blue-500 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Platform Settings</h3>
+                <p className="text-gray-500">Configuration options and system settings...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Enhanced Add Writer Modal */}
+          {showAddWriter && (
+            <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddWriter(false)}></div>
+              <div className="relative z-10 w-full max-w-2xl mt-10">
+                <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200">
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100">
+                    <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Add Writer</h3>
+                    <button onClick={() => setShowAddWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="px-5 py-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input
+                          type="text"
+                          value={newWriter.name}
+                          onChange={(e) => setNewWriter({ ...newWriter, name: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                          placeholder="e.g., John Doe"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input
+                          type="text"
+                          value={newWriter.username}
+                          onChange={(e) => setNewWriter({ ...newWriter, username: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                          placeholder="unique handle"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input
+                          type="password"
+                          value={newWriter.password}
+                          onChange={(e) => setNewWriter({ ...newWriter, password: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                          placeholder="secure password"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input
+                          type="tel"
+                          value={newWriter.phone}
+                          onChange={(e) => setNewWriter({ ...newWriter, phone: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                          placeholder="optional"
+                        />
+                      </div>
+                      <div className="md:col-span-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Field Allotted</label>
+                        <input
+                          type="text"
+                          value={newWriter.field_allotted}
+                          onChange={(e) => setNewWriter({ ...newWriter, field_allotted: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                          placeholder="Technology, Sports, Politics"
+                        />
+                      </div>
+                      <div className="md:col-span-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Expertise</label>
+                        <input
+                          type="text"
+                          value={newWriter.expertise}
+                          onChange={(e) => setNewWriter({ ...newWriter, expertise: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                          placeholder="Comma-separated areas"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                        <textarea
+                          rows={2}
+                          value={newWriter.bio}
+                          onChange={(e) => setNewWriter({ ...newWriter, bio: e.target.value })}
+                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black resize-none"
+                          placeholder="Brief bio about the writer"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-end gap-3 pt-4">
+                      <button onClick={() => setShowAddWriter(false)} className="px-4 py-2 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200">Cancel</button>
+                      <button onClick={handleAddWriter} className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700">Create Writer</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>
+      )}
+    </div>
+  );
+}

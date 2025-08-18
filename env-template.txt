@@ -9,3 +9,7 @@ JWT_SECRET=69ef7fb68fb41f982e2211ba1f82cb9b1c62af90087d138be3250c20b7ccf30244504
 
 # Optional: Additional configuration
 NODE_ENV=development 
+
+# Admin login (set these in .env.local)
+ADMIN_USERNAME=admin@example.com
+ADMIN_PASSWORD=change_me
