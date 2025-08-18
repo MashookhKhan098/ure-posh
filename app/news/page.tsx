@@ -84,6 +84,62 @@ function getImageForPost(post: Post, idx: number): string {
   return genericFallbacks[idx % genericFallbacks.length]
 }
 
+// Build ordered candidate list for resilient image loading
+function getCandidateSources(post: Post, idx: number): string[] {
+  const candidates: string[] = []
+  if (post.featured_image && post.featured_image.trim().length > 0) {
+    candidates.push(post.featured_image)
+  }
+  const cat = categoryFallbacks[post.category]
+  if (cat) candidates.push(cat)
+  // Add all generics in a rotated order so cards spread different fallbacks
+  const rotated = [...genericFallbacks.slice(idx % genericFallbacks.length), ...genericFallbacks.slice(0, idx % genericFallbacks.length)]
+  candidates.push(...rotated)
+  // De-duplicate while preserving order
+  return Array.from(new Set(candidates))
+}
+
+function SmartPostImage({
+  post,
+  idx,
+  alt,
+  priority,
+  shimmerW,
+  shimmerH,
+  sizes,
+  className,
+}: {
+  post: Post;
+  idx: number;
+  alt: string;
+  priority?: boolean;
+  shimmerW: number;
+  shimmerH: number;
+  sizes: string;
+  className?: string;
+}) {
+  const sources = getCandidateSources(post, idx)
+  const [srcIndex, setSrcIndex] = React.useState(0)
+
+  return (
+    <Image
+      src={sources[srcIndex]}
+      alt={alt}
+      fill
+      priority={!!priority}
+      loading={priority ? undefined : "lazy"}
+      sizes={sizes}
+      placeholder="blur"
+      blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(shimmerW, shimmerH))}`}
+      className={className}
+      onError={() => {
+        // Try next fallback if available
+        setSrcIndex((i) => (i + 1 < sources.length ? i + 1 : i))
+      }}
+    />
+  )
+}
+
 export default function NewsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -257,19 +313,18 @@ export default function NewsPage() {
               className="grid lg:grid-cols-3 gap-8"
             >
               {featuredPosts.map((post, index) => {
-                const imgSrc = getImageForPost(post, index)
                 return (
                   <motion.div key={post.id} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
                     <Card className="h-full bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                       <div className="relative h-48 overflow-hidden">
-                        <Image
-                          src={imgSrc}
+                        <SmartPostImage
+                          post={post}
+                          idx={index}
                           alt={`${post.category} - ${post.title}`}
-                          fill
                           priority={index === 0}
+                          shimmerW={700}
+                          shimmerH={300}
                           sizes="(max-width: 1024px) 100vw, 33vw"
-                          placeholder="blur"
-                          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 300))}`}
                           className="object-cover object-center"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -420,19 +475,17 @@ export default function NewsPage() {
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {recentPosts.map((post, index) => {
-                const imgSrc = getImageForPost(post, index)
                 return (
                   <motion.div key={post.id} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
                     <Card className="h-full bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                       <div className="relative h-40 overflow-hidden">
-                        <Image
-                          src={imgSrc}
+                        <SmartPostImage
+                          post={post}
+                          idx={index}
                           alt={`${post.category} - ${post.title}`}
-                          fill
-                          loading="lazy"
+                          shimmerW={700}
+                          shimmerH={250}
                           sizes="(max-width: 1024px) 100vw, 33vw"
-                          placeholder="blur"
-                          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 250))}`}
                           className="object-cover object-center"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
