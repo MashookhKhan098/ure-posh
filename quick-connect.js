@@ -59,51 +59,37 @@ async function quickConnect() {
     
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     
-    // Test all three tables
-    console.log('🔍 Testing admin table...');
-    const { data: adminData, error: adminError } = await supabase
-      .from('admin')
+    // Test articles table (instead of posts)
+    console.log('🔍 Testing articles table...');
+    const { data: articlesData, error: articlesError } = await supabase
+      .from('articles')
       .select('*')
       .limit(1);
     
-    if (adminError) {
-      console.log('❌ Admin table error:', adminError.message);
+    if (articlesError) {
+      console.log('❌ Articles table error:', articlesError.message);
     } else {
-      console.log('✅ Admin table connected');
-      console.log('   Found', adminData?.length || 0, 'admin users');
+      console.log('✅ Articles table connected');
+      console.log('   Found', articlesData?.length || 0, 'articles');
     }
     
-    console.log('\n🔍 Testing writer_profiles table...');
-    const { data: writerData, error: writerError } = await supabase
-      .from('writer_profiles')
+    // Test writers table
+    console.log('🔍 Testing writers table...');
+    const { data: writersData, error: writersError } = await supabase
+      .from('writers')
       .select('*')
       .limit(1);
     
-    if (writerError) {
-      console.log('❌ Writer profiles table error:', writerError.message);
+    if (writersError) {
+      console.log('❌ Writers table error:', writersError.message);
     } else {
-      console.log('✅ Writer profiles table connected');
-      console.log('   Found', writerData?.length || 0, 'writer profiles');
+      console.log('✅ Writers table connected');
+      console.log('   Found', writersData?.length || 0, 'writers');
     }
     
-    console.log('\n🔍 Testing posts table...');
-    const { data: postsData, error: postsError } = await supabase
-      .from('posts')
-      .select('*')
-      .limit(1);
-    
-    if (postsError) {
-      console.log('❌ Posts table error:', postsError.message);
-    } else {
-      console.log('✅ Posts table connected');
-      console.log('   Found', postsData?.length || 0, 'posts');
-    }
-    
-    console.log('\n🎉 All tables connected successfully!');
-    console.log('\n🚀 Your admin login system is ready:');
-    console.log('   URL: http://localhost:3000/admin/login');
-    console.log('   Username: admin');
-    console.log('   Password: admin123');
+    console.log('\n🎉 Database tables connected successfully!');
+    console.log('\n🚀 Your website is ready!');
+    console.log('   URL: http://localhost:4000');
     
   } catch (error) {
     console.error('\n❌ Connection failed:', error.message);

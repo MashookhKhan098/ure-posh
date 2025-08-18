@@ -55,12 +55,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    scroll-behavior: smooth;
   }
-}
-
-/* ADDED: Smooth scrolling for anchor links */
-html {
-  scroll-behavior: smooth;
 }
 
 /* Custom scrollbar */

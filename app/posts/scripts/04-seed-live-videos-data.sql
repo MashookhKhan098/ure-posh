@@ -1,0 +1,7 @@
+-- Insert sample live video data
+INSERT INTO live_videos (title, description, thumbnail_url, stream_url, is_live, viewer_count, category_id, started_at) VALUES
+('Breaking: Global Climate Summit Live Coverage', 'Live coverage of the historic climate agreement signing ceremony', '/live-climate-summit.png', 'https://example.com/stream/climate-summit', true, 15420, (SELECT id FROM categories WHERE slug = 'world' LIMIT 1), NOW() - INTERVAL '2 hours'),
+('Tech Conference 2024: AI Revolution Panel', 'Leading experts discuss the future of artificial intelligence', '/live-tech-conference.png', 'https://example.com/stream/tech-ai', true, 8930, (SELECT id FROM categories WHERE slug = 'technology' LIMIT 1), NOW() - INTERVAL '45 minutes'),
+('Championship Finals Live Stream', 'Watch the thrilling championship match live with expert commentary', '/live-sports-championship.png', 'https://example.com/stream/championship', true, 25670, (SELECT id FROM categories WHERE slug = 'sports' LIMIT 1), NOW() - INTERVAL '1 hour'),
+('Market Analysis: Stock Exchange Live', 'Real-time market analysis and trading insights', '/live-market-analysis.png', 'https://example.com/stream/market', true, 5420, (SELECT id FROM categories WHERE slug = 'business' LIMIT 1), NOW() - INTERVAL '30 minutes'),
+('Health Summit: Medical Breakthrough Discussion', 'Live discussion on revolutionary medical treatments', '/live-health-summit.png', 'https://example.com/stream/health', false, 3210, (SELECT id FROM categories WHERE slug = 'health' LIMIT 1), NOW() - INTERVAL '3 hours');

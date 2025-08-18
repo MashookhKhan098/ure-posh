@@ -22,46 +22,32 @@ async function testConnection() {
     // Create Supabase client
     const supabase = createClient(supabaseUrl, supabaseKey);
     
-    // Test admin table
-    console.log('\n🔍 Testing admin table...');
-    const { data: adminData, error: adminError } = await supabase
-      .from('admin')
+    // Test articles table (instead of posts)
+    console.log('\n🔍 Testing articles table...');
+    const { data: articlesData, error: articlesError } = await supabase
+      .from('articles')
       .select('*')
       .limit(1);
     
-    if (adminError) {
-      console.error('❌ Admin table error:', adminError.message);
+    if (articlesError) {
+      console.error('❌ Articles table error:', articlesError.message);
     } else {
-      console.log('✅ Admin table connected');
-      console.log('   Found', adminData?.length || 0, 'admin users');
+      console.log('✅ Articles table connected');
+      console.log('   Found', articlesData?.length || 0, 'articles');
     }
     
-    // Test writer_profiles table
-    console.log('\n🔍 Testing writer_profiles table...');
-    const { data: writerData, error: writerError } = await supabase
-      .from('writer_profiles')
+    // Test writers table
+    console.log('\n🔍 Testing writers table...');
+    const { data: writersData, error: writersError } = await supabase
+      .from('writers')
       .select('*')
       .limit(1);
     
-    if (writerError) {
-      console.error('❌ Writer profiles table error:', writerError.message);
+    if (writersError) {
+      console.error('❌ Writers table error:', writersError.message);
     } else {
-      console.log('✅ Writer profiles table connected');
-      console.log('   Found', writerData?.length || 0, 'writer profiles');
-    }
-    
-    // Test posts table
-    console.log('\n🔍 Testing posts table...');
-    const { data: postsData, error: postsError } = await supabase
-      .from('posts')
-      .select('*')
-      .limit(1);
-    
-    if (postsError) {
-      console.error('❌ Posts table error:', postsError.message);
-    } else {
-      console.log('✅ Posts table connected');
-      console.log('   Found', postsData?.length || 0, 'posts');
+      console.log('✅ Writers table connected');
+      console.log('   Found', writersData?.length || 0, 'writers');
     }
     
     console.log('\n🎉 Database connection test completed!');

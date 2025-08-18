@@ -1,958 +1,601 @@
-'use client'
+"use client"
 
-import { useEffect, useState, useMemo, useCallback } from 'react'
-import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Search, 
-  Calendar, 
-  Clock, 
-  Heart, 
-  Bookmark as BookmarkIcon,
-  ChevronDown, 
-  Grid, 
-  List, 
-  RefreshCw, 
-  AlertCircle, 
-  Twitter, 
-  Facebook,
-  Copy,
-  Check,
-  ArrowRight,
-  Video,
-  Filter,
-  TrendingUp,
-  Star,
-  Zap,
-  Sparkles,
-  BookOpen,
-  Users,
-  Award,
-  Target,
-  Globe,
-  Layers,
-  Palette,
-  Camera,
-  ChevronLeft,
-  ChevronRight,
-  MessageSquare,
-  FilterX,
-  Hash,
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Clock,
   Eye,
-  ThumbsUp,
+  Search,
+  Bell,
+  User,
   Share2,
-  TrendingDown
-} from 'lucide-react'
+  Bookmark,
+  Flame,
+  Zap,
+  Play,
+  Calendar,
+  MapPin,
+  Globe,
+  Cpu,
+  Briefcase,
+  Heart,
+  Atom,
+  Star,
+  Activity,
+  X,
+  Grid3X3,
+  Users,
+  Radio,
+  TrendingUp,
+  Newspaper,
+  Loader2,
+} from "lucide-react"
+import Image from "next/image"
+import { useArticles, useCategories } from "../../hooks/useArticles"
+import { Article, Category } from "../../types/database"
 
-interface PostResponse {
-  id: string
-  title: string
-  excerpt: string
-  author: string
-  authorAvatar?: string
-  category: string
-  createdAt: string
-  featuredImage?: string
-  videoUrl?: string
-  videoTitle?: string
-  tags?: string[]
-  slug: string
-  content: string
-  readTime?: number
-  likes?: number
-  comments?: number
-  viewCount?: number
-  status?: string
+function formatTimeAgo(dateString: string): string {
+  const now = new Date()
+  const publishedDate = new Date(dateString)
+  const diffInMinutes = Math.floor((now.getTime() - publishedDate.getTime()) / (1000 * 60))
+
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes}m ago`
+  } else if (diffInMinutes < 1440) {
+    return `${Math.floor(diffInMinutes / 60)}h ago`
+  } else {
+    return `${Math.floor(diffInMinutes / 1440)}d ago`
+  }
 }
 
-type ViewMode = 'grid' | 'list'
-type SortOption = 'newest' | 'oldest' | 'popular' | 'title'
-
-export default function PostsPage() {
-  const [posts, setPosts] = useState<PostResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [selectedTag, setSelectedTag] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<SortOption>('newest')
-  const [viewMode, setViewMode] = useState<ViewMode>('grid')
-  const [showFilters, setShowFilters] = useState(false)
-  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set())
-  const [copiedLink, setCopiedLink] = useState<string | null>(null)
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set())
-  const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage] = useState(12)
-
-  const fetchPosts = useCallback(async () => {
-    try {
-      setLoading(true)
-      const response = await fetch('/api/posts')
-      
-      if (response.ok) {
-        const data = await response.json()
-        
-        const transformedPosts = (Array.isArray(data) ? data : []).map((post: any) => ({
-          id: post.id,
-          title: post.title,
-          excerpt: post.excerpt || post.content?.substring(0, 150) || '',
-          author: post.author,
-          authorAvatar: post.author_avatar,
-          category: post.category,
-          createdAt: post.created_at,
-          featuredImage: post.featured_image,
-          videoUrl: post.video_url,
-          videoTitle: post.video_title,
-          tags: Array.isArray(post.tags) ? post.tags : (post.tags ? post.tags.split(',') : []),
-          slug: post.slug,
-          content: post.content,
-          readTime: post.read_time,
-          likes: post.likes || 0,
-          comments: post.comments_count || 0,
-          viewCount: post.view_count || 0,
-          status: post.status
-        }))
-        
-        setPosts(transformedPosts)
-        setError(null)
-      } else {
-        throw new Error('Failed to fetch posts')
-      }
-    } catch (err) {
-      console.error('Error fetching posts:', err)
-      setError('Failed to load posts. Please check your internet connection.')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchPosts()
-  }, [fetchPosts])
-
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
-    } catch {
-      return 'Invalid date'
-    }
-  }
-
-  const calculateReadTime = (content: string) => {
-    if (!content) return 1
-    const wordsPerMinute = 200
-    const words = content.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length
-    return Math.max(1, Math.ceil(words / wordsPerMinute))
-  }
-
-  const sharePost = async (platform: string, post: PostResponse) => {
-    const url = `${window.location.origin}/posts/${post.slug}`
-    const title = post.title
-
-    const shareUrls = {
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
-    }
-
-    if (shareUrls[platform as keyof typeof shareUrls]) {
-      window.open(shareUrls[platform as keyof typeof shareUrls], '_blank', 'width=600,height=400')
-    } else if (platform === 'copy') {
-      try {
-        await navigator.clipboard.writeText(url)
-        setCopiedLink(post.id)
-        setTimeout(() => setCopiedLink(null), 2000)
-      } catch {
-        const textArea = document.createElement('textarea')
-        textArea.value = url
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textArea)
-        setCopiedLink(post.id)
-        setTimeout(() => setCopiedLink(null), 2000)
-      }
-    }
-  }
-
-  const toggleBookmark = (postId: string) => {
-    setBookmarkedPosts(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(postId)) {
-        newSet.delete(postId)
-      } else {
-        newSet.add(postId)
-      }
-      return newSet
-    })
-  }
-
-  const toggleLike = (postId: string) => {
-    setLikedPosts(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(postId)) {
-        newSet.delete(postId)
-      } else {
-        newSet.add(postId)
-      }
-      return newSet
-    })
-  }
-
-  // Get unique categories and tags from posts
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(posts.map(post => post.category).filter(Boolean))]
-    return uniqueCategories.sort()
-  }, [posts])
-
-  const allTags = useMemo(() => {
-    const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []))]
-    return uniqueTags.sort()
-  }, [posts])
-
-  // Filter and sort posts
-  const filteredAndSortedPosts = useMemo(() => {
-    let filtered = posts.filter(post => {
-      const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          (post.excerpt && post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                          post.author.toLowerCase().includes(searchTerm.toLowerCase())
-      
-      const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory
-      const matchesTag = selectedTag === 'all' || (post.tags && post.tags.includes(selectedTag))
-      
-      return matchesSearch && matchesCategory && matchesTag
-    })
-
-    // Sort posts
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'newest':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        case 'oldest':
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        case 'popular':
-          return (b.likes || 0) - (a.likes || 0)
-        case 'title':
-          return a.title.localeCompare(b.title)
-        default:
-          return 0
-      }
-    })
-
-    return filtered
-  }, [posts, searchTerm, selectedCategory, selectedTag, sortBy])
-
-  // Pagination
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = filteredAndSortedPosts.slice(indexOfFirstPost, indexOfLastPost)
-  const totalPages = Math.ceil(filteredAndSortedPosts.length / postsPerPage)
-
-  const clearFilters = () => {
-    setSearchTerm('')
-    setSelectedCategory('all')
-    setSelectedTag('all')
-    setSortBy('newest')
-    setCurrentPage(1)
-  }
-
-  const hasActiveFilters = searchTerm || selectedCategory !== 'all' || selectedTag !== 'all' || sortBy !== 'newest'
-
-  // Featured post (first published post)
-  const featuredPost = posts.find(post => post.status === 'published') || posts[0]
-
-  if (loading) {
+function ArticleCard({ article, featured = false, compact = false }: { article: Article; featured?: boolean; compact?: boolean }) {
+  if (compact) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="animate-pulse">
-            <div className="h-12 bg-slate-200 rounded-lg w-80 mb-8"></div>
-            <div className="h-6 bg-slate-200 rounded w-96 mb-12"></div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                  <div className="h-48 bg-slate-200"></div>
-                  <div className="p-6">
-                    <div className="h-4 bg-slate-200 rounded w-20 mb-3"></div>
-                    <div className="h-6 bg-slate-200 rounded w-full mb-3"></div>
-                    <div className="h-4 bg-slate-200 rounded w-3/4 mb-4"></div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="h-10 w-10 bg-slate-200 rounded-full"></div>
-                      <div className="flex-1">
-                        <div className="h-4 bg-slate-200 rounded w-24 mb-1"></div>
-                        <div className="h-3 bg-slate-200 rounded w-32"></div>
-                      </div>
-                    </div>
-                  </div>
+             <Card className="group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border-0 shadow-sm bg-white">
+        <CardContent className="p-4">
+          <div className="flex items-start space-x-4">
+                                      <div className="relative w-24 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-pink-200 to-pink-300">
+               <Image
+                 src={`https://picsum.photos/96/80?random=${article.id}`}
+                 alt={article.title}
+                 width={96}
+                 height={80}
+                 className="w-full h-full object-cover"
+               />
+              {article.is_breaking && (
+                <div className="absolute top-1 left-1">
+                                   <Badge className="bg-pink-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
+                   BREAKING
+                 </Badge>
                 </div>
-              ))}
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center space-x-2 mb-2">
+                                 <Badge 
+                   className="text-xs font-medium px-2 py-1 rounded-full" 
+                   style={{ 
+                     backgroundColor: article.categories?.color || '#EC4899', 
+                     color: "white",
+                     boxShadow: `0 0 10px ${article.categories?.color || '#EC4899'}40`
+                   }}
+                 >
+                   {article.categories?.name || 'Uncategorized'}
+                 </Badge>
+                {article.is_hot && (
+                                     <div className="flex items-center space-x-1">
+                     <Flame className="h-3 w-3 text-pink-500 animate-pulse" />
+                     <span className="text-xs text-pink-500 font-medium">HOT</span>
+                   </div>
+                )}
+              </div>
+                             <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-pink-600 transition-colors duration-300 mb-3 text-gray-900">
+                 {article.title}
+               </h3>
+                             <div className="flex items-center space-x-3 text-xs text-gray-600">
+                <div className="flex items-center space-x-1">
+                  <Clock className="h-3 w-3" />
+                  <span>{formatTimeAgo(article.published_at)}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Eye className="h-3 w-3" />
+                  <span>{article.views.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+         <Card className={`group cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-0 shadow-md bg-white overflow-hidden ${featured ? "md:col-span-2" : ""}`}>
+      <CardContent className="p-0">
+        <div className="relative">
+                                <div className={`relative overflow-hidden ${featured ? "h-80" : "h-48"} bg-gradient-to-br from-pink-200 to-pink-300`}>
+             <Image
+               src={`https://picsum.photos/${featured ? '800' : '600'}/${featured ? '320' : '192'}?random=${article.id}`}
+               alt={article.title}
+               width={featured ? 800 : 600}
+               height={featured ? 320 : 192}
+               className="w-full h-full object-cover"
+             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            {article.is_breaking && (
+              <div className="absolute top-4 left-4">
+                                 <Badge className="bg-pink-500 text-white animate-pulse px-3 py-1 rounded-full font-medium">
+                   <Zap className="h-3 w-3 mr-1" />
+                   BREAKING
+                 </Badge>
+              </div>
+            )}
+            {article.is_hot && (
+              <div className="absolute top-4 right-4">
+                                 <Badge className="bg-pink-400 text-white px-3 py-1 rounded-full font-medium">
+                   <Flame className="h-3 w-3 mr-1" />
+                   HOT
+                 </Badge>
+              </div>
+            )}
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="flex items-center space-x-2 mb-2">
+                                 <Badge 
+                   className="text-sm font-medium px-3 py-1 rounded-full" 
+                   style={{ 
+                     backgroundColor: article.categories?.color || '#EC4899', 
+                     color: "white",
+                     boxShadow: `0 0 15px ${article.categories?.color || '#EC4899'}60`
+                   }}
+                 >
+                   {article.categories?.name || 'Uncategorized'}
+                 </Badge>
+                <span className="text-white/80 text-sm">•</span>
+                <span className="text-white/80 text-sm">{article.author}</span>
+              </div>
+            </div>
+          </div>
+          <div className="p-6">
+                                      <h3 className={`font-bold mb-4 group-hover:text-pink-600 transition-colors duration-300 leading-tight text-gray-900 ${featured ? "text-3xl" : "text-xl"}`}>
+               {article.title}
+             </h3>
+             <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base">{article.excerpt}</p>
+            <div className="flex items-center justify-between">
+                             <div className="flex items-center space-x-4 text-sm text-gray-600">
+                <div className="flex items-center space-x-1">
+                  <Clock className="h-4 w-4" />
+                  <span>{formatTimeAgo(article.published_at)}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Eye className="h-4 w-4" />
+                  <span>{article.views.toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                                 <Button variant="ghost" size="sm" className="hover:bg-pink-50 hover:text-pink-600 transition-colors">
+                   <Share2 className="h-4 w-4" />
+                 </Button>
+                 <Button variant="ghost" size="sm" className="hover:bg-pink-50 hover:text-pink-600 transition-colors">
+                   <Bookmark className="h-4 w-4" />
+                 </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+export default function PostsPage() {
+  const [activeCategory, setActiveCategory] = useState("all")
+  
+  // Fetch data from database
+  const { articles: latestNews, loading: latestLoading, error: latestError } = useArticles({
+    limit: 12,
+    sortBy: 'published_at',
+    sortOrder: 'desc'
+  })
+  
+  const { articles: breakingNews, loading: breakingLoading } = useArticles({
+    breaking: true,
+    limit: 3,
+    sortBy: 'published_at',
+    sortOrder: 'desc'
+  })
+  
+  const { articles: hotTopics, loading: hotLoading } = useArticles({
+    hot: true,
+    limit: 5,
+    sortBy: 'views',
+    sortOrder: 'desc'
+  })
+  
+  const { articles: trendingNews, loading: trendingLoading } = useArticles({
+    hot: true,
+    limit: 6,
+    sortBy: 'views',
+    sortOrder: 'desc'
+  })
+  
+  const { articles: editorsPicks, loading: editorsLoading } = useArticles({
+    limit: 6,
+    sortBy: 'views',
+    sortOrder: 'desc'
+  })
+  
+  const { articles: mostPopular, loading: popularLoading } = useArticles({
+    limit: 6,
+    sortBy: 'views',
+    sortOrder: 'desc'
+  })
+  
+  const { categories, loading: categoriesLoading } = useCategories()
+
+  // Filter articles based on active category
+  const filteredNews = activeCategory === "all" 
+    ? latestNews 
+    : latestNews.filter((article) => article.categories?.slug === activeCategory)
+
+  // Loading state
+  const isLoading = latestLoading || breakingLoading || hotLoading || categoriesLoading
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-pink-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading News</h2>
+          <p className="text-gray-600">Please wait while we fetch the latest stories...</p>
         </div>
       </div>
     )
   }
 
-  if (error) {
+  // Error state
+  if (latestError) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
-            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6" />
-            <h3 className="text-xl font-bold text-slate-900 mb-3">Failed to Load Posts</h3>
-            <p className="text-slate-600 mb-6">{error}</p>
-            <button
-              onClick={fetchPosts}
-              className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
-            >
-              <RefreshCw className="w-5 h-5" />
-              Try Again
-            </button>
-          </div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error Loading News</h2>
+          <p className="text-gray-600">{latestError}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      {/* Enhanced Hero Section */}
-      <div className="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 bg-black/5"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.08%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
-        
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-white/15 rounded-full blur-lg animate-pulse delay-500"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="inline-flex items-center gap-3 bg-white/15 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20"
-            >
-              <Sparkles className="w-5 h-5 text-yellow-300 animate-pulse" />
-              <span className="text-white/95 text-sm font-semibold">Discover Amazing Content</span>
-              <div className="w-2 h-2 bg-yellow-300 rounded-full animate-ping"></div>
-            </motion.div>
-            
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent"
-            >
-              Our Blog
-            </motion.h1>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-xl md:text-2xl text-white/95 max-w-4xl mx-auto leading-relaxed mb-10 font-light"
-            >
-              Discover insights, tutorials, and stories from our community. 
-              Stay updated with the latest trends and best practices.
-            </motion.p>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="flex items-center justify-center gap-8 text-white/90"
-            >
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <BookOpen className="w-5 h-5 text-yellow-300" />
-                <span className="font-semibold">{posts.length} Articles</span>
+    <div className="min-h-screen bg-white">
+             {/* Breaking News Banner */}
+       {breakingNews.length > 0 && (
+         <div className="bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800 text-white py-4 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Zap className="h-5 w-5 animate-pulse" />
+                  <span className="font-bold text-lg">BREAKING NEWS</span>
+                </div>
+                <div className="hidden md:flex space-x-6">
+                  {breakingNews.map((article, index) => (
+                                         <span key={article.id} className="text-sm font-medium hover:text-pink-200 transition-colors cursor-pointer">
+                       {article.title}
+                       {index < breakingNews.length - 1 && <span className="mx-3 text-pink-300">•</span>}
+                     </span>
+                  ))}
+                </div>
               </div>
-              <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Users className="w-5 h-5 text-yellow-300" />
-                <span className="font-semibold">Expert Authors</span>
-              </div>
-              <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <Award className="w-5 h-5 text-yellow-300" />
-                <span className="font-semibold">Premium Content</span>
-              </div>
-            </motion.div>
-          </motion.div>
+                             <Button variant="ghost" size="sm" className="text-white hover:bg-pink-700/50">
+                <Bell className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+             {/* Category Navigation */}
+       <div className="bg-white border-b border-pink-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center space-x-2 py-4 overflow-x-auto scrollbar-hide">
+                                      <Button
+               variant={activeCategory === "all" ? "default" : "ghost"}
+               size="sm"
+               onClick={() => setActiveCategory("all")}
+               className="whitespace-nowrap hover:bg-pink-50 transition-colors text-black"
+               style={{
+                 backgroundColor: activeCategory === "all" ? "#EC4899" : undefined,
+                 color: activeCategory === "all" ? "white" : "black",
+               }}
+             >
+               <Grid3X3 className="h-4 w-4 mr-2" />
+               All News
+             </Button>
+                         {categories.map((category) => (
+               <Button
+                 key={category.id}
+                 variant={activeCategory === category.slug ? "default" : "ghost"}
+                 size="sm"
+                 onClick={() => setActiveCategory(category.slug)}
+                 className="whitespace-nowrap hover:bg-pink-50 transition-colors text-black"
+                 style={{
+                   backgroundColor: activeCategory === category.slug ? category.color : undefined,
+                   color: activeCategory === category.slug ? "white" : "black",
+                 }}
+               >
+                 {category.name}
+               </Button>
+             ))}
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Enhanced Featured Post */}
-        {featuredPost && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-20"
-          >
-            <div className="relative">
-              {/* Background Glow */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl"></div>
-              
-              <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-                <div className="grid lg:grid-cols-2 gap-0">
-                  {/* Enhanced Featured Image */}
-                  <div className="relative h-80 lg:h-full overflow-hidden group">
-                    {featuredPost.featuredImage ? (
-                      <img 
-                        src={featuredPost.featuredImage} 
-                        alt={featuredPost.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
-                        <BookOpen className="w-20 h-20 text-white/50" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                    {featuredPost.videoUrl && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-white/95 rounded-full flex items-center justify-center backdrop-blur-sm shadow-2xl">
-                          <Video className="w-12 h-12 text-black" />
-                        </div>
-                      </div>
-                    )}
-                    <div className="absolute top-6 left-6">
-                      <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
-                        <Star className="w-4 h-4 mr-2" />
-                        Featured
-                      </span>
-                    </div>
-                    <div className="absolute top-6 right-6 flex gap-3">
-                      <button
-                        onClick={() => toggleBookmark(featuredPost.id)}
-                        className="p-3 bg-white/95 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
-                      >
-                        <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(featuredPost.id) ? 'fill-current text-purple-600' : 'text-slate-700'}`} />
-                      </button>
-                      <button
-                        onClick={() => sharePost('copy', featuredPost)}
-                        className="p-3 bg-white/95 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
-                      >
-                        {copiedLink === featuredPost.id ? <Check className="w-5 h-5 text-green-600" /> : <Share2 className="w-5 h-5 text-slate-700" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Enhanced Featured Content */}
-                  <div className="p-10 lg:p-14 flex flex-col justify-center">
-                    <div className="flex items-center gap-3 mb-6">
-                      <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 border border-indigo-200">
-                        {featuredPost.category}
-                      </span>
-                      {featuredPost.videoUrl && (
-                        <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 border border-pink-200">
-                          <Video className="w-4 h-4 mr-2" />
-                          Video
-                        </span>
-                      )}
-                    </div>
-
-                    <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-6 leading-tight">
-                      <Link href={`/posts/${featuredPost.slug}`} className="hover:text-indigo-600 transition-colors duration-300">
-                        {featuredPost.title}
-                      </Link>
-                    </h2>
-
-                    {featuredPost.excerpt && (
-                      <p className="text-slate-600 mb-8 leading-relaxed line-clamp-3 text-lg">
-                        {featuredPost.excerpt}
-                      </p>
-                    )}
-
-                    <div className="flex items-center gap-5 mb-8">
-                      {featuredPost.authorAvatar ? (
-                        <img
-                          src={featuredPost.authorAvatar}
-                          alt={featuredPost.author}
-                          className="w-14 h-14 rounded-full object-cover ring-4 ring-white shadow-lg"
-                        />
-                      ) : (
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                          <span className="text-white font-bold text-xl">{featuredPost.author.charAt(0).toUpperCase()}</span>
-                        </div>
-                      )}
-                      <div className="flex-1">
-                        <p className="font-bold text-slate-900 text-lg">{featuredPost.author}</p>
-                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            <span>{formatDate(featuredPost.createdAt)}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            <span>{featuredPost.readTime || calculateReadTime(featuredPost.content)} min read</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <Link 
-                        href={`/posts/${featuredPost.slug}`} 
-                        className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
-                      >
-                        Read Featured Article
-                        <ArrowRight className="w-5 h-5" />
-                      </Link>
-
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => toggleLike(featuredPost.id)}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 ${
-                            likedPosts.has(featuredPost.id)
-                              ? 'bg-gradient-to-r from-pink-100 to-rose-100 text-pink-600 shadow-lg'
-                              : 'bg-slate-100 text-slate-600 hover:bg-gradient-to-r hover:from-pink-100 hover:to-rose-100 hover:text-pink-600 hover:shadow-lg'
-                          }`}
-                        >
-                          <Heart className={`w-5 h-5 ${likedPosts.has(featuredPost.id) ? 'fill-current' : ''}`} />
-                          <span className="font-semibold">{(featuredPost.likes || 0) + (likedPosts.has(featuredPost.id) ? 1 : 0)}</span>
-                        </button>
-                        <div className="flex items-center gap-2 px-4 py-3 bg-slate-100 text-slate-600 rounded-xl">
-                          <MessageSquare className="w-5 h-5" />
-                          <span className="font-semibold">{featuredPost.comments || 0}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+      {/* Main Content */}
+             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-3">
+            {/* Featured Stories */}
+                         <div className="mb-16">
+                           <div className="flex items-center space-x-3 mb-6">
+               <div className="w-1 h-8 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
+                                <h2 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
+                   {activeCategory === "all"
+                     ? "Featured Stories"
+                     : `${categories.find((c) => c.slug === activeCategory)?.name || "Featured"} Stories`}
+                 </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-2">
+                  {filteredNews[0] && <ArticleCard article={filteredNews[0]} featured />}
+                </div>
+                <div className="space-y-4">
+                  {filteredNews
+                    .slice(1, 4)
+                    .map((article) => article && <ArticleCard key={article.id} article={article} compact />)}
                 </div>
               </div>
             </div>
-          </motion.div>
-        )}
 
-        {/* Enhanced Search and Filters */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="relative bg-white rounded-3xl shadow-xl border border-slate-100 p-8 mb-12"
-        >
-          {/* Background Glow */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-xl"></div>
-          
-          <div className="relative">
-            <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
-              {/* Enhanced Search */}
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search articles, authors, or topics..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-slate-50 focus:bg-white transition-all text-lg shadow-sm hover:shadow-md"
-                />
-              </div>
+                         {/* Latest Updates */}
+             <div className="border-t border-pink-200 pt-8">
+               <div className="flex items-center space-x-3 mb-6">
+                 <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
+                 <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
+                   Latest Updates
+                 </h2>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {filteredNews.length > 4 ? (
+                   filteredNews
+                     .slice(4, 10)
+                     .map((article) => article && <ArticleCard key={article.id} article={article} />)
+                 ) : filteredNews.length === 0 ? (
+                   <div className="col-span-full text-center py-16">
+                     <div className="bg-white rounded-2xl p-12 border border-pink-200">
+                       <Newspaper className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                       <h3 className="text-2xl font-bold mb-3 text-gray-900 tracking-tight">No articles found</h3>
+                       <p className="text-gray-600 font-medium">Try selecting a different category or check back later.</p>
+                     </div>
+                   </div>
+                 ) : null}
+               </div>
+             </div>
 
-              {/* Enhanced View Toggle */}
-              <div className="flex items-center gap-4">
-                <div className="flex bg-slate-100 rounded-2xl p-1 shadow-sm">
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-3 rounded-xl transition-all duration-300 ${
-                      viewMode === 'grid' 
-                        ? 'bg-white shadow-lg text-indigo-600' 
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Grid className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-3 rounded-xl transition-all duration-300 ${
-                      viewMode === 'list' 
-                        ? 'bg-white shadow-lg text-indigo-600' 
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <List className="w-5 h-5" />
-                  </button>
-                </div>
-                
-                <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  className={`flex items-center gap-2 px-6 py-4 rounded-2xl transition-all duration-300 ${
-                    showFilters 
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg' 
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:shadow-md'
-                  }`}
-                >
-                  <Filter className="w-5 h-5" />
-                  Filters
-                  <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
-                </button>
-              </div>
-            </div>
+             {/* Trending Now */}
+             <div className="border-t border-pink-200 pt-8 mt-16">
+               <div className="flex items-center space-x-3 mb-6">
+                 <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
+                 <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
+                   Trending Now
+                 </h2>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {trendingNews.map((article) => (
+                   <ArticleCard key={article.id} article={article} />
+                 ))}
+               </div>
+             </div>
 
-            {/* Enhanced Advanced Filters */}
-            <AnimatePresence>
-              {showFilters && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-8 pt-8 border-t border-slate-100"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Category Filter */}
-                    <div>
-                      <label className="block text-sm font-bold text-slate-900 mb-3">Category</label>
-                      <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-slate-50 focus:bg-white transition-all text-lg shadow-sm hover:shadow-md"
-                      >
-                        <option value="all">All Categories</option>
-                        {categories.map(category => (
-                          <option key={category} value={category}>{category}</option>
-                        ))}
-                      </select>
-                    </div>
+             {/* Editor's Picks */}
+             <div className="border-t border-pink-200 pt-8 mt-16">
+               <div className="flex items-center space-x-3 mb-6">
+                 <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
+                 <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
+                   Editor's Picks
+                 </h2>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {editorsPicks.map((article) => (
+                   <ArticleCard key={article.id} article={article} />
+                 ))}
+               </div>
+             </div>
 
-                    {/* Tag Filter */}
-                    <div>
-                      <label className="block text-sm font-bold text-slate-900 mb-3">Tag</label>
-                      <select
-                        value={selectedTag}
-                        onChange={(e) => setSelectedTag(e.target.value)}
-                        className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-slate-50 focus:bg-white transition-all text-lg shadow-sm hover:shadow-md"
-                      >
-                        <option value="all">All Tags</option>
-                        {allTags.map(tag => (
-                          <option key={tag} value={tag}>{tag}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Sort */}
-                    <div>
-                      <label className="block text-sm font-bold text-slate-900 mb-3">Sort By</label>
-                      <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value as SortOption)}
-                        className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-slate-50 focus:bg-white transition-all text-lg shadow-sm hover:shadow-md"
-                      >
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="popular">Most Popular</option>
-                        <option value="title">Alphabetical</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Enhanced Clear Filters */}
-                  {hasActiveFilters && (
-                    <div className="mt-6 flex justify-end">
-                      <button
-                        onClick={clearFilters}
-                        className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors duration-300 hover:scale-105"
-                      >
-                        <FilterX className="w-4 h-4" />
-                        Clear all filters
-                      </button>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+             {/* Most Popular */}
+             <div className="border-t border-pink-200 pt-8 mt-16">
+               <div className="flex items-center space-x-3 mb-6">
+                 <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
+                 <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
+                   Most Popular
+                 </h2>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {mostPopular.map((article) => (
+                   <ArticleCard key={article.id} article={article} />
+                 ))}
+               </div>
+             </div>
           </div>
-        </motion.div>
 
-        {/* Enhanced Results Summary */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mb-8 flex items-center justify-between"
-        >
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
-              <BookOpen className="w-5 h-5 text-indigo-600" />
-              <p className="text-slate-900 font-bold text-lg">
-                {filteredAndSortedPosts.length} {filteredAndSortedPosts.length === 1 ? 'article' : 'articles'} found
-              </p>
-            </div>
-            {hasActiveFilters && (
-              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 border border-indigo-200 shadow-sm">
-                <Filter className="w-4 h-4 mr-2" />
-                Filtered
-              </span>
-            )}
-          </div>
-          <button
-            onClick={fetchPosts}
-            className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Refresh Posts
-          </button>
-        </motion.div>
-
-        {/* Posts Grid/List */}
-        {filteredAndSortedPosts.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="text-center py-20"
-          >
-            <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Search className="w-12 h-12 text-slate-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">No articles found</h3>
-            <p className="text-slate-600 mb-8 max-w-md mx-auto">
-              Try adjusting your search or filter criteria to find what you're looking for.
-            </p>
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="bg-blue-600 text-white px-8 py-4 rounded-2xl hover:bg-blue-700 transition-colors font-semibold"
-              >
-                Clear all filters
-              </button>
-            )}
-          </motion.div>
-        ) : (
-          <>
-            <div className={`grid gap-8 ${
-              viewMode === 'grid' 
-                ? 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-                : 'grid-cols-1 max-w-4xl mx-auto'
-            }`}>
-              <AnimatePresence>
-                {currentPosts.map((post, index) => (
-                  <motion.article
-                    key={post.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`relative bg-white rounded-3xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-500 overflow-hidden group ${
-                      viewMode === 'list' ? 'flex gap-6' : ''
-                    }`}
-                  >
-                    {/* Hover Glow Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    {/* Featured Image */}
-                    {post.featuredImage && (
-                      <div className={`${viewMode === 'list' ? 'w-80 flex-shrink-0' : 'aspect-video'} relative overflow-hidden`}>
-                        <img 
-                          src={post.featuredImage} 
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
-                        {post.videoUrl && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                            <div className="w-16 h-16 bg-white/95 rounded-full flex items-center justify-center backdrop-blur-sm shadow-lg">
-                              <Video className="w-8 h-8 text-black" />
-                            </div>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <button
-                            onClick={() => toggleBookmark(post.id)}
-                            className="p-2 bg-white/95 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
-                          >
-                            <BookmarkIcon className={`w-5 h-5 ${bookmarkedPosts.has(post.id) ? 'fill-current text-purple-600' : 'text-slate-700'}`} />
-                          </button>
-                          <button
-                            onClick={() => sharePost('copy', post)}
-                            className="p-2 bg-white/95 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
-                          >
-                            {copiedLink === post.id ? <Check className="w-5 h-5 text-green-600" /> : <Share2 className="w-5 h-5 text-slate-700" />}
-                          </button>
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="space-y-6 sticky top-32">
+                             {/* Hot Topics */}
+               <Card className="border-0 shadow-lg bg-white">
+                <CardHeader className="pb-4">
+                                     <div className="flex items-center space-x-2">
+                     <TrendingUp className="h-5 w-5 text-pink-500" />
+                     <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Hot Topics</h3>
+                   </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {hotTopics.map((article, index) => (
+                    <div key={article.id} className="group cursor-pointer p-3 rounded-lg hover:bg-pink-50 transition-colors">
+                      <div className="flex items-start space-x-3">
+                        <div className="text-2xl font-bold text-gray-400 group-hover:text-pink-500 transition-colors">
+                          {index + 1}
                         </div>
-                      </div>
-                    )}
-
-                    {/* Enhanced Content */}
-                    <div className={viewMode === 'list' ? 'flex-1 p-8' : 'p-6'}>
-                      {/* Category and Tags */}
-                      <div className="flex items-center gap-2 mb-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 border border-indigo-200">
-                          {post.category}
-                        </span>
-                        {post.videoUrl && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 border border-pink-200">
-                            <Video className="w-3 h-3 mr-1" />
-                            Video
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Title */}
-                      <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-4 line-clamp-2 group-hover:text-indigo-600 transition-colors duration-300 leading-tight">
-                        <Link href={`/posts/${post.slug}`}>
-                          {post.title}
-                        </Link>
-                      </h2>
-
-                      {/* Excerpt */}
-                      {post.excerpt && (
-                        <p className="text-slate-600 mb-6 line-clamp-3 leading-relaxed text-base">
-                          {post.excerpt}
-                        </p>
-                      )}
-
-                      {/* Author & Meta */}
-                      <div className="flex items-center gap-4 mb-6">
-                        {post.authorAvatar ? (
-                          <img
-                            src={post.authorAvatar}
-                            alt={post.author}
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-100 shadow-md"
-                          />
-                        ) : (
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md">
-                            <span className="text-white font-bold text-lg">{post.author.charAt(0).toUpperCase()}</span>
+                        <div className="flex-1 min-w-0">
+                                                     <h4 className="font-semibold text-sm line-clamp-2 group-hover:text-pink-600 transition-colors leading-tight text-gray-900">
+                             {article.title}
+                           </h4>
+                          <div className="flex items-center space-x-2 mt-2 text-xs text-gray-500">
+                            <Clock className="h-3 w-3" />
+                            <span>{formatTimeAgo(article.published_at)}</span>
+                            <Eye className="h-3 w-3" />
+                            <span>{article.views.toLocaleString()}</span>
                           </div>
-                        )}
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-900">{post.author}</p>
-                          <div className="flex items-center gap-3 text-sm text-slate-600">
-                            <Calendar className="w-4 h-4" />
-                            <span>{formatDate(post.createdAt)}</span>
-                            <span>•</span>
-                            <Clock className="w-4 h-4" />
-                            <span>{post.readTime || calculateReadTime(post.content)} min read</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Tags */}
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="flex items-center gap-2 mb-6">
-                          <Hash className="w-4 h-4 text-slate-400" />
-                          <div className="flex flex-wrap gap-1">
-                            {post.tags.slice(0, 3).map((tag, index) => (
-                              <span
-                                key={index}
-                                className="text-xs text-slate-600 hover:text-indigo-600 cursor-pointer font-medium transition-colors"
-                              >
-                                #{tag}
-                              </span>
-                            ))}
-                            {post.tags.length > 3 && (
-                              <span className="text-xs text-slate-600 font-medium">
-                                +{post.tags.length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Enhanced Action Buttons */}
-                      <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                        <Link 
-                          href={`/posts/${post.slug}`} 
-                          className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold text-sm group/link transition-colors duration-300"
-                        >
-                          Read Article
-                          <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
-                        </Link>
-
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => toggleLike(post.id)}
-                            className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 ${
-                              likedPosts.has(post.id)
-                                ? 'bg-gradient-to-r from-pink-100 to-rose-100 text-pink-600 shadow-md'
-                                : 'bg-slate-100 text-slate-600 hover:bg-gradient-to-r hover:from-pink-100 hover:to-rose-100 hover:text-pink-600 hover:shadow-md'
-                            }`}
-                          >
-                            <Heart className={`w-4 h-4 ${likedPosts.has(post.id) ? 'fill-current' : ''}`} />
-                            <span className="text-sm font-medium">{(post.likes || 0) + (likedPosts.has(post.id) ? 1 : 0)}</span>
-                          </button>
-                          <div className="flex items-center gap-1 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg">
-                            <MessageSquare className="w-4 h-4" />
-                            <span className="text-sm font-medium">{post.comments || 0}</span>
-                          </div>
-                          <button
-                            onClick={() => sharePost('twitter', post)}
-                            className="p-2 text-slate-600 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all duration-300"
-                            title="Share on Twitter"
-                          >
-                            <Twitter className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => sharePost('facebook', post)}
-                            className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-300"
-                            title="Share on Facebook"
-                          >
-                            <Facebook className="w-4 h-4" />
-                          </button>
                         </div>
                       </div>
                     </div>
-                  </motion.article>
-                ))}
-              </AnimatePresence>
-            </div>
+                  ))}
+                </CardContent>
+              </Card>
 
-            {/* Enhanced Pagination */}
-            {totalPages > 1 && (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="mt-16 flex items-center justify-center gap-3"
-              >
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="p-4 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                
-                {[...Array(totalPages)].map((_, index) => {
-                  const page = index + 1
-                  return (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`px-5 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                        currentPage === page
-                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg scale-105'
-                          : 'bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 hover:shadow-md hover:scale-105'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  )
-                })}
-                
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="p-4 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </motion.div>
-            )}
-          </>
-        )}
-      </div>
+                             {/* Newsletter Signup */}
+               <Card className="border-0 shadow-lg bg-white">
+                <CardHeader className="pb-4">
+                                     <div className="flex items-center space-x-2">
+                     <Bell className="h-5 w-5 text-pink-500" />
+                     <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Stay Updated</h3>
+                   </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                                     <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                     Get the latest news and updates delivered directly to your inbox. Never miss important stories.
+                   </p>
+                                     <Input 
+                     placeholder="Enter your email address" 
+                     className="bg-white/50 border-gray-200 focus:border-pink-500"
+                   />
+                                     <Button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg">
+                     Subscribe to Newsletter
+                   </Button>
+                </CardContent>
+              </Card>
+
+                                            {/* Quick Stats */}
+               <Card className="border-0 shadow-lg bg-white">
+                 <CardHeader className="pb-4">
+                   <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Today's Stats</h3>
+                 </CardHeader>
+                 <CardContent className="space-y-4">
+                   <div className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
+                     <div className="flex items-center space-x-2">
+                       <Eye className="h-4 w-4 text-pink-500" />
+                       <span className="text-sm font-semibold text-gray-900">Total Views</span>
+                     </div>
+                     <span className="text-lg font-bold text-pink-600">89.2K</span>
+                   </div>
+                   <div className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
+                     <div className="flex items-center space-x-2">
+                       <Newspaper className="h-4 w-4 text-pink-500" />
+                       <span className="text-sm font-semibold text-gray-900">Articles</span>
+                     </div>
+                     <span className="text-lg font-bold text-pink-600">156</span>
+                   </div>
+                   <div className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
+                     <div className="flex items-center space-x-2">
+                       <Flame className="h-4 w-4 text-pink-500" />
+                       <span className="text-sm font-semibold text-gray-900">Hot Stories</span>
+                     </div>
+                     <span className="text-lg font-bold text-pink-600">23</span>
+                   </div>
+                 </CardContent>
+               </Card>
+
+               {/* Breaking News Alert */}
+               <Card className="border-0 shadow-lg bg-gradient-to-br from-pink-500 to-pink-600">
+                 <CardHeader className="pb-4">
+                   <div className="flex items-center space-x-2">
+                     <Zap className="h-5 w-5 text-white animate-pulse" />
+                     <h3 className="text-2xl font-bold text-white tracking-tight">Breaking News</h3>
+                   </div>
+                 </CardHeader>
+                 <CardContent className="space-y-4">
+                   {breakingNews.slice(0, 3).map((article) => (
+                     <div key={article.id} className="group cursor-pointer p-3 rounded-lg hover:bg-white/10 transition-colors">
+                       <h4 className="font-semibold text-sm line-clamp-2 group-hover:text-pink-200 transition-colors leading-tight text-white">
+                         {article.title}
+                       </h4>
+                       <div className="flex items-center space-x-2 mt-2 text-xs text-pink-200">
+                         <Clock className="h-3 w-3" />
+                         <span>{formatTimeAgo(article.published_at)}</span>
+                       </div>
+                     </div>
+                   ))}
+                 </CardContent>
+               </Card>
+
+               {/* Top Categories */}
+               <Card className="border-0 shadow-lg bg-white">
+                 <CardHeader className="pb-4">
+                   <div className="flex items-center space-x-2">
+                     <Grid3X3 className="h-5 w-5 text-pink-500" />
+                     <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Top Categories</h3>
+                   </div>
+                 </CardHeader>
+                 <CardContent className="space-y-3">
+                   {categories.slice(0, 6).map((category) => (
+                     <div key={category.id} className="group cursor-pointer p-3 rounded-lg hover:bg-pink-50 transition-colors">
+                       <div className="flex items-center justify-between">
+                         <span className="font-semibold text-sm text-gray-900 group-hover:text-pink-600 transition-colors">
+                           {category.name}
+                         </span>
+                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }}></div>
+                       </div>
+                     </div>
+                   ))}
+                 </CardContent>
+               </Card>
+
+               {/* Follow Us */}
+               <Card className="border-0 shadow-lg bg-gradient-to-br from-gray-900 to-gray-800">
+                 <CardHeader className="pb-4">
+                   <div className="flex items-center space-x-2">
+                     <Users className="h-5 w-5 text-pink-400" />
+                     <h3 className="text-2xl font-bold text-white tracking-tight">Follow Us</h3>
+                   </div>
+                 </CardHeader>
+                 <CardContent className="space-y-4">
+                   <p className="text-sm text-gray-300 leading-relaxed">
+                     Stay connected with us on social media for the latest updates and exclusive content.
+                   </p>
+                   <div className="grid grid-cols-2 gap-3">
+                     <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                       <span className="text-sm font-medium">Twitter</span>
+                     </Button>
+                     <Button className="w-full bg-blue-800 hover:bg-blue-900 text-white transition-colors">
+                       <span className="text-sm font-medium">Facebook</span>
+                     </Button>
+                     <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white transition-colors">
+                       <span className="text-sm font-medium">Instagram</span>
+                     </Button>
+                     <Button className="w-full bg-red-600 hover:bg-red-700 text-white transition-colors">
+                       <span className="text-sm font-medium">YouTube</span>
+                     </Button>
+                   </div>
+                 </CardContent>
+               </Card>
+            </div>
+          </div>
+        </div>
+      </main>
+
+
     </div>
   )
 }

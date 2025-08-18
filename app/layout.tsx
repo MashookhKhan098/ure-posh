@@ -4,7 +4,6 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import NavbarWrapper from './components/NavbarWrapper'
 import ConditionalFooter from "./components/ConditionalFooter"
-import { headers } from 'next/headers'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -18,30 +17,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const headersList = headers()
-  const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || ''
-  const isWriterPage = pathname.startsWith('/writer')
-  const isAdminPage = pathname.startsWith('/admin')
-
-  // Debug logging (will show in server console)
-  console.log('Layout Debug:', { pathname, isWriterPage, isAdminPage })
-
   return (
-    <html lang="en" data-admin={isAdminPage ? "true" : "false"}>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {/* Navbar - hidden for admin and writer pages */}
-          {!isWriterPage && !isAdminPage && <NavbarWrapper />}
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
+        <ThemeProvider>
+          {/* Navbar - always shown */}
+          <NavbarWrapper />
           
           {/* Main content */}
           <main className="min-h-screen">{children}</main>
           
-          {/* Footer - Conditionally rendered based on path */}
+          {/* Footer - always shown */}
           <ConditionalFooter />
         </ThemeProvider>
       </body>

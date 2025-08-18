@@ -153,32 +153,31 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
     dots: { color: string, position: React.CSSProperties }[], 
     index: number 
 }) => {
-    const createGearPath = (
-        teeth = 24, 
-        innerRadius = 35, 
-        midRadius = 42, 
-        outerRadius = 50
-    ) => {
-        const angle = (Math.PI * 2) / teeth;
-        const toothWidth = angle * 0.4;
-        let path = '';
-        for (let i = 0; i < teeth; i++) {
-            const start = i * angle;
-            const p1x = Math.cos(start) * midRadius + 50;
-            const p1y = Math.sin(start) * midRadius + 50;
-            const p2x = Math.cos(start + toothWidth) * outerRadius + 50;
-            const p2y = Math.sin(start + toothWidth) * outerRadius + 50;
-            const p3x = Math.cos(start + toothWidth * 2) * outerRadius + 50;
-            const p3y = Math.sin(start + toothWidth * 2) * outerRadius + 50;
-            const p4x = Math.cos(start + toothWidth * 3) * midRadius + 50;
-            const p4y = Math.sin(start + toothWidth * 3) * midRadius + 50;
+    // Gear with trapezoidal teeth blended into a circular base
+    const toothCount = 24;
+    const toothDepth = 8;           // radial depth of each tooth
+    const baseRadius = 42;          // base circle radius
+    const baseAngleDeg = 12;        // tooth base angular width
+    const tipAngleDeg = 8;          // tooth tip angular width (narrower for realism)
+    const addendumRadius = baseRadius + toothDepth;
 
-            if (i === 0) path += `M ${p1x},${p1y} `;
-            else path += `L ${p1x},${p1y} `;
-            path += `L ${p2x},${p2y} L ${p3x},${p3y} L ${p4x},${p4y} `;
-        }
-        path += 'Z';
-        return path;
+    const polarToCartesian = (cx: number, cy: number, r: number, angleDeg: number) => {
+        const angleRad = (Math.PI / 180) * angleDeg;
+        return {
+            x: cx + r * Math.cos(angleRad),
+            y: cy + r * Math.sin(angleRad),
+        };
+    };
+
+    const createToothPath = () => {
+        const centerAngleDeg = -90; // point upwards
+        const baseHalf = baseAngleDeg / 2;
+        const tipHalf = tipAngleDeg / 2;
+        const baseLeft = polarToCartesian(50, 50, baseRadius, centerAngleDeg - baseHalf);
+        const baseRight = polarToCartesian(50, 50, baseRadius, centerAngleDeg + baseHalf);
+        const tipRight = polarToCartesian(50, 50, addendumRadius, centerAngleDeg + tipHalf);
+        const tipLeft = polarToCartesian(50, 50, addendumRadius, centerAngleDeg - tipHalf);
+        return `M ${baseLeft.x},${baseLeft.y} L ${baseRight.x},${baseRight.y} L ${tipRight.x},${tipRight.y} A ${addendumRadius} ${addendumRadius} 0 0 1 ${tipLeft.x} ${tipLeft.y} Z`;
     };
 
     const duration = 20 + (index * 4);
@@ -186,11 +185,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
 
     return (
         <div className="flex flex-col items-center justify-center col-span-1 group">
-            <div className={`relative flex items-center justify-center z-30 ${
-                title === "POSH Adaptability Training" 
-                    ? "w-56 h-56 sm:w-64 sm:h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96" 
-                    : "w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 xl:w-80 xl:h-80"
-            }`}>
+            <div className={`relative flex items-center justify-center z-30 w-52 h-52 sm:w-60 sm:h-60 lg:w-72 lg:h-72 xl:w-80 xl:h-80`}>
                 <motion.div
                     className="absolute inset-0"
                     animate={{ rotate: 360 * direction }}
@@ -207,19 +202,40 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                     >
                         <defs>
                             <linearGradient id={`gearGradient${index}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style={{ stopColor: '#E0E0E0' }} />
-                                <stop offset="50%" style={{ stopColor: '#BDBDBD' }} />
-                                <stop offset="100%" style={{ stopColor: '#E0E0E0' }} />
+                                <stop offset="0%" style={{ stopColor: '#F0F0F0' }} />
+                                <stop offset="50%" style={{ stopColor: '#C9C9C9' }} />
+                                <stop offset="100%" style={{ stopColor: '#F0F0F0' }} />
                             </linearGradient>
+                            <radialGradient id={`hubHighlight${index}`} cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="rgba(255,255,255,0.35)" />
+                                <stop offset="70%" stopColor="rgba(255,255,255,0)" />
+                            </radialGradient>
                         </defs>
-                        <path
-                            d={createGearPath()}
+                        {Array.from({ length: toothCount }).map((_, i) => (
+                            <path
+                                key={i}
+                                d={createToothPath()}
+                                fill={`url(#gearGradient${index})`}
+                                stroke="#AFAFAF"
+                                strokeWidth={0.3}
+                                strokeLinejoin="round"
+                                transform={`rotate(${(i * 360) / toothCount} 50 50)`}
+                            />
+                        ))}
+                        {/* Base circle overlays tooth roots slightly to blend */}
+                        <circle
+                            cx="50"
+                            cy="50"
+                            r={baseRadius}
                             fill={`url(#gearGradient${index})`}
                             stroke="#AFAFAF"
                             strokeWidth="0.5"
                         />
+                        {/* Root fillet highlight for realism */}
+                        <circle cx="50" cy="50" r={baseRadius - 0.6} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
                         <circle cx="50" cy="50" r="28" className="fill-slate-900" /> 
                         <circle cx="50" cy="50" r="30" fill="transparent" stroke="rgba(255,255,255,0.2)" strokeWidth="4"/>
+                        <circle cx="50" cy="50" r="26" fill={`url(#hubHighlight${index})`} />
                     </svg>
                     {dots.map((dot, i) => (
                         <motion.div 
@@ -241,11 +257,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                 </motion.div>
                 
                 <motion.div 
-                    className={`relative z-10 text-center ${
-                        title === "POSH Adaptability Training" 
-                            ? "px-2 sm:px-4 lg:px-6" 
-                            : "px-1 sm:px-2"
-                    }`}
+                    className={`relative z-10 text-center px-3 sm:px-4 lg:px-6`}
                     animate={{ 
                         scale: [1, 1.02, 1],
                     }}
@@ -255,17 +267,9 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                         ease: "easeInOut"
                     }}
                 >
-                    <div className={`text-white font-medium leading-tight ${
-                        title === "POSH Adaptability Training" 
-                            ? "text-sm sm:text-base lg:text-lg xl:text-xl" 
-                            : "text-xs sm:text-sm lg:text-base xl:text-lg"
-                    }`}>
+                    <div className={`text-white font-medium leading-tight text-xs sm:text-sm lg:text-base xl:text-lg`}>
                         {content.split('\n').map((line, idx) => (
-                            <div key={idx} className={`mb-0.5 sm:mb-1 lg:mb-1.5 ${
-                                line.includes('Internal Committees') || line.includes('Quarterly Training') 
-                                    ? 'text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold tracking-wide' 
-                                    : ''
-                            }`}>
+                            <div key={idx} className="mb-0.5 sm:mb-1 lg:mb-1.5">
                                 {line}
                             </div>
                         ))}
@@ -456,10 +460,10 @@ export default function HomePage() {
         <section className="relative pt-4 sm:pt-6 lg:pt-8 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
-              <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -right-24 text-6xl sm:text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -right-10 text-7xl sm:text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 right-1/4 text-4xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute -top-12 -right-12 w-24 h-24 sm:w-32 sm:h-32 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 w-24 h-24 sm:w-32 sm:h-32 text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 w-24 h-24 sm:w-32 sm:h-32 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute bottom-10 right-1/4 sm:bottom-16 w-24 h-24 sm:w-32 sm:h-32 text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           
@@ -572,12 +576,7 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5"></div>
                       
 
-                      
-                      {/* Corner Accents */}
-                      <div className="absolute top-3 lg:top-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
-                      <div className="absolute top-3 lg:top-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
-                      <div className="absolute bottom-3 lg:bottom-4 left-3 lg:left-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
-                      <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 w-2 h-2 lg:w-3 lg:h-3 bg-black rounded-full shadow-lg"></div>
+
                     </div>
                   </motion.div>
                 </div>
@@ -639,7 +638,7 @@ export default function HomePage() {
               className="max-w-7xl mx-auto"
             >
               {/* Top Row - 3 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-2 lg:gap-3 mb-3 sm:mb-5 lg:mb-7">
                 {expertiseGears.slice(0, 3).map((gear, index) => (
                   <motion.div
                     key={index}
@@ -660,7 +659,7 @@ export default function HomePage() {
               </div>
               
               {/* Bottom Row - 2 Gears */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-1 lg:gap-2 max-w-6xl mx-auto">
                 {expertiseGears.slice(3, 5).map((gear, index) => (
                   <motion.div
                     key={index + 3}
@@ -668,7 +667,6 @@ export default function HomePage() {
                     whileHover={{ scale: 1.01, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.3 }}
-                    className={index === 0 ? "sm:col-span-2" : ""}
                   >
                     <ExpertiseGear
                       title={gear.title}
@@ -688,10 +686,10 @@ export default function HomePage() {
         <section className="relative py-6 sm:py-8 lg:py-10 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
-              <Cog className="absolute -top-12 -right-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -right-24 text-6xl sm:text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -right-10 text-7xl sm:text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 right-1/4 text-4xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute -top-12 -right-12 w-28 h-28 sm:w-36 sm:h-36 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 w-28 h-28 sm:w-36 sm:h-36 text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 w-28 h-28 sm:w-36 sm:h-36 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute bottom-10 right-1/4 sm:bottom-16 w-28 h-28 sm:w-36 sm:h-36 text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           

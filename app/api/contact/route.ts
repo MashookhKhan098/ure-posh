@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
-import { createAdminClient } from '@/utils/supabase/admin'
 
 type ContactPayload = {
   name: string
@@ -31,28 +30,14 @@ async function resolveRecipientEmail(): Promise<string | null> {
     return process.env.CONTACT_RECIPIENT_EMAIL
   }
 
-  try {
-    if (process.env.SMTP_USER) {
-      return process.env.SMTP_USER
-    }
-    const supabase = createAdminClient()
-    const { data, error } = await supabase
-      .from('admin')
-      .select('email')
-      .order('created_at', { ascending: true })
-      .limit(1)
-
-    if (error) {
-      console.error('Failed to fetch admin email:', error.message)
-      return null
-    }
-
-    const adminEmail = data && data[0]?.email
-    return adminEmail ?? null
-  } catch (err) {
-    console.error('Error resolving recipient email:', err)
-    return null
+  // Fallback to SMTP user if no specific recipient is configured
+  if (process.env.SMTP_USER) {
+    return process.env.SMTP_USER
   }
+
+  // If no email is configured, return null
+  console.warn('No recipient email configured. Set CONTACT_RECIPIENT_EMAIL or SMTP_USER environment variable.')
+  return null
 }
 
 async function getTransport() {

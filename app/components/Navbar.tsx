@@ -81,7 +81,6 @@ export default function Navbar() {
     { name: "About", href: "/about" },
     { name: "People", href: "/people" },
     { name: "News Room", href: "/posts" },
-    { name: "Posters", href: "/posters" },
     { name: "Connect", href: "/connect" },
   ]
 
@@ -270,9 +269,7 @@ export default function Navbar() {
               
               {/* 5 Expertise Category Columns */}
               {Object.entries(expertiseContent).map(([key, category], index) => (
-                <div key={key} className={`border-r border-gray-100 last:border-r-0 last:pr-0 ${
-                  key === "posh-adaptability" ? "w-72 pr-14" : key === "equality-compliance" ? "w-64 pr-14" : "w-64 pr-8"
-                }`}>
+                <div key={key} className={"border-r border-gray-100 last:border-r-0 w-64 pr-10 last:pr-0"}>
                   <h3 className={`mb-4 pb-3 border-b transition-all duration-300 ${
                     key === "posh-adaptability" 
                       ? "text-[16px] font-bold text-black border-gray-300 hover:text-black hover:border-gray-400" 
@@ -285,13 +282,13 @@ export default function Navbar() {
                       <div key={itemIdx}>
                         <Link 
                           href={`/services/${item.slug}`} 
-                          className={`group block py-2 px-3 rounded-lg transition-all duration-300 text-left w-full hover:shadow-lg hover:shadow-pink-100/50 ${
+                          className={`group relative block py-2 px-3 rounded-lg transition-all duration-300 text-left w-full hover:shadow-lg hover:shadow-pink-100/50 flex items-center min-h-10 leading-snug whitespace-normal break-words ${
                             item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
                               ? 'text-[12px] font-medium text-gray-800 hover:text-pink-600 hover:bg-gradient-to-r hover:from-pink-50 hover:to-pink-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-pink-200'
                               : 'text-[12px] text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-gray-200'
                           }`}
                         >
-                          <span className="relative z-10">{item.name}</span>
+                          <span className="relative z-10 block">{item.name}</span>
                           {/* Hover background effect */}
                           <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
                             item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')

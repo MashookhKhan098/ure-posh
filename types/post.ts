@@ -21,7 +21,6 @@ export interface Post {
   comments?: number
   is_featured?: boolean
   rejection_reason?: string
-  revert_message?: string // message from admin when reverted
 }
 
 // Helper type for API response
@@ -46,5 +45,5 @@ export interface PostResponse {
   likes?: number
   comments?: number
   is_featured?: boolean
-  revert_message?: string // message from admin when reverted
+
 }

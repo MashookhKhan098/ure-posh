@@ -49,7 +49,7 @@ JWT_SECRET=69ef7fb68fb41f982e2211ba1f82cb9b1c62af90087d138be3250c20b7ccf30244504
 # APPLICATION CONFIGURATION
 # ========================================
 NODE_ENV=development
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:4000
 `;
 
     fs.writeFileSync('.env.local', envContent);
@@ -62,50 +62,36 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
     
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     
-    // Test admin table
-    const { data: adminData, error: adminError } = await supabase
-      .from('admin')
+    // Test articles table (instead of posts)
+    const { data: articlesData, error: articlesError } = await supabase
+      .from('articles')
       .select('*')
       .limit(1);
     
-    if (adminError) {
-      console.log('❌ Admin table error:', adminError.message);
+    if (articlesError) {
+      console.log('❌ Articles table error:', articlesError.message);
     } else {
-      console.log('✅ Admin table connected');
-      console.log('   Found', adminData?.length || 0, 'admin users');
+      console.log('✅ Articles table connected');
+      console.log('   Found', articlesData?.length || 0, 'articles');
     }
     
-    // Test writer_profiles table
-    const { data: writerData, error: writerError } = await supabase
-      .from('writer_profiles')
+    // Test writers table
+    const { data: writersData, error: writersError } = await supabase
+      .from('writers')
       .select('*')
       .limit(1);
     
-    if (writerError) {
-      console.log('❌ Writer profiles table error:', writerError.message);
+    if (writersError) {
+      console.log('❌ Writers table error:', writersError.message);
     } else {
-      console.log('✅ Writer profiles table connected');
-      console.log('   Found', writerData?.length || 0, 'writer profiles');
+      console.log('✅ Writers table connected');
+      console.log('   Found', writersData?.length || 0, 'writers');
     }
     
-    // Test posts table
-    const { data: postsData, error: postsError } = await supabase
-      .from('posts')
-      .select('*')
-      .limit(1);
-    
-    if (postsError) {
-      console.log('❌ Posts table error:', postsError.message);
-    } else {
-      console.log('✅ Posts table connected');
-      console.log('   Found', postsData?.length || 0, 'posts');
-    }
-    
-    console.log('\n🎉 Setup completed! Your tables are now connected.');
+    console.log('\n🎉 Setup completed! Your database tables are now connected.');
     console.log('\n🚀 You can now:');
     console.log('1. Start your app: npm run dev');
-    console.log('2. Test admin login: http://localhost:3000/admin/login');
-    console.log('   Username: admin, Password: admin123');
+    console.log('2. Visit your website: http://localhost:4000');
     
   } catch (error) {
     console.error('❌ Setup failed:', error.message);

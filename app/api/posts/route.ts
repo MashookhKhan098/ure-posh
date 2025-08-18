@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { createAdminClient } from '@/utils/supabase/admin';
 import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
@@ -9,26 +8,20 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
-    const approvalStatus = searchParams.get('approval_status');
-    const includeAll = searchParams.get('include_all') === 'true';
     
-    // Create Supabase admin client to bypass RLS
-    const supabase = createAdminClient();
+    // Create Supabase client
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
 
     let query = supabase
       .from('posts')
       .select('*')
       .order('created_at', { ascending: false });
 
-    // Filter by status if provided
+    // Filter by status if provided, otherwise show only published posts
     if (status) {
       query = query.eq('status', status);
-    }
-
-    // Filter by status if provided
-    if (approvalStatus) {
-      query = query.eq('status', approvalStatus);
-    } else if (!includeAll) {
+    } else {
       // By default, only show published posts for public access
       query = query.eq('status', 'published');
     }
@@ -72,7 +65,7 @@ export async function POST(req: NextRequest) {
     const readTime = formData.get('readTime') as string;
     const language = formData.get('language') as string;
     const slug = formData.get('slug') as string;
-    const isFromWriter = formData.get('isFromWriter') === 'true';
+
     
     // File uploads
     const featuredImage = formData.get('featuredImage') as File;
@@ -87,8 +80,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create Supabase admin client to bypass RLS
-    const supabase = createAdminClient();
+    // Create Supabase client
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
 
     let featuredImageUrl = '';
     let videoUrl = '';
@@ -146,8 +140,8 @@ export async function POST(req: NextRequest) {
     // Calculate read time if not provided
     const calculatedReadTime = readTime ? parseInt(readTime) : Math.ceil(content.split(' ').length / 200);
 
-    // Set status based on source
-    const postStatus = isFromWriter ? 'draft' : 'published';
+    // Set status to published by default
+    const postStatus = 'published';
 
     // Prepare basic insert data with only essential fields
     const basicInsertData = {
