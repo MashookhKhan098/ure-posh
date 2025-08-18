@@ -21,6 +21,9 @@ export async function getArticles(options?: {
       .from('articles')
       .select('*')
 
+    // Always filter to show only verified articles for public access
+    query = query.eq('verified', true)
+
     // Apply filters
     if (options?.featured !== undefined) {
       query = query.eq('is_featured', options.featured)
@@ -107,6 +110,7 @@ export async function getArticleBySlug(slug: string): Promise<ArticleResponse> {
       .from('articles')
       .select('*')
       .eq('slug', slug)
+      .eq('verified', true)
       .single()
 
     if (error) {

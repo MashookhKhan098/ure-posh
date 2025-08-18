@@ -42,6 +42,7 @@ export interface Database {
           is_breaking: boolean
           is_hot: boolean
           is_featured: boolean
+          verified: boolean
           views: number
           published_at: string
           category_id: string | null
@@ -59,6 +60,7 @@ export interface Database {
           is_breaking?: boolean
           is_hot?: boolean
           is_featured?: boolean
+          verified?: boolean
           views?: number
           published_at?: string
           category_id?: string | null
@@ -76,6 +78,7 @@ export interface Database {
           is_breaking?: boolean
           is_hot?: boolean
           is_featured?: boolean
+          verified?: boolean
           views?: number
           published_at?: string
           category_id?: string | null
@@ -137,6 +140,7 @@ export interface Article {
   is_breaking: boolean
   is_hot: boolean
   is_featured: boolean
+  verified: boolean
   views: number
   published_at: string
   category_id: string | null

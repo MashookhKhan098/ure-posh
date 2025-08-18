@@ -12,10 +12,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    // Update article to approved and set as verified
+    // Update article to rejected and set verified to false
     const updateData = {
-      verified: true,
-      published_at: new Date().toISOString(),
+      verified: false,
       updated_at: new Date().toISOString()
     };
 
@@ -43,15 +42,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     return NextResponse.json({
       success: true,
-      message: 'Article approved and verified successfully',
+      message: 'Article rejected successfully',
       article
     });
 
   } catch (error) {
-    console.error('Approve post error:', error);
+    console.error('Reject post error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
-} 
+}

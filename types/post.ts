@@ -20,6 +20,7 @@ export interface Post {
   likes?: number
   comments?: number
   is_featured?: boolean
+  verified?: boolean
   rejection_reason?: string
 }
 
@@ -45,5 +46,5 @@ export interface PostResponse {
   likes?: number
   comments?: number
   is_featured?: boolean
-
+  verified?: boolean
 }

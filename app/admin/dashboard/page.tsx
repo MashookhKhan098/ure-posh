@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '@/components/ui/toaster';
 import { 
   Users, FileText, Plus, Check, X, RotateCcw, Search, Filter, Eye, 
   LogOut, Bell, Settings, MoreVertical, Calendar, TrendingUp, 
@@ -10,38 +12,154 @@ import {
   UserPlus, Edit3, Trash2, Mail
 } from 'lucide-react';
 
+// Type definitions
+interface Post {
+  id: number;
+  title: string;
+  author: string;
+  category: string;
+  created_at: string;
+  verified: boolean;
+  status?: string;
+  content?: string;
+  submittedDate?: string;
+  excerpt?: string;
+  is_breaking?: boolean;
+  is_hot?: boolean;
+  is_featured?: boolean;
+  image_url?: string;
+  readTime?: string;
+  views?: number;
+  published_at?: string;
+}
+
+interface Writer {
+  id: number;
+  name: string;
+  username: string;
+  status: string;
+  joinDate: string;
+  postsCount: number;
+  avatar: string;
+}
+
+interface DashboardStats {
+  totalPosts: {
+    count: number;
+    growth: string;
+    trend: string;
+  };
+  activeWriters: {
+    count: number;
+    growth: string;
+    trend: string;
+  };
+  pendingReview: {
+    count: number;
+    trend: string;
+  };
+  revertedPosts: {
+    count: number;
+    trend: string;
+  };
+}
+
 export default function AdminDashboardPage() {
   const { admin, isAuthenticated, loading: authLoading, logout } = useAdminAuth();
   const router = useRouter();
+  const { toast } = useToast();
   
-  // Sample data
-  const [writers, setWriters] = useState([
+  // Real data from database
+  const [writers, setWriters] = useState<Writer[]>([
     { id: 1, name: 'John Doe', username: 'john', status: 'Active', joinDate: '2024-01-15', postsCount: 12, avatar: 'JD' },
     { id: 2, name: 'Jane Smith', username: 'jane', status: 'Active', joinDate: '2024-02-20', postsCount: 8, avatar: 'JS' },
     { id: 3, name: 'Mike Johnson', username: 'mike', status: 'Inactive', joinDate: '2024-03-10', postsCount: 5, avatar: 'MJ' }
   ]);
 
-  const [posts, setPosts] = useState([
-    { id: 1, title: 'The Future of AI Technology', author: 'John Doe', status: 'Pending', submittedDate: '2024-08-15', category: 'Technology', readTime: '5 min', views: 234 },
-    { id: 2, title: 'Climate Change Solutions', author: 'Jane Smith', status: 'Approved', submittedDate: '2024-08-14', category: 'Environment', readTime: '8 min', views: 892 },
-    { id: 3, title: 'Digital Marketing Trends', author: 'Mike Johnson', status: 'Rejected', submittedDate: '2024-08-13', category: 'Marketing', readTime: '6 min', views: 156 },
-    { id: 4, title: 'Sustainable Living Tips', author: 'Jane Smith', status: 'Pending', submittedDate: '2024-08-16', category: 'Lifestyle', readTime: '4 min', views: 67 },
-    { id: 5, title: 'Machine Learning Basics', author: 'John Doe', status: 'Reverted', submittedDate: '2024-08-12', category: 'Technology', readTime: '12 min', views: 445 }
-  ]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Dashboard statistics state
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats>({
+    totalPosts: { count: 0, growth: '0%', trend: 'from last month' },
+    activeWriters: { count: 0, growth: '0', trend: 'no new writers' },
+    pendingReview: { count: 0, trend: 'All caught up' },
+    revertedPosts: { count: 0, trend: 'No rejected posts' }
+  });
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAddWriter, setShowAddWriter] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [verifiedFilter, setVerifiedFilter] = useState('All');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
+  const [verifyingPosts, setVerifyingPosts] = useState<Set<number>>(new Set());
 
-  // Authentication guard
+  // Fetch posts from database
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/admin/posts');
+      if (response.ok) {
+        const data = await response.json();
+        setPosts(data);
+      } else {
+        console.error('Failed to fetch posts');
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch all dashboard data
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch dashboard statistics
+      const statsResponse = await fetch('/api/admin/dashboard/stats');
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json();
+        setDashboardStats(statsData);
+      }
+
+      // Fetch posts for admin (including unverified)
+      const postsResponse = await fetch('/api/admin/posts');
+      if (postsResponse.ok) {
+        const postsData = await postsResponse.json();
+        setPosts(postsData);
+      }
+
+      // Fetch writers
+      const writersResponse = await fetch('/api/admin/writers');
+      if (writersResponse.ok) {
+        const writersData = await writersResponse.json();
+        setWriters(writersData);
+      }
+
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Authentication guard and fetch posts
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated) {
       router.push('/admin/login');
       return;
+    }
+    
+    // Fetch dashboard data when authenticated
+    if (isAuthenticated) {
+      fetchDashboardData();
     }
   }, [authLoading, isAuthenticated, router]);
 
@@ -94,12 +212,90 @@ export default function AdminDashboardPage() {
   };
 
   // Post management functions
-  const handlePostAction = (postId: number, action: string) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { ...post, status: action === 'approve' ? 'Approved' : action === 'reject' ? 'Rejected' : 'Reverted' }
-        : post
-    ));
+  const handlePostAction = async (postId: number, action: string) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/${action}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Update the specific post in the state instead of refreshing all data
+        setPosts(prevPosts => 
+          prevPosts.map(post => 
+            post.id === postId 
+              ? { 
+                  ...post, 
+                  status: action === 'approve' ? 'Published' : 'Rejected',
+                  verified: action === 'approve' ? true : false,
+                  published_at: action === 'approve' ? new Date().toISOString() : post.published_at || undefined
+                }
+              : post
+          )
+        );
+      } else {
+        const data = await response.json();
+        alert(data.error || `Failed to ${action} post`);
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing post:`, error);
+      alert(`Failed to ${action} post`);
+    }
+  };
+
+  // Verification function
+  const handleVerifyPost = async (postId: number, verified: boolean) => {
+    try {
+      // Add post to verifying set
+      setVerifyingPosts(prev => new Set(prev).add(postId));
+      
+      const response = await fetch(`/api/posts/${postId}/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ verified }),
+      });
+
+      if (response.ok) {
+        // Update the specific post in the state instead of refreshing all data
+        setPosts(prevPosts => 
+          prevPosts.map(post => 
+            post.id === postId 
+              ? { ...post, verified: verified }
+              : post
+          )
+        );
+        
+        // Show success feedback
+        toast({
+          title: "Verification Updated",
+          description: `Article ${verified ? 'verified' : 'unverified'} successfully`,
+          variant: "default",
+        });
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Failed to update verification status');
+      }
+    } catch (error) {
+      console.error('Error updating verification status:', error);
+      alert('Failed to update verification status');
+    } finally {
+      // Remove post from verifying set
+      setVerifyingPosts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(postId);
+        return newSet;
+      });
+    }
+  };
+
+  // Preview function
+  const handlePreview = (post: any) => {
+    setSelectedPost(post);
+    setShowPreview(true);
   };
 
   // Filter posts
@@ -107,7 +303,10 @@ export default function AdminDashboardPage() {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          post.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || post.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesVerified = verifiedFilter === 'All' || 
+                           (verifiedFilter === 'Verified' && post.verified) || 
+                           (verifiedFilter === 'Not Verified' && !post.verified);
+    return matchesSearch && matchesStatus && matchesVerified;
   });
 
   // Filter writers
@@ -119,7 +318,8 @@ export default function AdminDashboardPage() {
   const getStatusColor = (status: string) => {
     switch(status) {
       case 'Pending': return 'bg-amber-500/10 text-amber-700 border border-amber-200';
-      case 'Approved': return 'bg-emerald-500/10 text-emerald-700 border border-emerald-200';
+      case 'Published': return 'bg-emerald-500/10 text-emerald-700 border border-emerald-200';
+      case 'Draft': return 'bg-blue-500/10 text-blue-700 border border-blue-200';
       case 'Rejected': return 'bg-red-500/10 text-red-700 border border-red-200';
       case 'Reverted': return 'bg-purple-500/10 text-purple-700 border border-purple-200';
       case 'Active': return 'bg-emerald-500/10 text-emerald-700 border border-emerald-200';
@@ -134,7 +334,7 @@ export default function AdminDashboardPage() {
 
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'posts', label: 'Posts', icon: FileText },
+    { id: 'posts', label: 'Articles', icon: FileText },
     { id: 'writers', label: 'Writers', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
     { id: 'settings', label: 'Settings', icon: Settings }
@@ -254,14 +454,14 @@ export default function AdminDashboardPage() {
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {activeTab === 'dashboard' && 'Dashboard Overview'}
-                    {activeTab === 'posts' && 'Posts Management'}
+                    {activeTab === 'posts' && 'Articles Management'}
                     {activeTab === 'writers' && 'Writers Management'}
                     {activeTab === 'analytics' && 'Analytics'}
                     {activeTab === 'settings' && 'Settings'}
                   </h1>
                   <p className="text-sm text-gray-500 mt-1">
                     {activeTab === 'dashboard' && 'Monitor your content platform performance'}
-                    {activeTab === 'posts' && 'Review and manage submitted posts'}
+                    {activeTab === 'posts' && 'Review and manage submitted articles'}
                     {activeTab === 'writers' && 'Manage your writing team'}
                     {activeTab === 'analytics' && 'View detailed platform analytics'}
                     {activeTab === 'settings' && 'Configure platform settings'}
@@ -302,8 +502,8 @@ export default function AdminDashboardPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-blue-100 text-sm font-medium">Total Posts</p>
-                      <p className="text-3xl font-bold mt-2">{posts.length}</p>
-                      <p className="text-blue-100 text-xs mt-1">+12% from last month</p>
+                      <p className="text-3xl font-bold mt-2">{loading ? '...' : dashboardStats.totalPosts.count}</p>
+                      <p className="text-blue-100 text-xs mt-1">{loading ? 'Loading...' : `${dashboardStats.totalPosts.growth} ${dashboardStats.totalPosts.trend}`}</p>
                     </div>
                     <div className="bg-white/20 p-3 rounded-xl">
                       <FileText className="w-6 h-6" />
@@ -315,8 +515,8 @@ export default function AdminDashboardPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-emerald-100 text-sm font-medium">Active Writers</p>
-                      <p className="text-3xl font-bold mt-2">{writers.filter(w => w.status === 'Active').length}</p>
-                      <p className="text-emerald-100 text-xs mt-1">+2 new this week</p>
+                      <p className="text-3xl font-bold mt-2">{loading ? '...' : dashboardStats.activeWriters.count}</p>
+                      <p className="text-emerald-100 text-xs mt-1">{loading ? 'Loading...' : `${dashboardStats.activeWriters.growth} ${dashboardStats.activeWriters.trend}`}</p>
                     </div>
                     <div className="bg-white/20 p-3 rounded-xl">
                       <Users className="w-6 h-6" />
@@ -328,8 +528,8 @@ export default function AdminDashboardPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-amber-100 text-sm font-medium">Pending Review</p>
-                      <p className="text-3xl font-bold mt-2">{posts.filter(p => p.status === 'Pending').length}</p>
-                      <p className="text-amber-100 text-xs mt-1">Requires attention</p>
+                      <p className="text-3xl font-bold mt-2">{loading ? '...' : dashboardStats.pendingReview.count}</p>
+                      <p className="text-amber-100 text-xs mt-1">{loading ? 'Loading...' : dashboardStats.pendingReview.trend}</p>
                     </div>
                     <div className="bg-white/20 p-3 rounded-xl">
                       <Activity className="w-6 h-6" />
@@ -340,9 +540,9 @@ export default function AdminDashboardPage() {
                 <div className="group bg-gradient-to-br from-rose-500 to-red-500 rounded-2xl p-6 text-white hover:shadow-xl hover:shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-rose-100 text-sm font-medium">Reverted Posts</p>
-                      <p className="text-3xl font-bold mt-2">{posts.filter(p => p.status === 'Reverted').length}</p>
-                      <p className="text-rose-100 text-xs mt-1">Action needed</p>
+                      <p className="text-rose-100 text-sm font-medium">Rejected Posts</p>
+                      <p className="text-3xl font-bold mt-2">{loading ? '...' : dashboardStats.revertedPosts.count}</p>
+                      <p className="text-rose-100 text-xs mt-1">{loading ? 'Loading...' : dashboardStats.revertedPosts.trend}</p>
                     </div>
                     <div className="bg-white/20 p-3 rounded-xl">
                       <RotateCcw className="w-6 h-6" />
@@ -391,7 +591,7 @@ export default function AdminDashboardPage() {
                         <p className="text-sm font-medium text-gray-900">{post.title}</p>
                         <p className="text-xs text-gray-500">by {post.author} • {post.submittedDate}</p>
                       </div>
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(post.status)}`}>
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(post.status || 'pending')}`}>
                         {post.status}
                       </span>
                     </div>
@@ -401,22 +601,39 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* Posts Management Tab */}
+                    {/* Posts Management Tab */}
           {activeTab === 'posts' && (
             <div className="space-y-6">
-              {/* Enhanced Controls */}
-              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
-                <div className="flex flex-col lg:flex-row gap-4">
-                  <div className="relative flex-1">
-                    <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Search posts by title or author..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all"
-                    />
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="flex items-center gap-3 text-gray-600">
+                    <div className="w-6 h-6 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                                         <span>Loading articles...</span>
                   </div>
+                </div>
+              ) : (
+                <>
+                  {/* Enhanced Controls */}
+                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                                  <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="relative flex-1">
+                      <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                                                 placeholder="Search articles by title or author..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all"
+                      />
+                    </div>
+                    <button
+                      onClick={fetchPosts}
+                      disabled={loading}
+                      className="flex items-center px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <RotateCcw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                      Refresh
+                    </button>
                   <div className="relative">
                     <Filter className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <select
@@ -425,10 +642,22 @@ export default function AdminDashboardPage() {
                       className="pl-12 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm appearance-none cursor-pointer"
                     >
                       <option value="All">All Status</option>
+                      <option value="Draft">Draft</option>
+                      <option value="Published">Published</option>
                       <option value="Pending">Pending</option>
-                      <option value="Approved">Approved</option>
                       <option value="Rejected">Rejected</option>
-                      <option value="Reverted">Reverted</option>
+                    </select>
+                  </div>
+                  <div className="relative">
+                    <Shield className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <select
+                      value={verifiedFilter}
+                      onChange={(e) => setVerifiedFilter(e.target.value)}
+                      className="pl-12 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm appearance-none cursor-pointer"
+                    >
+                      <option value="All">All Verification</option>
+                      <option value="Verified">Verified</option>
+                      <option value="Not Verified">Not Verified</option>
                     </select>
                   </div>
                 </div>
@@ -436,71 +665,230 @@ export default function AdminDashboardPage() {
 
               {/* Enhanced Posts Grid */}
               <div className="space-y-4">
-                {filteredPosts.map((post, index) => (
-                  <div key={post.id} className="group bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg hover:shadow-xl hover:shadow-gray-500/10 transition-all duration-300 hover:-translate-y-1">
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{post.title}</h3>
-                              <span className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(post.status)}`}>
+                {filteredPosts.length === 0 ? (
+                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-12 border border-gray-200/50 shadow-lg text-center">
+                    <FileText className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                                         <h3 className="text-lg font-semibold text-gray-900 mb-2">No Articles Found</h3>
+                                         <p className="text-gray-500 mb-4">
+                       {searchTerm || statusFilter !== 'All' || verifiedFilter !== 'All' 
+                         ? 'No articles match your current filters. Try adjusting your search criteria.'
+                         : 'No articles have been created yet. Writers can start creating content from their dashboard.'
+                       }
+                     </p>
+                    {(searchTerm || statusFilter !== 'All' || verifiedFilter !== 'All') && (
+                      <button
+                        onClick={() => {
+                          setSearchTerm('');
+                          setStatusFilter('All');
+                          setVerifiedFilter('All');
+                        }}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+                      >
+                        Clear Filters
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  filteredPosts.map((post, index) => (
+                    <div key={post.id} className="group bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                      <div className="p-6">
+                        {/* Header with Status Badges */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-start gap-3 flex-1">
+                            <div className="flex-1">
+                              <h3 className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors mb-2 line-clamp-2">
+                                {post.title}
+                              </h3>
+                              {post.excerpt && (
+                                <p className="text-gray-600 text-sm mb-3 line-clamp-2 leading-relaxed">
+                                  {post.excerpt}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {/* Status Badges */}
+                          <div className="flex flex-col items-end gap-2">
+                            <div className="flex items-center gap-2 flex-wrap justify-end">
+                              <span className={`px-3 py-1.5 text-xs font-semibold rounded-lg ${getStatusColor(post.status || 'pending')} shadow-sm`}>
                                 {post.status}
                               </span>
+                              <span className={`px-3 py-1.5 text-xs font-semibold rounded-lg shadow-sm ${
+                                post.verified 
+                                  ? 'bg-green-500/15 text-green-700 border border-green-200/50' 
+                                  : 'bg-red-500/15 text-red-700 border border-red-200/50'
+                              }`}>
+                                {post.verified ? '✓ Verified' : '✗ Not Verified'}
+                              </span>
                             </div>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
-                              <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                                  {post.author.split(' ').map(n => n[0]).join('')}
-                                </div>
-                                <span>{post.author}</span>
-                              </div>
-                              <span>•</span>
-                              <span className="bg-gray-100 px-2 py-1 rounded-lg text-xs">{post.category}</span>
-                              <span>•</span>
-                              <span>{post.readTime}</span>
-                              <span>•</span>
-                              <span>{post.views} views</span>
-                              <span>•</span>
-                              <span>{post.submittedDate}</span>
+                            
+                            {/* Special Badges */}
+                            <div className="flex items-center gap-2">
+                              {post.is_breaking && (
+                                <span className="px-2 py-1 text-xs font-semibold rounded-md bg-red-500/15 text-red-700 border border-red-200/50">
+                                  🔥 Breaking
+                                </span>
+                              )}
+                              {post.is_hot && (
+                                <span className="px-2 py-1 text-xs font-semibold rounded-md bg-orange-500/15 text-orange-700 border border-orange-200/50">
+                                  🔥 Hot
+                                </span>
+                              )}
+                              {post.is_featured && (
+                                <span className="px-2 py-1 text-xs font-semibold rounded-md bg-purple-500/15 text-purple-700 border border-purple-200/50">
+                                  ⭐ Featured
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handlePostAction(post.id, 'approve')}
-                          className="flex items-center px-4 py-2 bg-emerald-500/10 text-emerald-600 rounded-xl hover:bg-emerald-500/20 transition-all duration-200 border border-emerald-200/50 group/btn"
-                        >
-                          <Check className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handlePostAction(post.id, 'reject')}
-                          className="flex items-center px-4 py-2 bg-red-500/10 text-red-600 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-red-200/50 group/btn"
-                        >
-                          <X className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => handlePostAction(post.id, 'revert')}
-                          className="flex items-center px-4 py-2 bg-purple-500/10 text-purple-600 rounded-xl hover:bg-purple-500/20 transition-all duration-200 border border-purple-200/50 group/btn"
-                        >
-                          <RotateCcw className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
-                          Revert
-                        </button>
-                        <button className="p-2 bg-gray-500/10 text-gray-600 rounded-xl hover:bg-gray-500/20 transition-all duration-200 border border-gray-200/50">
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 bg-gray-500/10 text-gray-600 rounded-xl hover:bg-gray-500/20 transition-all duration-200 border border-gray-200/50">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
+
+                        {/* Article Image */}
+                        {post.image_url && (
+                          <div className="mb-4 rounded-xl overflow-hidden bg-gray-100">
+                            <img 
+                              src={post.image_url} 
+                              alt={post.title}
+                              className="w-full h-48 object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = '/placeholder.jpg';
+                              }}
+                            />
+                          </div>
+                        )}
+
+                        {/* Author & Meta Info */}
+                        <div className="flex items-center justify-between mb-4 p-3 bg-gray-50/80 rounded-xl border border-gray-200/50">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md">
+                              {post.author.split(' ').map((n: string) => n[0]).join('').substring(0, 2)}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900">{post.author}</p>
+                              <p className="text-xs text-gray-500">Author</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                            <div className="flex items-center gap-1">
+                              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                              <span className="font-medium">{post.category}</span>
+                            </div>
+                            <div className="text-gray-400">•</div>
+                            <span>{post.readTime}</span>
+                            <div className="text-gray-400">•</div>
+                            <span className="font-medium">{post.views} views</span>
+                          </div>
+                        </div>
+
+                        {/* Date Info */}
+                        <div className="flex items-center justify-between mb-4 text-xs text-gray-500">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            <span>Submitted: {new Date(post.submittedDate ?? '').toLocaleDateString('en-US', { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric'
+                            })}</span>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-200/50">
+                          {/* Conditional Action Controls */}
+                          {!post.verified ? (
+                            // Show Approve/Reject/Revert buttons for unverified posts
+                            <div className="flex items-center gap-3">
+                              <button
+                                onClick={() => handlePostAction(post.id, 'approve')}
+                                className="flex items-center px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                              >
+                                <Check className="w-4 h-4 mr-2" />
+                                <span className="font-medium">Approve</span>
+                              </button>
+                              
+                              <button
+                                onClick={() => handlePostAction(post.id, 'reject')}
+                                className="flex items-center px-4 py-2.5 bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-xl hover:from-red-600 hover:to-rose-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                              >
+                                <X className="w-4 h-4 mr-2" />
+                                <span className="font-medium">Reject</span>
+                              </button>
+                              
+                              <button
+                                onClick={() => handlePostAction(post.id, 'revert')}
+                                className="flex items-center px-4 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl hover:from-purple-600 hover:to-indigo-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                              >
+                                <RotateCcw className="w-4 h-4 mr-2" />
+                                <span className="font-medium">Revert</span>
+                              </button>
+
+                              {/* Status info for unverified posts */}
+                              <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2">
+                                <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                                <span className="text-sm font-medium text-amber-700">Awaiting Review</span>
+                              </div>
+                            </div>
+                          ) : (
+                            // Show verification toggle for verified/approved posts
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-2">
+                                <Check className="w-4 h-4 text-green-600" />
+                                <span className="text-sm font-medium text-green-700">Post Approved</span>
+                              </div>
+                              
+                              {/* Verification Control */}
+                              <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-2 border border-gray-200/50 shadow-sm">
+                                <span className="text-sm font-medium text-gray-700">Verified:</span>
+                                <button
+                                  onClick={() => handleVerifyPost(post.id, !post.verified)}
+                                  disabled={verifyingPosts.has(post.id)}
+                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                                    post.verified 
+                                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 focus:ring-green-500' 
+                                      : 'bg-gray-300 focus:ring-gray-400'
+                                  } shadow-inner ${verifyingPosts.has(post.id) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                >
+                                  <span
+                                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-md ${
+                                      post.verified ? 'translate-x-6' : 'translate-x-1'
+                                    } ${verifyingPosts.has(post.id) ? 'animate-pulse' : ''}`}
+                                  />
+                                </button>
+                                <span className={`text-sm font-semibold ${
+                                  post.verified ? 'text-green-600' : 'text-gray-500'
+                                }`}>
+                                  {verifyingPosts.has(post.id) ? 'Updating...' : (post.verified ? 'Yes' : 'No')}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Always show preview and more options */}
+                          <div className="flex items-center gap-2">
+                            <button 
+                              onClick={() => handlePreview(post)}
+                              className="p-2.5 bg-blue-500/10 text-blue-600 rounded-xl hover:bg-blue-500/20 transition-all duration-200 border border-blue-200/50 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                              title="Preview Article"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            
+                            <button 
+                              className="p-2.5 bg-gray-500/10 text-gray-600 rounded-xl hover:bg-gray-500/20 transition-all duration-200 border border-gray-200/50 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                              title="More Options"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                ))
+                )}
               </div>
+                </>
+              )}
             </div>
           )}
 
@@ -606,107 +994,193 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* Enhanced Add Writer Modal */}
-          {showAddWriter && (
-            <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
-              <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddWriter(false)}></div>
-              <div className="relative z-10 w-full max-w-2xl mt-10">
-                <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200">
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100">
-                    <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Add Writer</h3>
-                    <button onClick={() => setShowAddWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                  <div className="px-5 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                        <input
-                          type="text"
-                          value={newWriter.name}
-                          onChange={(e) => setNewWriter({ ...newWriter, name: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                          placeholder="e.g., John Doe"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                        <input
-                          type="text"
-                          value={newWriter.username}
-                          onChange={(e) => setNewWriter({ ...newWriter, username: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                          placeholder="unique handle"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input
-                          type="password"
-                          value={newWriter.password}
-                          onChange={(e) => setNewWriter({ ...newWriter, password: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                          placeholder="secure password"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                        <input
-                          type="tel"
-                          value={newWriter.phone}
-                          onChange={(e) => setNewWriter({ ...newWriter, phone: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                          placeholder="optional"
-                        />
-                      </div>
-                      <div className="md:col-span-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Field Allotted</label>
-                        <input
-                          type="text"
-                          value={newWriter.field_allotted}
-                          onChange={(e) => setNewWriter({ ...newWriter, field_allotted: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                          placeholder="Technology, Sports, Politics"
-                        />
-                      </div>
-                      <div className="md:col-span-1">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Expertise</label>
-                        <input
-                          type="text"
-                          value={newWriter.expertise}
-                          onChange={(e) => setNewWriter({ ...newWriter, expertise: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                          placeholder="Comma-separated areas"
-                        />
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                        <textarea
-                          rows={2}
-                          value={newWriter.bio}
-                          onChange={(e) => setNewWriter({ ...newWriter, bio: e.target.value })}
-                          className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black resize-none"
-                          placeholder="Brief bio about the writer"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-end gap-3 pt-4">
-                      <button onClick={() => setShowAddWriter(false)} className="px-4 py-2 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200">Cancel</button>
-                      <button onClick={handleAddWriter} className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700">Create Writer</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+                     {/* Enhanced Add Writer Modal */}
+           {showAddWriter && (
+             <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+               <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddWriter(false)}></div>
+               <div className="relative z-10 w-full max-w-2xl mt-10">
+                 <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200">
+                   <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100">
+                     <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Add Writer</h3>
+                     <button onClick={() => setShowAddWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                       <X className="w-5 h-5" />
+                     </button>
+                   </div>
+                   <div className="px-5 py-4">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                         <input
+                           type="text"
+                           value={newWriter.name}
+                           onChange={(e) => setNewWriter({ ...newWriter, name: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           placeholder="e.g., John Doe"
+                         />
+                       </div>
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                         <input
+                           type="text"
+                           value={newWriter.username}
+                           onChange={(e) => setNewWriter({ ...newWriter, username: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           placeholder="unique handle"
+                         />
+                       </div>
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                         <input
+                           type="password"
+                           value={newWriter.password}
+                           onChange={(e) => setNewWriter({ ...newWriter, password: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           placeholder="secure password"
+                         />
+                       </div>
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                         <input
+                           type="tel"
+                           value={newWriter.phone}
+                           onChange={(e) => setNewWriter({ ...newWriter, phone: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           placeholder="optional"
+                         />
+                       </div>
+                       <div className="md:col-span-1">
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Field Allotted</label>
+                         <input
+                           type="text"
+                           value={newWriter.field_allotted}
+                           onChange={(e) => setNewWriter({ ...newWriter, field_allotted: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           placeholder="Technology, Sports, Politics"
+                         />
+                       </div>
+                       <div className="md:col-span-1">
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Expertise</label>
+                         <input
+                           type="text"
+                           value={newWriter.expertise}
+                           onChange={(e) => setNewWriter({ ...newWriter, expertise: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           placeholder="Comma-separated areas"
+                         />
+                       </div>
+                       <div className="md:col-span-2">
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                         <textarea
+                           rows={2}
+                           value={newWriter.bio}
+                           onChange={(e) => setNewWriter({ ...newWriter, bio: e.target.value })}
+                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black resize-none"
+                           placeholder="Brief bio about the writer"
+                         />
+                       </div>
+                     </div>
+                     <div className="flex items-center justify-end gap-3 pt-4">
+                       <button onClick={() => setShowAddWriter(false)} className="px-4 py-2 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200">Cancel</button>
+                       <button onClick={handleAddWriter} className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700">Create Writer</button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           )}
+
+           {/* Article Preview Modal */}
+           {showPreview && selectedPost && (
+             <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+               <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowPreview(false)}></div>
+               <div className="relative z-10 w-full max-w-4xl mt-10 max-h-[90vh] overflow-y-auto">
+                 <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200">
+                   <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                     <h3 className="text-lg font-semibold text-gray-900">Article Preview</h3>
+                     <button onClick={() => setShowPreview(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                       <X className="w-5 h-5" />
+                     </button>
+                   </div>
+                   <div className="px-6 py-6">
+                     {/* Article Header */}
+                     <div className="mb-6">
+                       <div className="flex items-center gap-3 mb-3 flex-wrap">
+                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(selectedPost.status)}`}>
+                           {selectedPost.status}
+                         </span>
+                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${selectedPost.verified ? 'bg-green-500/10 text-green-700 border border-green-200' : 'bg-gray-500/10 text-gray-600 border border-gray-200'}`}>
+                           {selectedPost.verified ? '✓ Verified' : '✗ Not Verified'}
+                         </span>
+                         {selectedPost.is_breaking && (
+                           <span className="px-3 py-1 text-xs font-medium rounded-full bg-red-500/10 text-red-700 border border-red-200">
+                             🔥 Breaking
+                           </span>
+                         )}
+                         {selectedPost.is_hot && (
+                           <span className="px-3 py-1 text-xs font-medium rounded-full bg-orange-500/10 text-orange-700 border border-orange-200">
+                             🔥 Hot
+                           </span>
+                         )}
+                       </div>
+                       <h1 className="text-2xl font-bold text-gray-900 mb-3">{selectedPost.title}</h1>
+                       {selectedPost.excerpt && (
+                         <p className="text-gray-600 text-lg mb-4">{selectedPost.excerpt}</p>
+                       )}
+                       <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                         <div className="flex items-center gap-2">
+                           <div className="w-8 h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                             {selectedPost.author.split(' ').map((n: string) => n[0]).join('')}
+                           </div>
+                           <span>{selectedPost.author}</span>
+                         </div>
+                         <span>•</span>
+                         <span className="bg-gray-100 px-3 py-1 rounded-lg text-sm" style={{ backgroundColor: selectedPost.categoryColor + '20', color: selectedPost.categoryColor }}>
+                           {selectedPost.category}
+                         </span>
+                         <span>•</span>
+                         <span>{selectedPost.readTime}</span>
+                         <span>•</span>
+                         <span>{selectedPost.views} views</span>
+                         <span>•</span>
+                         <span>{selectedPost.submittedDate}</span>
+                       </div>
+                     </div>
+
+                     {/* Article Image */}
+                     {selectedPost.image_url && (
+                       <div className="mb-6">
+                         <img 
+                           src={selectedPost.image_url} 
+                           alt={selectedPost.title}
+                           className="w-full h-64 object-cover rounded-xl"
+                           onError={(e) => {
+                             e.currentTarget.src = '/placeholder.jpg';
+                           }}
+                         />
+                       </div>
+                     )}
+
+                     {/* Article Content */}
+                     <div className="prose prose-lg max-w-none">
+                       <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                         {selectedPost.content}
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           )}
         </div>
       </div>
 
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>
-      )}
-    </div>
-  );
-}
+             {/* Mobile Sidebar Overlay */}
+       {sidebarOpen && (
+         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>
+       )}
+       
+       {/* Toast Notifications */}
+       <Toaster />
+     </div>
+   );
+ }

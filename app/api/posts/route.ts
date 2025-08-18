@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
+    const verified = searchParams.get('verified');
     
     // Create Supabase client
     const cookieStore = cookies();
@@ -25,6 +26,15 @@ export async function GET(req: NextRequest) {
       // By default, only show published posts for public access
       query = query.eq('status', 'published');
     }
+
+    // Filter by verified status if provided
+    if (verified !== null && verified !== 'all') {
+      query = query.eq('verified', verified === 'true');
+    } else if (verified === null) {
+      // By default, only show verified posts for public access
+      query = query.eq('verified', true);
+    }
+    // If verified === 'all', don't filter by verification status (for admin access)
 
     const { data: posts, error } = await query;
 
@@ -157,6 +167,7 @@ export async function POST(req: NextRequest) {
       video_title: videoTitle,
       video_description: videoDescription,
       status: postStatus,
+      verified: false, // New posts are not verified by default
       read_time: calculatedReadTime,
       view_count: 0,
       likes: 0,
@@ -171,7 +182,8 @@ export async function POST(req: NextRequest) {
         meta_description: metaDescription,
         language,
         published_at: publishedAt,
-        comments_count: 0
+        comments_count: 0,
+        verified: false // New posts are not verified by default
       };
 
       const { data: post, error } = await supabase
