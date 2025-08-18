@@ -55,6 +55,51 @@ export async function GET(
   }
 }
 
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+
+    const body = await req.json().catch(() => ({} as any));
+    const { featured_image, ...rest } = body || {};
+
+    if (!featured_image && Object.keys(rest).length === 0) {
+      return NextResponse.json({ error: 'No fields to update' }, { status: 400 });
+    }
+
+    const updateData: Record<string, any> = {};
+    if (featured_image && typeof featured_image === 'string') updateData.featured_image = featured_image;
+    // Allow extending later with more updatable fields via `rest`
+    Object.assign(updateData, rest);
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+    }
+
+    let updateQuery = supabase.from('posts').update(updateData).select('*');
+    if (isUUID(params.id)) {
+      updateQuery = updateQuery.eq('id', params.id);
+    } else {
+      updateQuery = updateQuery.eq('slug', params.id);
+    }
+
+    const { data, error } = await updateQuery.single();
+
+    if (error) {
+      console.error('Supabase update error:', error);
+      return NextResponse.json({ error: 'Failed to update post' }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, post: data });
+  } catch (error) {
+    console.error('Update post error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }

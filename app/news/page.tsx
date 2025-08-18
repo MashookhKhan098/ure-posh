@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -40,6 +41,49 @@ interface Post {
   slug: string;
 }
 
+// Tiny shimmer placeholder for fast perceived loading
+function shimmer(w: number, h: number) {
+  return `
+    <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="g">
+          <stop stop-color="#e5e7eb" offset="20%" />
+          <stop stop-color="#f3f4f6" offset="50%" />
+          <stop stop-color="#e5e7eb" offset="70%" />
+        </linearGradient>
+      </defs>
+      <rect width="${w}" height="${h}" fill="#e5e7eb" />
+      <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+      <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+    </svg>`
+}
+const toBase64 = (str: string) =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str)
+
+// Category-based local fallbacks (office safety & POSH-related)
+const categoryFallbacks: Record<string, string> = {
+  "Workplace Safety": "/uploads/saftey-1753376435016.jpg",
+  "POSH Policy": "/uploads/women-s-safety-is-everyone-s-responsibility-1753376275735.jpg",
+  "Healthcare": "/uploads/he2o-1753381041380.jpg",
+  "Manufacturing": "/uploads/main-1753381366493.jpg",
+  "Technology": "/uploads/qwertyu-1753382685301.jpg",
+  "Finance": "/uploads/asdfgh-1753382565789.jpg",
+}
+const genericFallbacks = [
+  "/uploads/saftey-1753376499204.jpg",
+  "/uploads/women-s-safety-is-not-an-option-it-s-a-right-1751536610962.jpg",
+  "/uploads/1751349696275-Group 3.png",
+]
+
+function getImageForPost(post: Post, idx: number): string {
+  if (post.featured_image && post.featured_image.trim().length > 0) return post.featured_image
+  const byCategory = categoryFallbacks[post.category]
+  if (byCategory) return byCategory
+  return genericFallbacks[idx % genericFallbacks.length]
+}
+
 export default function NewsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +110,8 @@ export default function NewsPage() {
       setLoading(false);
     }
   };
+
+  // Display-only placeholders: no DB writes
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -210,71 +256,81 @@ export default function NewsPage() {
               viewport={{ once: true }}
               className="grid lg:grid-cols-3 gap-8"
             >
-              {featuredPosts.map((post, index) => (
-                <motion.div key={post.id} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
-                  <Card className="h-full bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div className="relative h-48 overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                        <Newspaper className="h-16 w-16 text-gray-400" />
+              {featuredPosts.map((post, index) => {
+                const imgSrc = getImageForPost(post, index)
+                return (
+                  <motion.div key={post.id} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
+                    <Card className="h-full bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                      <div className="relative h-48 overflow-hidden">
+                        <Image
+                          src={imgSrc}
+                          alt={`${post.category} - ${post.title}`}
+                          fill
+                          priority={index === 0}
+                          sizes="(max-width: 1024px) 100vw, 33vw"
+                          placeholder="blur"
+                          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 300))}`}
+                          className="object-cover object-center"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-white/90 text-gray-700 font-semibold">
+                            {post.category}
+                          </Badge>
+                        </div>
+                        <div className="absolute top-4 right-4">
+                          <Badge className="bg-yellow-500 text-white font-semibold">
+                            Featured
+                          </Badge>
+                        </div>
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-white/90 text-gray-700 font-semibold">
-                          {post.category}
-                        </Badge>
-                      </div>
-                      <div className="absolute top-4 right-4">
-                        <Badge className="bg-yellow-500 text-white font-semibold">
-                          Featured
-                        </Badge>
-                      </div>
-                    </div>
 
-                    <CardHeader>
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          {formatDate(post.created_at)}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          {getReadTime(post.content)}
-                        </div>
-                      </div>
-                      <CardTitle className="text-xl text-black line-clamp-2 group-hover:text-gray-700 transition-colors">
-                        {post.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-600 line-clamp-3">
-                        {post.excerpt || post.content.substring(0, 150) + '...'}
-                      </CardDescription>
-                    </CardHeader>
-
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-gray-500" />
-                          <span className="text-sm text-gray-600">{post.author}</span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <Eye className="w-4 h-4" />
-                            {post.view_count || 0}
+                      <CardHeader>
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            {formatDate(post.created_at)}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            {getReadTime(post.content)}
                           </div>
                         </div>
-                      </div>
-                      <Link href={`/posts/${post.slug}`}>
-                        <Button
-                          variant="outline"
-                          className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
-                        >
-                          Read More
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                        <CardTitle className="text-xl text-black line-clamp-2 group-hover:text-gray-700 transition-colors">
+                          {post.title}
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 line-clamp-3">
+                          {post.excerpt || post.content.substring(0, 150) + '...'}
+                        </CardDescription>
+                      </CardHeader>
+
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <User className="w-4 h-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">{post.author}</span>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-1">
+                              <Eye className="w-4 h-4" />
+                              {post.view_count || 0}
+                            </div>
+                          </div>
+                        </div>
+                        <Link href={`/posts/${post.slug}`}>
+                          <Button
+                            variant="outline"
+                            className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
+                          >
+                            Read More
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )
+              })}
             </motion.div>
           </div>
         </section>
@@ -363,65 +419,75 @@ export default function NewsPage() {
               viewport={{ once: true }}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {recentPosts.map((post, index) => (
-                <motion.div key={post.id} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
-                  <Card className="h-full bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-                    <div className="relative h-40 overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                        <Newspaper className="h-12 w-12 text-gray-400" />
+              {recentPosts.map((post, index) => {
+                const imgSrc = getImageForPost(post, index)
+                return (
+                  <motion.div key={post.id} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
+                    <Card className="h-full bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                      <div className="relative h-40 overflow-hidden">
+                        <Image
+                          src={imgSrc}
+                          alt={`${post.category} - ${post.title}`}
+                          fill
+                          loading="lazy"
+                          sizes="(max-width: 1024px) 100vw, 33vw"
+                          placeholder="blur"
+                          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 250))}`}
+                          className="object-cover object-center"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <div className="absolute top-3 left-3">
+                          <Badge className="bg-white/90 text-gray-700 font-semibold text-xs">
+                            {post.category}
+                          </Badge>
+                        </div>
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                      <div className="absolute top-3 left-3">
-                        <Badge className="bg-white/90 text-gray-700 font-semibold text-xs">
-                          {post.category}
-                        </Badge>
-                      </div>
-                    </div>
 
-                    <CardHeader>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(post.created_at)}
+                      <CardHeader>
+                        <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {formatDate(post.created_at)}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {getReadTime(post.content)}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {getReadTime(post.content)}
-                        </div>
-                      </div>
-                      <CardTitle className="text-lg text-black line-clamp-2 group-hover:text-gray-700 transition-colors">
-                        {post.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-600 line-clamp-3 text-sm">
-                        {post.excerpt || post.content.substring(0, 120) + '...'}
-                      </CardDescription>
-                    </CardHeader>
+                        <CardTitle className="text-lg text-black line-clamp-2 group-hover:text-gray-700 transition-colors">
+                          {post.title}
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 line-clamp-3 text-sm">
+                          {post.excerpt || post.content.substring(0, 120) + '...'}
+                        </CardDescription>
+                      </CardHeader>
 
-                    <CardContent className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          <User className="w-3 h-3 text-gray-500" />
-                          <span className="text-xs text-gray-600">{post.author}</span>
+                      <CardContent className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1">
+                            <User className="w-3 h-3 text-gray-500" />
+                            <span className="text-xs text-gray-600">{post.author}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Eye className="w-3 h-3" />
+                            {post.view_count || 0}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1 text-xs text-gray-500">
-                          <Eye className="w-3 h-3" />
-                          {post.view_count || 0}
-                        </div>
-                      </div>
-                      <Link href={`/posts/${post.slug}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
-                        >
-                          Read More
-                          <ArrowRight className="ml-2 h-3 w-3" />
-                        </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                        <Link href={`/posts/${post.slug}`}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
+                          >
+                            Read More
+                            <ArrowRight className="ml-2 h-3 w-3" />
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )
+              })}
             </motion.div>
           </div>
         </section>
