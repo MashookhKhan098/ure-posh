@@ -267,7 +267,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                         ease: "easeInOut"
                     }}
                 >
-                    <div className={`text-white font-medium leading-tight text-xs sm:text-sm lg:text-base xl:text-lg`}>
+                    <div className={`text-white font-medium leading-tight text-[10px] sm:text-xs lg:text-sm xl:text-base`}>
                         {content.split('\n').map((line, idx) => (
                             <div key={idx} className="mb-0.5 sm:mb-1 lg:mb-1.5">
                                 {line}
@@ -284,7 +284,7 @@ const ExpertiseGear = ({ title, content, color, dots, index }: {
                 transition={{ delay: 0.5, duration: 0.6 }}
                 viewport={{ once: true }}
             >
-                <h3 className="text-sm sm:text-base lg:text-lg xl:text-xl font-bold text-white mb-2">{title}</h3>
+                <h3 className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold text-white mb-2">{title}</h3>
             </motion.div>
         </div>
     );
@@ -468,7 +468,7 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-screen py-8 sm:py-10 lg:py-10">
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-[80vh] py-6 sm:py-8 lg:py-8">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -484,14 +484,14 @@ export default function HomePage() {
                   </Badge>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-2 sm:space-y-3 lg:space-y-4">
-                  <h1 className="text-lg sm:text-xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
+                  <h1 className="text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.6, duration: 0.8 }}
                       className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 mb-1 sm:mb-2"
                     >
-                      <span className="text-slate-600 font-medium text-lg sm:text-xl lg:text-3xl xl:text-4xl">
+                      <span className="text-slate-600 font-medium text-base sm:text-lg lg:text-2xl xl:text-3xl">
                         Creating
                       </span>
                       <motion.span 
@@ -515,27 +515,27 @@ export default function HomePage() {
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 1.0, duration: 0.8 }}
-                      className="block text-slate-700 font-semibold text-lg sm:text-xl lg:text-3xl xl:text-4xl"
+                      className="block text-slate-700 font-semibold text-base sm:text-lg lg:text-2xl xl:text-3xl"
                     >
                       Workplaces for Everyone
                     </motion.span>
                   </h1>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="space-y-3 sm:space-y-4 lg:space-y-6">
-                  <p className="text-xs sm:text-sm lg:text-lg xl:text-xl text-slate-600 leading-relaxed max-w-3xl font-medium">
+                  <p className="text-[11px] sm:text-xs lg:text-sm xl:text-base text-slate-600 leading-relaxed max-w-3xl font-medium">
                     We transform organizational cultures through comprehensive{" "}
                     <span className="font-bold text-slate-800 bg-yellow-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">POSH compliance</span>, expert training, and innovative solutions that make workplaces{" "}
                     <span className="font-bold text-slate-800 bg-green-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">safer, more inclusive</span>, and legally compliant across India.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
                     <Link href="/contact">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-xs sm:text-sm lg:text-base">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-7 py-2 sm:py-2 lg:py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-[11px] sm:text-xs lg:text-sm">
                         Get Started
                         <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1.5 sm:ml-2" />
                       </Button>
                     </Link>
                     <Link href="/about">
-                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm lg:text-base">
+                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-7 py-2 sm:py-2 lg:py-2.5 rounded-xl font-semibold transition-all duration-300 text-[11px] sm:text-xs lg:text-sm">
                         Learn More
                       </Button>
                     </Link>

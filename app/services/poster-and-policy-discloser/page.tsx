@@ -349,8 +349,8 @@ export default function PosterAndPolicyDiscloserPage() {
       {/* Browse Posters */}
       <>
           {/* Filters and Sort */}
-          <div className="bg-white border-b">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6">
+          <div className="bg-white border-b -mt-8 sm:-mt-12 lg:-mt-16 relative z-10">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4 sm:py-5">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="flex items-center gap-4">
                   <span className="text-gray-600 font-medium">
