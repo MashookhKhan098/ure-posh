@@ -566,7 +566,7 @@ export default function ProfessionalBlogPost() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-12">
         {/* Breadcrumb */}
         <nav className="mb-8" aria-label="Breadcrumb">
           <div className="flex items-center space-x-3 text-sm">
@@ -740,19 +740,21 @@ export default function ProfessionalBlogPost() {
           </motion.div>
         )}
 
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         {/* Article Content */}
+        <div className="xl:col-span-9">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 mb-12"
+          className="bg-white rounded-3xl shadow-xl border border-gray-100 p-10 md:p-14 xl:p-16 mb-12"
         >
           <div
             dangerouslySetInnerHTML={{
               __html: formatContent(post.content)
             }}
-            className="prose prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-code:bg-gray-100 prose-code:px-3 prose-code:py-1 prose-code:rounded-lg prose-li:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:font-medium prose-blockquote:text-gray-800 prose-h1:text-4xl prose-h1:font-bold prose-h2:text-3xl prose-h2:font-bold prose-h3:text-2xl prose-h3:font-semibold prose-h4:text-xl prose-h4:font-semibold prose-h5:text-lg prose-h5:font-medium prose-h6:text-base prose-h6:font-medium prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6 prose-ul:space-y-2 prose-ol:space-y-2 prose-li:marker:text-blue-500"
-          />
+            className="prose prose-lg md:prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-code:bg-gray-100 prose-code:px-3 prose-code:py-1 prose-code:rounded-lg prose-li:text-gray-700 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:font-medium prose-blockquote:text-gray-800 prose-h1:text-4xl prose-h1:font-bold prose-h2:text-3xl prose-h2:font-bold prose-h3:text-2xl prose-h3:font-semibold prose-h4:text-xl prose-h4:font-semibold prose-h5:text-lg prose-h5:font-medium prose-h6:text-base prose-h6:font-medium prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6 prose-ul:space-y-2 prose-ol:space-y-2 prose-li:marker:text-blue-500"
+        />
         </motion.div>
 
         {/* Tags */}
@@ -781,6 +783,33 @@ export default function ProfessionalBlogPost() {
             </div>
           </motion.div>
         )}
+
+        </div>
+        {/* Sidebar */}
+        <div className="hidden xl:block xl:col-span-3">
+          <div className="sticky top-24 space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+              <h4 className="text-lg font-bold text-gray-900 mb-4">About this story</h4>
+              <div className="space-y-3 text-sm text-gray-600">
+                <div className="flex items-center gap-2"><Tag className="w-4 h-4 text-blue-600" /><span>{post.category}</span></div>
+                <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-pink-600" /><span>{formatDate(post.createdAt)}</span></div>
+                <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-green-600" /><span>{readTime} min read</span></div>
+                <div className="flex items-center gap-2"><Eye className="w-4 h-4 text-gray-700" /><span>{(post as any).views || 0} views</span></div>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+              <h4 className="text-lg font-bold text-gray-900 mb-4">Share</h4>
+              <div className="flex items-center gap-2">
+                <button onClick={() => sharePost('twitter')} className="p-3 text-gray-600 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-colors" title="Share on Twitter"><Twitter className="w-5 h-5" /></button>
+                <button onClick={() => sharePost('facebook')} className="p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors" title="Share on Facebook"><Facebook className="w-5 h-5" /></button>
+                <button onClick={() => sharePost('linkedin')} className="p-3 text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-colors" title="Share on LinkedIn"><Linkedin className="w-5 h-5" /></button>
+                <button onClick={() => sharePost('copy')} className="p-3 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-xl transition-colors" title="Copy link"><Copy className="w-5 h-5" /></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (

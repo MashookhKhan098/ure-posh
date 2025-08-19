@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { X, Save, FileText, Type, Image, Tag, Sparkles, PenTool, Eye } from 'lucide-react'
+import { X, Save, FileText, Type, Image, Tag, Sparkles, PenTool, Eye, Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, Heading1, Heading2, Heading3, Quote, Link as LinkIcon, List, ListOrdered, Highlighter } from 'lucide-react'
 import { useWriterAuth } from '@/hooks/useWriterAuth'
 import { useToast } from '@/hooks/use-toast'
 
@@ -34,6 +34,43 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
 
   const [categories, setCategories] = useState<Category[]>([])
   const [submitting, setSubmitting] = useState(false)
+
+  const contentRef = React.useRef<HTMLTextAreaElement | null>(null)
+
+  const wrapSelection = (before: string, after: string = '') => {
+    const textarea = contentRef.current
+    if (!textarea) return
+    const { selectionStart, selectionEnd, value } = textarea
+    const selected = value.slice(selectionStart, selectionEnd)
+    const newValue = value.slice(0, selectionStart) + before + selected + after + value.slice(selectionEnd)
+    setFormData((prev) => ({ ...prev, content: newValue }))
+    requestAnimationFrame(() => {
+      const pos = selectionStart + before.length + selected.length + after.length
+      textarea.focus()
+      textarea.setSelectionRange(pos, pos)
+    })
+  }
+
+  const insertBlock = (html: string) => {
+    const textarea = contentRef.current
+    const pos = textarea ? textarea.selectionStart : formData.content.length
+    const before = formData.content.slice(0, pos)
+    const after = formData.content.slice(pos)
+    const newValue = `${before}\n\n${html}\n\n${after}`
+    setFormData((prev) => ({ ...prev, content: newValue }))
+  }
+
+  const insertList = (ordered = false) => {
+    const textarea = contentRef.current
+    if (!textarea) return
+    const { selectionStart, selectionEnd, value } = textarea
+    const selected = value.slice(selectionStart, selectionEnd) || 'Item 1\nItem 2\nItem 3'
+    const lines = selected.split(/\r?\n/).filter(Boolean)
+    const items = lines.map((l) => `<li>${l}</li>`).join('')
+    const html = ordered ? `<ol>${items}</ol>` : `<ul>${items}</ul>`
+    const newValue = value.slice(0, selectionStart) + html + value.slice(selectionEnd)
+    setFormData((prev) => ({ ...prev, content: newValue }))
+  }
 
   // Fetch categories on component mount
   useEffect(() => {
@@ -218,12 +255,67 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
                 {/* Content */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Article Content <span className="text-red-500">*</span></label>
+                  {/* Emoji toolbar for structured sections */}
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <span className="text-xs text-gray-500 mr-2">Insert sections:</span>
+                    {[
+                      { e: '🚨', label: 'Breaking' },
+                      { e: '📊', label: 'Stats' },
+                      { e: '🏢', label: 'Corporate' },
+                      { e: '💡', label: 'Tips' },
+                      { e: '🔮', label: 'Future' },
+                    ].map((b) => (
+                      <button
+                        key={b.e}
+                        type="button"
+                        title={b.label}
+                        onClick={() => {
+                          const snippetMap: Record<string, string> = {
+                            '🚨': '🚨 Breaking News: ',
+                            '📊': '📊 Why This Matters',
+                            '🏢': '🏢 Corporate Reactions',
+                            '💡': '💡 What Employees Need to Know',
+                            '🔮': '🔮 Looking Ahead',
+                          }
+                          const snippet = snippetMap[b.e]
+                          setFormData((prev) => ({
+                            ...prev,
+                            content: (prev.content ? prev.content + "\n\n" : '') + snippet + "\n\n",
+                          }))
+                        }}
+                        className="px-2 py-1 rounded-lg bg-white/70 border border-pink-200 text-gray-700 hover:bg-pink-50 text-sm"
+                      >
+                        {b.e}
+                      </button>
+                    ))}
+                    <span className="mx-3 h-4 w-px bg-pink-200" />
+                    <span className="text-xs text-gray-500">Format:</span>
+                    <button type="button" title="Bold" onClick={() => wrapSelection('<strong>', '</strong>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Bold className="w-4 h-4" /></button>
+                    <button type="button" title="Italic" onClick={() => wrapSelection('<em>', '</em>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Italic className="w-4 h-4" /></button>
+                    <button type="button" title="Underline" onClick={() => wrapSelection('<u>', '</u>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Underline className="w-4 h-4" /></button>
+                    <button type="button" title="Strikethrough" onClick={() => wrapSelection('<s>', '</s>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Strikethrough className="w-4 h-4" /></button>
+                    <button type="button" title="Small" onClick={() => wrapSelection('<span class=\'text-sm\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Type className="w-4 h-4" /></button>
+                    <button type="button" title="Large" onClick={() => wrapSelection('<span class=\'text-2xl font-bold\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Heading2 className="w-4 h-4" /></button>
+                    <button type="button" title="Align Left" onClick={() => wrapSelection('<span class=\'block text-left\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignLeft className="w-4 h-4" /></button>
+                    <button type="button" title="Align Center" onClick={() => wrapSelection('<span class=\'block text-center\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignCenter className="w-4 h-4" /></button>
+                    <button type="button" title="Align Right" onClick={() => wrapSelection('<span class=\'block text-right\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignRight className="w-4 h-4" /></button>
+                    <button type="button" title="Quote" onClick={() => insertBlock('<blockquote class=\'border-l-4 border-pink-500 pl-4 italic\'>Quote here...</blockquote>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Quote className="w-4 h-4" /></button>
+                    <button type="button" title="Link" onClick={() => {
+                      const url = prompt('Enter URL', 'https://') || 'https://'
+                      wrapSelection(`<a href=\'${url}\' target=\'_blank\'>`, '</a>')
+                    }} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><LinkIcon className="w-4 h-4" /></button>
+                    <button type="button" title="Bulleted List" onClick={() => insertList(false)} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><List className="w-4 h-4" /></button>
+                    <button type="button" title="Numbered List" onClick={() => insertList(true)} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><ListOrdered className="w-4 h-4" /></button>
+                    <button type="button" title="Highlight" onClick={() => wrapSelection('<mark>', '</mark>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Highlighter className="w-4 h-4" /></button>
+                    <button type="button" title="Separator" onClick={() => insertBlock('<hr/>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50">—</button>
+                  </div>
                   <textarea
                     rows={16}
                     value={formData.content}
                     onChange={(e) => handleInputChange('content', e.target.value)}
                     placeholder="Start writing your article here. Share your knowledge, insights, and experiences..."
                     className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500 resize-none leading-relaxed"
+                    ref={contentRef}
                     required
                   />
                   <div className="flex justify-between items-center mt-1">
@@ -234,6 +326,7 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
                       {formData.content.split(' ').filter(word => word.length > 0).length} words
                     </span>
                   </div>
+                  <p className="mt-1 text-xs text-gray-500">Tip: Use the buttons above to add structured sections like Breaking, Stats, Corporate reactions, Tips, and Future outlook.</p>
                 </div>
               </div>
 
