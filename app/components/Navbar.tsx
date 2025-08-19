@@ -32,9 +32,9 @@ const expertiseContent = {
   "disclosure-and-audit": {
     title: "Disclosure and Audit",
     items: [
-      { name: "POSH & Workplace Harassment Compliance Reporting", slug: "posh-workplace-harassment-compliance-reporting", placeholder: "Comprehensive compliance reporting system" },
-             { name: "Poster and Policy Discloser", slug: "poster-and-policy-discloser", placeholder: "Transparent policy disclosure framework" },
-      { name: "POSH & Workplace Harassment Audits", slug: "posh-workplace-harassment-audits", placeholder: "Regular compliance audits and assessments" }
+      { name: "POSH Compliance Reporting", slug: "posh-workplace-harassment-compliance-reporting", placeholder: "Comprehensive compliance reporting system" },
+      { name: "Poster and Policy Disclosure", slug: "poster-and-policy-discloser", placeholder: "Transparent policy and poster disclosure framework" },
+      { name: "Safe Workplace Audit", slug: "posh-workplace-harassment-audits", placeholder: "Regular compliance audits and assessments" }
     ]
   },
   "posh-adaptability": {
@@ -51,7 +51,7 @@ const expertiseContent = {
     items: [
       { name: "Well Being Programmes", slug: "well-being-programmes", placeholder: "Comprehensive employee wellness programs" },
       { name: "Code of Conduct Training", slug: "code-of-conduct-training", placeholder: "Ethical workplace behavior training" },
-      { name: "Mental Health Training & Counselling", slug: "mental-health-training-counselling", placeholder: "Mental health support and counseling services" }
+      { name: "Mental Health Training", slug: "mental-health-training-counselling", placeholder: "Mental health support and counseling services" }
     ]
   },
   "diversity-and-inclusion": {
@@ -69,6 +69,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isExpertiseOpen, setIsExpertiseOpen] = useState(false)
   const expertiseRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const [showNavbar, setShowNavbar] = useState(true)
   const [scrolled, setScrolled] = useState(false)
@@ -127,6 +128,29 @@ export default function Navbar() {
       window.removeEventListener('openExpertiseDropdown', handleOpenExpertiseDropdown);
     };
   }, []);
+
+  // Close expertise on outside click or Escape
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node
+      if (
+        isExpertiseOpen &&
+        !expertiseRef.current?.contains(target) &&
+        !dropdownRef.current?.contains(target)
+      ) {
+        setIsExpertiseOpen(false)
+      }
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsExpertiseOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isExpertiseOpen])
 
   return (
     <motion.nav
@@ -256,14 +280,14 @@ export default function Navbar() {
 
       {/* Render dropdown as a direct child of nav for extreme left alignment */}
       {isExpertiseOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 bg-white shadow-xl border border-gray-200 z-50 transition-all duration-300 hover:shadow-2xl">
+        <div ref={dropdownRef} className="absolute left-0 right-0 top-full mt-2 bg-white shadow-xl border border-gray-200 z-50 transition-all duration-300 hover:shadow-2xl">
           <div className="px-8 py-6 max-w-6xl mx-auto">
             <div className="grid grid-cols-6 gap-12">
               {/* Expertise Header Column */}
               <div className="w-56 pr-6">
                 <h2 className="text-[22px] font-bold text-gray-900 mb-4 pr-2 transition-colors duration-300 hover:text-pink-600">Expertise</h2>
                 <p className="text-[12px] text-gray-600 leading-relaxed">
-                  Advising and leading businesses and brands across an array of industries
+                  Consulting for Safe Workplace Emerging World’s Leading Companies
                 </p>
               </div>
               

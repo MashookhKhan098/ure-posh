@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -32,217 +32,53 @@ export default function PosterAndPolicyDiscloserPage() {
   })
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [purchaseResult, setPurchaseResult] = useState<any>(null)
-  const [activeTab, setActiveTab] = useState<'browse' | 'downloads'>('browse')
-  const [downloadedPosters, setDownloadedPosters] = useState([
-    {
-      id: 1,
-      name: "POSH Policy Compliance Poster",
-      price: 299,
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop",
-      downloadUrl: "/api/posters/1/download?order=TXN_123456789",
-      downloadExpiresAt: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000), // 6 days from now
-      purchasedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      transactionId: "TXN_123456789",
-      downloadCount: 2,
-      maxDownloads: 5
-    },
-    {
-      id: 2,
-      name: "Women's Safety Guidelines Poster",
-      price: 249,
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
-      downloadUrl: "/api/posters/2/download?order=TXN_987654321",
-      downloadExpiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-      purchasedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      transactionId: "TXN_987654321",
-      downloadCount: 1,
-      maxDownloads: 5
-    },
-    {
-      id: 5,
-      name: "Women's Empowerment Poster",
-      price: 349,
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
-      downloadUrl: "/api/posters/5/download?order=TXN_456789123",
-      downloadExpiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day from now
-      purchasedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-      transactionId: "TXN_456789123",
-      downloadCount: 3,
-      maxDownloads: 5
-    }
-  ])
+  // Download feature removed: no downloads state or tab
 
-  // Function to add newly purchased poster to downloads
-  const addToDownloads = (product: any, customerDetails: any) => {
-    const newPoster = {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      downloadUrl: `/api/posters/${product.id}/download?order=TXN_${Date.now()}`,
-      downloadExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      purchasedAt: new Date(),
-      transactionId: `TXN_${Date.now()}`,
-      downloadCount: 0,
-      maxDownloads: 5
+  const [posters, setPosters] = useState<any[]>([])
+  const [loadingPosters, setLoadingPosters] = useState(false)
+  const [postersError, setPostersError] = useState<string | null>(null)
+
+  const fetchPosters = async () => {
+    try {
+      setLoadingPosters(true)
+      setPostersError(null)
+      const res = await fetch('/api/posters?limit=100')
+      const json = await res.json()
+      if (!res.ok) throw new Error(json?.error || 'Failed to load posters')
+      const mapped = (json.posters || []).map((p: any) => ({
+        id: p.id,
+        name: p.title,
+        price: Number(p.price ?? 0),
+        originalPrice: Number(p.price ?? 0),
+        discount: 0,
+        rating: 4.6,
+        reviews: 0,
+        image: p.image_url,
+        description: p.description || '',
+        features: Array.isArray(p.tags) && p.tags.length ? p.tags : ['Print Ready', 'High Resolution', 'Digital Download'],
+        category: (p.category || 'Other').toString(),
+        inStock: true,
+        fastDelivery: !!p.featured,
+        featured: !!p.featured,
+      }))
+      setPosters(mapped)
+    } catch (e: any) {
+      setPostersError(e?.message || 'Unable to load posters')
+    } finally {
+      setLoadingPosters(false)
     }
-    
-    setDownloadedPosters(prev => [newPoster, ...prev])
   }
 
-  const posterProducts = [
-    {
-      id: 1,
-      name: "POSH Policy Compliance Poster",
-      price: 299,
-      originalPrice: 499,
-      discount: 40,
-      rating: 4.5,
-      reviews: 128,
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop",
-      description: "Professional POSH policy poster for workplace compliance",
-      features: ["A3 Size", "Print Ready", "Legal Compliant", "Digital Download"],
-      category: "Policy",
-      inStock: true,
-      fastDelivery: true,
-      featured: true
-    },
-    {
-      id: 2,
-      name: "Women's Safety Guidelines Poster",
-      price: 249,
-      originalPrice: 399,
-      discount: 38,
-      rating: 4.3,
-      reviews: 95,
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
-      description: "Clear women's safety guidelines for workplace display",
-      features: ["A2 Size", "High Quality", "Bilingual", "Instant Download"],
-      category: "Safety",
-      inStock: true,
-      fastDelivery: true,
-      featured: true
-    },
-    {
-      id: 3,
-      name: "Gender Equality Rights Poster",
-      price: 199,
-      originalPrice: 299,
-      discount: 33,
-      rating: 4.7,
-      reviews: 156,
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600&fit=crop",
-      description: "Comprehensive gender equality rights and responsibilities guide",
-      features: ["A3 Size", "Colorful Design", "Easy to Read", "PDF Format"],
-      category: "Equality",
-      inStock: true,
-      fastDelivery: false,
-      featured: false
-    },
-    {
-      id: 4,
-      name: "Workplace Safety for Women",
-      price: 179,
-      originalPrice: 249,
-      discount: 28,
-      rating: 4.2,
-      reviews: 87,
-      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop",
-      description: "Essential workplace safety guidelines for women employees",
-      features: ["A4 Size", "Safety Focused", "Visual Icons", "Print Ready"],
-      category: "Safety",
-      inStock: false,
-      fastDelivery: true,
-      featured: false
-    },
-    {
-      id: 5,
-      name: "Women's Empowerment Poster",
-      price: 349,
-      originalPrice: 599,
-      discount: 42,
-      rating: 4.8,
-      reviews: 203,
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
-      description: "Promote women's empowerment and leadership in your workplace",
-      features: ["A2 Size", "Modern Design", "Inclusive Language", "High Resolution"],
-      category: "Empowerment",
-      inStock: true,
-      fastDelivery: true,
-      featured: true
-    },
-    {
-      id: 6,
-      name: "Anti-Discrimination Policy Display",
-      price: 399,
-      originalPrice: 699,
-      discount: 43,
-      rating: 4.6,
-      reviews: 134,
-      image: "https://images.unsplash.com/photo-1523240797358-5bbd9f0c3b0d?w=800&h=600&fit=crop",
-      description: "Professional anti-discrimination policy for organizational display",
-      features: ["A1 Size", "Premium Quality", "Customizable", "Legal Review"],
-      category: "Policy",
-      inStock: true,
-      fastDelivery: false,
-      featured: false
-    },
-    {
-      id: 7,
-      name: "Women's Rights Awareness Poster",
-      price: 229,
-      originalPrice: 349,
-      discount: 34,
-      rating: 4.4,
-      reviews: 112,
-      image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800&h=600&fit=crop",
-      description: "Raise awareness about women's rights and gender equality",
-      features: ["A3 Size", "Eye-catching Design", "Educational Content", "High Quality"],
-      category: "Equality",
-      inStock: true,
-      fastDelivery: true,
-      featured: false
-    },
-    {
-      id: 8,
-      name: "Workplace Harassment Prevention",
-      price: 279,
-      originalPrice: 399,
-      discount: 30,
-      rating: 4.6,
-      reviews: 89,
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop",
-      description: "Comprehensive workplace harassment prevention guidelines",
-      features: ["A2 Size", "Clear Guidelines", "Professional Design", "Legal Compliant"],
-      category: "Safety",
-      inStock: true,
-      fastDelivery: true,
-      featured: true
-    },
-    {
-      id: 9,
-      name: "Equal Pay Advocacy Poster",
-      price: 189,
-      originalPrice: 279,
-      discount: 32,
-      rating: 4.3,
-      reviews: 76,
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600&fit=crop",
-      description: "Advocate for equal pay and fair compensation practices",
-      features: ["A4 Size", "Modern Design", "Clear Messaging", "Print Ready"],
-      category: "Equality",
-      inStock: true,
-      fastDelivery: false,
-      featured: false
-    }
-  ]
+  useEffect(() => {
+    fetchPosters()
+  }, [])
 
   const categories = [
     { name: 'All', value: 'all' },
-    { name: 'Policy', value: 'Policy' },
-    { name: 'Safety', value: 'Safety' },
-    { name: 'Equality', value: 'Equality' },
-    { name: 'Empowerment', value: 'Empowerment' }
+    { name: 'Policy', value: 'policy' },
+    { name: 'Safety', value: 'safety' },
+    { name: 'Equality', value: 'equality' },
+    { name: 'Empowerment', value: 'empowerment' }
   ]
 
   const addToCart = (productId: number) => {
@@ -279,7 +115,7 @@ export default function PosterAndPolicyDiscloserPage() {
 
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => {
-      const product = posterProducts.find(p => p.id === item.id)
+      const product = posters.find(p => p.id === item.id)
       return total + (product?.price || 0) * item.quantity
     }, 0)
   }
@@ -303,15 +139,10 @@ export default function PosterAndPolicyDiscloserPage() {
       
       // Generate mock transaction details
       const transactionId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-      const downloadUrl = `/api/posters/${selectedProduct.id}/download?order=${transactionId}`
-      
-      // Add to downloads
-      addToDownloads(selectedProduct, customerDetails)
       
       // Set purchase result
       setPurchaseResult({
         transactionId,
-        downloadUrl,
         product: selectedProduct,
         customerDetails
       })
@@ -332,16 +163,16 @@ export default function PosterAndPolicyDiscloserPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star 
         key={i} 
-        className={`w-4 h-4 ${i < Math.floor(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+        className={`w-3 h-3 ${i < Math.floor(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
       />
     ))
   }
 
   // Filter and sort products
-  const filteredProducts = posterProducts.filter(product => {
+  const filteredProducts = posters.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory
+    const matchesCategory = selectedCategory === 'all' || (product.category || '').toLowerCase() === selectedCategory.toLowerCase()
     return matchesSearch && matchesCategory
   })
 
@@ -377,66 +208,116 @@ export default function PosterAndPolicyDiscloserPage() {
         <div className="absolute bottom-10 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full blur-xl animate-pulse delay-500"></div>
         
         <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 mb-8">
-              <Shield className="w-4 h-4" />
-              <span className="text-sm font-medium">100% Legal Compliant</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            {/* Left: Copy */}
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 mb-6">
+                <Shield className="w-4 h-4" />
+                <span className="text-sm font-medium">100% Legal Compliant</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4">
+                <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Women's Rights</span>
+                <br />
+                <span className="text-white">& Safety Posters</span>
+              </h1>
+              <p className="text-lg md:text-xl opacity-90 max-w-2xl leading-relaxed mb-8">
+                Professional, print‑ready posters to promote women's rights and workplace safety.
+                <span className="block text-blue-100 font-medium mt-2">Premium quality • High resolution • Instant access</span>
+              </p>
+
+              {/* In-hero search and trust markers removed per request */}
             </div>
-            
-            {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                Women's Rights
-              </span>
-              <br />
-              <span className="text-white">
-                & Safety Posters
-              </span>
-            </h1>
-            
-            {/* Subtitle */}
-            <p className="text-xl md:text-2xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed">
-              Professional, legally compliant posters designed to promote women's rights and workplace safety. 
-              <span className="block text-blue-100 font-medium mt-2">
-                Instant download • Print ready • Premium quality
-              </span>
-            </p>
-            
-            {/* Search and Filter Section */}
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 mb-8 max-w-4xl mx-auto">
-              <div className="flex flex-col lg:flex-row gap-4 items-center">
-                <div className="relative flex-1 w-full">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 w-5 h-5" />
-                  <Input
-                    placeholder="Search for posters, policies, or safety guidelines..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-12 pr-4 py-3 bg-white/10 border-white/20 text-white placeholder:text-white/70 rounded-xl text-lg focus:bg-white/20 focus:border-white/40 transition-all"
+
+            {/* Right: Enhanced multi-size collage */}
+            <div className="relative hidden lg:block">
+              <div className="relative h-[520px]">
+                {/* Soft glow background */}
+                <div className="absolute -inset-6 rounded-[28px] bg-gradient-to-br from-white/20 via-blue-300/20 to-purple-300/20 blur-2xl opacity-50 -z-10" />
+
+                {/* Tile A: Main portrait */}
+                <div className="absolute left-0 top-8 h-[74%] w-[58%] rotate-[-3deg]">
+                  <div className="bg-white/95 rounded-3xl p-2 shadow-2xl border border-white/30">
+                    <div className="rounded-2xl overflow-hidden">
+                      <img
+                        src={(posters[0]?.image || posters[0]?.image_url) || '/placeholder.jpg'}
+                        alt={posters[0]?.name || 'Poster A'}
+                        className="w-full h-[300px] object-cover"
+                      />
+                    </div>
+                    <div className="px-3 py-2 text-xs text-gray-600 truncate">
+                      {posters[0]?.name || 'Featured poster'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile B: Tall right */}
+                <div className="absolute right-0 top-0 h-[58%] w-[38%] rotate-[4deg]">
+                  <div className="bg-white/95 rounded-3xl p-2 shadow-xl border border-white/30">
+                    <div className="rounded-2xl overflow-hidden">
+                      <img
+                        src={(posters[1]?.image || posters[1]?.image_url) || '/placeholder.jpg'}
+                        alt={posters[1]?.name || 'Poster B'}
+                        className="w-full h-[230px] object-cover"
+                      />
+                    </div>
+                    <div className="px-3 py-2 text-xs text-gray-600 truncate">
+                      {posters[1]?.name || 'Curated pick'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile C: Bottom right square */}
+                <div className="absolute right-4 bottom-2 h-[54%] w-[42%] rotate-[-2deg]">
+                  <div className="bg-white/95 rounded-3xl p-2 shadow-xl border border-white/30">
+                    <div className="rounded-2xl overflow-hidden">
+                      <img
+                        src={(posters[2]?.image || posters[2]?.image_url) || '/placeholder.jpg'}
+                        alt={posters[2]?.name || 'Poster C'}
+                        className="w-full h-[210px] object-cover"
+                      />
+                    </div>
+                    <div className="px-3 py-2 text-xs text-gray-600 truncate">
+                      {posters[2]?.name || 'Editor’s choice'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile D: Top center small */}
+                <div className="absolute left-1/2 -translate-x-1/2 -top-3 h-[30%] w-[28%] rotate-[2deg]">
+                  <div className="bg-white/95 rounded-3xl p-2 shadow-lg border border-white/30">
+                    <div className="rounded-2xl overflow-hidden">
+                      <img
+                        src={(posters[3]?.image || posters[3]?.image_url) || '/placeholder.jpg'}
+                        alt={posters[3]?.name || 'Poster D'}
+                        className="w-full h-[120px] object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile E: Bottom left wide */}
+                <div className="absolute left-3 bottom-0 h-[32%] w-[36%] rotate-[2deg]">
+                  <div className="bg-white/95 rounded-3xl p-2 shadow-xl border border-white/30">
+                    <div className="rounded-2xl overflow-hidden">
+                      <img
+                        src={(posters[4]?.image || posters[4]?.image_url) || '/placeholder.jpg'}
+                        alt={posters[4]?.name || 'Poster E'}
+                        className="w-full h-[120px] object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile F: Small circular thumb */}
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-6 w-20 h-20 rounded-full overflow-hidden ring-4 ring-white/70 shadow-xl border border-white/50">
+                  <img
+                    src={(posters[5]?.image || posters[5]?.image_url) || '/placeholder.jpg'}
+                    alt={posters[5]?.name || 'Poster F'}
+                    className="w-full h-full object-cover"
                   />
-            </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full lg:w-48 bg-white/10 border-white/20 text-white rounded-xl py-3 text-lg">
-                    <SelectValue placeholder="All Categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button 
-                  className="w-full lg:w-auto bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-xl text-lg font-semibold transition-all"
-                >
-                  <Search className="w-5 h-5 mr-2" />
-                  Search Posters
-              </Button>
+                </div>
               </div>
             </div>
-            
-
           </div>
         </div>
         
@@ -463,43 +344,10 @@ export default function PosterAndPolicyDiscloserPage() {
 
 
 
-      {/* Tab Navigation */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="flex space-x-8">
-            <button
-              onClick={() => setActiveTab('browse')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === 'browse'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                Browse Posters ({posterProducts.length})
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab('downloads')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === 'downloads'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                My Downloads ({downloadedPosters.length})
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Download tab removed */}
 
-      {/* Conditional Content Based on Active Tab */}
-      {activeTab === 'browse' ? (
-        <>
+      {/* Browse Posters */}
+      <>
           {/* Filters and Sort */}
           <div className="bg-white border-b">
             <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6">
@@ -548,7 +396,7 @@ export default function PosterAndPolicyDiscloserPage() {
                       ) : (
                         <div className="space-y-4">
                           {cartItems.map((item) => {
-                            const product = posterProducts.find(p => p.id === item.id)
+                            const product = posters.find(p => p.id === item.id)
                             if (!product) return null
                             
                             return (
@@ -621,71 +469,71 @@ export default function PosterAndPolicyDiscloserPage() {
           </div>
 
           {/* Products Grid */}
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div id="posters-grid" className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {sortedProducts.map((product) => (
-                <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden border-0 shadow-lg">
+                <Card key={product.id} className="group hover:shadow-md transition-all duration-300 overflow-hidden border-0 shadow-sm">
                   <div className="relative">
                     <img
                         src={product.image}
                         alt={product.name}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {product.featured && (
-                      <Badge className="absolute top-4 left-4 bg-yellow-500 hover:bg-yellow-600">
+                      <Badge className="absolute top-2.5 left-2.5 bg-yellow-500 hover:bg-yellow-600 text-[10px] px-1.5 py-0.5">
                         <Star className="w-3 h-3 mr-1" />
                         Featured
                       </Badge>
                     )}
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button size="sm" variant="secondary" className="w-10 h-10 p-0 rounded-full shadow-lg">
+                    <div className="absolute top-2.5 right-2.5 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button size="sm" variant="secondary" className="w-7 h-7 p-0 rounded-full shadow">
                         <Heart className="w-4 h-4" />
                       </Button>
-                      <Button size="sm" variant="secondary" className="w-10 h-10 p-0 rounded-full shadow-lg">
+                      <Button size="sm" variant="secondary" className="w-7 h-7 p-0 rounded-full shadow">
                         <Eye className="w-4 h-4" />
                       </Button>
                     </div>
                     {product.discount > 0 && (
-                      <Badge className="absolute bottom-4 left-4 bg-red-500 text-white px-3 py-1 text-sm font-semibold shadow-lg">
+                      <Badge className="absolute bottom-2.5 left-2.5 bg-red-500 text-white px-2 py-0.5 text-[10px] font-semibold shadow">
                         {product.discount}% OFF
                       </Badge>
                     )}
                     {!product.inStock && (
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <Badge variant="secondary" className="text-white bg-gray-800 px-4 py-2 text-base">
+                        <Badge variant="secondary" className="text-white bg-gray-800 px-2.5 py-0.5 text-xs">
                           Out of Stock
                         </Badge>
                       </div>
                     )}
                   </div>
 
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg line-clamp-2">{product.name}</CardTitle>
-                    <CardDescription className="line-clamp-2">
+                  <CardHeader className="pb-1">
+                    <CardTitle className="text-sm line-clamp-2">{product.name}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-xs">
                       {product.description}
                     </CardDescription>
                   </CardHeader>
                   
                   <CardContent className="pb-2">
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge variant="outline">{product.category}</Badge>
-                      <div className="text-2xl font-bold text-green-600">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="outline" className="text-[10px] px-2 py-0.5">{product.category}</Badge>
+                      <div className="text-lg font-bold text-green-600">
                         ₹{product.price}
                       </div>
                     </div>
 
                     {/* Rating */}
-                    <div className="flex items-center mb-3">
+                    <div className="flex items-center mb-2">
                       <div className="flex items-center mr-2">
                         {renderStars(product.rating)}
                       </div>
-                      <span className="text-sm text-gray-600">({product.reviews} reviews)</span>
+                      <span className="text-[10px] text-gray-600">({product.reviews} reviews)</span>
                     </div>
 
                     {/* Features */}
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {product.features.slice(0, 3).map((feature, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
+                    <div className="flex flex-wrap gap-1 mb-2.5">
+                      {product.features.slice(0, 2).map((feature, index) => (
+                        <Badge key={index} variant="secondary" className="text-[10px] py-0.5 px-1.5">
                           {feature}
                         </Badge>
                       ))}
@@ -693,52 +541,52 @@ export default function PosterAndPolicyDiscloserPage() {
 
                     {/* Price Comparison */}
                       {product.originalPrice > product.price && (
-                      <div className="flex items-center gap-2 mb-4">
-                        <span className="text-sm text-gray-500 line-through">₹{product.originalPrice}</span>
-                        <span className="text-sm text-green-600 font-semibold">
+                      <div className="flex items-center gap-2 mb-2.5">
+                        <span className="text-[10px] text-gray-500 line-through">₹{product.originalPrice}</span>
+                        <span className="text-[10px] text-green-600 font-semibold">
                           Save ₹{product.originalPrice - product.price}
                         </span>
                       </div>
                     )}
 
                     {/* Delivery Info */}
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-2.5">
                       {product.fastDelivery && (
-                        <Badge className="bg-green-100 text-green-800 text-xs">
+                        <Badge className="bg-green-100 text-green-800 text-[10px] py-0.5">
                           <Zap className="w-3 h-3 mr-1" />
                           Fast Delivery
                         </Badge>
                       )}
-                      <span className="text-sm text-gray-500">Free delivery</span>
+                      <span className="text-[10px] text-gray-500">Free delivery</span>
                     </div>
                   </CardContent>
                   
-                  <CardContent className="pt-2">
-                                     <div className="flex gap-3">
+                  <CardContent className="pt-1">
+                                     <div className="flex gap-2">
                        {getCartItem(product.id) ? (
-                         <div className="flex-1 flex items-center justify-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-                           <Check className="w-4 h-4 text-green-600" />
-                           <span className="text-sm text-green-700 font-medium">
+                         <div className="flex-1 flex items-center justify-center gap-1.5 bg-green-50 border border-green-200 rounded-lg px-2 py-1.5">
+                           <Check className="w-3 h-3 text-green-600" />
+                           <span className="text-[11px] text-green-700 font-medium">
                              In Cart ({getCartItem(product.id)?.quantity})
                            </span>
                          </div>
                        ) : (
                       <Button 
                         onClick={() => addToCart(product.id)}
-                           className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                           className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-8 text-xs"
                         disabled={!product.inStock}
                       >
-                           <ShoppingCart className="w-4 h-4 mr-2" />
+                           <ShoppingCart className="w-3.5 h-3.5 mr-2" />
                         Add to Cart
                       </Button>
                        )}
                       <Button 
                          onClick={() => handleBuyNow(product)}
                         variant="outline" 
-                         className="px-6"
+                         className="px-3 h-8 text-xs"
                         disabled={!product.inStock}
                       >
-                         <Download className="w-4 h-4 mr-2" />
+                         <Download className="w-3.5 h-3.5 mr-2" />
                         Buy Now
                       </Button>
                     </div>
@@ -755,155 +603,7 @@ export default function PosterAndPolicyDiscloserPage() {
               </div>
             )}
           </div>
-        </>
-      ) : (
-        <>
-          {/* Downloads Section */}
-          <div className="bg-white py-12">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">My Downloads</h2>
-                <p className="text-lg text-gray-600">
-                  Access all your purchased posters. Download them anytime within the validity period.
-                </p>
-              </div>
-
-              {downloadedPosters.length === 0 ? (
-                <div className="text-center py-16">
-                  <Download className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                  <h3 className="text-2xl font-semibold text-gray-600 mb-2">No downloads yet</h3>
-                  <p className="text-gray-500 mb-6">Purchase some posters to see them here</p>
-                  <Button 
-                    onClick={() => setActiveTab('browse')}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                  >
-                    Browse Posters
-                  </Button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {downloadedPosters.map((poster) => {
-                    const daysLeft = Math.ceil((poster.downloadExpiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-                    const isExpired = daysLeft <= 0
-                    const isExpiringSoon = daysLeft <= 2
-                    
-                    return (
-                      <Card key={poster.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden border-0 shadow-lg">
-                        <div className="relative">
-                          <img
-                            src={poster.image}
-                            alt={poster.name}
-                            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          
-                          {/* Status Badges */}
-                          <div className="absolute top-4 left-4 flex flex-col gap-2">
-                            {isExpired ? (
-                              <Badge className="bg-red-500 text-white">
-                                <Clock className="w-3 h-3 mr-1" />
-                                Expired
-                              </Badge>
-                            ) : isExpiringSoon ? (
-                              <Badge className="bg-orange-500 text-white">
-                                <Clock className="w-3 h-3 mr-1" />
-                                Expires in {daysLeft} day{daysLeft !== 1 ? 's' : ''}
-                              </Badge>
-                            ) : (
-                              <Badge className="bg-green-500 text-white">
-                                <Check className="w-3 h-3 mr-1" />
-                                Active
-                              </Badge>
-                            )}
-                          </div>
-                          
-                          <div className="absolute top-4 right-4">
-                            <Badge variant="secondary" className="bg-white/90 text-gray-700">
-                              <Download className="w-3 h-3 mr-1" />
-                              {poster.downloadCount}/{poster.maxDownloads}
-                            </Badge>
-                          </div>
-                        </div>
-
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-lg line-clamp-2">{poster.name}</CardTitle>
-                          <CardDescription className="line-clamp-2">
-                            Purchased for ₹{poster.price}
-                          </CardDescription>
-                        </CardHeader>
-                        
-                        <CardContent className="space-y-4">
-                          {/* Purchase Info */}
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Transaction ID:</span>
-                              <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
-                                {poster.transactionId.slice(-8)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Purchased:</span>
-                              <span>{poster.purchasedAt.toLocaleDateString()}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Downloads:</span>
-                              <span>{poster.downloadCount} of {poster.maxDownloads}</span>
-                            </div>
-                          </div>
-
-                          {/* Validity Info */}
-                          <div className="bg-gray-50 rounded-lg p-3">
-                            {isExpired ? (
-                              <div className="text-center text-red-600">
-                                <Clock className="w-4 h-4 mx-auto mb-1" />
-                                <p className="text-sm font-medium">Download link expired</p>
-                                <p className="text-xs">Contact support for renewal</p>
-                              </div>
-                            ) : (
-                              <div className="text-center">
-                                <Clock className="w-4 h-4 mx-auto mb-1 text-blue-600" />
-                                <p className="text-sm font-medium text-gray-900">
-                                  Valid for {daysLeft} more day{daysLeft !== 1 ? 's' : ''}
-                                </p>
-                                <p className="text-xs text-gray-600">
-                                  Expires on {poster.downloadExpiresAt.toLocaleDateString()}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Action Buttons */}
-                          <div className="flex gap-3">
-                            <Button 
-                              onClick={() => window.open(poster.downloadUrl, '_blank')}
-                              disabled={isExpired || poster.downloadCount >= poster.maxDownloads}
-                              className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              {isExpired ? 'Expired' : poster.downloadCount >= poster.maxDownloads ? 'Limit Reached' : 'Download'}
-                            </Button>
-                            
-                            <Button 
-                              variant="outline"
-                              className="px-4"
-                              onClick={() => {
-                                // Copy download link to clipboard
-                                navigator.clipboard.writeText(poster.downloadUrl)
-                                alert('Download link copied to clipboard!')
-                              }}
-                            >
-                              <Link className="w-4 h-4" href={poster.downloadUrl} />
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-        </>
-      )}
+      </>
       
       {/* Purchase Dialog */}
       <Dialog open={showPurchaseDialog} onOpenChange={setShowPurchaseDialog}>
@@ -1079,22 +779,10 @@ export default function PosterAndPolicyDiscloserPage() {
               
               <div className="space-y-3">
                 <Button
-                  onClick={() => window.open(purchaseResult.downloadUrl, '_blank')}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  onClick={() => setShowSuccessDialog(false)}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Poster
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowSuccessDialog(false)
-                    setActiveTab('downloads')
-                  }}
-                  className="w-full"
-                >
-                  View My Downloads
+                  Done
                 </Button>
               </div>
             </div>

@@ -13,6 +13,7 @@ export default function ContactPage() {
     email: '',
     phone: '',
     company: '',
+    gstin: '',
     jobTitle: '',
     industry: '',
     website: '',
@@ -142,7 +143,7 @@ export default function ContactPage() {
       setPreviewUrl(data?.previewUrl || null);
       setStatus('success');
       setFormData({ 
-        name: '', email: '', phone: '', company: '', jobTitle: '', industry: '', 
+        name: '', email: '', phone: '', company: '', gstin: '', jobTitle: '', industry: '', 
         website: '', linkedin: '', subject: '', serviceType: '', budgetRange: '', 
         preferredContact: '', urgencyLevel: '', employeeCount: '', location: '', 
         projectTimeline: '', referralSource: '', additionalContacts: '', 
@@ -312,7 +313,7 @@ export default function ContactPage() {
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label htmlFor="phone" className="block text-sm font-semibold text-gray-700">
-                            Phone Number
+                            Mobile No
                           </label>
                           <div className="relative">
                             <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -323,7 +324,7 @@ export default function ContactPage() {
                               value={formData.phone}
                               onChange={handleChange}
                               className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-                              placeholder="Enter your phone number"
+                              placeholder="Enter your mobile number"
                             />
                           </div>
                         </div>
@@ -342,6 +343,26 @@ export default function ContactPage() {
                               onChange={handleChange}
                               className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
                               placeholder="Enter your company name"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label htmlFor="gstin" className="block text-sm font-semibold text-gray-700">
+                            GSTIN
+                          </label>
+                          <div className="relative">
+                            <FileText className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <input
+                              type="text"
+                              id="gstin"
+                              name="gstin"
+                              value={formData.gstin}
+                              onChange={handleChange}
+                              className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                              placeholder="Enter your GSTIN"
                             />
                           </div>
                         </div>
@@ -673,7 +694,7 @@ export default function ContactPage() {
                             onChange={handleChange}
                             required
                             minLength={20}
-                            rows={6}
+                            rows={4}
                             className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 resize-none bg-gray-50 focus:bg-white"
                             placeholder="Tell us about your needs, challenges, or questions..."
                           />

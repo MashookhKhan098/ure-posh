@@ -88,3 +88,35 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ error: 'Post id is required' }, { status: 400 })
+    }
+
+    const cookieStore = cookies()
+    const supabase = createClient(cookieStore)
+
+    const { error } = await supabase
+      .from('articles')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Error deleting article:', error)
+      return NextResponse.json({ error: 'Failed to delete article' }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Admin delete article API error:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete article' },
+      { status: 500 }
+    )
+  }
+}

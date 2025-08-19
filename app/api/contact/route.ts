@@ -6,6 +6,7 @@ type ContactPayload = {
   email: string
   phone?: string
   company?: string
+  gstin?: string
   jobTitle?: string
   industry?: string
   website?: string
@@ -80,6 +81,7 @@ function validatePayload(body: any): { valid: boolean; errors?: string[]; payloa
   const email = typeof body?.email === 'string' ? body.email.trim() : ''
   const phone = typeof body?.phone === 'string' ? body.phone.trim() : ''
   const company = typeof body?.company === 'string' ? body.company.trim() : ''
+  const gstin = typeof body?.gstin === 'string' ? body.gstin.trim() : ''
   const jobTitle = typeof body?.jobTitle === 'string' ? body.jobTitle.trim() : ''
   const industry = typeof body?.industry === 'string' ? body.industry.trim() : ''
   const website = typeof body?.website === 'string' ? body.website.trim() : ''
@@ -106,7 +108,7 @@ function validatePayload(body: any): { valid: boolean; errors?: string[]; payloa
   return { 
     valid: true, 
     payload: { 
-      name, email, phone, company, jobTitle, industry, website, linkedin, subject, 
+      name, email, phone, company, gstin, jobTitle, industry, website, linkedin, subject, 
       serviceType, budgetRange, preferredContact, urgencyLevel, employeeCount, location, 
       projectTimeline, referralSource, additionalContacts, specificRequirements, message 
     } 
@@ -216,6 +218,7 @@ function generateEmailHTML(payload: ContactPayload): string {
               <span class="field-label">Company Information</span>
               <div class="field-value">
                 ${payload.company ? `<strong>Company:</strong> ${payload.company}<br>` : ''}
+                ${payload.gstin ? `<strong>GSTIN:</strong> ${payload.gstin}<br>` : ''}
                 ${payload.industry ? `<strong>Industry:</strong> ${payload.industry}<br>` : ''}
                 ${payload.employeeCount ? `<strong>Company Size:</strong> ${payload.employeeCount}<br>` : ''}
                 ${payload.website ? `<strong>Website:</strong> <a href="${payload.website}" target="_blank">${payload.website}</a><br>` : ''}
@@ -348,6 +351,7 @@ ${payload.location ? `- Location: ${payload.location}` : ''}
 
 COMPANY INFORMATION:
 ${payload.company ? `- Company: ${payload.company}` : ''}
+${payload.gstin ? `- GSTIN: ${payload.gstin}` : ''}
 ${payload.industry ? `- Industry: ${payload.industry}` : ''}
 ${payload.employeeCount ? `- Company Size: ${payload.employeeCount}` : ''}
 ${payload.website ? `- Website: ${payload.website}` : ''}
@@ -407,6 +411,7 @@ export async function POST(req: NextRequest) {
     console.log(`   📧 Email: ${payload.email}`)
     console.log(`   📱 Phone: ${payload.phone || 'Not provided'}`)
     console.log(`   🏢 Company: ${payload.company || 'Not provided'}`)
+    console.log(`   🧾 GSTIN: ${payload.gstin || 'Not provided'}`)
     console.log(`   💼 Job Title: ${payload.jobTitle || 'Not provided'}`)
     console.log(`   🌐 Industry: ${payload.industry || 'Not provided'}`)
     console.log(`   🔗 Website: ${payload.website || 'Not provided'}`)

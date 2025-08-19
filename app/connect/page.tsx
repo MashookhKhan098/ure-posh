@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, MessageCircle, Calendar, ArrowRight, User, Building, CheckCircle, Clock, Shield, Award, Send } from "lucide-react"
+import { Phone, Mail, MapPin, MessageCircle, Calendar, ArrowRight, User, Building, CheckCircle, Clock, Shield, Award, Send, FileText } from "lucide-react"
 
 export default function ConnectPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +13,7 @@ export default function ConnectPage() {
     email: '',
     phone: '',
     company: '',
+    gstin: '',
     subject: '',
     message: ''
   });
@@ -41,7 +42,7 @@ export default function ConnectPage() {
       setPreviewUrl(data?.previewUrl || null);
       setStatus('success');
       setFormData({ 
-        name: '', email: '', phone: '', company: '', subject: '', message: '' 
+        name: '', email: '', phone: '', company: '', gstin: '', subject: '', message: '' 
       });
       setTimeout(() => { setStatus('idle'); setPreviewUrl(null); }, 8000);
     } catch (err: any) {
@@ -60,9 +61,9 @@ export default function ConnectPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50">
              {/* Connect Form Section */}
-       <section className="pt-32 pb-20">
+       <section className="pt-28 pb-14 sm:pt-24 sm:pb-12">
          <div className="w-full">
-                       <div className="grid lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-8">
+                       <div className="grid lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8">
                            {/* Connect Form - Left Side */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -70,7 +71,7 @@ export default function ConnectPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="w-full lg:col-span-2"
               >
-               <div className="bg-white rounded-3xl shadow-2xl border border-pink-100 overflow-hidden">
+               <div className="bg-white rounded-2xl shadow-xl border border-pink-100 overflow-hidden">
                              {/* Form Header */}
                <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-3">
                  <div className="flex items-center">
@@ -85,7 +86,7 @@ export default function ConnectPage() {
                </div>
               
               {/* Form Content */}
-              <div className="p-6">
+              <div className="p-5">
                 {status === 'success' ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -95,12 +96,12 @@ export default function ConnectPage() {
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircle className="w-10 h-10 text-green-600" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">Message Sent Successfully!</h3>
-                    <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent Successfully!</h3>
+                    <p className="text-gray-600 mb-4 max-w-md mx-auto text-sm">
                       Thank you for reaching out. We'll get back to you within 24 hours with a detailed response.
                     </p>
                     {previewUrl && (
-                      <div className="mt-8 p-6 bg-pink-50 rounded-xl border border-pink-200">
+                      <div className="mt-6 p-4 bg-pink-50 rounded-xl border border-pink-200">
                         <p className="text-sm text-pink-800 mb-3 font-medium">Development Preview:</p>
                         <a
                           href={previewUrl}
@@ -115,9 +116,9 @@ export default function ConnectPage() {
                     )}
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-3">
                     {status === 'error' && (
-                      <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700">
+                      <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700">
                         <div className="flex items-center">
                           <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center mr-3">
                             <span className="text-red-600 text-xs font-bold">!</span>
@@ -129,13 +130,13 @@ export default function ConnectPage() {
                     )}
                     
                                          {/* Personal Information */}
-                     <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                     <div className="grid md:grid-cols-3 gap-3 max-w-3xl mx-auto">
                        <div className="space-y-2">
                          <label htmlFor="name" className="block text-xs font-semibold text-gray-700">
                            Full Name *
                          </label>
                          <div className="relative">
-                           <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                           <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                            <input
                              type="text"
                              id="name"
@@ -143,7 +144,7 @@ export default function ConnectPage() {
                              value={formData.name}
                              onChange={handleChange}
                              required
-                             className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
+                             className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
                              placeholder="Enter your full name"
                            />
                          </div>
@@ -154,7 +155,7 @@ export default function ConnectPage() {
                            Email Address *
                          </label>
                          <div className="relative">
-                           <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                            <input
                              type="email"
                              id="email"
@@ -162,7 +163,7 @@ export default function ConnectPage() {
                              value={formData.email}
                              onChange={handleChange}
                              required
-                             className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
+                             className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
                              placeholder="Enter your email"
                            />
                          </div>
@@ -173,35 +174,74 @@ export default function ConnectPage() {
                            Company
                          </label>
                          <div className="relative">
-                           <Building className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                           <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                            <input
                              type="text"
                              id="company"
                              name="company"
                              value={formData.company}
                              onChange={handleChange}
-                             className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
+                             className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
                              placeholder="Enter your company name"
                            />
                          </div>
                        </div>
                      </div>
 
-                                         <div className="space-y-2 max-w-3xl mx-auto">
-                       <label htmlFor="subject" className="block text-xs font-semibold text-gray-700">
-                         Subject *
-                       </label>
-                       <input
-                         type="text"
-                         id="subject"
-                         name="subject"
-                         value={formData.subject}
-                         onChange={handleChange}
-                         required
-                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
-                         placeholder="Brief description of your inquiry"
-                       />
-                     </div>
+                      {/* Additional Details */}
+                      <div className="grid md:grid-cols-3 gap-3 max-w-3xl mx-auto">
+                        <div className="space-y-2">
+                          <label htmlFor="phone" className="block text-xs font-semibold text-gray-700">
+                            Mobile No
+                          </label>
+                          <div className="relative">
+                            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              type="tel"
+                              id="phone"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                              className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
+                              placeholder="Enter your mobile number"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label htmlFor="gstin" className="block text-xs font-semibold text-gray-700">
+                            GSTIN
+                          </label>
+                          <div className="relative">
+                            <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              type="text"
+                              id="gstin"
+                              name="gstin"
+                              value={formData.gstin}
+                              onChange={handleChange}
+                              className="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
+                              placeholder="Enter your GSTIN"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                                          <div className="space-y-2 max-w-3xl mx-auto">
+                        <label htmlFor="subject" className="block text-xs font-semibold text-gray-700">
+                          Subject *
+                        </label>
+                        <input
+                          type="text"
+                          id="subject"
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-sm"
+                          placeholder="Brief description of your inquiry"
+                        />
+                      </div>
                     
                                          <div className="space-y-2 max-w-3xl mx-auto">
                        <label htmlFor="message" className="block text-xs font-semibold text-gray-700">
@@ -214,12 +254,11 @@ export default function ConnectPage() {
                          onChange={handleChange}
                          required
                          minLength={20}
-                         rows={4}
-                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 resize-none bg-gray-50 focus:bg-white text-sm"
+                         rows={3}
+                         className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 resize-none bg-gray-50 focus:bg-white text-sm"
                          placeholder="Tell us about your needs, questions, or how we can help you..."
                        />
-                       <p className="text-xs text-gray-500">Minimum 20 characters</p>
-                     </div>
+                       </div>
                     
                     
                     
@@ -227,16 +266,16 @@ export default function ConnectPage() {
                        <Button
                          type="submit"
                          disabled={status === 'submitting'}
-                         className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-base"
+                         className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-sm"
                        >
                       {status === 'submitting' ? (
                         <div className="flex items-center">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                           Sending Message...
                         </div>
                       ) : (
                         <div className="flex items-center">
-                          <Send className="w-5 h-5 mr-3" />
+                          <Send className="w-4 h-4 mr-2" />
                           Send Message
                                                  </div>
                        )}
@@ -261,7 +300,7 @@ export default function ConnectPage() {
               <div className="w-full">
                 {/* Contact Details */}
                 <div className="space-y-6">
-                                   <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                   <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                     <div className="w-6 h-6 bg-gradient-to-r from-pink-500 to-rose-500 rounded-md flex items-center justify-center mr-3">
                       <MessageCircle className="w-3 h-3 text-white" />
                     </div>
@@ -271,43 +310,42 @@ export default function ConnectPage() {
                  <div className="space-y-4">
                    <motion.div
                      whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-4 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-pink-200 transition-all duration-300"
+                     className="flex items-center p-3 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-pink-200 transition-all duration-300"
                    >
-                                           <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+                                            <div className="w-7 h-7 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0 mr-3">
                         <Mail className="w-4 h-4 text-white" />
                       </div>
                      <div>
-                       <h4 className="font-semibold text-gray-900 text-lg">Email</h4>
-                        <p className="text-gray-600 text-base">ea@ureposh.com</p>
+                       <h4 className="font-semibold text-gray-900 text-base">Email</h4>
+                        <p className="text-gray-600 text-sm">ea@ureposh.com</p>
                      </div>
                    </motion.div>
 
                    <motion.div
                      whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-4 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-green-200 transition-all duration-300"
+                     className="flex items-center p-3 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-green-200 transition-all duration-300"
                    >
-                                           <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+                                            <div className="w-7 h-7 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-3">
                         <Phone className="w-4 h-4 text-white" />
                       </div>
                      <div>
-                       <h4 className="font-semibold text-gray-900 text-lg">Phone</h4>
-                        <p className="text-gray-600 text-base">+91 99999 44807</p>
+                       <h4 className="font-semibold text-gray-900 text-base">Phone</h4>
+                        <p className="text-gray-600 text-sm">+91 99999 44807</p>
                      </div>
                    </motion.div>
 
                    <motion.div
                      whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-4 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-purple-200 transition-all duration-300"
+                     className="flex items-center p-3 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-purple-200 transition-all duration-300"
                    >
-                                           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+                                            <div className="w-7 h-7 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-3">
                         <MapPin className="w-4 h-4 text-white" />
                       </div>
                      <div>
-                       <h4 className="font-semibold text-gray-900 text-lg">Office</h4>
-                        <p className="text-gray-600 text-base">C 84, Sector 2, Noida, 201301</p>
-                     </div>
+                       <h4 className="font-semibold text-gray-900 text-base">Office</h4>
+                        <p className="text-gray-600 text-sm">C 84, Sector 2, Noida, 201301</p>
+                      </div>
                    </motion.div>
-                   
 
                  </div>
                </div>

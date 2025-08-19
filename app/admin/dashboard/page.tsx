@@ -7,9 +7,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { 
   Users, FileText, Plus, Check, X, RotateCcw, Search, Filter, Eye, 
-  LogOut, Bell, Settings, MoreVertical, Calendar, TrendingUp, 
+  LogOut, Bell, Settings, MoreVertical, Calendar, 
   ChevronDown, Menu, Shield, Activity, BarChart3, Download,
-  UserPlus, Edit3, Trash2, Mail
+  UserPlus, Edit3, Trash2, Mail, Image as ImageIcon, Tag, DollarSign, Save
 } from 'lucide-react';
 
 // Type definitions
@@ -77,6 +77,7 @@ export default function AdminDashboardPage() {
   ]);
 
   const [posts, setPosts] = useState<Post[]>([]);
+  const [posters, setPosters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Dashboard statistics state
@@ -140,6 +141,13 @@ export default function AdminDashboardPage() {
       if (writersResponse.ok) {
         const writersData = await writersResponse.json();
         setWriters(writersData);
+      }
+
+      // Fetch posters
+      const postersResponse = await fetch('/api/posters');
+      if (postersResponse.ok) {
+        const postersData = await postersResponse.json();
+        setPosters(postersData.posters || []);
       }
 
     } catch (error) {
@@ -337,11 +345,271 @@ export default function AdminDashboardPage() {
     await logout();
   };
 
+  function PosterCreateForm({ onCreated }: { onCreated: () => void }) {
+    const { toast } = useToast()
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [imageUrl, setImageUrl] = useState('')
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [category, setCategory] = useState('policy')
+    const [price, setPrice] = useState('')
+    const [featured, setFeatured] = useState(false)
+    const [tags, setTags] = useState<string[]>([])
+    const [tagInput, setTagInput] = useState('')
+    const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+
+    const suggestedCategories = ['policy', 'safety', 'awareness', 'education', 'health', 'environment']
+
+    const addTag = () => {
+      const value = tagInput.trim()
+      if (!value) return
+      if (tags.includes(value)) {
+        setTagInput('')
+        return
+      }
+      setTags((prev) => [...prev, value])
+      setTagInput('')
+    }
+
+    const removeTag = (value: string) => {
+      setTags((prev) => prev.filter((t) => t !== value))
+    }
+
+    const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault()
+        addTag()
+      } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+        setTags((prev) => prev.slice(0, -1))
+      }
+    }
+
+    const validate = () => {
+      if (!title.trim()) return 'Title is required'
+      if (!imageUrl.trim()) return 'Image URL is required'
+      if (!price.trim() || isNaN(Number(price)) || Number(price) <= 0) return 'Valid price is required'
+      return null
+    }
+
+    const createPoster = async () => {
+      const validationError = validate()
+      if (validationError) {
+        setError(validationError)
+        toast({ title: 'Validation error', description: validationError, variant: 'destructive' })
+        return
+      }
+      setSubmitting(true)
+      setError(null)
+      try {
+        let response
+        if (imageFile) {
+          const form = new FormData()
+          form.append('title', title)
+          form.append('description', description)
+          form.append('category', category)
+          form.append('price', price)
+          form.append('featured', String(featured))
+          form.append('tags', JSON.stringify(tags))
+          form.append('image', imageFile)
+          response = await fetch('/api/posters/upload', { method: 'POST', body: form })
+        } else {
+          const res = await fetch('/api/posters', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description, image_url: imageUrl, category, price, featured, tags })
+          })
+          response = res
+        }
+
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(data?.error || 'Failed to create poster')
+        toast({ title: 'Poster created', description: 'Your poster has been created successfully.' })
+        setTitle('')
+        setDescription('')
+        setImageUrl('')
+        setImageFile(null)
+        setCategory('policy')
+        setPrice('')
+        setFeatured(false)
+        setTags([])
+        setTagInput('')
+        onCreated()
+      } catch (e) {
+        const message = (e as any)?.message || 'Error creating poster'
+        setError(message)
+        toast({ title: 'Error', description: message, variant: 'destructive' })
+      } finally {
+        setSubmitting(false)
+      }
+    }
+
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-black">
+        <div className="lg:col-span-2 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-black mb-1">Title <span className="text-red-500">*</span></label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 text-black"
+              placeholder="Enter poster title"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-black mb-1">Description</label>
+            <textarea
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 resize-none text-black"
+              placeholder="Short description of the poster"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-black mb-1">Tags</label>
+            <div className="flex items-center gap-2 flex-wrap border border-gray-200 rounded-xl px-2.5 py-2 bg-white/80">
+              {tags.map((t) => (
+                <span key={t} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-500/10 text-blue-700 border border-blue-200 text-xs">
+                  {t}
+                  <button type="button" onClick={() => removeTag(t)} className="ml-1 hover:text-red-600">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </span>
+              ))}
+              <input
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
+                placeholder={tags.length === 0 ? 'Type a tag and press Enter' : 'Add another tag'}
+                className="flex-1 min-w-[140px] bg-transparent outline-none text-sm text-black"
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Press Enter or comma to add tags</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-black mb-1">Category</label>
+            <div className="grid grid-cols-3 gap-2 mb-2">
+              {suggestedCategories.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setCategory(c)}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs border transition-colors ${
+                    category === c ? 'bg-blue-500 text-white border-blue-500' : 'bg-white/80 text-gray-700 border-gray-200 hover:bg-blue-50'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+            <input
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 text-black"
+              placeholder="e.g., policy, safety, awareness"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-black mb-1">Image URL <span className="text-red-500">*</span></label>
+            <input
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 text-black"
+              placeholder="https://..."
+            />
+            <div className="mt-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const f = e.target.files?.[0] || null
+                  setImageFile(f)
+                  if (f) {
+                    const reader = new FileReader()
+                    reader.onload = () => setImageUrl(String(reader.result || ''))
+                    reader.readAsDataURL(f)
+                  }
+                }}
+                className="block w-full text-sm text-black file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+              />
+            </div>
+            {imageUrl && (
+              <div className="mt-2 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                <img
+                  src={imageUrl}
+                  alt="Preview"
+                  className="w-full h-36 object-cover"
+                  onError={(e) => {
+                    ;(e.currentTarget as HTMLImageElement).style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-black mb-1">Price (₹) <span className="text-red-500">*</span></label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 text-black"
+                placeholder="e.g., 299"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Featured</label>
+              <button
+                type="button"
+                onClick={() => setFeatured((f) => !f)}
+                className={`relative inline-flex h-10 w-full items-center justify-between rounded-xl border px-3 transition-colors ${
+                  featured ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border-green-500' : 'bg-white/80 text-gray-700 border-gray-200'
+                }`}
+              >
+                <span className="text-sm">{featured ? 'Featured' : 'Not Featured'}</span>
+                <span
+                  className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                    featured ? 'translate-x-0' : ''
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {error && (
+            <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</div>
+          )}
+
+          <div className="flex justify-end">
+            <button
+              onClick={createPoster}
+              disabled={submitting}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 disabled:opacity-70"
+            >
+              <Save className="w-4 h-4" />
+              {submitting ? 'Creating...' : 'Create Poster'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
     { id: 'posts', label: 'Articles', icon: FileText },
     { id: 'writers', label: 'Writers', icon: Users },
-    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'posters', label: 'Posters', icon: ImageIcon },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
@@ -461,14 +729,14 @@ export default function AdminDashboardPage() {
                     {activeTab === 'dashboard' && 'Dashboard Overview'}
                     {activeTab === 'posts' && 'Articles Management'}
                     {activeTab === 'writers' && 'Writers Management'}
-                    {activeTab === 'analytics' && 'Analytics'}
+                    {activeTab === 'posters' && 'Posters'}
                     {activeTab === 'settings' && 'Settings'}
                   </h1>
                   <p className="text-sm text-gray-500 mt-1">
                     {activeTab === 'dashboard' && 'Monitor your content platform performance'}
                     {activeTab === 'posts' && 'Review and manage submitted articles'}
                     {activeTab === 'writers' && 'Manage your writing team'}
-                    {activeTab === 'analytics' && 'View detailed platform analytics'}
+                    {activeTab === 'posters' && 'Create and manage posters'}
                     {activeTab === 'settings' && 'Configure platform settings'}
                   </p>
                 </div>
@@ -880,10 +1148,23 @@ export default function AdminDashboardPage() {
                             </button>
                             
                             <button 
-                              className="p-2.5 bg-gray-500/10 text-gray-600 rounded-xl hover:bg-gray-500/20 transition-all duration-200 border border-gray-200/50 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
-                              title="More Options"
+                              onClick={async () => {
+                                if (!confirm('Delete this post permanently?')) return;
+                                try {
+                                  const res = await fetch(`/api/admin/posts?id=${post.id}`, { method: 'DELETE' })
+                                  if (!res.ok) {
+                                    const data = await res.json().catch(() => ({}))
+                                    throw new Error(data?.error || 'Failed to delete post')
+                                  }
+                                  setPosts(prev => prev.filter(p => p.id !== post.id))
+                                } catch (e: any) {
+                                  alert(e?.message || 'Failed to delete post')
+                                }
+                              }}
+                              className="p-2.5 bg-red-500/10 text-red-600 rounded-xl hover:bg-red-500/20 transition-all duration-200 border border-red-200/50 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                              title="Delete Post"
                             >
-                              <MoreVertical className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         </div>
@@ -977,13 +1258,71 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* Analytics Tab */}
-          {activeTab === 'analytics' && (
+          {/* Posters Tab */}
+          {activeTab === 'posters' && (
             <div className="space-y-6">
-              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 shadow-lg text-center">
-                <BarChart3 className="w-16 h-16 mx-auto text-blue-500 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Analytics Dashboard</h3>
-                <p className="text-gray-500">Detailed analytics and reporting features coming soon...</p>
+              {/* Create Poster */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Create Poster</h3>
+                <PosterCreateForm onCreated={() => fetchDashboardData()} />
+              </div>
+
+              {/* Posters List */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">All Posters</h3>
+                  <button 
+                    onClick={fetchDashboardData}
+                    className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" /> Refresh
+                  </button>
+                </div>
+                {posters.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">No posters yet</div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {posters.map((p) => (
+                      <div key={p.id} className="group bg-white/80 rounded-2xl border border-gray-200/60 shadow hover:shadow-lg transition overflow-hidden">
+                        <div className="h-40 bg-gray-100 overflow-hidden">
+                          {p.image_url ? (
+                            <img src={p.image_url} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400">No image</div>
+                          )}
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-semibold text-gray-900 line-clamp-1">{p.title}</h4>
+                          <p className="text-sm text-gray-600 line-clamp-2 mt-1">{p.description}</p>
+                          <div className="flex items-center justify-between mt-3 text-sm">
+                            <span className="inline-flex items-center gap-1 text-gray-700"><Tag className="w-4 h-4" />{p.category || 'Uncategorized'}</span>
+                            <span className="inline-flex items-center gap-1 font-semibold text-emerald-700"><DollarSign className="w-4 h-4" />{p.price ?? '-'} </span>
+                          </div>
+                          <div className="flex items-center justify-end mt-3">
+                            <button
+                              onClick={async () => {
+                                if (!confirm('Delete this poster?')) return;
+                                try {
+                                  const res = await fetch(`/api/posters/${p.id}`, { method: 'DELETE' })
+                                  if (!res.ok) {
+                                    const data = await res.json().catch(() => ({}))
+                                    throw new Error(data?.error || 'Failed to delete poster')
+                                  }
+                                  setPosters(prev => prev.filter(x => x.id !== p.id))
+                                } catch (e: any) {
+                                  alert(e?.message || 'Failed to delete poster')
+                                }
+                              }}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-700 hover:bg-red-500/20 border border-red-200/60 text-sm"
+                            >
+                              <Trash2 className="w-4 h-4" /> Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
