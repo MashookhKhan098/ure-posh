@@ -305,7 +305,27 @@ export default function ProfessionalBlogPost() {
 
   const formatContent = (content: string) => {
     // Enhanced content formatting with better visual hierarchy
-    return content
+    let html = content
+      // Inline tags
+      .replace(/\[b\]([\s\S]*?)\[\/b\]/g, '<strong>$1</strong>')
+      .replace(/\[i\]([\s\S]*?)\[\/i\]/g, '<em>$1</em>')
+      .replace(/\[u\]([\s\S]*?)\[\/u\]/g, '<u>$1</u>')
+      .replace(/\[s\]([\s\S]*?)\[\/s\]/g, '<s>$1</s>')
+      .replace(/\[small\]([\s\S]*?)\[\/small\]/g, '<span class="text-sm">$1</span>')
+      .replace(/\[large\]([\s\S]*?)\[\/large\]/g, '<span class="text-2xl font-bold">$1</span>')
+      .replace(/\[left\]([\s\S]*?)\[\/left\]/g, '<div class="text-left">$1</div>')
+      .replace(/\[center\]([\s\S]*?)\[\/center\]/g, '<div class="text-center">$1</div>')
+      .replace(/\[right\]([\s\S]*?)\[\/right\]/g, '<div class="text-right">$1</div>')
+      .replace(/\[quote\]([\s\S]*?)\[\/quote\]/g, '<blockquote class="border-l-4 border-blue-500 pl-4 italic">$1</blockquote>')
+      .replace(/\[mark\]([\s\S]*?)\[\/mark\]/g, '<mark>$1</mark>')
+      .replace(/\[hr\]/g, '<hr/>')
+      .replace(/\[link url=\"([^\"]+)\"\]([\s\S]*?)\[\/link\]/g, '<a href="$1" target="_blank" class="text-blue-600 hover:underline">$2<\/a>')
+      // Lists
+      .replace(/\[ul\]([\s\S]*?)\[\/ul\]/g, '<ul>$1</ul>')
+      .replace(/\[ol\]([\s\S]*?)\[\/ol\]/g, '<ol>$1</ol>')
+      .replace(/\[li\]([\s\S]*?)\[\/li\]/g, '<li>$1</li>')
+
+    return html
       .split('\n')
       .map((line, index) => {
         // Enhanced content formatting with better visual hierarchy
@@ -319,6 +339,47 @@ export default function ProfessionalBlogPost() {
                 <div class="absolute -left-4 top-0 w-2 h-full bg-gradient-to-b from-orange-500 to-red-500 rounded-full opacity-20"></div>
                 <div class="h-1 w-32 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full"></div>
               </div>
+            </div>
+          `;
+        }
+        // New emoji sections
+        if (line.startsWith('🚨')) {
+          return `
+            <div class="my-10 space-y-4" key="${index}">
+              <h2 class="text-3xl md:text-4xl font-extrabold text-rose-700 flex items-center gap-3"><span>🚨</span>${line.replace('🚨', '').trim()}</h2>
+              <div class="h-1 w-28 bg-rose-300 rounded-full"></div>
+            </div>
+          `;
+        }
+        if (line.startsWith('📊')) {
+          return `
+            <div class="my-8" key="${index}">
+              <h3 class="text-2xl font-bold text-blue-700 flex items-center gap-2"><span>📊</span>${line.replace('📊', '').trim()}</h3>
+              <div class="mt-2 h-1 w-20 bg-blue-300 rounded-full"></div>
+            </div>
+          `;
+        }
+        if (line.startsWith('🏢')) {
+          return `
+            <div class="my-8" key="${index}">
+              <h3 class="text-2xl font-bold text-purple-700 flex items-center gap-2"><span>🏢</span>${line.replace('🏢', '').trim()}</h3>
+              <div class="mt-2 h-1 w-20 bg-purple-300 rounded-full"></div>
+            </div>
+          `;
+        }
+        if (line.startsWith('💡')) {
+          return `
+            <div class="my-8" key="${index}">
+              <h3 class="text-2xl font-bold text-amber-700 flex items-center gap-2"><span>💡</span>${line.replace('💡', '').trim()}</h3>
+              <div class="mt-2 h-1 w-20 bg-amber-300 rounded-full"></div>
+            </div>
+          `;
+        }
+        if (line.startsWith('🔮')) {
+          return `
+            <div class="my-8" key="${index}">
+              <h3 class="text-2xl font-bold text-indigo-700 flex items-center gap-2"><span>🔮</span>${line.replace('🔮', '').trim()}</h3>
+              <div class="mt-2 h-1 w-20 bg-indigo-300 rounded-full"></div>
             </div>
           `;
         }

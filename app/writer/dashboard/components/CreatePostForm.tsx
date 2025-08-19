@@ -290,24 +290,25 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
                     ))}
                     <span className="mx-3 h-4 w-px bg-pink-200" />
                     <span className="text-xs text-gray-500">Format:</span>
-                    <button type="button" title="Bold" onClick={() => wrapSelection('<strong>', '</strong>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Bold className="w-4 h-4" /></button>
-                    <button type="button" title="Italic" onClick={() => wrapSelection('<em>', '</em>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Italic className="w-4 h-4" /></button>
-                    <button type="button" title="Underline" onClick={() => wrapSelection('<u>', '</u>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Underline className="w-4 h-4" /></button>
-                    <button type="button" title="Strikethrough" onClick={() => wrapSelection('<s>', '</s>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Strikethrough className="w-4 h-4" /></button>
-                    <button type="button" title="Small" onClick={() => wrapSelection('<span class=\'text-sm\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Type className="w-4 h-4" /></button>
-                    <button type="button" title="Large" onClick={() => wrapSelection('<span class=\'text-2xl font-bold\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Heading2 className="w-4 h-4" /></button>
-                    <button type="button" title="Align Left" onClick={() => wrapSelection('<span class=\'block text-left\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignLeft className="w-4 h-4" /></button>
-                    <button type="button" title="Align Center" onClick={() => wrapSelection('<span class=\'block text-center\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignCenter className="w-4 h-4" /></button>
-                    <button type="button" title="Align Right" onClick={() => wrapSelection('<span class=\'block text-right\'>', '</span>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignRight className="w-4 h-4" /></button>
-                    <button type="button" title="Quote" onClick={() => insertBlock('<blockquote class=\'border-l-4 border-pink-500 pl-4 italic\'>Quote here...</blockquote>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Quote className="w-4 h-4" /></button>
+                    <button type="button" title="Bold" onClick={() => wrapSelection('[b]', '[/b]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Bold className="w-4 h-4" /></button>
+                    <button type="button" title="Italic" onClick={() => wrapSelection('[i]', '[/i]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Italic className="w-4 h-4" /></button>
+                    <button type="button" title="Underline" onClick={() => wrapSelection('[u]', '[/u]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Underline className="w-4 h-4" /></button>
+                    <button type="button" title="Strikethrough" onClick={() => wrapSelection('[s]', '[/s]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Strikethrough className="w-4 h-4" /></button>
+                    <button type="button" title="Small" onClick={() => wrapSelection('[small]', '[/small]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Type className="w-4 h-4" /></button>
+                    <button type="button" title="Large" onClick={() => wrapSelection('[large]', '[/large]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Heading2 className="w-4 h-4" /></button>
+                    <button type="button" title="Align Left" onClick={() => wrapSelection('[left]', '[/left]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignLeft className="w-4 h-4" /></button>
+                    <button type="button" title="Align Center" onClick={() => wrapSelection('[center]', '[/center]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignCenter className="w-4 h-4" /></button>
+                    <button type="button" title="Align Right" onClick={() => wrapSelection('[right]', '[/right]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignRight className="w-4 h-4" /></button>
+                    <button type="button" title="Quote" onClick={() => wrapSelection('[quote]', '[/quote]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Quote className="w-4 h-4" /></button>
                     <button type="button" title="Link" onClick={() => {
                       const url = prompt('Enter URL', 'https://') || 'https://'
-                      wrapSelection(`<a href=\'${url}\' target=\'_blank\'>`, '</a>')
+                      const text = prompt('Link text', 'Click here') || 'Link'
+                      insertBlock(`[link url="${url}"]${text}[/link]`)
                     }} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><LinkIcon className="w-4 h-4" /></button>
-                    <button type="button" title="Bulleted List" onClick={() => insertList(false)} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><List className="w-4 h-4" /></button>
-                    <button type="button" title="Numbered List" onClick={() => insertList(true)} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><ListOrdered className="w-4 h-4" /></button>
-                    <button type="button" title="Highlight" onClick={() => wrapSelection('<mark>', '</mark>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Highlighter className="w-4 h-4" /></button>
-                    <button type="button" title="Separator" onClick={() => insertBlock('<hr/>')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50">—</button>
+                    <button type="button" title="Bulleted List" onClick={() => insertBlock('[ul]\n[li]Item 1[/li]\n[li]Item 2[/li]\n[li]Item 3[/li]\n[/ul]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><List className="w-4 h-4" /></button>
+                    <button type="button" title="Numbered List" onClick={() => insertBlock('[ol]\n[li]First[/li]\n[li]Second[/li]\n[li]Third[/li]\n[/ol]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><ListOrdered className="w-4 h-4" /></button>
+                    <button type="button" title="Highlight" onClick={() => wrapSelection('[mark]', '[/mark]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Highlighter className="w-4 h-4" /></button>
+                    <button type="button" title="Separator" onClick={() => insertBlock('[hr]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50">—</button>
                   </div>
                   <textarea
                     rows={16}
