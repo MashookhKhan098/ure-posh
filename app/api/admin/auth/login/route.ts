@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SignJWT } from 'jose'
+import bcrypt from 'bcryptjs'
+import { createAdminClient } from '@/utils/supabase/admin'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin'
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ureposh2024'
 const secretKey = new TextEncoder().encode(JWT_SECRET)
 
 export async function POST(req: NextRequest) {
@@ -13,12 +13,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Username and password are required' }, { status: 400 })
     }
 
-    // Check against environment variables
-    if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    // Look up admin from Supabase (admins table: id, password_hash)
+    const supabase = createAdminClient()
+    const { data: adminRecord, error } = await supabase
+      .from('admins')
+      .select('id, password_hash')
+      .eq('id', username)
+      .single()
+
+    if (error || !adminRecord) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    const token = await new SignJWT({ role: 'admin', adminId: 'admin' })
+    const passwordOk = await bcrypt.compare(password, adminRecord.password_hash || '')
+    if (!passwordOk) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+    }
+
+    const token = await new SignJWT({ role: 'admin', adminId: adminRecord.id })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('24h')
@@ -27,8 +39,8 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({
       success: true,
       admin: {
-        id: 'admin',
-        username: ADMIN_USERNAME,
+        id: adminRecord.id,
+        username: adminRecord.id,
         email: 'admin@ureposh.com',
         role: 'admin',
       },

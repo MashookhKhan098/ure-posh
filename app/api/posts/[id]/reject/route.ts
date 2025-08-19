@@ -12,18 +12,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    // Update article to rejected and set verified to false
-    const updateData = {
-      verified: false,
-      updated_at: new Date().toISOString()
-    };
-
-    const { data: article, error } = await supabase
+    // Delete the article
+    const { error } = await supabase
       .from('articles')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
+      .delete()
+      .eq('id', id);
 
     if (error) {
       console.error('Supabase error:', error);
@@ -33,17 +26,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       );
     }
 
-    if (!article) {
-      return NextResponse.json(
-        { error: 'Article not found' },
-        { status: 404 }
-      );
-    }
-
     return NextResponse.json({
       success: true,
-      message: 'Article rejected successfully',
-      article
+      message: 'Article deleted successfully'
     });
 
   } catch (error) {

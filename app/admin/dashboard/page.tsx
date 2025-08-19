@@ -222,19 +222,24 @@ export default function AdminDashboardPage() {
       });
 
       if (response.ok) {
-        // Update the specific post in the state instead of refreshing all data
-        setPosts(prevPosts => 
-          prevPosts.map(post => 
-            post.id === postId 
-              ? { 
-                  ...post, 
-                  status: action === 'approve' ? 'Published' : 'Rejected',
-                  verified: action === 'approve' ? true : false,
-                  published_at: action === 'approve' ? new Date().toISOString() : post.published_at || undefined
-                }
-              : post
-          )
-        );
+        if (action === 'reject') {
+          // Remove the post from UI when deleted
+          setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+        } else {
+          // Update the specific post in the state
+          setPosts(prevPosts => 
+            prevPosts.map(post => 
+              post.id === postId 
+                ? { 
+                    ...post, 
+                    status: action === 'approve' ? 'Published' : 'Rejected',
+                    verified: action === 'approve' ? true : false,
+                    published_at: action === 'approve' ? new Date().toISOString() : post.published_at || undefined
+                  }
+                : post
+            )
+          );
+        }
       } else {
         const data = await response.json();
         alert(data.error || `Failed to ${action} post`);

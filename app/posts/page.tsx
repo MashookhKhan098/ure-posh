@@ -34,6 +34,7 @@ import {
   Loader2,
 } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useArticles, useCategories } from "../../hooks/useArticles"
 import { Article, Category } from "../../types/database"
 
@@ -59,11 +60,12 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
           <div className="flex items-start space-x-4">
                                       <div className="relative w-24 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-pink-200 to-pink-300">
                <Image
-                 src={`https://picsum.photos/96/80?random=${article.id}`}
+                 src={article.image_url && article.image_url.trim().length > 0 ? article.image_url : "/placeholder.jpg"}
                  alt={article.title}
                  width={96}
                  height={80}
                  className="w-full h-full object-cover"
+                 onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.jpg" }}
                />
               {article.is_breaking && (
                 <div className="absolute top-1 left-1">
@@ -73,7 +75,7 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
                 </div>
               )}
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 flex flex-col">
               <div className="flex items-center space-x-2 mb-2">
                                  <Badge 
                    className="text-xs font-medium px-2 py-1 rounded-full" 
@@ -95,15 +97,28 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
                              <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-pink-600 transition-colors duration-300 mb-3 text-gray-900">
                  {article.title}
                </h3>
-                             <div className="flex items-center space-x-3 text-xs text-gray-600">
-                <div className="flex items-center space-x-1">
-                  <Clock className="h-3 w-3" />
-                  <span>{formatTimeAgo(article.published_at)}</span>
+              <div className="mt-auto">
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center space-x-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{formatTimeAgo(article.published_at)}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Eye className="h-3 w-3" />
+                      <span>{article.views.toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-600 hover:text-pink-600"><Share2 className="h-3.5 w-3.5" /></Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-600 hover:text-pink-600"><Bookmark className="h-3.5 w-3.5" /></Button>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Eye className="h-3 w-3" />
-                  <span>{article.views.toLocaleString()}</span>
-                </div>
+                <Link href={`/posts/${article.slug}`}>
+                  <Button variant="outline" size="sm" className="mt-3 w-full">
+                    Read Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -113,16 +128,17 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
   }
 
   return (
-         <Card className={`group cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-0 shadow-md bg-white overflow-hidden ${featured ? "md:col-span-2" : ""}`}>
-      <CardContent className="p-0">
+         <Card className={`group h-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-0 shadow-md bg-white overflow-hidden ${featured ? "md:col-span-2" : ""}`}>
+      <CardContent className="p-0 h-full flex flex-col">
         <div className="relative">
                                 <div className={`relative overflow-hidden ${featured ? "h-80" : "h-48"} bg-gradient-to-br from-pink-200 to-pink-300`}>
              <Image
-               src={`https://picsum.photos/${featured ? '800' : '600'}/${featured ? '320' : '192'}?random=${article.id}`}
+               src={article.image_url && article.image_url.trim().length > 0 ? article.image_url : "/placeholder.jpg"}
                alt={article.title}
                width={featured ? 800 : 600}
                height={featured ? 320 : 192}
                className="w-full h-full object-cover"
+               onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.jpg" }}
              />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
             {article.is_breaking && (
@@ -158,12 +174,13 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
               </div>
             </div>
           </div>
-          <div className="p-6">
-                                      <h3 className={`font-bold mb-4 group-hover:text-pink-600 transition-colors duration-300 leading-tight text-gray-900 ${featured ? "text-3xl" : "text-xl"}`}>
+          <div className="p-6 flex flex-col flex-1">
+                                      <h3 className={`font-bold mb-3 group-hover:text-pink-600 transition-colors duration-300 leading-tight text-gray-900 ${featured ? "text-3xl" : "text-xl"}`}>
                {article.title}
              </h3>
-             <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base">{article.excerpt}</p>
-            <div className="flex items-center justify-between">
+             <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed text-base">{article.excerpt}</p>
+            <div className="mt-auto">
+              <div className="flex items-center justify-between">
                              <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-1">
                   <Clock className="h-4 w-4" />
@@ -182,10 +199,20 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
                    <Bookmark className="h-4 w-4" />
                  </Button>
               </div>
+              </div>
+              <Link href={`/posts/${article.slug}`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hover:bg-pink-50 hover:text-pink-600 transition-colors mt-3 w-full sm:w-auto"
+                >
+                  Read Now
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-      </CardContent>
+        </CardContent>
     </Card>
   )
 }
@@ -193,52 +220,66 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
 export default function PostsPage() {
   const [activeCategory, setActiveCategory] = useState("all")
   
-  // Fetch data from database
+  const selectedCategory = activeCategory !== "all" ? activeCategory : undefined
+  
+  // Fetch data from database (scoped by selected category when applicable)
   const { articles: latestNews, loading: latestLoading, error: latestError } = useArticles({
-    limit: 12,
+    category: selectedCategory,
+    sortBy: 'created_at',
+    sortOrder: 'desc',
+  })
+  
+  const { articles: featuredNews, loading: featuredLoading } = useArticles({
+    category: selectedCategory,
+    featured: true,
+    limit: 6,
     sortBy: 'published_at',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   })
   
   const { articles: breakingNews, loading: breakingLoading } = useArticles({
+    category: selectedCategory,
     breaking: true,
     limit: 3,
-    sortBy: 'published_at',
-    sortOrder: 'desc'
+    sortBy: 'created_at',
+    sortOrder: 'desc',
   })
   
   const { articles: hotTopics, loading: hotLoading } = useArticles({
+    category: selectedCategory,
     hot: true,
     limit: 5,
     sortBy: 'views',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   })
   
   const { articles: trendingNews, loading: trendingLoading } = useArticles({
+    category: selectedCategory,
     hot: true,
     limit: 6,
     sortBy: 'views',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   })
   
   const { articles: editorsPicks, loading: editorsLoading } = useArticles({
+    category: selectedCategory,
+    featured: true,
     limit: 6,
-    sortBy: 'views',
-    sortOrder: 'desc'
+    sortBy: 'published_at',
+    sortOrder: 'desc',
   })
   
   const { articles: mostPopular, loading: popularLoading } = useArticles({
+    category: selectedCategory,
     limit: 6,
     sortBy: 'views',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   })
   
   const { categories, loading: categoriesLoading } = useCategories()
 
-  // Filter articles based on active category
-  const filteredNews = activeCategory === "all" 
-    ? latestNews 
-    : latestNews.filter((article) => article.categories?.slug === activeCategory)
+  // Latest news list (already scoped by selected category)
+  const filteredNews = latestNews
 
   // Loading state
   const isLoading = latestLoading || breakingLoading || hotLoading || categoriesLoading
@@ -338,6 +379,7 @@ export default function PostsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3">
             {/* Featured Stories */}
+            {filteredNews.length > 0 && (
                          <div className="mb-16">
                            <div className="flex items-center space-x-3 mb-6">
                <div className="w-1 h-8 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
@@ -358,8 +400,10 @@ export default function PostsPage() {
                 </div>
               </div>
             </div>
+            )}
 
-                         {/* Latest Updates */}
+             {/* Latest Updates */}
+             {filteredNews.length > 0 && (
              <div className="border-t border-pink-200 pt-8">
                <div className="flex items-center space-x-3 mb-6">
                  <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
@@ -367,24 +411,15 @@ export default function PostsPage() {
                    Latest Updates
                  </h2>
                </div>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                 {filteredNews.length > 4 ? (
-                   filteredNews
-                     .slice(4, 10)
-                     .map((article) => article && <ArticleCard key={article.id} article={article} />)
-                 ) : filteredNews.length === 0 ? (
-                   <div className="col-span-full text-center py-16">
-                     <div className="bg-white rounded-2xl p-12 border border-pink-200">
-                       <Newspaper className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                       <h3 className="text-2xl font-bold mb-3 text-gray-900 tracking-tight">No articles found</h3>
-                       <p className="text-gray-600 font-medium">Try selecting a different category or check back later.</p>
-                     </div>
-                   </div>
-                 ) : null}
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+                 {filteredNews
+                   .map((article) => article && <ArticleCard key={article.id} article={article} />)}
                </div>
              </div>
+             )}
 
              {/* Trending Now */}
+             {trendingNews.length > 0 && (
              <div className="border-t border-pink-200 pt-8 mt-16">
                <div className="flex items-center space-x-3 mb-6">
                  <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
@@ -398,8 +433,10 @@ export default function PostsPage() {
                  ))}
                </div>
              </div>
+             )}
 
              {/* Editor's Picks */}
+             {editorsPicks.length > 0 && (
              <div className="border-t border-pink-200 pt-8 mt-16">
                <div className="flex items-center space-x-3 mb-6">
                  <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
@@ -413,8 +450,10 @@ export default function PostsPage() {
                  ))}
                </div>
              </div>
+             )}
 
              {/* Most Popular */}
+             {mostPopular.length > 0 && (
              <div className="border-t border-pink-200 pt-8 mt-16">
                <div className="flex items-center space-x-3 mb-6">
                  <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
@@ -428,6 +467,7 @@ export default function PostsPage() {
                  ))}
                </div>
              </div>
+             )}
           </div>
 
           {/* Sidebar */}
@@ -594,8 +634,6 @@ export default function PostsPage() {
           </div>
         </div>
       </main>
-
-
     </div>
   )
 }

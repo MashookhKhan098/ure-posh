@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
+import { createAdminClient } from '@/utils/supabase/admin'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin'
 const secretKey = new TextEncoder().encode(JWT_SECRET)
 
 export async function GET(req: NextRequest) {
@@ -13,16 +13,23 @@ export async function GET(req: NextRequest) {
     const { payload } = await jwtVerify(token, secretKey)
     const adminId = payload.adminId as string
 
-    // Verify it's a valid admin token
-    if (adminId !== 'admin') {
+    // Confirm admin exists in DB
+    const supabase = createAdminClient()
+    const { data: adminRecord } = await supabase
+      .from('admins')
+      .select('id')
+      .eq('id', adminId)
+      .single()
+
+    if (!adminRecord) {
       return NextResponse.json({ authenticated: false }, { status: 401 })
     }
 
     return NextResponse.json({
       authenticated: true,
       admin: {
-        id: 'admin',
-        username: ADMIN_USERNAME,
+        id: adminRecord.id,
+        username: adminRecord.id,
         email: 'admin@ureposh.com',
         role: 'admin',
       },

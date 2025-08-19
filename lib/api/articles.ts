@@ -155,7 +155,12 @@ export async function createArticle(articleData: {
 
     const { data: article, error } = await supabase
       .from('articles')
-      .insert([articleData])
+      .insert([{ 
+        ...articleData, 
+        verified: false, 
+        views: 0, 
+        published_at: null 
+      }])
       .select('*')
       .single()
 

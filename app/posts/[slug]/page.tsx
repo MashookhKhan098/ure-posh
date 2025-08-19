@@ -150,35 +150,36 @@ export default function ProfessionalBlogPost() {
         throw new Error("No slug provided")
       }
       setLoading(true)
-      const response = await fetch(`/api/posts/${slug}`)
+      const response = await fetch(`/api/articles/${slug}`)
 
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
+      const payload = await response.json()
+      const data = payload?.data || payload
       
       // Transform the post data to match the expected interface
       const transformedPost = {
         ...data,
         tags: Array.isArray(data.tags) ? data.tags : (data.tags ? data.tags.split(',') : []),
-        createdAt: data.created_at,
-        featuredImage: data.featured_image,
+        createdAt: data.published_at || data.created_at,
+        featuredImage: data.image_url || data.featured_image,
         videoUrl: data.video_url,
         videoTitle: data.video_title,
         videoDescription: data.video_description,
         readTime: data.read_time,
         authorAvatar: data.author_avatar,
-        authorBio: data.author_bio
+        authorBio: data.author_bio,
+        category: data.categories?.name || data.category || 'Uncategorized'
       }
       
       setPost(transformedPost)
       
       // Fetch comments and related posts in parallel
       await Promise.all([
-        fetchComments(data.id),
-        fetchRelatedPosts(data.category, data.id)
+        fetchRelatedPosts(transformedPost.category, data.id)
       ])
       
       setError(null)
@@ -204,10 +205,18 @@ export default function ProfessionalBlogPost() {
 
   const fetchRelatedPosts = async (category: string, currentPostId: string) => {
     try {
-      const response = await fetch(`/api/posts/related?category=${category}&exclude=${currentPostId}&limit=3`)
+      const response = await fetch(`/api/articles?category=${encodeURIComponent(category)}&limit=3`)
       if (response.ok) {
-        const data = await response.json()
-        setRelatedPosts(data)
+        const payload = await response.json()
+        const list = payload?.data || []
+        setRelatedPosts(list.map((a: any) => ({
+          id: a.id,
+          title: a.title,
+          slug: a.slug,
+          featuredImage: a.image_url,
+          category: a.categories?.name || 'Uncategorized',
+          createdAt: a.published_at || a.created_at
+        })))
       }
     } catch (error) {
       console.error("Error fetching related posts:", error)
@@ -230,7 +239,7 @@ export default function ProfessionalBlogPost() {
 
     try {
       setLoading(true)
-      const response = await fetch(`/api/posts/${slug}`, {
+      const response = await fetch(`/api/articles/${slug}`, {
         method: "DELETE",
       })
       if (!response.ok) {

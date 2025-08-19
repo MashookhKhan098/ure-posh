@@ -19,13 +19,16 @@ import {
 	BookOpen,
 	Award,
 	Target,
-	BarChart3
+	BarChart3,
+	Share2,
+	Bookmark
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Image from 'next/image'
 
 type Post = {
 	id: string
@@ -34,9 +37,14 @@ type Post = {
 	status?: string
 	category?: string
 	featured_image?: string
+	image_url?: string
+	excerpt?: string
 	created_at?: string
 	updated_at?: string
 	author?: string
+	verified?: boolean
+	published_at?: string | null
+	views?: number
 }
 
 export default function WriterDashboardPage() {
@@ -45,6 +53,7 @@ export default function WriterDashboardPage() {
 	const [loading, setLoading] = useState<boolean>(true)
 	const [error, setError] = useState<string | null>(null)
 	const [showCreateForm, setShowCreateForm] = useState<boolean>(false)
+	const [writerStatusFilter, setWriterStatusFilter] = useState<'All' | 'Published' | 'Pending' | 'Reverted'>('All')
 
 	const supabase = useMemo(() => {
 		try {
@@ -64,25 +73,16 @@ export default function WriterDashboardPage() {
 
 	useEffect(() => {
 		const fetchArticlesForWriter = async () => {
-			if (!supabase || !writer) return
+			if (!isAuthenticated) return
 			setLoading(true)
 			setError(null)
 			try {
-				const name = writer.name || ''
-				const username = writer.username || ''
-				const orFilter = `author.eq.${encodeURIComponent(name)},author.eq.${encodeURIComponent(username)}`
-				const { data, error } = await supabase
-					.from('articles')
-					.select('*')
-					.or(orFilter)
-					.order('created_at', { ascending: false })
-
-				if (error) {
-					setError('Failed to load articles')
-					setArticles([])
-					return
+				const res = await fetch('/api/writer/articles', { credentials: 'include' })
+				if (!res.ok) {
+					throw new Error('Failed to load articles')
 				}
-				setArticles(data || [])
+				const json = await res.json()
+				setArticles(json.data || [])
 			} catch (e) {
 				setError('Failed to load articles')
 				setArticles([])
@@ -94,12 +94,30 @@ export default function WriterDashboardPage() {
 		if (isAuthenticated) {
 			fetchArticlesForWriter()
 		}
-	}, [isAuthenticated, writer, supabase])
+	}, [isAuthenticated])
 
 	const totalCount = articles.length
-	const publishedCount = articles.filter(p => p.status === 'published').length
-	const pendingCount = articles.filter(p => p.status === 'pending' || p.status === 'draft').length
-	const rejectedCount = articles.filter(p => p.status === 'rejected' || p.status === 'reverted').length
+	const deriveStatus = (p: Post): 'published' | 'pending' | 'reverted' => {
+		const isVerified = !!p.verified
+		const isPublished = !!p.published_at
+		if (isVerified && isPublished) return 'published'
+		if (isVerified && !isPublished) return 'reverted'
+		return 'pending'
+	}
+	const publishedCount = articles.filter(p => deriveStatus(p) === 'published').length
+	const pendingCount = articles.filter(p => deriveStatus(p) === 'pending').length
+	const revertedCount = articles.filter(p => deriveStatus(p) === 'reverted').length
+
+	const visibleArticles = React.useMemo(() => {
+		if (writerStatusFilter === 'All') return articles
+		return articles.filter((p) => {
+			const s = deriveStatus(p)
+			if (writerStatusFilter === 'Published') return s === 'published'
+			if (writerStatusFilter === 'Pending') return s === 'pending'
+			if (writerStatusFilter === 'Reverted') return s === 'reverted'
+			return true
+		})
+	}, [articles, writerStatusFilter])
 
 	// Calculate some additional stats
 	const thisMonthArticles = articles.filter(p => {
@@ -116,24 +134,14 @@ export default function WriterDashboardPage() {
 
 	const handleCreatePost = async () => {
 		// Refresh the articles list after creating a new article
-		if (isAuthenticated && writer && supabase) {
-			const { name, username } = writer
-			if (!name && !username) return
-
-			try {
-				const orFilter = `author.eq.${encodeURIComponent(name)},author.eq.${encodeURIComponent(username)}`
-				const { data, error } = await supabase
-					.from('articles')
-					.select('*')
-					.or(orFilter)
-					.order('created_at', { ascending: false })
-
-				if (!error && data) {
-					setArticles(data)
+		try {
+			const res = await fetch('/api/writer/articles', { credentials: 'include' })
+			if (res.ok) {
+				const json = await res.json()
+				setArticles(json.data || [])
 				}
 			} catch (e) {
 				console.error('Error refreshing articles:', e)
-			}
 		}
 
 		setShowCreateForm(false)
@@ -190,6 +198,8 @@ export default function WriterDashboardPage() {
 						</div>
 					</div>
 				</div>
+
+				{/* Top status chips removed as requested */}
 
 				{/* Stats Cards */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -272,40 +282,21 @@ export default function WriterDashboardPage() {
 					</div>
 				</div>
 
-				{/* Recent Activity */}
-				{articles.length > 0 && (
-					<div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg mb-8">
-						<div className="flex items-center justify-between mb-4">
-							<h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-							<button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
-						</div>
-						<div className="space-y-3">
-							{articles.slice(0, 3).map((post) => (
-								<div key={post.id} className="flex items-center p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-									<div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-									<div className="flex-1">
-										<p className="text-sm font-medium text-gray-900">{post.title}</p>
-										<p className="text-xs text-gray-500">Submitted on {formatDate(post.created_at)}</p>
-									</div>
-									<Badge variant={getStatusVariant(post.status)} className="text-xs">
-										{formatStatus(post.status)}
-									</Badge>
-								</div>
-							))}
-						</div>
+				{/* Section: Status tabs in spacer area */}
+				<div className="bg-white/60 backdrop-blur-sm rounded-2xl p-2 border border-gray-200/50 shadow-sm mb-6">
+					<Tabs value={writerStatusFilter as any} onValueChange={(v) => setWriterStatusFilter(v as any)} className="w-full">
+						<TabsList className="grid w-full grid-cols-4 bg-gray-100/60 p-1 rounded-xl">
+							<TabsTrigger value="All" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm">All ({totalCount})</TabsTrigger>
+							<TabsTrigger value="Pending" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm">Pending ({pendingCount})</TabsTrigger>
+							<TabsTrigger value="Published" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm">Published ({publishedCount})</TabsTrigger>
+							<TabsTrigger value="Reverted" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm">Reverted ({revertedCount})</TabsTrigger>
+						</TabsList>
+					</Tabs>
 					</div>
-				)}
 
 				{/* Main Content */}
 				<Tabs defaultValue="articles" className="w-full">
 					<div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 shadow-lg overflow-hidden">
-						<div className="p-6 border-b border-gray-200/50">
-							<TabsList className="grid w-full grid-cols-3 bg-gray-100/50">
-								<TabsTrigger value="articles" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">My Articles</TabsTrigger>
-								<TabsTrigger value="analytics" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Analytics</TabsTrigger>
-								<TabsTrigger value="profile" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Profile</TabsTrigger>
-							</TabsList>
-						</div>
 
 						<TabsContent value="articles" className="p-6 mt-0">
 							<div className="space-y-6">
@@ -340,7 +331,7 @@ export default function WriterDashboardPage() {
 											<p className="text-gray-500 text-sm mt-2">Please try refreshing the page</p>
 										</div>
 									</div>
-								) : articles.length === 0 ? (
+								) : visibleArticles.length === 0 ? (
 									<div className="text-center py-12">
 										<div className="bg-gray-50/50 border border-gray-200 rounded-2xl p-8">
 											<BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -356,44 +347,61 @@ export default function WriterDashboardPage() {
 									</div>
 								) : (
 									<div className="space-y-4">
-										{articles.map((post: any) => (
-											<div key={post.id} className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-4 hover:bg-white/80 transition-all duration-200 hover:shadow-md">
-												<div className="flex items-center justify-between">
-													<div className="flex-1">
-														<div className="flex items-center gap-3 mb-2">
-															<h3 className="font-semibold text-gray-900 text-lg">{post.title}</h3>
-															<Badge variant={getStatusVariant(post.status)} className="shadow-sm">
-																{formatStatus(post.status)}
-															</Badge>
-														</div>
-														<div className="flex items-center gap-4 text-sm text-gray-600">
-															<span className="flex items-center gap-1">
-																<Calendar className="h-4 w-4" />
-																{formatDate(post.created_at)}
-															</span>
-															{post.category && (
-																<span className="flex items-center gap-1">
-																	<Target className="h-4 w-4" />
-																	{post.category}
-																</span>
-															)}
-														</div>
-													</div>
-													<div className="flex items-center gap-2">
-														{post.status === 'published' && (
-															<Button variant="outline" size="sm" asChild className="bg-white/60 backdrop-blur-sm">
-																<a href={`/posts/${post.slug || post.id}`} target="_blank" rel="noreferrer">
-																	<Eye className="h-4 w-4" />
-																	View Live
-																</a>
-															</Button>
+										{visibleArticles.map((post: any) => (
+											<div key={post.id} className="group bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-2xl p-4 hover:bg-white transition-all duration-200 hover:shadow-lg">
+												<div className="flex gap-4">
+													{/* Thumbnail */}
+													<div className="relative w-28 h-24 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+														{(post.image_url || post.featured_image) ? (
+															<Image src={(post.image_url || post.featured_image) as string} alt={post.title} fill className="object-cover" />
+														) : (
+															<div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image</div>
 														)}
-														<Button variant="ghost" size="sm" className="hover:bg-white/60">
-															<Edit className="h-4 w-4" />
-															Edit
-														</Button>
+													</div>
+
+													{/* Content */}
+													<div className="flex-1 min-w-0">
+														<div className="flex items-center gap-3 mb-1">
+															<h3 className="font-semibold text-gray-900 text-base truncate">{post.title}</h3>
+															<Badge variant={getStatusVariant(deriveStatus(post))} className="shadow-sm">{formatStatus(deriveStatus(post))}</Badge>
+														</div>
+														{post.excerpt && (
+															<p className="text-sm text-gray-600 line-clamp-2 mb-2">{post.excerpt}</p>
+														)}
+
+														{/* Meta row */}
+														<div className="flex items-center justify-between text-xs text-gray-600">
+															<div className="flex items-center gap-4">
+																<span className="flex items-center gap-1"><Clock className="h-4 w-4" />{formatTimeAgo(post.created_at)}</span>
+																<span className="flex items-center gap-1"><Eye className="h-4 w-4" />{typeof post.views === 'number' ? (post.views?.toLocaleString?.() || post.views) : 0}</span>
+															</div>
+															<div className="flex items-center gap-1">
+																<Button variant="ghost" size="icon" className="h-7 w-7 text-gray-600 hover:text-blue-600"><Share2 className="h-4 w-4" /></Button>
+																<Button variant="ghost" size="icon" className="h-7 w-7 text-gray-600 hover:text-pink-600"><Bookmark className="h-4 w-4" /></Button>
+															</div>
+														</div>
+
+														{/* Actions row */}
+														<div className="mt-3 flex items-center gap-3">
+															{deriveStatus(post) === 'published' ? (
+																<Button variant="outline" asChild className="w-full sm:w-auto">
+																	<a href={`/posts/${post.slug || post.id}`} target="_blank" rel="noreferrer">Read</a>
+																</Button>
+															) : (
+																<span className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-1">In review</span>
+															)}
+															<Button variant="ghost" size="sm">Edit</Button>
+														</div>
 													</div>
 												</div>
+
+												{/* Context tip */}
+												{deriveStatus(post) === 'pending' && (
+													<div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">Awaiting admin review. You’ll be notified once it’s approved.</div>
+												)}
+												{deriveStatus(post) === 'reverted' && (
+													<div className="mt-3 text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded-lg px-3 py-2">Returned for updates. Edit and resubmit to publish again.</div>
+												)}
 											</div>
 										))}
 									</div>
@@ -401,141 +409,16 @@ export default function WriterDashboardPage() {
 							</div>
 						</TabsContent>
 
-						<TabsContent value="analytics" className="p-6 mt-0">
-							<div className="space-y-6">
-								<div>
-									<h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-										<BarChart3 className="h-5 w-5" />
-										Writing Analytics
-									</h2>
-									<p className="text-sm text-gray-600 mt-1">
-										Track your writing progress and performance
-									</p>
-								</div>
-								
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-									<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6 text-center">
-										<div className="text-3xl font-bold text-blue-600 mb-2">{Math.round((publishedCount / Math.max(totalCount, 1)) * 100)}%</div>
-										<div className="text-sm text-gray-600 font-medium">Success Rate</div>
-										<div className="text-xs text-gray-500 mt-1">Published vs Total</div>
-									</div>
-									<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6 text-center">
-										<div className="text-3xl font-bold text-emerald-600 mb-2">{totalCount > 0 ? Math.round(totalCount / 12) : 0}</div>
-										<div className="text-sm text-gray-600 font-medium">Avg per Month</div>
-										<div className="text-xs text-gray-500 mt-1">Articles written</div>
-									</div>
-									<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6 text-center">
-										<div className="text-3xl font-bold text-amber-600 mb-2">{rejectedCount}</div>
-										<div className="text-sm text-gray-600 font-medium">Need Revision</div>
-										<div className="text-xs text-gray-500 mt-1">Improvement areas</div>
-									</div>
-								</div>
-
-								{/* Progress Chart Placeholder */}
-								<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6">
-									<h3 className="text-lg font-semibold text-gray-900 mb-4">Writing Progress</h3>
-									<div className="h-64 bg-gray-50/50 rounded-lg flex items-center justify-center border border-gray-200/50">
-										<div className="text-center">
-											<BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-											<p className="text-gray-500 font-medium">Analytics Chart</p>
-											<p className="text-sm text-gray-400">Coming soon...</p>
-										</div>
-									</div>
+						{/* Bottom status summary */}
+						<div className="border-t border-gray-200/50 bg-white/70 backdrop-blur-sm px-6 py-4">
+							<div className="flex flex-wrap items-center gap-2">
+								<span className="text-sm text-gray-500 mr-2">Summary:</span>
+								<span className="px-3 py-1.5 rounded-full text-xs bg-gray-100 text-gray-800 border border-gray-200">All ({totalCount})</span>
+								<span className="px-3 py-1.5 rounded-full text-xs bg-amber-50 text-amber-800 border border-amber-200">Pending ({pendingCount})</span>
+								<span className="px-3 py-1.5 rounded-full text-xs bg-emerald-50 text-emerald-800 border border-emerald-200">Published ({publishedCount})</span>
+								<span className="px-3 py-1.5 rounded-full text-xs bg-purple-50 text-purple-800 border border-purple-200">Reverted ({revertedCount})</span>
 								</div>
 							</div>
-						</TabsContent>
-
-						<TabsContent value="profile" className="p-6 mt-0">
-							<div className="space-y-6">
-								<div>
-									<h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-										<Award className="h-5 w-5" />
-										Writer Profile
-									</h2>
-									<p className="text-sm text-gray-600 mt-1">
-										Your writing profile and achievements
-									</p>
-								</div>
-								
-								<div className="space-y-6">
-									<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6">
-										<div className="flex items-center gap-6">
-											<Avatar className="h-20 w-20">
-												<AvatarFallback className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xl font-semibold">
-													{getWriterInitials(writer?.name, writer?.username)}
-												</AvatarFallback>
-											</Avatar>
-											<div>
-												<h3 className="text-2xl font-bold text-gray-900">{writer?.name || writer?.username}</h3>
-												<p className="text-gray-600 text-lg">@{writer?.username}</p>
-												<p className="text-sm text-gray-500 mt-1">Member since {new Date().getFullYear()}</p>
-											</div>
-										</div>
-									</div>
-									
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-										<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6">
-											<h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-												<FileText className="h-5 w-5" />
-												Writing Statistics
-											</h4>
-											<div className="space-y-3">
-												<div className="flex justify-between items-center py-2 border-b border-gray-200/50">
-													<span className="text-gray-600">Total Articles:</span>
-													<span className="font-semibold text-gray-900">{totalCount}</span>
-												</div>
-												<div className="flex justify-between items-center py-2 border-b border-gray-200/50">
-													<span className="text-gray-600">Published:</span>
-													<span className="font-semibold text-emerald-600">{publishedCount}</span>
-												</div>
-												<div className="flex justify-between items-center py-2 border-b border-gray-200/50">
-													<span className="text-gray-600">In Review:</span>
-													<span className="font-semibold text-amber-600">{pendingCount}</span>
-												</div>
-												<div className="flex justify-between items-center py-2">
-													<span className="text-gray-600">This Month:</span>
-													<span className="font-semibold text-purple-600">{thisMonthArticles}</span>
-												</div>
-											</div>
-										</div>
-										
-										<div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-xl p-6">
-											<h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-												<Award className="h-5 w-5" />
-												Achievements
-											</h4>
-											<div className="space-y-3">
-												{publishedCount >= 1 && (
-													<Badge variant="secondary" className="mr-2 mb-2 bg-emerald-50 text-emerald-700 border-emerald-200">
-														🎉 First Article Published
-													</Badge>
-												)}
-												{publishedCount >= 5 && (
-													<Badge variant="secondary" className="mr-2 mb-2 bg-blue-50 text-blue-700 border-blue-200">
-														🏆 5 Articles Milestone
-													</Badge>
-												)}
-												{publishedCount >= 10 && (
-													<Badge variant="secondary" className="mr-2 mb-2 bg-purple-50 text-purple-700 border-purple-200">
-														⭐ Prolific Writer
-													</Badge>
-												)}
-												{thisMonthArticles >= 3 && (
-													<Badge variant="secondary" className="mr-2 mb-2 bg-orange-50 text-orange-700 border-orange-200">
-														🔥 Monthly Contributor
-													</Badge>
-												)}
-												{publishedCount === 0 && (
-													<div className="text-center py-4">
-														<p className="text-sm text-gray-500">Publish your first article to earn achievements!</p>
-													</div>
-												)}
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</TabsContent>
 					</div>
 				</Tabs>
 			</div>
@@ -565,6 +448,18 @@ function formatDate(value?: string) {
 	}
 }
 
+function formatTimeAgo(dateString?: string) {
+    if (!dateString) return 'Not set'
+    const now = new Date().getTime()
+    const then = new Date(dateString).getTime()
+    const diffMins = Math.max(0, Math.floor((now - then) / (1000 * 60)))
+    if (diffMins < 60) return `${diffMins}m ago`
+    const hours = Math.floor(diffMins / 60)
+    if (hours < 24) return `${hours}h ago`
+    const days = Math.floor(hours / 24)
+    return `${days}d ago`
+}
+
 function formatStatus(status?: string) {
 	if (!status) return 'Unknown'
 	return status.charAt(0).toUpperCase() + status.slice(1).replace(/_/g, ' ')
@@ -577,7 +472,6 @@ function getStatusVariant(status?: string): "default" | "secondary" | "destructi
 		case 'pending':
 		case 'draft':
 			return 'secondary'
-		case 'rejected':
 		case 'reverted':
 			return 'destructive'
 		default:
@@ -593,7 +487,6 @@ function getStatusBadgeClass(status?: string) {
 		case 'pending':
 		case 'draft':
 			return `${base} bg-amber-50 text-amber-700 border border-amber-100`
-		case 'rejected':
 		case 'reverted':
 			return `${base} bg-rose-50 text-rose-700 border border-rose-100`
 		default:
