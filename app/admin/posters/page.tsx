@@ -1,9 +1,9 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 
-export default function AdminPostersRoute() {
+function AdminPostersComponent() {
   const router = useRouter()
   const sp = useSearchParams()
 
@@ -13,6 +13,14 @@ export default function AdminPostersRoute() {
   }, [router, sp])
 
   return null
+}
+
+export default function AdminPostersRoute() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AdminPostersComponent />
+    </Suspense>
+  )
 }
 
 

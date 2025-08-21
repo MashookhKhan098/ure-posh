@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
@@ -73,6 +73,19 @@ interface DashboardStats {
 }
 
 export default function AdminDashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="flex items-center gap-3 text-gray-600">
+        <div className="w-5 h-5 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+        <span>Loading admin dashboard...</span>
+      </div>
+    </div>}>
+      <AdminDashboardContent />
+    </Suspense>
+  )
+}
+
+function AdminDashboardContent() {
   const { admin, isAuthenticated, loading: authLoading, logout } = useAdminAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -2495,13 +2508,13 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-             {/* Mobile Sidebar Overlay */}
-       {sidebarOpen && (
-         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>
-       )}
-       
-       {/* Toast Notifications */}
-       <Toaster />
-     </div>
-   );
- }
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)}></div>
+      )}
+      
+      {/* Toast Notifications */}
+      <Toaster />
+    </div>
+  );
+}
