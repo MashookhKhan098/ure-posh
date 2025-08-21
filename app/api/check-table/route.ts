@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Force this route to be dynamic
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     console.log('=== Check Table API Route ===')
@@ -17,32 +20,25 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, serviceRoleKey)
     
-    // Test 1: Try to list all tables in public schema
-    console.log('Testing 1: List all tables...')
-    const { data: tables, error: tablesError } = await supabase
-      .rpc('get_tables')
+    // Test 1: Try to check known tables instead of system queries
+    console.log('Testing 1: Check known tables...')
+    const knownTables = ['people', 'articles', 'writers', 'posters']
+    const tableStatus: any = {}
     
-    if (tablesError) {
-      console.log('RPC get_tables failed, trying direct query...')
-      // Try direct SQL query
-      const { data: directTables, error: directError } = await supabase
-        .from('pg_tables')
-        .select('schemaname, tablename')
-        .eq('schemaname', 'public')
-      
-      if (directError) {
-        console.error('Direct query also failed:', directError)
-        return NextResponse.json({
-          status: 'error',
-          message: 'Cannot access database schema',
-          error: directError.message,
-          code: directError.code
-        }, { status: 500 })
+    for (const tableName of knownTables) {
+      try {
+        const { data, error } = await supabase
+          .from(tableName)
+          .select('*', { count: 'exact', head: true })
+        
+        if (error) {
+          tableStatus[tableName] = { exists: false, error: error.message, code: error.code }
+        } else {
+          tableStatus[tableName] = { exists: true, count: data }
+        }
+      } catch (err) {
+        tableStatus[tableName] = { exists: false, error: 'Query failed' }
       }
-      
-      console.log('Direct query successful, tables:', directTables)
-    } else {
-      console.log('RPC successful, tables:', tables)
     }
     
     // Test 2: Try to query people table directly
@@ -55,18 +51,12 @@ export async function GET(request: NextRequest) {
     if (peopleError) {
       console.error('People query failed:', peopleError)
       
-      // Test 3: Try to check if table exists using different approach
-      console.log('Testing 3: Check table existence...')
-      const { data: tableCheck, error: checkError } = await supabase
-        .rpc('check_table_exists', { table_name: 'people' })
-      
       return NextResponse.json({
         status: 'error',
         message: 'People table query failed',
         peopleError: peopleError.message,
         peopleCode: peopleError.code,
-        tableCheck: tableCheck,
-        checkError: checkError?.message
+        tableStatus: tableStatus
       }, { status: 500 })
     }
     
@@ -87,7 +77,7 @@ export async function GET(request: NextRequest) {
       message: 'Table check completed',
       people: people,
       count: count,
-      tables: tables || 'RPC not available'
+      tableStatus: tableStatus
     })
     
   } catch (error) {

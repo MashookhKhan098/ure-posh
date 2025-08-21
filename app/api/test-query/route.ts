@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Force this route to be dynamic
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     console.log('=== Test Query API Route ===')
@@ -17,24 +20,27 @@ export async function GET(request: NextRequest) {
     
     const supabase = createClient(supabaseUrl, supabaseKey)
     
-    // Test 1: Try to list all tables
+    // Test 1: Try to query known tables instead of system tables
     console.log('Testing table list...')
-    const { data: tables, error: tablesError } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
-      .eq('table_schema', 'public')
     
-    if (tablesError) {
-      console.error('Tables query error:', tablesError)
-      return NextResponse.json({
-        status: 'error',
-        message: 'Cannot access information_schema',
-        error: tablesError.message,
-        code: tablesError.code
-      }, { status: 500 })
+    const knownTables = ['people', 'articles', 'writers', 'posters']
+    const tableStatus: any = {}
+    
+    for (const tableName of knownTables) {
+      try {
+        const { data, error } = await supabase
+          .from(tableName)
+          .select('*', { count: 'exact', head: true })
+        
+        if (error) {
+          tableStatus[tableName] = { exists: false, error: error.message }
+        } else {
+          tableStatus[tableName] = { exists: true, count: data }
+        }
+      } catch (err) {
+        tableStatus[tableName] = { exists: false, error: 'Query failed' }
+      }
     }
-    
-    console.log('Available tables:', tables)
     
     // Test 2: Try to query people table
     console.log('Testing people table query...')
@@ -52,7 +58,7 @@ export async function GET(request: NextRequest) {
         code: peopleError.code,
         details: peopleError.details,
         hint: peopleError.hint,
-        availableTables: tables?.map(t => t.table_name) || []
+        tableStatus: tableStatus
       }, { status: 500 })
     }
     
@@ -62,7 +68,7 @@ export async function GET(request: NextRequest) {
       status: 'success',
       message: 'All queries successful',
       people: people,
-      availableTables: tables?.map(t => t.table_name) || []
+      tableStatus: tableStatus
     })
     
   } catch (error) {
