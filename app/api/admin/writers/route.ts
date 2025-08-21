@@ -84,4 +84,28 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+    if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
+
+    const supabase = createAdminClient()
+
+    // Try writers table first
+    let { error } = await supabase.from('writers').delete().eq('id', id)
+    if (error) {
+      // Fallback to writer table
+      const fallback = await supabase.from('writer').delete().eq('id', id)
+      if (fallback.error) {
+        return NextResponse.json({ error: fallback.error.message }, { status: 400 })
+      }
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (e) {
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+  }
+}
+
 

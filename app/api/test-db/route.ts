@@ -1,47 +1,40 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '../../../utils/supabase/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 
-export const dynamic = 'force-dynamic'
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
-
+    
     // Test basic connection
-    const { data: testData, error: testError } = await supabase
-      .from('categories')
+    const { data, error } = await supabase
+      .from('people')
       .select('count')
       .limit(1)
-
-    if (testError) {
-      console.error('Database test error:', testError)
+    
+    if (error) {
       return NextResponse.json({
-        error: testError.message,
-        details: testError,
-        tables: 'Failed to query categories table'
+        status: 'error',
+        message: 'Database connection failed',
+        error: error.message,
+        details: 'The people table might not exist yet'
       }, { status: 500 })
     }
-
-    // Test articles table
-    const { data: articlesData, error: articlesError } = await supabase
-      .from('articles')
-      .select('count')
-      .limit(1)
-
+    
     return NextResponse.json({
-      success: true,
-      categories: testData ? 'Working' : 'Failed',
-      articles: articlesError ? articlesError.message : 'Working',
-      message: 'Database connection successful'
+      status: 'success',
+      message: 'Database connection successful',
+      tableExists: true,
+      data: data
     })
-
+    
   } catch (error) {
-    console.error('Test API error:', error)
+    console.error('Test DB error:', error)
     return NextResponse.json({
-      error: 'Failed to test database',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      status: 'error',
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

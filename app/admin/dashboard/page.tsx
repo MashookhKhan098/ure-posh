@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { 
@@ -67,17 +67,15 @@ interface DashboardStats {
 export default function AdminDashboardPage() {
   const { admin, isAuthenticated, loading: authLoading, logout } = useAdminAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   
   // Real data from database
-  const [writers, setWriters] = useState<Writer[]>([
-    { id: 1, name: 'John Doe', username: 'john', status: 'Active', joinDate: '2024-01-15', postsCount: 12, avatar: 'JD' },
-    { id: 2, name: 'Jane Smith', username: 'jane', status: 'Active', joinDate: '2024-02-20', postsCount: 8, avatar: 'JS' },
-    { id: 3, name: 'Mike Johnson', username: 'mike', status: 'Inactive', joinDate: '2024-03-10', postsCount: 5, avatar: 'MJ' }
-  ]);
+  const [writers, setWriters] = useState<Writer[]>([]);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [posters, setPosters] = useState<any[]>([]);
+  const [people, setPeople] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Dashboard statistics state
@@ -90,9 +88,12 @@ export default function AdminDashboardPage() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAddWriter, setShowAddWriter] = useState(false);
+  const [showAddPerson, setShowAddPerson] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [verifiedFilter, setVerifiedFilter] = useState('All');
+  const [peopleSearch, setPeopleSearch] = useState('');
+  const [peopleTab, setPeopleTab] = useState<'list' | 'add'>('list');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -143,6 +144,13 @@ export default function AdminDashboardPage() {
         setWriters(writersData);
       }
 
+      // Fetch people (admin endpoint)
+      const peopleResponse = await fetch('/api/admin/people?limit=100');
+      if (peopleResponse.ok) {
+        const peopleData = await peopleResponse.json();
+        setPeople(peopleData?.data || []);
+      }
+
       // Fetch posters
       const postersResponse = await fetch('/api/posters');
       if (postersResponse.ok) {
@@ -154,6 +162,21 @@ export default function AdminDashboardPage() {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch writers only (used on tab change)
+  const fetchWriters = async () => {
+    try {
+      const writersResponse = await fetch('/api/admin/writers');
+      if (writersResponse.ok) {
+        const writersData = await writersResponse.json();
+        setWriters(writersData);
+      } else {
+        setWriters([]);
+      }
+    } catch (e) {
+      setWriters([]);
     }
   };
 
@@ -171,6 +194,27 @@ export default function AdminDashboardPage() {
     }
   }, [authLoading, isAuthenticated, router]);
 
+  // Refetch writers when switching to Writers tab
+  useEffect(() => {
+    if (activeTab === 'writers') {
+      fetchWriters();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  // Initialize tab/modal from URL query (e.g., /admin/dashboard?tab=people&new=person)
+  useEffect(() => {
+    const tab = searchParams?.get('tab');
+    const toNew = searchParams?.get('new');
+    if (tab && ['dashboard','posts','people','writers','posters','settings'].includes(tab)) {
+      setActiveTab(tab);
+    }
+    if (toNew === 'person') {
+      setShowAddPerson(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   // New writer form state
   const [newWriter, setNewWriter] = useState({
     name: '',
@@ -181,6 +225,32 @@ export default function AdminDashboardPage() {
     expertise: '',
     phone: ''
   });
+
+  // New person form state
+  const [newPerson, setNewPerson] = useState<any>({
+    name: '',
+    title: '',
+    specialization: '',
+    description: '',
+    detailed_description: '',
+    experience: '',
+    category: 'legal',
+    email: '',
+    phone: '',
+    location: '',
+    website: '',
+    verified: false,
+    featured: false,
+    image_url: '',
+    icon_name: 'Scale',
+    color_gradient: 'from-pink-500 to-rose-600',
+    accent_color: 'pink',
+    languages: [] as string[],
+    expertise: [] as string[],
+  });
+
+  const [expertiseInput, setExpertiseInput] = useState('');
+  const [languagesInput, setLanguagesInput] = useState('');
 
   // Add new writer
   const handleAddWriter = async () => {
@@ -216,6 +286,47 @@ export default function AdminDashboardPage() {
         const data = await res.json()
         alert(data?.error || 'Failed to create writer')
       }
+    }
+  };
+
+  // Create Person
+  const handleCreatePerson = async () => {
+    try {
+      // Minimal required validation
+      if (!newPerson.name || !newPerson.title || !newPerson.specialization || !newPerson.email || !newPerson.location || !newPerson.experience || !newPerson.category || !newPerson.description) {
+        alert('Please fill all required fields');
+        return;
+      }
+
+      const payload = {
+        ...newPerson,
+        expertise: newPerson.expertise,
+        languages: newPerson.languages,
+        rating: 0,
+        review_count: 0,
+        projects: 0,
+        completion_rate: 0,
+        status: 'standard',
+        availability: 'Available',
+      };
+
+      const res = await fetch('/api/admin/people', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || 'Failed to create person');
+
+      setShowAddPerson(false);
+      setNewPerson({
+        name: '', title: '', specialization: '', description: '', detailed_description: '', experience: '', category: 'legal', email: '', phone: '', location: '', website: '', verified: false, featured: false, image_url: '', icon_name: 'Scale', color_gradient: 'from-pink-500 to-rose-600', accent_color: 'pink', languages: [], expertise: []
+      });
+      setExpertiseInput('');
+      setLanguagesInput('');
+      fetchDashboardData();
+    } catch (e: any) {
+      alert(e?.message || 'Error creating person');
     }
   };
 
@@ -323,10 +434,12 @@ export default function AdminDashboardPage() {
   });
 
   // Filter writers
-  const filteredWriters = writers.filter(writer => 
-    writer.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    writer.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredWriters = writers.filter(writer => {
+    const q = searchTerm.toLowerCase()
+    const matchesSearch = !q || writer.name.toLowerCase().includes(q) || writer.username.toLowerCase().includes(q)
+    const matchesStatus = statusFilter === 'All' || writer.status === statusFilter
+    return matchesSearch && matchesStatus
+  });
 
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -590,6 +703,101 @@ export default function AdminDashboardPage() {
             <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</div>
           )}
 
+          {/* People Management Tab */}
+          {activeTab === 'people' && (
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg flex flex-col gap-4">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                  <h2 className="text-xl font-semibold text-gray-900">People Management</h2>
+                  <p className="text-sm text-gray-500 mt-1">Create and manage expert profiles shown on the People page</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setPeopleTab('list')} className={`px-4 py-2 rounded-xl border ${peopleTab==='list'?'bg-pink-50 text-pink-700 border-pink-200':'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}>List</button>
+                  <button onClick={() => setPeopleTab('add')} className={`px-4 py-2 rounded-xl border ${peopleTab==='add'?'bg-pink-50 text-pink-700 border-pink-200':'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}>Add</button>
+                  <div className="flex-1" />
+                  <button
+                    onClick={fetchDashboardData}
+                    className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" /> Refresh
+                  </button>
+                </div>
+              </div>
+
+              {peopleTab === 'list' && (
+                <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                  <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="relative flex-1">
+                      <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search people by name, title, or specialization..."
+                        value={peopleSearch}
+                        onChange={(e) => setPeopleSearch(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 backdrop-blur-sm transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {peopleTab === 'list' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {people.filter((p)=>{
+                    const q = peopleSearch.toLowerCase();
+                    return !q || (p.name?.toLowerCase().includes(q) || p.title?.toLowerCase().includes(q) || p.specialization?.toLowerCase().includes(q));
+                  }).length === 0 ? (
+                    <div className="col-span-1 lg:col-span-2 text-center py-16 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 text-gray-600">
+                      No people found. Try adjusting your search or click "Add" to create one.
+                    </div>
+                  ) : (
+                    people.filter((p)=>{
+                      const q = peopleSearch.toLowerCase();
+                      return !q || (p.name?.toLowerCase().includes(q) || p.title?.toLowerCase().includes(q) || p.specialization?.toLowerCase().includes(q));
+                    }).map((p) => (
+                      <div key={p.id} className="group bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60 shadow hover:shadow-lg transition">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold border border-gray-200">
+                              {p.name?.split(' ').map((n:string)=>n[0]).join('').slice(0,2).toUpperCase()}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900">{p.name}</h3>
+                              <p className="text-sm text-gray-700">{p.title}</p>
+                              <p className="text-xs text-gray-500">{p.specialization}</p>
+                            </div>
+                          </div>
+                          <span className={`px-2.5 py-1 text-xs rounded-full border ${p.verified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
+                            {p.verified ? 'Verified' : 'Unverified'}
+                          </span>
+                        </div>
+                        <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-700">
+                          <div><span className="font-medium">Email:</span> {p.email}</div>
+                          <div><span className="font-medium">Location:</span> {p.location}</div>
+                          <div><span className="font-medium">Category:</span> {p.category}</div>
+                          <div><span className="font-medium">Experience:</span> {p.experience}</div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+
+              {peopleTab === 'add' && (
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60 shadow">
+                  <div className="text-sm text-gray-600 mb-4">Fill the form to add a new person to the People page.</div>
+                  <button
+                    onClick={() => setShowAddPerson(true)}
+                    className="inline-flex items-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" /> Open Add People Form
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex justify-end">
             <button
               onClick={createPoster}
@@ -608,6 +816,7 @@ export default function AdminDashboardPage() {
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
     { id: 'posts', label: 'Articles', icon: FileText },
+    { id: 'people', label: 'People', icon: Users },
     { id: 'writers', label: 'Writers', icon: Users },
     { id: 'posters', label: 'Posters', icon: ImageIcon },
     { id: 'settings', label: 'Settings', icon: Settings }
@@ -728,6 +937,7 @@ export default function AdminDashboardPage() {
                   <h1 className="text-2xl font-bold text-gray-900">
                     {activeTab === 'dashboard' && 'Dashboard Overview'}
                     {activeTab === 'posts' && 'Articles Management'}
+                    {activeTab === 'people' && 'People Management'}
                     {activeTab === 'writers' && 'Writers Management'}
                     {activeTab === 'posters' && 'Posters'}
                     {activeTab === 'settings' && 'Settings'}
@@ -735,6 +945,7 @@ export default function AdminDashboardPage() {
                   <p className="text-sm text-gray-500 mt-1">
                     {activeTab === 'dashboard' && 'Monitor your content platform performance'}
                     {activeTab === 'posts' && 'Review and manage submitted articles'}
+                    {activeTab === 'people' && 'Create and manage expert profiles for the People page'}
                     {activeTab === 'writers' && 'Manage your writing team'}
                     {activeTab === 'posters' && 'Create and manage posters'}
                     {activeTab === 'settings' && 'Configure platform settings'}
@@ -835,14 +1046,18 @@ export default function AdminDashboardPage() {
                     <UserPlus className="w-5 h-5 text-blue-600 mr-3 group-hover:scale-110 transition-transform" />
                     <span className="text-sm font-medium text-blue-700">Add Writer</span>
                   </button>
+                  <button 
+                    onClick={() => setShowAddPerson(true)}
+                    className="flex items-center p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl hover:from-pink-100 hover:to-rose-100 transition-all duration-200 border border-pink-200/60 group"
+                  >
+                    <UserPlus className="w-5 h-5 text-pink-600 mr-3 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium text-pink-700">Add People</span>
+                  </button>
                   <button className="flex items-center p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl hover:from-emerald-100 hover:to-green-100 transition-all duration-200 border border-emerald-200/50 group">
                     <Download className="w-5 h-5 text-emerald-600 mr-3 group-hover:scale-110 transition-transform" />
                     <span className="text-sm font-medium text-emerald-700">Export Data</span>
                   </button>
-                  <button className="flex items-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-200 border border-purple-200/50 group">
-                    <BarChart3 className="w-5 h-5 text-purple-600 mr-3 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-medium text-purple-700">View Reports</span>
-                  </button>
+                  
                   <button className="flex items-center p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl hover:from-orange-100 hover:to-red-100 transition-all duration-200 border border-orange-200/50 group">
                     <Mail className="w-5 h-5 text-orange-600 mr-3 group-hover:scale-110 transition-transform" />
                     <span className="text-sm font-medium text-orange-700">Send Notices</span>
@@ -1245,10 +1460,20 @@ export default function AdminDashboardPage() {
                         <Edit3 className="w-4 h-4 mr-2" />
                         Edit
                       </button>
-                      <button className="flex-1 flex items-center justify-center px-3 py-2 bg-gray-500/10 text-gray-600 rounded-lg hover:bg-gray-500/20 transition-all duration-200 text-sm border border-gray-200/50">
-                        {writer.status === 'Active' ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button className="p-2 bg-red-500/10 text-red-600 rounded-lg hover:bg-red-500/20 transition-all duration-200 border border-red-200/50">
+                      <button
+                        onClick={async () => {
+                          if (!confirm('Delete this writer?')) return;
+                          try {
+                            const res = await fetch(`/api/admin/writers?id=${writer.id}`, { method: 'DELETE' })
+                            const data = await res.json().catch(() => ({}))
+                            if (!res.ok) throw new Error(data?.error || 'Failed to delete writer')
+                            setWriters(prev => prev.filter(w => w.id !== writer.id))
+                          } catch (e: any) {
+                            alert(e?.message || 'Failed to delete writer')
+                          }
+                        }}
+                        className="p-2 bg-red-500/10 text-red-600 rounded-lg hover:bg-red-500/20 transition-all duration-200 border border-red-200/50"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -1334,6 +1559,140 @@ export default function AdminDashboardPage() {
                 <Settings className="w-16 h-16 mx-auto text-blue-500 mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Platform Settings</h3>
                 <p className="text-gray-500">Configuration options and system settings...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Create Person Modal */}
+          {showAddPerson && (
+            <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
+              <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddPerson(false)}></div>
+              <div className="relative z-10 w-full max-w-3xl mt-10 max-h-[92vh] overflow-y-auto">
+                <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200">
+                  <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                    <h3 className="text-lg font-semibold text-gray-900">Create Person</h3>
+                    <button onClick={() => setShowAddPerson(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="px-6 py-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
+                        <input value={newPerson.name} onChange={(e)=>setNewPerson({...newPerson,name:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Title <span className="text-red-500">*</span></label>
+                        <input value={newPerson.title} onChange={(e)=>setNewPerson({...newPerson,title:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Specialization <span className="text-red-500">*</span></label>
+                        <input value={newPerson.specialization} onChange={(e)=>setNewPerson({...newPerson,specialization:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Experience <span className="text-red-500">*</span></label>
+                        <input value={newPerson.experience} onChange={(e)=>setNewPerson({...newPerson,experience:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" placeholder="e.g., 8+ years" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Category <span className="text-red-500">*</span></label>
+                        <select value={newPerson.category} onChange={(e)=>setNewPerson({...newPerson,category:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80">
+                          <option value="legal">Legal</option>
+                          <option value="finance">Finance</option>
+                          <option value="psychology">Psychology</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                        <input value={newPerson.image_url} onChange={(e)=>setNewPerson({...newPerson,image_url:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" placeholder="https://..." />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Short Description <span className="text-red-500">*</span></label>
+                        <textarea rows={2} value={newPerson.description} onChange={(e)=>setNewPerson({...newPerson,description:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 resize-none" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Detailed Summary</label>
+                        <textarea rows={3} value={newPerson.detailed_description} onChange={(e)=>setNewPerson({...newPerson,detailed_description:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 resize-none" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
+                        <input type="email" value={newPerson.email} onChange={(e)=>setNewPerson({...newPerson,email:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input value={newPerson.phone} onChange={(e)=>setNewPerson({...newPerson,phone:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Location <span className="text-red-500">*</span></label>
+                        <input value={newPerson.location} onChange={(e)=>setNewPerson({...newPerson,location:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                        <input value={newPerson.website} onChange={(e)=>setNewPerson({...newPerson,website:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" />
+                      </div>
+
+                      {/* Expertise tags */}
+                      <div className="md:col-span-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Expertise (tags)</label>
+                        <div className="flex items-center gap-2 flex-wrap border border-gray-200 rounded-xl px-2.5 py-2 bg-white/80">
+                          {newPerson.expertise.map((t:string) => (
+                            <span key={t} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-pink-500/10 text-pink-700 border border-pink-200 text-xs">
+                              {t}
+                              <button type="button" onClick={()=>setNewPerson({...newPerson,expertise:newPerson.expertise.filter((x:string)=>x!==t)})} className="ml-1 hover:text-red-600">
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </span>
+                          ))}
+                          <input
+                            value={expertiseInput}
+                            onChange={(e)=>setExpertiseInput(e.target.value)}
+                            onKeyDown={(e)=>{ if (e.key==='Enter' || e.key===','){ e.preventDefault(); const v=expertiseInput.trim(); if (v && !newPerson.expertise.includes(v)) { setNewPerson({...newPerson,expertise:[...newPerson.expertise,v]}); setExpertiseInput(''); } } }}
+                            placeholder={newPerson.expertise.length===0 ? 'Type a tag and press Enter' : 'Add another tag'}
+                            className="flex-1 min-w-[140px] bg-transparent outline-none text-sm"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Press Enter or comma to add</p>
+                      </div>
+
+                      {/* Languages tags */}
+                      <div className="md:col-span-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Languages (tags)</label>
+                        <div className="flex items-center gap-2 flex-wrap border border-gray-200 rounded-xl px-2.5 py-2 bg-white/80">
+                          {newPerson.languages.map((t:string) => (
+                            <span key={t} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-500/10 text-blue-700 border border-blue-200 text-xs">
+                              {t}
+                              <button type="button" onClick={()=>setNewPerson({...newPerson,languages:newPerson.languages.filter((x:string)=>x!==t)})} className="ml-1 hover:text-red-600">
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </span>
+                          ))}
+                          <input
+                            value={languagesInput}
+                            onChange={(e)=>setLanguagesInput(e.target.value)}
+                            onKeyDown={(e)=>{ if (e.key==='Enter' || e.key===','){ e.preventDefault(); const v=languagesInput.trim(); if (v && !newPerson.languages.includes(v)) { setNewPerson({...newPerson,languages:[...newPerson.languages,v]}); setLanguagesInput(''); } } }}
+                            placeholder={newPerson.languages.length===0 ? 'Type a language and press Enter' : 'Add another language'}
+                            className="flex-1 min-w-[140px] bg-transparent outline-none text-sm"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Press Enter or comma to add</p>
+                      </div>
+
+                      {/* Toggles */}
+                      <div className="flex items-center gap-4 md:col-span-2">
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                          <input type="checkbox" checked={newPerson.verified} onChange={(e)=>setNewPerson({...newPerson,verified:e.target.checked})} /> Verified
+                        </label>
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                          <input type="checkbox" checked={newPerson.featured} onChange={(e)=>setNewPerson({...newPerson,featured:e.target.checked})} /> Featured
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-6">
+                      <button onClick={()=>setShowAddPerson(false)} className="px-4 py-2 rounded-xl bg-white text-gray-700 hover:bg-gray-50 border border-gray-200">Cancel</button>
+                      <button onClick={handleCreatePerson} className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700">Create Person</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
