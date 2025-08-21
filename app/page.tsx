@@ -74,7 +74,7 @@ const teamMembers = [
   },
   {
     name: "Dr. Anjali Mehta",
-    role: "Organizational Psychologist",
+    role: "Mental health professional",
     bio: "Expert in organizational behavior and workplace psychology with specialization in inclusive workplace design.",
     image: "/images/4.jpg",
     expertise: ["Psychology", "Behavioral Training", "Inclusive Design"],
@@ -457,7 +457,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <main>
         {/* Hero Section */}
-        <section className="relative pt-4 sm:pt-6 lg:pt-8 flex items-center justify-center overflow-hidden bg-white">
+        <section className="relative pt-8 sm:pt-10 lg:pt-12 mt-4 sm:mt-6 lg:mt-8 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 w-24 h-24 sm:w-32 sm:h-32 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -484,14 +484,14 @@ export default function HomePage() {
                   </Badge>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-2 sm:space-y-3 lg:space-y-4">
-                  <h1 className="text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
+                  <h1 className="text-xl sm:text-2xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.6, duration: 0.8 }}
                       className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 mb-1 sm:mb-2"
                     >
-                      <span className="text-slate-600 font-medium text-base sm:text-lg lg:text-2xl xl:text-3xl">
+                      <span className="text-slate-600 font-medium text-xl sm:text-2xl lg:text-4xl xl:text-5xl">
                         Creating
                       </span>
                       <motion.span 
@@ -515,27 +515,27 @@ export default function HomePage() {
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 1.0, duration: 0.8 }}
-                      className="block text-slate-700 font-semibold text-base sm:text-lg lg:text-2xl xl:text-3xl"
+                      className="block text-slate-700 font-semibold text-xl sm:text-2xl lg:text-4xl xl:text-5xl"
                     >
                       Workplaces for Everyone
                     </motion.span>
                   </h1>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }} className="space-y-3 sm:space-y-4 lg:space-y-6">
-                  <p className="text-[11px] sm:text-xs lg:text-sm xl:text-base text-slate-600 leading-relaxed max-w-3xl font-medium">
+                  <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-slate-600 leading-relaxed max-w-3xl font-medium">
                     We transform organizational cultures through comprehensive{" "}
-                    <span className="font-bold text-slate-800 bg-yellow-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">POSH compliance</span>, expert training, and innovative solutions that make workplaces{" "}
-                    <span className="font-bold text-slate-800 bg-green-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-xs sm:text-xs lg:text-sm">safer, more inclusive</span>, and legally compliant across India.
+                    <span className="font-bold text-slate-800 bg-yellow-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-sm sm:text-base lg:text-lg">POSH compliance</span>, expert training, and innovative solutions that make workplaces{" "}
+                    <span className="font-bold text-slate-800 bg-green-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-sm sm:text-base lg:text-lg">safer, more inclusive</span>, and legally compliant across India.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
                     <Link href="/contact">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-7 py-2 sm:py-2 lg:py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-[11px] sm:text-xs lg:text-sm">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base lg:text-lg">
                         Get Started
-                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1.5 sm:ml-2" />
+                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-1.5 sm:ml-2" />
                       </Button>
                     </Link>
                     <Link href="/about">
-                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-7 py-2 sm:py-2 lg:py-2.5 rounded-xl font-semibold transition-all duration-300 text-[11px] sm:text-xs lg:text-sm">
+                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-6 sm:px-8 lg:px-10 py-3 sm:py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base lg:text-lg">
                         Learn More
                       </Button>
                     </Link>

@@ -9,7 +9,8 @@ import {
   Users, FileText, Plus, Check, X, RotateCcw, Search, Filter, Eye, 
   LogOut, Bell, Settings, MoreVertical, Calendar, 
   ChevronDown, Menu, Shield, Activity, BarChart3, Download,
-  UserPlus, Edit3, Trash2, Mail, Image as ImageIcon, Tag, DollarSign, Save
+  UserPlus, Edit3, Trash2, Mail, Image as ImageIcon, Tag, DollarSign, Save,
+  CheckCircle, Award, Scale, Calculator, Brain, MapPin, Star, ChevronRight
 } from 'lucide-react';
 
 // Type definitions
@@ -34,13 +35,20 @@ interface Post {
 }
 
 interface Writer {
+  draftCount: number;
+  publishedCount: number;
+  specializations: string[];
+  bio: React.JSX.Element;
   id: number;
   name: string;
   username: string;
-  status: string;
+  status: string;  
   joinDate: string;
   postsCount: number;
   avatar: string;
+  email?: string; // Added email property
+  verified?: boolean; // Added verified property
+  lastActive?: string; // Added lastActive property
 }
 
 interface DashboardStats {
@@ -138,10 +146,19 @@ export default function AdminDashboardPage() {
       }
 
       // Fetch writers
+      console.log('🔄 Dashboard: Fetching writers...');
       const writersResponse = await fetch('/api/admin/writers');
+      console.log('📡 Dashboard: Writers response status:', writersResponse.status);
       if (writersResponse.ok) {
         const writersData = await writersResponse.json();
+        console.log('✅ Dashboard: Writers data loaded:', writersData?.length || 0);
+        console.log('📊 Dashboard: Writers data:', writersData);
         setWriters(writersData);
+      } else {
+        console.error('❌ Dashboard: Failed to fetch writers');
+        const errorText = await writersResponse.text();
+        console.error('❌ Dashboard: Error response:', errorText);
+        setWriters([]);
       }
 
       // Fetch people (admin endpoint)
@@ -168,14 +185,33 @@ export default function AdminDashboardPage() {
   // Fetch writers only (used on tab change)
   const fetchWriters = async () => {
     try {
+      console.log('🔄 Fetching writers from API...');
       const writersResponse = await fetch('/api/admin/writers');
+      console.log('📡 Writers response status:', writersResponse.status);
+      console.log('📡 Writers response headers:', writersResponse.headers);
+      
       if (writersResponse.ok) {
         const writersData = await writersResponse.json();
-        setWriters(writersData);
+        console.log('✅ Writers data received:', writersData);
+        console.log('📊 Number of writers:', writersData?.length || 0);
+        console.log('🏷️ Writers data type:', typeof writersData);
+        console.log('📋 Is array:', Array.isArray(writersData));
+        
+        if (Array.isArray(writersData)) {
+          setWriters(writersData);
+          console.log('✅ Writers state updated with', writersData.length, 'writers');
+        } else {
+          console.error('❌ Writers data is not an array:', writersData);
+          setWriters([]);
+        }
       } else {
+        console.error('❌ Failed to fetch writers, response not ok');
+        const errorText = await writersResponse.text();
+        console.error('❌ Error response:', errorText);
         setWriters([]);
       }
     } catch (e) {
+      console.error('💥 Exception while fetching writers:', e);
       setWriters([]);
     }
   };
@@ -270,14 +306,21 @@ export default function AdminDashboardPage() {
       })
       if (res.ok) {
         const { writer } = await res.json()
-        const local = {
+        const local: Writer = {
           id: writer.id || writers.length + 1,
           name: newWriter.name,
           username: newWriter.username,
           status: 'Active',
           joinDate: new Date().toISOString().split('T')[0],
           postsCount: 0,
-          avatar: newWriter.name.split(' ').map(n => n[0]).join('').toUpperCase()
+          avatar: newWriter.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+          draftCount: 0,
+          publishedCount: 0,
+          specializations: [],
+          bio: <span>{newWriter.bio}</span>,
+          email: '', // or writer.email if available
+          verified: false,
+          lastActive: ''
         }
         setWriters([...writers, local])
         setNewWriter({ name: '', username: '', password: '', bio: '', field_allotted: '', expertise: '', phone: '' })
@@ -703,96 +746,429 @@ export default function AdminDashboardPage() {
             <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</div>
           )}
 
-          {/* People Management Tab */}
+          {/* Enhanced People Management Tab */}
           {activeTab === 'people' && (
             <div className="space-y-6">
-              {/* Header */}
-              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg flex flex-col gap-4">
-                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                  <h2 className="text-xl font-semibold text-gray-900">People Management</h2>
-                  <p className="text-sm text-gray-500 mt-1">Create and manage expert profiles shown on the People page</p>
+              {/* Enhanced Header */}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">People Management</h2>
+                    <p className="text-sm text-gray-500 mt-1">Create and manage expert profiles displayed on the People page</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-xl">
+                      <Users className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-semibold text-blue-700">{people.length} People</span>
+                    </div>
+                    <button
+                      onClick={() => setShowAddPerson(true)}
+                      className="flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Person
+                    </button>
+                  </div>
                 </div>
+
+                {/* Tab Navigation */}
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setPeopleTab('list')} className={`px-4 py-2 rounded-xl border ${peopleTab==='list'?'bg-pink-50 text-pink-700 border-pink-200':'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}>List</button>
-                  <button onClick={() => setPeopleTab('add')} className={`px-4 py-2 rounded-xl border ${peopleTab==='add'?'bg-pink-50 text-pink-700 border-pink-200':'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}>Add</button>
+                  <button 
+                    onClick={() => setPeopleTab('list')} 
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                      peopleTab === 'list'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Users className="w-4 h-4 inline-block mr-2" />
+                    All People
+                  </button>
+                  <button 
+                    onClick={() => setPeopleTab('add')} 
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                      peopleTab === 'add'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Plus className="w-4 h-4 inline-block mr-2" />
+                    Add New
+                  </button>
                   <div className="flex-1" />
                   <button
                     onClick={fetchDashboardData}
                     className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
                   >
-                    <RotateCcw className="w-4 h-4 mr-2" /> Refresh
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Refresh
                   </button>
                 </div>
               </div>
 
+              {/* People List Tab */}
               {peopleTab === 'list' && (
-                <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
-                  <div className="flex flex-col lg:flex-row gap-4">
-                    <div className="relative flex-1">
-                      <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Search people by name, title, or specialization..."
-                        value={peopleSearch}
-                        onChange={(e) => setPeopleSearch(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 backdrop-blur-sm transition-all"
-                      />
+                <>
+                  {/* Advanced Filters */}
+                  <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                      <div className="relative">
+                        <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="Search people..."
+                          value={peopleSearch}
+                          onChange={(e) => setPeopleSearch(e.target.value)}
+                          className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                        />
+                      </div>
+                      <select className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80">
+                        <option>All Categories</option>
+                        <option>Legal</option>
+                        <option>Finance</option>
+                        <option>Psychology</option>
+                      </select>
+                      <select className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80">
+                        <option>All Status</option>
+                        <option>Verified</option>
+                        <option>Unverified</option>
+                        <option>Featured</option>
+                      </select>
+                      <select className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80">
+                        <option>Sort by Name</option>
+                        <option>Sort by Experience</option>
+                        <option>Sort by Rating</option>
+                        <option>Sort by Date Added</option>
+                      </select>
                     </div>
                   </div>
-                </div>
-              )}
 
-              {peopleTab === 'list' && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {people.filter((p)=>{
-                    const q = peopleSearch.toLowerCase();
-                    return !q || (p.name?.toLowerCase().includes(q) || p.title?.toLowerCase().includes(q) || p.specialization?.toLowerCase().includes(q));
-                  }).length === 0 ? (
-                    <div className="col-span-1 lg:col-span-2 text-center py-16 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 text-gray-600">
-                      No people found. Try adjusting your search or click "Add" to create one.
-                    </div>
-                  ) : (
-                    people.filter((p)=>{
+                  {/* People Grid */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {people.filter((p) => {
                       const q = peopleSearch.toLowerCase();
-                      return !q || (p.name?.toLowerCase().includes(q) || p.title?.toLowerCase().includes(q) || p.specialization?.toLowerCase().includes(q));
-                    }).map((p) => (
-                      <div key={p.id} className="group bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60 shadow hover:shadow-lg transition">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-start gap-3">
-                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold border border-gray-200">
-                              {p.name?.split(' ').map((n:string)=>n[0]).join('').slice(0,2).toUpperCase()}
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-900">{p.name}</h3>
-                              <p className="text-sm text-gray-700">{p.title}</p>
-                              <p className="text-xs text-gray-500">{p.specialization}</p>
+                      return !q || (
+                        p.name?.toLowerCase().includes(q) || 
+                        p.title?.toLowerCase().includes(q) || 
+                        p.specialization?.toLowerCase().includes(q) ||
+                        p.category?.toLowerCase().includes(q)
+                      );
+                    }).length === 0 ? (
+                      <div className="col-span-full text-center py-16 bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200/50">
+                        <Users className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No People Found</h3>
+                        <p className="text-gray-600 mb-6">
+                          {peopleSearch ? 'No people match your search criteria.' : 'No people have been added yet.'}
+                        </p>
+                        <button
+                          onClick={() => setShowAddPerson(true)}
+                          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add First Person
+                        </button>
+                      </div>
+                    ) : (
+                      people.filter((p) => {
+                        const q = peopleSearch.toLowerCase();
+                        return !q || (
+                          p.name?.toLowerCase().includes(q) || 
+                          p.title?.toLowerCase().includes(q) || 
+                          p.specialization?.toLowerCase().includes(q) ||
+                          p.category?.toLowerCase().includes(q)
+                        );
+                      }).map((person) => (
+                        <div key={person.id} className="group bg-white/70 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200">
+                          {/* Card Header */}
+                          <div className={`h-20 bg-gradient-to-r ${person.color_gradient || 'from-blue-500 to-indigo-600'} rounded-t-2xl relative overflow-hidden`}>
+                            <div className="absolute inset-0 bg-black/10"></div>
+                            <div className="absolute top-3 right-3 flex gap-2">
+                              {person.featured && (
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <Award className="h-3 w-3 text-white" />
+                                </div>
+                              )}
+                              {person.verified && (
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <CheckCircle className="h-3 w-3 text-white" />
+                                </div>
+                              )}
                             </div>
                           </div>
-                          <span className={`px-2.5 py-1 text-xs rounded-full border ${p.verified ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
-                            {p.verified ? 'Verified' : 'Unverified'}
-                          </span>
+
+                          {/* Card Content */}
+                          <div className="p-6 -mt-6 relative">
+                            {/* Profile Section */}
+                            <div className="flex items-start gap-4 mb-4">
+                              <div className="w-12 h-12 bg-white rounded-xl shadow-lg border-2 border-white flex items-center justify-center">
+                                {person.image_url ? (
+                                  <img src={person.image_url} alt={person.name} className="w-full h-full rounded-xl object-cover" />
+                                ) : (
+                                  <span className="text-gray-600 font-bold text-sm">
+                                    {person.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-gray-900 line-clamp-1">{person.name}</h3>
+                                <p className="text-blue-600 font-semibold text-sm line-clamp-1">{person.title}</p>
+                                <p className="text-gray-600 text-xs line-clamp-1">{person.specialization}</p>
+                              </div>
+                            </div>
+
+                            {/* Quick Stats */}
+                            <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+                              <div className="text-center">
+                                <div className="text-sm font-bold text-gray-900">{person.projects || 0}</div>
+                                <div className="text-xs text-gray-500">Projects</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-sm font-bold text-green-600">{person.completion_rate || 0}%</div>
+                                <div className="text-xs text-gray-500">Success</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-sm font-bold text-orange-600">{person.rating || 0}</div>
+                                <div className="text-xs text-gray-500">Rating</div>
+                              </div>
+                            </div>
+
+                            {/* Details */}
+                            <div className="space-y-2 mb-4 text-xs text-gray-600">
+                              <div className="flex items-center gap-2">
+                                <Mail className="w-3 h-3" />
+                                <span className="truncate">{person.email}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-3 h-3" />
+                                <span>{person.location}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Tag className="w-3 h-3" />
+                                <span className="capitalize">{person.category}</span>
+                              </div>
+                            </div>
+
+                            {/* Expertise Tags */}
+                            <div className="mb-4">
+                              <div className="flex flex-wrap gap-1">
+                                {(person.expertise || []).slice(0, 3).map((skill: string, index: number) => (
+                                  <span key={index} className="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-medium border border-blue-200">
+                                    {skill}
+                                  </span>
+                                ))}
+                                {(person.expertise || []).length > 3 && (
+                                  <span className="px-2 py-1 bg-gray-50 text-gray-600 rounded-md text-xs font-medium border border-gray-200">
+                                    +{(person.expertise || []).length - 3} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2">
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const updatedData = { ...person, verified: !person.verified };
+                                    const res = await fetch(`/api/admin/people/${person.id}`, {
+                                      method: 'PUT',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ verified: !person.verified }),
+                                    });
+                                    if (!res.ok) throw new Error('Failed to update verification');
+                                    setPeople(prev => prev.map(p => p.id === person.id ? updatedData : p));
+                                  } catch (e: any) {
+                                    alert(e?.message || 'Failed to update verification');
+                                  }
+                                }}
+                                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                  person.verified
+                                    ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
+                                    : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
+                                }`}
+                              >
+                                {person.verified ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 mr-1" />
+                                    Verified
+                                  </>
+                                ) : (
+                                  <>
+                                    <Shield className="w-4 h-4 mr-1" />
+                                    Verify
+                                  </>
+                                )}
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const updatedData = { ...person, featured: !person.featured };
+                                    const res = await fetch(`/api/admin/people/${person.id}`, {
+                                      method: 'PUT',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ featured: !person.featured }),
+                                    });
+                                    if (!res.ok) throw new Error('Failed to update featured status');
+                                    setPeople(prev => prev.map(p => p.id === person.id ? updatedData : p));
+                                  } catch (e: any) {
+                                    alert(e?.message || 'Failed to update featured status');
+                                  }
+                                }}
+                                className={`px-3 py-2 rounded-lg text-sm transition-colors border ${
+                                  person.featured
+                                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100'
+                                    : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                                }`}
+                              >
+                                {person.featured ? <Award className="w-4 h-4" /> : <Star className="w-4 h-4" />}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  // Edit functionality - could open a modal with edit form
+                                  alert('Edit functionality will be implemented');
+                                }}
+                                className="px-3 py-2 rounded-lg text-sm bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`Delete ${person.name}? This action cannot be undone.`)) return;
+                                  try {
+                                    const res = await fetch(`/api/admin/people/${person.id}`, { method: 'DELETE' });
+                                    if (!res.ok) throw new Error('Failed to delete person');
+                                    setPeople(prev => prev.filter(p => p.id !== person.id));
+                                  } catch (e: any) {
+                                    alert(e?.message || 'Failed to delete person');
+                                  }
+                                }}
+                                className="px-3 py-2 rounded-lg text-sm bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-700">
-                          <div><span className="font-medium">Email:</span> {p.email}</div>
-                          <div><span className="font-medium">Location:</span> {p.location}</div>
-                          <div><span className="font-medium">Category:</span> {p.category}</div>
-                          <div><span className="font-medium">Experience:</span> {p.experience}</div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
+                      ))
+                    )}
+                  </div>
+                </>
               )}
 
+              {/* Add Person Tab */}
               {peopleTab === 'add' && (
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60 shadow">
-                  <div className="text-sm text-gray-600 mb-4">Fill the form to add a new person to the People page.</div>
-                  <button
-                    onClick={() => setShowAddPerson(true)}
-                    className="inline-flex items-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
-                  >
-                    <UserPlus className="w-4 h-4 mr-2" /> Open Add People Form
-                  </button>
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg">
+                  <div className="max-w-3xl mx-auto">
+                    <div className="text-center mb-8">
+                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <UserPlus className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Add New Person</h3>
+                      <p className="text-gray-600">Create a new expert profile to display on the People page</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                      {/* Quick Add Options */}
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Scale className="w-6 h-6 text-blue-600" />
+                          <h4 className="font-semibold text-blue-900">Legal Expert</h4>
+                        </div>
+                        <p className="text-sm text-blue-700 mb-4">Add a lawyer, legal advisor, or compliance expert</p>
+                        <button
+                          onClick={() => {
+                            setNewPerson({
+                              ...newPerson,
+                              category: 'legal',
+                              icon_name: 'Scale',
+                              color_gradient: 'from-blue-500 to-indigo-600',
+                              accent_color: 'blue'
+                            });
+                            setShowAddPerson(true);
+                          }}
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
+                        >
+                          Create Legal Profile
+                        </button>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Calculator className="w-6 h-6 text-green-600" />
+                          <h4 className="font-semibold text-green-900">Finance Expert</h4>
+                        </div>
+                        <p className="text-sm text-green-700 mb-4">Add a financial advisor, accountant, or analyst</p>
+                        <button
+                          onClick={() => {
+                            setNewPerson({
+                              ...newPerson,
+                              category: 'finance',
+                              icon_name: 'Calculator',
+                              color_gradient: 'from-green-500 to-emerald-600',
+                              accent_color: 'green'
+                            });
+                            setShowAddPerson(true);
+                          }}
+                          className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
+                        >
+                          Create Finance Profile
+                        </button>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl p-6 border border-purple-200">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Brain className="w-6 h-6 text-purple-600" />
+                          <h4 className="font-semibold text-purple-900">Psychology Expert</h4>
+                        </div>
+                        <p className="text-sm text-purple-700 mb-4">Add a mental health professional, therapist, or counselor</p>
+                        <button
+                          onClick={() => {
+                            setNewPerson({
+                              ...newPerson,
+                              category: 'psychology',
+                              icon_name: 'Brain',
+                              color_gradient: 'from-purple-500 to-violet-600',
+                              accent_color: 'purple'
+                            });
+                            setShowAddPerson(true);
+                          }}
+                          className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors text-sm font-medium"
+                        >
+                          Create Psychology Profile
+                        </button>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-6 border border-gray-200">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Users className="w-6 h-6 text-gray-600" />
+                          <h4 className="font-semibold text-gray-900">Custom Profile</h4>
+                        </div>
+                        <p className="text-sm text-gray-700 mb-4">Create a custom profile with your own settings</p>
+                        <button
+                          onClick={() => setShowAddPerson(true)}
+                          className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium"
+                        >
+                          Create Custom Profile
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-3 gap-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">{people.filter(p => p.category === 'legal').length}</div>
+                        <div className="text-sm text-blue-700">Legal Experts</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">{people.filter(p => p.category === 'finance').length}</div>
+                        <div className="text-sm text-green-700">Finance Experts</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-600">{people.filter(p => p.category === 'psychology').length}</div>
+                        <div className="text-sm text-purple-700">Psychology Experts</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1393,92 +1769,334 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* Writers Management Tab */}
+          {/* Enhanced Writers Management Tab */}
           {activeTab === 'writers' && (
             <div className="space-y-6">
               {/* Enhanced Writers Header */}
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg">
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Writers Management</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Writers Management</h2>
                     <p className="text-sm text-gray-500 mt-1">Manage your content creation team</p>
                   </div>
-                  <div className="flex gap-3 w-full lg:w-auto">
-                    <div className="relative flex-1 lg:flex-initial lg:w-80">
-                      <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Search writers..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm"
-                      />
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-xl">
+                      <Users className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-semibold text-blue-700">{writers.length} Writers</span>
                     </div>
                     <button
                       onClick={() => setShowAddWriter(true)}
-                      className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
+                      className="flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg"
                     >
-                      <Plus className="w-5 h-5 mr-2" />
+                      <Plus className="w-4 h-4 mr-2" />
                       Add Writer
                     </button>
                   </div>
                 </div>
+
+                {/* Filters and Search */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                  <div className="relative">
+                    <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search writers..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                    />
+                  </div>
+                  <select 
+                    value={statusFilter} 
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                  >
+                    <option value="All">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                  <select 
+                    value={verifiedFilter} 
+                    onChange={(e) => setVerifiedFilter(e.target.value)}
+                    className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+                  >
+                    <option value="All">All Verification</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Unverified">Unverified</option>
+                  </select>
+                  <button
+                    onClick={fetchWriters}
+                    className="flex items-center px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Refresh
+                  </button>
+                </div>
+              </div>
+
+              {/* Writers Statistics Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-green-500 rounded-xl p-2">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-green-600 text-sm font-medium">Total</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{writers.length}</div>
+                  <div className="text-sm text-green-600">Active Writers</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-blue-500 rounded-xl p-2">
+                      <CheckCircle className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-blue-600 text-sm font-medium">Verified</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                    {writers.filter(w => w.verified).length}
+                  </div>
+                  <div className="text-sm text-blue-600">Verified Writers</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-yellow-500 rounded-xl p-2">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-yellow-600 text-sm font-medium">Posts</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                    {writers.reduce((sum, w) => sum + (w.postsCount || 0), 0)}
+                  </div>
+                  <div className="text-sm text-yellow-600">Total Posts</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-6 border border-purple-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-purple-500 rounded-xl p-2">
+                      <Activity className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-purple-600 text-sm font-medium">Active</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                    {writers.filter(w => w.status === 'Active').length}
+                  </div>
+                  <div className="text-sm text-purple-600">Active This Month</div>
+                </div>
               </div>
 
               {/* Enhanced Writers Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {filteredWriters.map((writer) => (
-                  <div key={writer.id} className="group bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 shadow-lg hover:shadow-xl hover:shadow-gray-500/10 transition-all duration-300 hover:-translate-y-1">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                          {writer.avatar}
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-gray-200/50 shadow-lg overflow-hidden">
+                <div className="p-6 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900">All Writers</h3>
+                  <p className="text-sm text-gray-600 mt-1">Complete list of your content creation team</p>
+                </div>
+
+                {loading ? (
+                  <div className="flex items-center justify-center py-20">
+                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                    <span className="ml-3 text-gray-600">Loading writers...</span>
+                  </div>
+                ) : filteredWriters.length === 0 ? (
+                  <div className="text-center py-20">
+                    <Users className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">No Writers Found</h3>
+                    <p className="text-gray-600 mb-6">
+                      {searchTerm || statusFilter !== 'All' || verifiedFilter !== 'All' 
+                        ? 'No writers match your search criteria.' 
+                        : 'No writers have been added yet.'}
+                    </p>
+                    <button
+                      onClick={() => setShowAddWriter(true)}
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add First Writer
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {filteredWriters.map((writer) => (
+                        <div key={writer.id} className="group bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200">
+                          {/* Writer Header */}
+                          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-16 rounded-t-2xl relative overflow-hidden">
+                            <div className="absolute inset-0 bg-black/10"></div>
+                            <div className="absolute top-3 right-3 flex gap-2">
+                              {writer.verified && (
+                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
+                                  <CheckCircle className="h-3 w-3 text-white" />
+                                </div>
+                              )}
+                              <div className={`bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 ${
+                                writer.status === 'Active' ? 'text-green-300' :
+                                writer.status === 'Inactive' ? 'text-red-300' : 'text-yellow-300'
+                              }`}>
+                                <div className={`w-2 h-2 rounded-full ${
+                                  writer.status === 'Active' ? 'bg-green-300' :
+                                  writer.status === 'Inactive' ? 'bg-red-300' : 'bg-yellow-300'
+                                }`}></div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Writer Content */}
+                          <div className="p-6 -mt-4 relative">
+                            {/* Profile Section */}
+                            <div className="flex items-start gap-4 mb-4">
+                              <div className="w-12 h-12 bg-white rounded-xl shadow-lg border-2 border-white flex items-center justify-center">
+                                {writer.avatar ? (
+                                  <img src={writer.avatar} alt={writer.name} className="w-full h-full rounded-xl object-cover" />
+                                ) : (
+                                  <span className="text-gray-600 font-bold text-sm">
+                                    {writer.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-gray-900 line-clamp-1">{writer.name}</h3>
+                                <p className="text-blue-600 font-semibold text-sm">@{writer.username}</p>
+                                <p className="text-gray-600 text-xs">{writer.email}</p>
+                              </div>
+                            </div>
+
+                            {/* Quick Stats */}
+                            <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+                              <div className="text-center">
+                                <div className="text-sm font-bold text-gray-900">{writer.postsCount || 0}</div>
+                                <div className="text-xs text-gray-500">Posts</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-sm font-bold text-green-600">{writer.publishedCount || 0}</div>
+                                <div className="text-xs text-gray-500">Published</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-sm font-bold text-orange-600">{writer.draftCount || 0}</div>
+                                <div className="text-xs text-gray-500">Drafts</div>
+                              </div>
+                            </div>
+
+                            {/* Writer Details */}
+                            <div className="space-y-2 mb-4 text-xs text-gray-600">
+                              <div className="flex items-center justify-between">
+                                <span>Status:</span>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(writer.status)}`}>
+                                  {writer.status}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span>Joined:</span>
+                                <span>{writer.joinDate}</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span>Last Active:</span>
+                                <span>{writer.lastActive || 'Never'}</span>
+                              </div>
+                              {writer.bio && (
+                                <div className="pt-2">
+                                  <p className="text-gray-700 text-xs line-clamp-2">{writer.bio}</p>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Specializations */}
+                            {Array.isArray(writer.specializations) && writer.specializations.length > 0 && (
+                              <div className="mb-4">
+                                <div className="flex flex-wrap gap-1">
+                                  {writer.specializations.slice(0, 2).map((spec: string, index: number) => (
+                                    <span key={index} className="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-medium border border-blue-200">
+                                      {spec}
+                                    </span>
+                                  ))}
+                                  {writer.specializations.length > 2 && (
+                                    <span className="px-2 py-1 bg-gray-50 text-gray-600 rounded-md text-xs font-medium border border-gray-200">
+                                      +{writer.specializations.length - 2} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2">
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const updatedData = { ...writer, verified: !writer.verified };
+                                    const res = await fetch(`/api/admin/writers/${writer.id}`, {
+                                      method: 'PUT',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ verified: !writer.verified }),
+                                    });
+                                    if (!res.ok) throw new Error('Failed to update verification');
+                                    setWriters(prev => prev.map(w => w.id === writer.id ? updatedData : w));
+                                  } catch (e: any) {
+                                    alert(e?.message || 'Failed to update verification');
+                                  }
+                                }}
+                                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                  writer.verified
+                                    ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
+                                    : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
+                                }`}
+                              >
+                                {writer.verified ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 mr-1" />
+                                    Verified
+                                  </>
+                                ) : (
+                                  <>
+                                    <Shield className="w-4 h-4 mr-1" />
+                                    Verify
+                                  </>
+                                )}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  // View writer posts - could navigate to posts filtered by writer
+                                  setActiveTab('posts');
+                                  setSearchTerm(writer.username);
+                                }}
+                                className="px-3 py-2 rounded-lg text-sm bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors"
+                              >
+                                <FileText className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  // Edit functionality - could open a modal with edit form
+                                  alert('Edit functionality will be implemented');
+                                }}
+                                className="px-3 py-2 rounded-lg text-sm bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 transition-colors"
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`Delete writer ${writer.name}? This action cannot be undone.`)) return;
+                                  try {
+                                    const res = await fetch(`/api/admin/writers?id=${writer.id}`, { method: 'DELETE' });
+                                    const data = await res.json().catch(() => ({}));
+                                    if (!res.ok) throw new Error(data?.error || 'Failed to delete writer');
+                                    setWriters(prev => prev.filter(w => w.id !== writer.id));
+                                  } catch (e: any) {
+                                    alert(e?.message || 'Failed to delete writer');
+                                  }
+                                }}
+                                className="px-3 py-2 rounded-lg text-sm bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{writer.name}</h3>
-                          <p className="text-sm text-gray-500">@{writer.username}</p>
-                        </div>
-                      </div>
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(writer.status)}`}>
-                        {writer.status}
-                      </span>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="bg-gray-50/50 rounded-lg p-3 border border-gray-200/50">
-                        <p className="text-xs text-gray-500 mb-1">Posts</p>
-                        <p className="text-lg font-bold text-gray-900">{writer.postsCount}</p>
-                      </div>
-                      <div className="bg-gray-50/50 rounded-lg p-3 border border-gray-200/50">
-                        <p className="text-xs text-gray-500 mb-1">Joined</p>
-                        <p className="text-sm font-medium text-gray-900">{writer.joinDate}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <button className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-500/10 text-blue-600 rounded-lg hover:bg-blue-500/20 transition-all duration-200 text-sm border border-blue-200/50">
-                        <Edit3 className="w-4 h-4 mr-2" />
-                        Edit
-                      </button>
-                      <button
-                        onClick={async () => {
-                          if (!confirm('Delete this writer?')) return;
-                          try {
-                            const res = await fetch(`/api/admin/writers?id=${writer.id}`, { method: 'DELETE' })
-                            const data = await res.json().catch(() => ({}))
-                            if (!res.ok) throw new Error(data?.error || 'Failed to delete writer')
-                            setWriters(prev => prev.filter(w => w.id !== writer.id))
-                          } catch (e: any) {
-                            alert(e?.message || 'Failed to delete writer')
-                          }
-                        }}
-                        className="p-2 bg-red-500/10 text-red-600 rounded-lg hover:bg-red-500/20 transition-all duration-200 border border-red-200/50"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      ))}
                     </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}

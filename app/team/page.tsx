@@ -526,7 +526,7 @@ export default function TeamPage() {
     {
       id: 6,
       name: "Dr. Meera Sharma",
-      title: "Organizational Psychologist & HR Consultant",
+      title: "Mental health professional & HR Consultant",
       specialization: "Workplace Psychology & Behavioral Training",
       icon: Brain,
       color: "from-pink-300 to-rose-400",
@@ -575,7 +575,7 @@ export default function TeamPage() {
         },
       ],
       certifications: [
-        "Licensed Clinical Psychologist",
+        "Licensed Clinical Mental health professional",
         "Trauma-Informed Care Specialist",
         "Organizational Development Expert",
       ],
@@ -603,7 +603,7 @@ export default function TeamPage() {
           status: "In Progress",
         },
       ],
-      achievements: ["Best Organizational Psychologist - Pune", "Excellence in Employee Wellness"],
+      achievements: ["Best Mental health professional - Pune", "Excellence in Employee Wellness"],
       status: "standard",
       verified: true,
       featured: false,
@@ -918,7 +918,7 @@ export default function TeamPage() {
                 <option value="all">All Categories</option>
                 <option value="legal">Legal Experts</option>
                 <option value="finance">Financial Advisors</option>
-                <option value="psychology">Psychologists</option>
+                <option value="psychology">Mental health professionals</option>
               </select>
 
               <select

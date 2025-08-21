@@ -275,12 +275,12 @@ export default function Navbar() {
       {/* Render dropdown as a direct child of nav for extreme left alignment */}
       {isExpertiseOpen && (
         <div ref={dropdownRef} className="absolute left-0 right-0 top-full mt-1 bg-white shadow-xl border border-gray-200 z-50 transition-all duration-300 hover:shadow-2xl">
-          <div className="w-full pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8">
-            <div className="py-8 pl-0">
-              <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 lg:gap-8 items-start">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-8 px-4">
+              <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 lg:gap-12">
                 {/* Expertise Header Column */}
-                <div className="w-48 pr-4">
-                  <h2 className="text-[22px] font-bold text-gray-900 mb-4 transition-colors duration-300 hover:text-pink-600">Expertise</h2>
+                <div className="w-56 pr-6">
+                  <h2 className="text-[22px] font-bold text-gray-900 mb-4 pr-2 transition-colors duration-300 hover:text-pink-600">Expertise</h2>
                   <p className="text-[12px] text-gray-600 leading-relaxed">
                     Consulting for Safe Workplace Emerging World's Leading Companies
                   </p>
@@ -288,15 +288,15 @@ export default function Navbar() {
                 
                 {/* 5 Expertise Category Columns */}
                 {Object.entries(expertiseContent).map(([key, category], index) => (
-                  <div key={key} className={"border-r border-gray-100 last:border-r-0 w-56 pr-8 last:pr-0"}>
-                    <h3 className={`mb-4 pb-3 px-3 border-b transition-all duration-300 ${
+                  <div key={key} className={"border-r border-gray-100 last:border-r-0 w-64 pr-10 last:pr-0"}>
+                    <h3 className={`mb-4 pb-3 border-b transition-all duration-300 ${
                       key === "posh-adaptability" 
                         ? "text-[16px] font-bold text-black border-gray-300 hover:text-black hover:border-gray-400" 
                         : "text-[14px] font-semibold text-gray-900 border-gray-200 hover:text-pink-600 hover:border-pink-300"
                     }`}>
                       {category.title}
                     </h3>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {category.items.map((item, itemIdx) => (
                         <div key={itemIdx}>
                           <Link 

@@ -63,6 +63,8 @@ const expertiseContent = {
   }
 }
 
+
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isExpertiseOpen, setIsExpertiseOpen] = useState(false)
@@ -73,6 +75,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const lastScrollY = useRef(0)
 
+
+
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
@@ -80,6 +84,8 @@ export default function Navbar() {
     { name: "News Room", href: "/posts" },
     { name: "Connect", href: "/connect" },
   ]
+
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -156,16 +162,16 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center h-8">
-          <Image 
-            src="/images/logo.jpg" 
-            alt="UREPOSH Logo" 
-            width={120} 
-            height={120} 
-            className="h-16 w-auto -mt-2"
-            priority
-          />
-        </Link>
+                  <Link href="/" className="flex items-center h-8">
+            <Image 
+              src="/images/logo.jpg" 
+              alt="UREPOSH Logo" 
+              width={120} 
+              height={120} 
+              className="h-16 w-auto -mt-2"
+              priority
+            />
+          </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center space-x-1 ml-auto mr-4">
@@ -275,52 +281,51 @@ export default function Navbar() {
       {/* Render dropdown as a direct child of nav for extreme left alignment */}
       {isExpertiseOpen && (
         <div ref={dropdownRef} className="absolute left-0 right-0 top-full mt-1 bg-white shadow-xl border border-gray-200 z-50 transition-all duration-300 hover:shadow-2xl">
-          <div className="w-full pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8">
-            <div className="py-8 pl-0">
-              <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 lg:gap-8 items-start">
-                {/* Expertise Header Column */}
-                <div className="w-48 pr-4">
-                  <h2 className="text-[22px] font-bold text-gray-900 mb-4 transition-colors duration-300 hover:text-pink-600">Expertise</h2>
-                  <p className="text-[12px] text-gray-600 leading-relaxed">
-                    Consulting for Safe Workplace Emerging World's Leading Companies
-                  </p>
-                </div>
-                
-                {/* 5 Expertise Category Columns */}
-                {Object.entries(expertiseContent).map(([key, category], index) => (
-                  <div key={key} className={"border-r border-gray-100 last:border-r-0 w-56 pr-8 last:pr-0"}>
-                    <h3 className={`mb-4 pb-3 px-3 border-b transition-all duration-300 ${
-                      key === "posh-adaptability" 
-                        ? "text-[16px] font-bold text-black border-gray-300 hover:text-black hover:border-gray-400" 
-                        : "text-[14px] font-semibold text-gray-900 border-gray-200 hover:text-pink-600 hover:border-pink-300"
-                    }`}>
-                      {category.title}
-                    </h3>
-                    <div className="space-y-2">
-                      {category.items.map((item, itemIdx) => (
-                        <div key={itemIdx}>
-                          <Link 
-                            href={`/services/${item.slug}`} 
-                            className={`group relative block py-2 px-3 rounded-lg transition-all duration-300 text-left w-full hover:shadow-lg hover:shadow-pink-100/50 flex items-center min-h-10 leading-snug whitespace-normal break-words ${
-                              item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
-                                ? 'text-[12px] font-medium text-gray-800 hover:text-pink-600 hover:bg-gradient-to-r hover:from-pink-50 hover:to-pink-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-pink-200'
-                                : 'text-[12px] text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-gray-200'
-                            }`}
-                          >
-                            <span className="relative z-10 block">{item.name}</span>
-                            {/* Hover background effect */}
-                            <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                              item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
-                                ? 'bg-gradient-to-r from-pink-50 to-pink-100'
-                                : 'bg-gradient-to-r from-gray-50 to-gray-100'
-                            }`}></div>
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-8 px-4">
+              <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 lg:gap-12">
+              {/* Expertise Header Column */}
+              <div className="w-56 pr-6">
+                <h2 className="text-[22px] font-bold text-gray-900 mb-4 pr-2 transition-colors duration-300 hover:text-pink-600">Expertise</h2>
+                <p className="text-[12px] text-gray-600 leading-relaxed">
+                  Consulting for Safe Workplace Emerging World’s Leading Companies
+                </p>
               </div>
+              
+              {/* 5 Expertise Category Columns */}
+              {Object.entries(expertiseContent).map(([key, category], index) => (
+                <div key={key} className={"border-r border-gray-100 last:border-r-0 w-64 pr-10 last:pr-0"}>
+                  <h3 className={`mb-4 pb-3 border-b transition-all duration-300 ${
+                    key === "posh-adaptability" 
+                      ? "text-[16px] font-bold text-black border-gray-300 hover:text-black hover:border-gray-400" 
+                      : "text-[14px] font-semibold text-gray-900 border-gray-200 hover:text-pink-600 hover:border-pink-300"
+                  }`}>
+                    {category.title}
+                  </h3>
+                  <div className="space-y-3">
+                    {category.items.map((item, itemIdx) => (
+                      <div key={itemIdx}>
+                        <Link 
+                          href={`/services/${item.slug}`} 
+                          className={`group relative block py-2 px-3 rounded-lg transition-all duration-300 text-left w-full hover:shadow-lg hover:shadow-pink-100/50 flex items-center min-h-10 leading-snug whitespace-normal break-words ${
+                            item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
+                              ? 'text-[12px] font-medium text-gray-800 hover:text-pink-600 hover:bg-gradient-to-r hover:from-pink-50 hover:to-pink-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-pink-200'
+                              : 'text-[12px] text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-gray-200'
+                          }`}
+                        >
+                          <span className="relative z-10 block">{item.name}</span>
+                          {/* Hover background effect */}
+                          <div className={`absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                            item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
+                              ? 'bg-gradient-to-r from-pink-50 to-pink-100'
+                              : 'bg-gradient-to-r from-gray-50 to-gray-100'
+                          }`}></div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

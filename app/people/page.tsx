@@ -122,7 +122,7 @@ export default function TeamPage() {
     { id: 'all', label: 'All Professionals', color: 'from-slate-600 to-slate-700' },
     { id: 'legal', label: 'Legal Experts', color: 'from-blue-600 to-indigo-700' },
     { id: 'finance', label: 'Financial Advisors', color: 'from-green-600 to-emerald-700' },
-    { id: 'psychology', label: 'Psychologists', color: 'from-purple-600 to-violet-700' },
+    { id: 'psychology', label: 'Mental health professionals', color: 'from-purple-600 to-violet-700' },
   ]
 
   const sortOptions = [
@@ -153,7 +153,7 @@ export default function TeamPage() {
               Exceptional Professionals
             </h1>
             <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
-              Connect with our carefully curated team of legal experts, financial advisors, and organizational psychologists
+              Connect with our carefully curated team of legal experts, financial advisors, and mental health professionals
             </p>
           </div>
         </div>
