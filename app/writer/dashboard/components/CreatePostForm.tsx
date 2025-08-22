@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { X, Save, FileText, Type, Image, Tag, Sparkles, PenTool, Eye, Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, Heading1, Heading2, Heading3, Quote, Link as LinkIcon, List, ListOrdered, Highlighter } from 'lucide-react'
+import { X, Save, FileText, Type, Image, Tag, Sparkles, PenTool, Eye, Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, Heading1, Heading2, Heading3, Quote, Link as LinkIcon, List, ListOrdered, Highlighter, Upload, Trash2 } from 'lucide-react'
 import { useWriterAuth } from '@/hooks/useWriterAuth'
 import { useToast } from '@/hooks/use-toast'
 
@@ -34,6 +34,9 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
 
   const [categories, setCategories] = useState<Category[]>([])
   const [submitting, setSubmitting] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const contentRef = React.useRef<HTMLTextAreaElement | null>(null)
 
@@ -176,6 +179,10 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
         image_url: '',
         category_id: '',
       })
+      setImagePreview(null)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
 
       onSubmit?.()
       onClose()
@@ -193,6 +200,83 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Only JPEG, PNG, WebP, and GIF files are allowed.",
+        variant: "destructive"
+      })
+      return
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: "Maximum file size is 5MB.",
+        variant: "destructive"
+      })
+      return
+    }
+
+    setUploadingImage(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('image', file)
+
+      const response = await fetch('/api/articles/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed')
+      }
+
+      setFormData(prev => ({ ...prev, image_url: result.image_url }))
+      setImagePreview(result.image_url)
+      
+      toast({
+        title: "Success!",
+        description: "Image uploaded successfully",
+      })
+
+    } catch (error) {
+      console.error('Upload error:', error)
+      toast({
+        title: "Upload failed",
+        description: error instanceof Error ? error.message : "Failed to upload image",
+        variant: "destructive"
+      })
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      handleImageUpload(file)
+    }
+  }
+
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, image_url: '' }))
+    setImagePreview(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   return (
@@ -336,25 +420,75 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
                 {/* Featured Image */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
-                  <input
-                    type="url"
-                    value={formData.image_url}
-                    onChange={(e) => handleInputChange('image_url', e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className="w-full px-3.5 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
-                  />
-                  {formData.image_url && (
-                    <div className="mt-2 rounded-xl overflow-hidden border border-pink-200">
-                      <img 
-                        src={formData.image_url} 
-                        alt="Preview" 
-                        className="w-full h-32 object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
+                  
+                  {/* Image Upload Section */}
+                  <div className="space-y-3">
+                    {/* Upload Button */}
+                    <div className="flex items-center gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingImage}
+                        className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:from-pink-600 hover:to-rose-600 disabled:opacity-50 transition-all text-sm"
+                      >
+                        <Upload className="w-4 h-4" />
+                        {uploadingImage ? 'Uploading...' : 'Upload Image'}
+                      </button>
+                      <span className="text-xs text-gray-500">or use URL below</span>
+                    </div>
+
+                    {/* URL Input */}
+                    <div>
+                      <input
+                        type="url"
+                        value={formData.image_url}
+                        onChange={(e) => {
+                          handleInputChange('image_url', e.target.value)
+                          setImagePreview(e.target.value)
                         }}
+                        placeholder="https://example.com/image.jpg"
+                        className="w-full px-3.5 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
                       />
                     </div>
-                  )}
+
+                    {/* Image Preview */}
+                    {(imagePreview || formData.image_url) && (
+                      <div className="relative">
+                        <div className="rounded-xl overflow-hidden border border-pink-200">
+                          <img 
+                            src={imagePreview || formData.image_url} 
+                            alt="Preview" 
+                            className="w-full h-32 object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none'
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                          title="Remove image"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Upload Info */}
+                    <div className="text-xs text-gray-500 space-y-1">
+                      <p>• Supported formats: JPEG, PNG, WebP, GIF</p>
+                      <p>• Maximum file size: 5MB</p>
+                      <p>• Recommended size: 1200x630 pixels</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Category */}
