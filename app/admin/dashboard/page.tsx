@@ -109,7 +109,7 @@ function AdminDashboardContent() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAddWriter, setShowAddWriter] = useState(false);
-  const [showAddPerson, setShowAddPerson] = useState(false);
+  const [showAddPerson, setShowAddPerson] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [verifiedFilter, setVerifiedFilter] = useState('All');
@@ -2562,7 +2562,7 @@ function AdminDashboardContent() {
           {showAddPerson && (
             <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
               <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddPerson(false)}></div>
-              <div className="relative z-10 w-full max-w-3xl mt-10 max-h-[92vh] overflow-y-auto">
+              <div className="relative z-10 w-full max-w-3xl mt-10 max-h-[90vh] overflow-y-auto">
                 <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200">
                   <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900">Create Person</h3>
