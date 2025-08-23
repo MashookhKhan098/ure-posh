@@ -91,8 +91,28 @@ function AdminDashboardContent() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   
+  // Writer type definition
+  type Writer = {
+    id: number;
+    name: string;
+    username: string;
+    status: string;
+    joinDate: string;
+    postsCount: number;
+    avatar?: string;
+    draftCount: number;
+    publishedCount: number;
+    specializations: string[];
+    bio?: React.ReactNode;
+    email: string;
+    verified: boolean;
+    lastActive?: string;
+    phone?: string; // <-- Added phone property
+    image_url?: string;
+  };
+  
   // Real data from database
-  const [writers, setWriters] = useState<Writer[]>([]);
+    const [writers, setWriters] = useState<Writer[]>([]);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [posters, setPosters] = useState<any[]>([]);
@@ -355,7 +375,7 @@ function AdminDashboardContent() {
     setEditWriterForm({
       name: writer.name || '',
       username: writer.username || '',
-      bio: writer.bio?.props?.children || '',
+      bio: writer.bio && typeof writer.bio === 'object' && 'props' in writer.bio ? writer.bio.props.children : (writer.bio || ''),
       phone: writer.phone || '',
       image_url: writer.image_url || '',
       is_active: writer.status === 'Active',
@@ -665,7 +685,7 @@ function AdminDashboardContent() {
       } else if (type === 'editWriter') {
         setEditWriterForm(prev => ({ ...prev, image_url: result.image_url }))
       } else if (type === 'person') {
-        setNewPerson(prev => ({ ...prev, image_url: result.image_url }))
+        setNewPerson((prev: typeof newPerson) => ({ ...prev, image_url: result.image_url }))
       }
       
       toast({
@@ -716,7 +736,7 @@ function AdminDashboardContent() {
       setEditWriterForm(prev => ({ ...prev, image_url: '' }))
       setEditWriterImagePreview(null)
     } else if (type === 'person') {
-      setNewPerson(prev => ({ ...prev, image_url: '' }))
+      setNewPerson((prev: typeof newPerson) => ({ ...prev, image_url: '' }))
       setPersonImagePreview(null)
     }
   }
@@ -1447,7 +1467,7 @@ function AdminDashboardContent() {
 
               {/* Add Person Tab */}
               {peopleTab === 'add' && (
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg pb-4 mt-2">
                   <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-8">
                       <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
