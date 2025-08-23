@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { Heart, Scale, Target, BookOpen, Award, CheckCircle, Users, Shield, TrendingUp, Building, ArrowRight, Globe, Zap, UserCheck, Laptop, HeartHandshake, Briefcase, GraduationCap, Phone, Mail } from 'lucide-react';
 import Image from 'next/image';
+import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState('mission');
@@ -184,6 +186,50 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Floating Mug Section */}
+      <section className="py-16 bg-gradient-to-br from-white via-pink-50/20 to-white">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Experience Our Interactive Platform</h2>
+            <div className="w-16 h-1 bg-pink-400 mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Discover our innovative approach to workplace safety through our interactive floating mug experience
+            </p>
+          </div>
+          
+          <div className="flex justify-center">
+            <Card className="relative shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105">
+              <CardContent className="p-8 relative z-10">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                  className="text-center"
+                >
+                  {/* Interactive Mug in Foreground */}
+                  <div className="mb-6">
+                    <iframe 
+                      src="https://floating-mug.vercel.app/"
+                      className="w-80 h-80 rounded-2xl shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-300"
+                      style={{ minHeight: '320px', minWidth: '320px' }}
+                      title="Interactive Floating Mug"
+                      frameBorder="0"
+                      allowFullScreen
+                      onClick={() => window.open('https://floating-mug.vercel.app/', '_blank')}
+                    />
+                  </div>
+                  
+                  {/* Subtle Description */}
+                  <p className="text-sm text-gray-600 bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 inline-block">
+                    Click the mug to explore
+                  </p>
+                </motion.div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

@@ -78,6 +78,7 @@ export default function Navbar() {
     { name: "About", href: "/about" },
     { name: "People", href: "/people" },
     { name: "News Room", href: "/posts" },
+    { name: "Poster & Policy", href: "/services/poster-and-policy-discloser" },
     { name: "Connect", href: "/connect" },
   ]
 

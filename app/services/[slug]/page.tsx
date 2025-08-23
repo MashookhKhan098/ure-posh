@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Phone, Mail, MapPin, CheckCircle, Users, Shield, TrendingUp, Award, Clock, Target, Zap, Star, ArrowRight } from 'lucide-react'
 
-// Service content mapping with all services
+// Service content mapping with all services from expertiseContent
 const serviceContent = {
   // Equality Compliance
   "posh-compliance-initiation": {
@@ -69,7 +69,7 @@ const serviceContent = {
 
   // Disclosure and Audit
   "posh-workplace-harassment-compliance-reporting": {
-    title: "POSH & Workplace Harassment Compliance Reporting",
+    title: "POSH Compliance Reporting",
     description: "Comprehensive compliance reporting system",
     content: "Develop comprehensive reporting systems that track and document all POSH and workplace harassment compliance activities. Our automated solutions provide real-time insights and ensure regulatory compliance.",
     features: [
@@ -88,8 +88,8 @@ const serviceContent = {
     icon: TrendingUp,
     color: "purple"
   },
-  "workplace-harassment-posh-policy-disclosure": {
-    title: "Workplace Harassment & POSH Policy Disclosure",
+  "poster-and-policy-discloser": {
+    title: "Poster and Policy Disclosure",
     description: "Transparent policy disclosure framework",
     content: "Create transparent policy disclosure frameworks that ensure all employees understand their rights and responsibilities. Our comprehensive approach includes policy communication, training, and feedback mechanisms.",
     features: [

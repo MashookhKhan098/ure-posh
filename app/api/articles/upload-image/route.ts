@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file type
+    // Enhanced file validation
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
@@ -31,6 +31,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate file name
+    if (!file.name || file.name.trim() === '') {
+      return NextResponse.json(
+        { error: 'File name is required.' },
+        { status: 400 }
+      )
+    }
+
     // Use service role key to bypass RLS policies
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -44,10 +52,12 @@ export async function POST(request: NextRequest) {
     
     const supabase = createClient(supabaseUrl, serviceRoleKey)
 
-    // Generate unique filename
-    const fileExt = file.name.split('.').pop() || 'png'
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
-    const fileName = `article-${Date.now()}-${safeName}`
+    // Generate unique filename with better naming
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || 'png'
+    const timestamp = Date.now()
+    const randomId = Math.random().toString(36).substring(2, 15)
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase()
+    const fileName = `article-${timestamp}-${randomId}-${safeName}`
 
     // Check if uploads bucket exists, if not try to create it
     let bucketName = 'uploads'
@@ -84,17 +94,39 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Upload to Supabase storage
-    const { error: uploadError } = await supabase.storage
+    // Upload to Supabase storage with better error handling
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from(bucketName)
-      .upload(fileName, file)
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false
+      })
 
     if (uploadError) {
       console.error('Upload error:', uploadError)
-      return NextResponse.json(
-        { error: `File upload failed: ${uploadError.message}` },
-        { status: 500 }
-      )
+      
+      // Provide more specific error messages
+      if (uploadError.message.includes('duplicate')) {
+        return NextResponse.json(
+          { error: 'A file with this name already exists. Please try uploading again.' },
+          { status: 409 }
+        )
+      } else if (uploadError.message.includes('size')) {
+        return NextResponse.json(
+          { error: 'File size exceeds the allowed limit.' },
+          { status: 413 }
+        )
+      } else if (uploadError.message.includes('type')) {
+        return NextResponse.json(
+          { error: 'File type not allowed.' },
+          { status: 415 }
+        )
+      } else {
+        return NextResponse.json(
+          { error: `File upload failed: ${uploadError.message}` },
+          { status: 500 }
+        )
+      }
     }
 
     // Get public URL
@@ -104,14 +136,32 @@ export async function POST(request: NextRequest) {
 
     const image_url = urlData.publicUrl
 
+    // Return enhanced response with more details
     return NextResponse.json({ 
       success: true,
       image_url,
-      fileName 
+      fileName,
+      fileSize: file.size,
+      fileType: file.type,
+      uploadedAt: new Date().toISOString(),
+      bucket: bucketName,
+      message: 'Image uploaded successfully to Supabase storage'
     }, { status: 201 })
 
   } catch (error) {
     console.error('Image upload error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    
+    // Provide more specific error messages based on error type
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      return NextResponse.json(
+        { error: 'Network error. Please check your internet connection and try again.' },
+        { status: 503 }
+      )
+    }
+    
+    return NextResponse.json(
+      { error: 'Internal server error. Please try again later.' }, 
+      { status: 500 }
+    )
   }
 }

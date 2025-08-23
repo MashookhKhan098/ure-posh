@@ -802,6 +802,170 @@ export default function ContactPage() {
                     <p className="text-gray-600">C 84, Sector 2, Noida, 201301</p>
                   </div>
                 </motion.div>
+
+                {/* Get a Coffee Card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -5,
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.1)"
+                  }}
+                  className="relative overflow-hidden p-6 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 rounded-2xl shadow-lg border border-amber-200 cursor-pointer group"
+                >
+                  {/* Animated Coffee Cup */}
+                  <div className="absolute top-4 right-4 w-16 h-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300">
+                    <motion.div
+                      animate={{ 
+                        y: [0, -5, 0],
+                        rotate: [0, 5, -5, 0]
+                      }}
+                      transition={{ 
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-600 rounded-full flex items-center justify-center"
+                    >
+                      <motion.div
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          opacity: [0.7, 1, 0.7]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        className="w-8 h-8 bg-white rounded-full"
+                      />
+                    </motion.div>
+                  </div>
+
+                  {/* Floating Coffee Beans */}
+                  <motion.div
+                    animate={{ 
+                      y: [0, -10, 0],
+                      rotate: [0, 360]
+                    }}
+                    transition={{ 
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute top-8 right-12 w-2 h-2 bg-amber-600 rounded-full opacity-60"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -8, 0],
+                      rotate: [0, -360]
+                    }}
+                    transition={{ 
+                      duration: 3.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.5
+                    }}
+                    className="absolute top-12 right-8 w-1.5 h-1.5 bg-orange-500 rounded-full opacity-50"
+                  />
+
+                  <div className="relative z-10">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <motion.div
+                          animate={{ 
+                            rotate: [0, 360]
+                          }}
+                          transition={{ 
+                            duration: 8,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                        >
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M2 21h18v-2H2v2zm6-4h12v-2H8v2zm-6-4h16v-2H2v2zm6-4h12V7H8v2z"/>
+                          </svg>
+                        </motion.div>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-lg">Let's Grab a Coffee!</h3>
+                        <p className="text-amber-700 font-medium">Perfect for casual discussions</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 text-sm text-gray-700">
+                        <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                        <span>Informal consultation</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm text-gray-700">
+                        <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                        <span>Network & connect</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm text-gray-700">
+                        <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                        <span>Share ideas & insights</span>
+                      </div>
+                    </div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="mt-4"
+                    >
+                      <button 
+                        onClick={() => {
+                          // You can add navigation or modal trigger here
+                          window.open('mailto:ea@ureposh.com?subject=Let\'s grab a coffee!&body=Hi! I\'d love to meet for coffee and discuss workplace solutions.', '_blank')
+                        }}
+                        className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                      >
+                        <motion.div
+                          animate={{ 
+                            x: [0, 5, 0]
+                          }}
+                          transition={{ 
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                          className="flex items-center justify-center space-x-2"
+                        >
+                          <span>☕ Schedule Coffee Chat</span>
+                          <motion.div
+                            animate={{ 
+                              x: [0, 3, 0]
+                            }}
+                            transition={{ 
+                              duration: 1.5,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                          >
+                            →
+                          </motion.div>
+                        </motion.div>
+                      </button>
+                    </motion.div>
+
+                    <div className="mt-3 text-xs text-amber-600 text-center">
+                      <motion.div
+                        animate={{ 
+                          opacity: [0.6, 1, 0.6]
+                        }}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        ☕ Coffee on us! ☕
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
 
               <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 border border-gray-200">

@@ -40,6 +40,28 @@ import { motion, AnimatePresence } from "framer-motion"
 export default function ServicesPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  // Function to get service slug based on service name
+  const getServiceSlug = (serviceName: string): string => {
+    const slugMap: { [key: string]: string } = {
+      "POSH Compliance Initiation": "posh-compliance-initiation",
+      "External Members from Renowned NGO": "external-members-renowned-ngo",
+      "Compliant Redressal": "compliant-redressal",
+      "POSH Compliance Reporting": "posh-workplace-harassment-compliance-reporting",
+      "Poster and Policy Disclosure": "poster-and-policy-discloser",
+      "Safe Workplace Audit": "posh-workplace-harassment-audits",
+      "Workplace Respect Training": "respectful-workplace-training-compliance",
+      "Internal Committees Training": "training-internal-committees-workplace-panels",
+      "Quarterly Mandatory Training": "quarterly-mandatory-training",
+      "Managers Level Training": "managers-level-training",
+      "Well Being Programmes": "well-being-programmes",
+      "Code of Conduct Training": "code-of-conduct-training",
+      "Mental Health Training": "mental-health-training-counselling",
+      "Diversity at Work Place": "diversity-at-work-place",
+      "LGBTQIA++ Inclusion": "lgbtqia-inclusion"
+    }
+    return slugMap[serviceName] || serviceName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  }
+
   // Function to open expertise dropdown
   const openExpertiseDropdown = () => {
     // Dispatch a custom event that the navbar can listen to
@@ -57,10 +79,10 @@ export default function ServicesPage() {
 
   const expertiseCategories = [
     {
-      id: "compliance",
-      title: "Compliance at ALL Work Place",
+      id: "equality-compliance",
+      title: "Equality Compliance",
       icon: Shield,
-      color: "from-gray-500 to-gray-600",
+      color: "from-pink-500 to-pink-600",
       description: "Comprehensive POSH compliance solutions ensuring legal adherence and workplace safety across all organizational levels.",
       image: "/images/2.jpg",
       services: [
@@ -84,69 +106,72 @@ export default function ServicesPage() {
           features: ["Legal compliance", "Fair procedures", "Documentation", "Resolution support"],
           duration: "As needed",
           price: "Per Case"
-        },
+        }
+      ]
+    },
+    {
+      id: "disclosure-and-audit",
+      title: "Disclosure and Audit",
+      icon: FileText,
+      color: "from-blue-500 to-blue-600",
+      description: "Transparent disclosure and comprehensive audit solutions ensuring ongoing compliance and risk management.",
+      image: "/images/3.jpg",
+      services: [
         {
-          name: "Order Writing",
-          description: "Professional order writing and documentation services",
-          features: ["Legal drafting", "Compliance review", "Documentation", "Record keeping"],
-          duration: "1-2 weeks",
-          price: "Per Order"
-        },
-        {
-          name: "Annual Report",
-          description: "Comprehensive annual POSH compliance reporting",
-          features: ["Data compilation", "Legal review", "Stakeholder reporting", "Compliance verification"],
-          duration: "2-3 weeks",
-          price: "Annual Service"
-        },
-        {
-          name: "Organisation Disclosure",
-          description: "Transparent disclosure and reporting mechanisms",
-          features: ["Transparency framework", "Stakeholder communication", "Compliance reporting", "Public disclosure"],
+          name: "POSH Compliance Reporting",
+          description: "Comprehensive compliance reporting system",
+          features: ["Automated reporting", "Compliance dashboards", "Regular cycles", "Audit trails"],
           duration: "Ongoing",
           price: "Annual Service"
         },
         {
-          name: "POSH Audit",
-          description: "Comprehensive audit of POSH implementation",
-          features: ["360-degree review", "Gap analysis", "Compliance check", "Improvement recommendations"],
+          name: "Poster and Policy Disclosure",
+          description: "Transparent policy disclosure framework",
+          features: ["Policy communication", "Employee awareness", "Regular updates", "Feedback mechanisms"],
+          duration: "Ongoing",
+          price: "Annual Service"
+        },
+        {
+          name: "Safe Workplace Audit",
+          description: "Regular compliance audits and assessments",
+          features: ["Comprehensive audits", "Gap analysis", "Compliance verification", "Improvement plans"],
           duration: "3-4 weeks",
           price: "Per Audit"
         }
       ]
     },
     {
-      id: "training",
-      title: "Trainings and Adaptability",
+      id: "posh-adaptability",
+      title: "POSH Adaptability",
       icon: GraduationCap,
-      color: "from-gray-500 to-gray-600",
+      color: "from-emerald-500 to-emerald-600",
       description: "Specialized training programs designed to build competence, awareness, and adaptability across all organizational levels.",
-      image: "/images/3.jpg",
+      image: "/images/4.jpg",
       services: [
         {
-          name: "POSH Training for Workforce",
-          description: "Comprehensive awareness training for all employees",
-          features: ["Interactive sessions", "Case studies", "Legal awareness", "Behavioral guidelines"],
+          name: "Workplace Respect Training",
+          description: "Comprehensive workplace respect training",
+          features: ["Interactive sessions", "Behavioral change", "Compliance monitoring", "Effectiveness assessment"],
           duration: "1-2 days",
           price: "Per Employee"
         },
         {
-          name: "POSH Training for IC Members",
-          description: "Specialized training for Internal Committee members",
-          features: ["Advanced procedures", "Investigation skills", "Legal framework", "Practical exercises"],
+          name: "Internal Committees Training",
+          description: "Specialized training for internal committees",
+          features: ["Committee training", "Investigation skills", "Legal framework", "Decision-making"],
           duration: "2-3 days",
           price: "Per Member"
         },
         {
           name: "Quarterly Mandatory Training",
-          description: "Regular refresher training to maintain compliance",
-          features: ["Updated content", "Refresher sessions", "Compliance tracking", "Progress monitoring"],
+          description: "Regular mandatory compliance training",
+          features: ["Quarterly sessions", "Updated content", "Progress tracking", "Compliance verification"],
           duration: "Quarterly",
           price: "Annual Package"
         },
         {
           name: "Managers Level Training",
-          description: "Leadership-focused POSH training for managers",
+          description: "Leadership-focused compliance training",
           features: ["Leadership skills", "Prevention strategies", "Team management", "Cultural responsibility"],
           duration: "1-2 days",
           price: "Per Manager"
@@ -154,41 +179,10 @@ export default function ServicesPage() {
       ]
     },
     {
-      id: "remote",
-      title: "Remote Training (Cost Effective)",
-      icon: Globe,
-      color: "from-gray-500 to-gray-600",
-      description: "Cost-effective remote training solutions that maintain quality while reducing organizational overhead and travel costs.",
-      image: "/images/4.jpg",
-      services: [
-        {
-          name: "POSH Training for Workforce",
-          description: "Virtual training sessions for all employees",
-          features: ["Online modules", "Interactive sessions", "Progress tracking", "Certification"],
-          duration: "Self-paced",
-          price: "Reduced Rates"
-        },
-        {
-          name: "POSH Training for IC Members",
-          description: "Virtual specialized training for IC members",
-          features: ["Advanced online modules", "Virtual workshops", "Expert guidance", "Digital resources"],
-          duration: "2-3 days",
-          price: "Per Member"
-        },
-        {
-          name: "Managers Level Training",
-          description: "Virtual leadership training for managers",
-          features: ["Leadership modules", "Virtual workshops", "Case studies", "Digital certification"],
-          duration: "1-2 days",
-          price: "Per Manager"
-        }
-      ]
-    },
-    {
-      id: "counselling",
-      title: "Organisation Counselling and Well-being",
+      id: "organisation-well-being",
+      title: "Organisation Well-being",
       icon: Heart,
-      color: "from-gray-500 to-gray-600",
+      color: "from-purple-500 to-purple-600",
       description: "Holistic workplace well-being programs focusing on mental health, inclusion, and organizational culture transformation.",
       image: "/images/5.jpg",
       services: [
@@ -212,9 +206,19 @@ export default function ServicesPage() {
           features: ["Awareness sessions", "Support resources", "Crisis management", "Prevention strategies"],
           duration: "1-2 days",
           price: "Per Employee"
-        },
+        }
+      ]
+    },
+    {
+      id: "diversity-and-inclusion",
+      title: "Diversity and Inclusion",
+      icon: Users,
+      color: "from-indigo-500 to-indigo-600",
+      description: "Comprehensive diversity and inclusion programs that create inclusive workplace environments for all employees.",
+      image: "/images/6.jpg",
+      services: [
         {
-          name: "Inclusion at Work Place",
+          name: "Diversity at Work Place",
           description: "Creating inclusive workplace environments",
           features: ["Diversity training", "Inclusion strategies", "Cultural sensitivity", "Equity programs"],
           duration: "Ongoing",
@@ -327,13 +331,15 @@ export default function ServicesPage() {
                         </div>
                       ))}
                     </div>
-                    <Button
-                      variant="outline"
-                      className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
-                    >
-                      View Details
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    <Link href={`/services/${category.id === "compliance" ? "compliance-at-all-workplace" : category.id === "training" ? "trainings-and-adaptability" : category.id === "remote" ? "remote-training-cost-effective" : category.id === "counselling" ? "organisation-counselling-wellbeing" : "#"}`}>
+                      <Button
+                        variant="outline"
+                        className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
+                      >
+                        View Details
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -429,15 +435,16 @@ export default function ServicesPage() {
                               </div>
                             </div>
 
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
-                              onClick={openExpertiseDropdown}
-                            >
-                              Learn More
-                              <ArrowRight className="ml-2 h-3 w-3" />
-                            </Button>
+                            <Link href={`/services/${getServiceSlug(service.name)}`}>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                              >
+                                View Details
+                                <ArrowRight className="ml-2 h-3 w-3" />
+                              </Button>
+                            </Link>
                           </div>
                         </motion.div>
                       ))}
@@ -580,22 +587,22 @@ export default function ServicesPage() {
               <h3 className="font-semibold mb-4">Expertise</h3>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <Link href="/services" className="hover:text-gray-400">
+                  <Link href="/services/compliance-at-all-workplace" className="hover:text-gray-400">
                     Compliance Solutions
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services" className="hover:text-gray-400">
+                  <Link href="/services/trainings-and-adaptability" className="hover:text-gray-400">
                     Training Programs
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services" className="hover:text-gray-400">
+                  <Link href="/services/remote-training-cost-effective" className="hover:text-gray-400">
                     Remote Training
                   </Link>
                 </li>
                 <li>
-                  <Link href="/services" className="hover:text-gray-400">
+                  <Link href="/services/organisation-counselling-wellbeing" className="hover:text-gray-400">
                     Well-being Programs
                   </Link>
                 </li>

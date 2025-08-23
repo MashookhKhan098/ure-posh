@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, MessageCircle, Calendar, ArrowRight, User, Building, CheckCircle, Clock, Shield, Award, Send, FileText } from "lucide-react"
+import { Phone, Mail, MapPin, MessageCircle, Calendar, ArrowRight, User, Building, CheckCircle, Clock, Shield, Award, Send, FileText, Coffee } from "lucide-react"
 
 export default function ConnectPage() {
   const [formData, setFormData] = useState({
@@ -298,57 +298,109 @@ export default function ConnectPage() {
 
                            {/* Contact Cards Grid */}
               <div className="w-full">
-                {/* Contact Details */}
-                <div className="space-y-6">
-                                   <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                    <div className="w-6 h-6 bg-gradient-to-r from-pink-500 to-rose-500 rounded-md flex items-center justify-center mr-3">
-                      <MessageCircle className="w-3 h-3 text-white" />
-                    </div>
-                    Get in Touch
-                  </h3>
-                 
+                                 {/* Contact Details */}
                  <div className="space-y-4">
-                   <motion.div
-                     whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-3 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-pink-200 transition-all duration-300"
-                   >
-                                            <div className="w-7 h-7 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0 mr-3">
-                        <Mail className="w-4 h-4 text-white" />
-                      </div>
-                     <div>
-                       <h4 className="font-semibold text-gray-900 text-base">Email</h4>
-                        <p className="text-gray-600 text-sm">ea@ureposh.com</p>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                     <div className="w-5 h-5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-md flex items-center justify-center mr-2">
+                       <MessageCircle className="w-3 h-3 text-white" />
                      </div>
-                   </motion.div>
-
-                   <motion.div
-                     whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-3 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-green-200 transition-all duration-300"
-                   >
-                                            <div className="w-7 h-7 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-3">
-                        <Phone className="w-4 h-4 text-white" />
+                     Get in Touch
+                   </h3>
+                  
+                  <div className="space-y-2">
+                    <motion.div
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      className="flex items-center p-2 bg-white rounded-lg shadow-md border border-gray-100 hover:border-pink-200 transition-all duration-300"
+                    >
+                                             <div className="w-6 h-6 bg-gradient-to-r from-pink-500 to-rose-500 rounded-md flex items-center justify-center flex-shrink-0 mr-2">
+                         <Mail className="w-3 h-3 text-white" />
+                       </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 text-sm">Email</h4>
+                         <p className="text-gray-600 text-xs">ea@ureposh.com</p>
                       </div>
-                     <div>
-                       <h4 className="font-semibold text-gray-900 text-base">Phone</h4>
-                        <p className="text-gray-600 text-sm">+91 99999 44807</p>
-                     </div>
-                   </motion.div>
+                    </motion.div>
 
-                   <motion.div
-                     whileHover={{ scale: 1.02, x: 5 }}
-                     className="flex items-center p-3 bg-white rounded-xl shadow-lg border border-gray-100 hover:border-purple-200 transition-all duration-300"
-                   >
-                                            <div className="w-7 h-7 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 mr-3">
-                        <MapPin className="w-4 h-4 text-white" />
+                    <motion.div
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      className="flex items-center p-2 bg-white rounded-lg shadow-md border border-gray-100 hover:border-green-200 transition-all duration-300"
+                    >
+                                             <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-md flex items-center justify-center flex-shrink-0 mr-2">
+                         <Phone className="w-3 h-3 text-white" />
+                       </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 text-sm">Phone</h4>
+                         <p className="text-gray-600 text-xs">+91 99999 44807</p>
                       </div>
-                     <div>
-                       <h4 className="font-semibold text-gray-900 text-base">Office</h4>
-                        <p className="text-gray-600 text-sm">C 84, Sector 2, Noida, 201301</p>
-                      </div>
-                   </motion.div>
+                    </motion.div>
 
-                 </div>
-               </div>
+                    <motion.div
+                      whileHover={{ scale: 1.02, x: 5 }}
+                      className="flex items-center p-2 bg-white rounded-lg shadow-md border border-gray-100 hover:border-purple-200 transition-all duration-300"
+                    >
+                                             <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-md flex items-center justify-center flex-shrink-0 mr-2">
+                         <MapPin className="w-3 h-3 text-white" />
+                       </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 text-sm">Office</h4>
+                         <p className="text-gray-600 text-xs">C 84, Sector 2, Noida, 201301</p>
+                       </div>
+                                        </motion.div>
+
+                   </div>
+
+                                     {/* Floating Mug Section */}
+                   <div className="mt-8">
+                     <motion.div
+                       initial={{ opacity: 0, y: 20 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ duration: 0.6, delay: 0.6 }}
+                       className="relative overflow-hidden"
+                     >
+                                               <Card className="relative shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105">
+                          {/* Background Mug */}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                            <iframe 
+                              src="https://floating-mug.vercel.app/"
+                              className="w-64 h-64 rounded-lg"
+                              style={{ minHeight: '256px', minWidth: '256px' }}
+                              title="Floating Mug Background"
+                              frameBorder="0"
+                              allowFullScreen
+                            />
+                          </div>
+                          
+                          <CardContent className="p-12 relative z-10">
+                           <motion.div
+                             initial={{ opacity: 0 }}
+                             animate={{ opacity: 1 }}
+                             transition={{ delay: 0.8 }}
+                             className="text-center space-y-6"
+                           >
+                             <motion.div
+                               whileHover={{ scale: 1.02 }}
+                               whileTap={{ scale: 0.98 }}
+                             >
+                               <Button 
+                                 className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base relative z-20"
+                                 onClick={() => window.open('mailto:ea@ureposh.com?subject=Free Coffee Meeting Request&body=Hi! I would love to take you up on your free coffee offer and discuss my project requirements. Please let me know your availability for a coffee meeting.', '_blank')}
+                               >
+                                 <motion.div
+                                   className="flex items-center justify-center"
+                                   animate={{ x: [0, 5, 0] }}
+                                   transition={{ duration: 2, repeat: Infinity }}
+                                 >
+                                   <Coffee className="w-5 h-5 mr-2" />
+                                   Claim Free Coffee Meeting
+                                 </motion.div>
+                               </Button>
+                             </motion.div>
+                           </motion.div>
+                         </CardContent>
+                       </Card>
+                     </motion.div>
+                   </div>
+                </div>
 
                                
                </div>

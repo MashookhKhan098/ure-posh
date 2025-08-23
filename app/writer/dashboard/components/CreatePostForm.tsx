@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { X, Save, FileText, Type, Image, Tag, Sparkles, PenTool, Eye, Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, Heading1, Heading2, Heading3, Quote, Link as LinkIcon, List, ListOrdered, Highlighter, Upload, Trash2 } from 'lucide-react'
+import { X, Save, FileText, Type, Image, Tag, Sparkles, PenTool, Eye, Bold, Italic, Underline, Strikethrough, AlignLeft, AlignCenter, AlignRight, Heading1, Heading2, Heading3, Quote, Link as LinkIcon, List, ListOrdered, Highlighter, Upload, Trash2, Camera, Link, Cloud, CheckCircle, AlertCircle } from 'lucide-react'
 import { useWriterAuth } from '@/hooks/useWriterAuth'
 import { useToast } from '@/hooks/use-toast'
 
@@ -36,7 +36,11 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
   const [submitting, setSubmitting] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isDragOver, setIsDragOver] = useState(false)
+  const [uploadMethod, setUploadMethod] = useState<'device' | 'url'>('device')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const dropZoneRef = useRef<HTMLDivElement>(null)
 
   const contentRef = React.useRef<HTMLTextAreaElement | null>(null)
 
@@ -202,41 +206,70 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleImageUpload = async (file: File) => {
-    if (!file) return
-
+  const validateImageFile = (file: File): { isValid: boolean; error?: string } => {
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
     if (!allowedTypes.includes(file.type)) {
-      toast({
-        title: "Invalid file type",
-        description: "Only JPEG, PNG, WebP, and GIF files are allowed.",
-        variant: "destructive"
-      })
-      return
+      return { 
+        isValid: false, 
+        error: "Only JPEG, PNG, WebP, and GIF files are allowed." 
+      }
     }
 
     // Validate file size (5MB limit)
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
+      return { 
+        isValid: false, 
+        error: "Maximum file size is 5MB." 
+      }
+    }
+
+    return { isValid: true }
+  }
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return
+
+    const validation = validateImageFile(file)
+    if (!validation.isValid) {
       toast({
-        title: "File too large",
-        description: "Maximum file size is 5MB.",
+        title: "Invalid file",
+        description: validation.error,
         variant: "destructive"
       })
       return
     }
 
     setUploadingImage(true)
+    setUploadProgress(0)
 
     try {
+      // Create preview immediately
+      const previewUrl = URL.createObjectURL(file)
+      setImagePreview(previewUrl)
+
       const formData = new FormData()
       formData.append('image', file)
+
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval)
+            return prev
+          }
+          return prev + 10
+        })
+      }, 200)
 
       const response = await fetch('/api/articles/upload-image', {
         method: 'POST',
         body: formData,
       })
+
+      clearInterval(progressInterval)
+      setUploadProgress(100)
 
       const result = await response.json()
 
@@ -245,15 +278,15 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
       }
 
       setFormData(prev => ({ ...prev, image_url: result.image_url }))
-      setImagePreview(result.image_url)
       
       toast({
         title: "Success!",
-        description: "Image uploaded successfully",
+        description: "Image uploaded successfully to Supabase",
       })
 
     } catch (error) {
       console.error('Upload error:', error)
+      setImagePreview(null)
       toast({
         title: "Upload failed",
         description: error instanceof Error ? error.message : "Failed to upload image",
@@ -261,6 +294,82 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
       })
     } finally {
       setUploadingImage(false)
+      setUploadProgress(0)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+    
+    const files = Array.from(e.dataTransfer.files)
+    const imageFile = files.find(file => file.type.startsWith('image/'))
+    
+    if (imageFile) {
+      handleImageUpload(imageFile)
+    } else {
+      toast({
+        title: "Invalid file",
+        description: "Please drop an image file.",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const handleCameraCapture = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Create a temporary video element
+      const video = document.createElement('video')
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('2d')
+      
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream
+          video.play()
+          
+          // After a short delay, capture the frame
+          setTimeout(() => {
+            canvas.width = video.videoWidth
+            canvas.height = video.videoHeight
+            context?.drawImage(video, 0, 0)
+            
+            // Convert to blob
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const file = new File([blob], `camera-capture-${Date.now()}.png`, { type: 'image/png' })
+                handleImageUpload(file)
+              }
+            }, 'image/png')
+            
+            // Stop the stream
+            stream.getTracks().forEach(track => track.stop())
+          }, 1000)
+        })
+        .catch(error => {
+          console.error('Camera access error:', error)
+          toast({
+            title: "Camera access denied",
+            description: "Please allow camera access or use file upload instead.",
+            variant: "destructive"
+          })
+        })
+    } else {
+      toast({
+        title: "Camera not available",
+        description: "Your device doesn't support camera capture.",
+        variant: "destructive"
+      })
     }
   }
 
@@ -274,6 +383,7 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
   const removeImage = () => {
     setFormData(prev => ({ ...prev, image_url: '' }))
     setImagePreview(null)
+    setUploadProgress(0)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -417,78 +527,212 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
 
               {/* Right Sidebar */}
               <div className="lg:col-span-1 space-y-4">
-                {/* Featured Image */}
+                {/* Enhanced Featured Image Upload */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
                   
-                  {/* Image Upload Section */}
-                  <div className="space-y-3">
-                    {/* Upload Button */}
-                    <div className="flex items-center gap-2">
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploadingImage}
-                        className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:from-pink-600 hover:to-rose-600 disabled:opacity-50 transition-all text-sm"
+                  {/* Upload Method Tabs */}
+                  <div className="flex bg-gray-100 rounded-lg p-1 mb-3">
+                    <button
+                      type="button"
+                      onClick={() => setUploadMethod('device')}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+                        uploadMethod === 'device'
+                          ? 'bg-white text-pink-600 shadow-sm'
+                          : 'text-gray-600 hover:text-gray-800'
+                      }`}
+                    >
+                      <Camera className="w-4 h-4" />
+                      Device
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUploadMethod('url')}
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+                        uploadMethod === 'url'
+                          ? 'bg-white text-pink-600 shadow-sm'
+                          : 'text-gray-600 hover:text-gray-800'
+                      }`}
+                    >
+                      <Link className="w-4 h-4" />
+                      URL
+                    </button>
+                  </div>
+
+                  {uploadMethod === 'device' ? (
+                    /* Device Upload Section */
+                    <div className="space-y-3">
+                      {/* Drag & Drop Zone */}
+                      <div
+                        ref={dropZoneRef}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all ${
+                          isDragOver
+                            ? 'border-pink-400 bg-pink-50'
+                            : 'border-pink-200 hover:border-pink-300'
+                        } ${uploadingImage ? 'pointer-events-none opacity-50' : ''}`}
                       >
-                        <Upload className="w-4 h-4" />
-                        {uploadingImage ? 'Uploading...' : 'Upload Image'}
-                      </button>
-                      <span className="text-xs text-gray-500">or use URL below</span>
-                    </div>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileSelect}
+                          className="hidden"
+                        />
+                        
+                        {uploadingImage ? (
+                          /* Upload Progress */
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-center">
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+                            </div>
+                            <div className="space-y-2">
+                              <p className="text-sm font-medium text-gray-700">Uploading to Supabase...</p>
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${uploadProgress}%` }}
+                                ></div>
+                              </div>
+                              <p className="text-xs text-gray-500">{uploadProgress}% complete</p>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Upload Interface */
+                          <div className="space-y-4">
+                            <div className="flex flex-col items-center gap-3">
+                              <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center">
+                                <Cloud className="w-6 h-6 text-pink-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-700">
+                                  Drop image here or click to browse
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Supports JPEG, PNG, WebP, GIF up to 5MB
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all text-sm font-medium"
+                              >
+                                <Upload className="w-4 h-4" />
+                                Choose File
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleCameraCapture}
+                                className="flex items-center gap-2 px-4 py-2 bg-white border border-pink-200 text-pink-600 rounded-lg hover:bg-pink-50 transition-all text-sm font-medium"
+                              >
+                                <Camera className="w-4 h-4" />
+                                Camera
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
-                    {/* URL Input */}
-                    <div>
-                      <input
-                        type="url"
-                        value={formData.image_url}
-                        onChange={(e) => {
-                          handleInputChange('image_url', e.target.value)
-                          setImagePreview(e.target.value)
-                        }}
-                        placeholder="https://example.com/image.jpg"
-                        className="w-full px-3.5 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
-                      />
+                      {/* Upload Status */}
+                      {uploadingImage && (
+                        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                          <span className="text-sm text-blue-700">Uploading to Supabase bucket...</span>
+                        </div>
+                      )}
                     </div>
-
-                    {/* Image Preview */}
-                    {(imagePreview || formData.image_url) && (
+                  ) : (
+                    /* URL Input Section */
+                    <div className="space-y-3">
                       <div className="relative">
-                        <div className="rounded-xl overflow-hidden border border-pink-200">
+                        <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                          type="url"
+                          value={formData.image_url}
+                          onChange={(e) => {
+                            handleInputChange('image_url', e.target.value)
+                            setImagePreview(e.target.value)
+                          }}
+                          placeholder="https://example.com/image.jpg"
+                          className="w-full pl-10 pr-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Enter a direct link to an image hosted online
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Enhanced Image Preview */}
+                  {(imagePreview || formData.image_url) && (
+                    <div className="space-y-3">
+                      <div className="relative group">
+                        <div className="rounded-xl overflow-hidden border border-pink-200 bg-gray-50">
                           <img 
                             src={imagePreview || formData.image_url} 
                             alt="Preview" 
-                            className="w-full h-32 object-cover"
+                            className="w-full h-40 object-cover transition-transform group-hover:scale-105"
                             onError={(e) => {
                               e.currentTarget.style.display = 'none'
+                              e.currentTarget.nextElementSibling?.classList.remove('hidden')
                             }}
                           />
+                          <div className="hidden w-full h-40 flex items-center justify-center text-gray-400">
+                            <div className="text-center">
+                              <Image className="w-8 h-8 mx-auto mb-2" />
+                              <p className="text-sm">Image not found</p>
+                            </div>
+                          </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={removeImage}
-                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                          title="Remove image"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    )}
+                        
+                        {/* Action Buttons */}
+                        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => window.open(imagePreview || formData.image_url, '_blank')}
+                            className="p-1.5 bg-white/90 backdrop-blur-sm text-gray-600 rounded-lg hover:bg-white hover:text-gray-800 transition-colors"
+                            title="View full size"
+                          >
+                            <Eye className="w-3 h-3" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={removeImage}
+                            className="p-1.5 bg-red-500/90 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-colors"
+                            title="Remove image"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
 
-                    {/* Upload Info */}
-                    <div className="text-xs text-gray-500 space-y-1">
-                      <p>• Supported formats: JPEG, PNG, WebP, GIF</p>
-                      <p>• Maximum file size: 5MB</p>
-                      <p>• Recommended size: 1200x630 pixels</p>
+                        {/* Upload Success Indicator */}
+                        {formData.image_url && formData.image_url.startsWith('https://') && (
+                          <div className="absolute top-2 left-2">
+                            <div className="flex items-center gap-1 px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-lg text-xs">
+                              <CheckCircle className="w-3 h-3" />
+                              <span>Uploaded</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Image Info */}
+                      <div className="text-xs text-gray-500 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <Cloud className="w-3 h-3" />
+                          <span>Stored in Supabase bucket</span>
+                        </div>
+                        <p>• Supported formats: JPEG, PNG, WebP, GIF</p>
+                        <p>• Maximum file size: 5MB</p>
+                        <p>• Recommended size: 1200x630 pixels</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Category */}
