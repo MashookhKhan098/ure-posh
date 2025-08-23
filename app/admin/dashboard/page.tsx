@@ -2778,8 +2778,21 @@ function AdminDashboardContent() {
            {showAddWriter && (
              <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddWriter(false)}></div>
-               <div className="relative z-10 w-full max-w-3xl mt-8">
-                 <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200">
+               <div className="relative z-10 w-full max-w-3xl mt-8 max-h-[90vh] overflow-y-auto">
+                 <style>{`
+                   .custom-scrollbar::-webkit-scrollbar {
+                     width: 10px;
+                   }
+                   .custom-scrollbar::-webkit-scrollbar-thumb {
+                     background: linear-gradient(90deg, #ec4899 0%, #f43f5e 100%);
+                     border-radius: 8px;
+                   }
+                   .custom-scrollbar::-webkit-scrollbar-track {
+                     background: #f3f4f6;
+                     border-radius: 8px;
+                   }
+                 `}</style>
+                 <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200 custom-scrollbar">
                    <div className="flex items-center justify-between px-4 py-2 border-b border-pink-100">
                      <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Add Writer</h3>
                      <button onClick={() => setShowAddWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
