@@ -270,10 +270,53 @@ function AdminDashboardContent() {
     username: '',
     password: '',
     bio: '',
-    field_allotted: '',
-    expertise: '',
-    phone: ''
+    phone: '',
+    image_url: '',
+    // Field Allotted Checkboxes
+    company_updates: false,
+    compliance_legal_insights: false,
+    news_media_coverage: false,
+    newsletter_archive: false,
+    thought_leadership: false,
+    workplace_stories: false,
+    events_webinars: false,
+    international_regulatory_policy_watch: false,
+    united_kingdom_workplace: false,
+    us_workplace: false
   });
+
+  // Photo upload states for writers
+  const [writerImagePreview, setWriterImagePreview] = useState<string | null>(null);
+  const [uploadingWriterImage, setUploadingWriterImage] = useState(false);
+  const [writerUploadProgress, setWriterUploadProgress] = useState(0);
+
+  // Edit writer state
+  const [editingWriter, setEditingWriter] = useState<Writer | null>(null);
+  const [showEditWriter, setShowEditWriter] = useState(false);
+  const [editWriterForm, setEditWriterForm] = useState({
+    name: '',
+    username: '',
+    bio: '',
+    phone: '',
+    image_url: '',
+    is_active: true,
+    // Field Allotted Checkboxes
+    company_updates: false,
+    compliance_legal_insights: false,
+    news_media_coverage: false,
+    newsletter_archive: false,
+    thought_leadership: false,
+    workplace_stories: false,
+    events_webinars: false,
+    international_regulatory_policy_watch: false,
+    united_kingdom_workplace: false,
+    us_workplace: false
+  });
+
+  // Photo upload states for editing writers
+  const [editWriterImagePreview, setEditWriterImagePreview] = useState<string | null>(null);
+  const [uploadingEditWriterImage, setUploadingEditWriterImage] = useState(false);
+  const [editWriterUploadProgress, setEditWriterUploadProgress] = useState(0);
 
   // New person form state
   const [newPerson, setNewPerson] = useState<any>({
@@ -298,12 +341,145 @@ function AdminDashboardContent() {
     expertise: [] as string[],
   });
 
+  // Photo upload states for people
+  const [personImagePreview, setPersonImagePreview] = useState<string | null>(null);
+  const [uploadingPersonImage, setUploadingPersonImage] = useState(false);
+  const [personUploadProgress, setPersonUploadProgress] = useState(0);
+
   const [expertiseInput, setExpertiseInput] = useState('');
   const [languagesInput, setLanguagesInput] = useState('');
+
+  // Edit writer functions
+  const handleEditWriter = (writer: Writer) => {
+    setEditingWriter(writer);
+    setEditWriterForm({
+      name: writer.name || '',
+      username: writer.username || '',
+      bio: writer.bio?.props?.children || '',
+      phone: writer.phone || '',
+      image_url: writer.image_url || '',
+      is_active: writer.status === 'Active',
+      // Field Allotted - these will be populated from API
+      company_updates: false,
+      compliance_legal_insights: false,
+      news_media_coverage: false,
+      newsletter_archive: false,
+      thought_leadership: false,
+      workplace_stories: false,
+      events_webinars: false,
+      international_regulatory_policy_watch: false,
+      united_kingdom_workplace: false,
+      us_workplace: false
+    });
+    setEditWriterImagePreview(writer.image_url || null);
+    setShowEditWriter(true);
+  };
+
+  const handleUpdateWriter = async () => {
+    if (!editingWriter) return;
+    
+    try {
+      const res = await fetch(`/api/admin/writers/${editingWriter.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editWriterForm.name,
+          username: editWriterForm.username,
+          bio: editWriterForm.bio,
+          phone: editWriterForm.phone,
+          image_url: editWriterForm.image_url,
+          is_active: editWriterForm.is_active,
+          // Field Allotted Checkboxes
+          company_updates: editWriterForm.company_updates,
+          compliance_legal_insights: editWriterForm.compliance_legal_insights,
+          news_media_coverage: editWriterForm.news_media_coverage,
+          newsletter_archive: editWriterForm.newsletter_archive,
+          thought_leadership: editWriterForm.thought_leadership,
+          workplace_stories: editWriterForm.workplace_stories,
+          events_webinars: editWriterForm.events_webinars,
+          international_regulatory_policy_watch: editWriterForm.international_regulatory_policy_watch,
+          united_kingdom_workplace: editWriterForm.united_kingdom_workplace,
+          us_workplace: editWriterForm.us_workplace
+        })
+      });
+
+      if (res.ok) {
+        const updatedWriter = await res.json();
+        setWriters(prev => prev.map(w => 
+          w.id === editingWriter.id 
+            ? { 
+                ...w, 
+                name: editWriterForm.name,
+                username: editWriterForm.username,
+                bio: <span>{editWriterForm.bio}</span>,
+                phone: editWriterForm.phone,
+                status: editWriterForm.is_active ? 'Active' : 'Inactive'
+              }
+            : w
+        ));
+        setShowEditWriter(false);
+        setEditingWriter(null);
+        toast({
+          title: "Success!",
+          description: "Writer updated successfully",
+        });
+      } else {
+        const error = await res.json();
+        throw new Error(error?.error || 'Failed to update writer');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update writer",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleToggleWriterStatus = async (writer: Writer) => {
+    try {
+      const newStatus = writer.status === 'Active' ? 'Inactive' : 'Active';
+      const res = await fetch(`/api/admin/writers/${writer.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: newStatus === 'Active' }),
+      });
+
+      if (res.ok) {
+        setWriters(prev => prev.map(w => 
+          w.id === writer.id 
+            ? { ...w, status: newStatus }
+            : w
+        ));
+        toast({
+          title: "Status Updated",
+          description: `${writer.name} is now ${newStatus.toLowerCase()}`,
+        });
+      } else {
+        const error = await res.json();
+        throw new Error(error?.error || 'Failed to update status');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update writer status",
+        variant: "destructive"
+      });
+    }
+  };
 
   // Add new writer
   const handleAddWriter = async () => {
     if (newWriter.name && newWriter.username && newWriter.password) {
+      // Check if at least one field is allotted
+      const hasFieldAllotted = Object.keys(newWriter).some(key => 
+        key !== 'name' && key !== 'username' && key !== 'password' && key !== 'phone' && key !== 'bio' && newWriter[key as keyof typeof newWriter]
+      );
+      
+      if (!hasFieldAllotted) {
+        alert('Please select at least one field allotted');
+        return;
+      }
       const res = await fetch('/api/admin/writers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -312,9 +488,19 @@ function AdminDashboardContent() {
           username: newWriter.username, 
           password: newWriter.password, 
           bio: newWriter.bio,
-          field_allotted: newWriter.field_allotted,
-          expertise: newWriter.expertise,
-          phone: newWriter.phone
+          phone: newWriter.phone,
+          image_url: newWriter.image_url,
+          // Field Allotted Checkboxes
+          company_updates: newWriter.company_updates,
+          compliance_legal_insights: newWriter.compliance_legal_insights,
+          news_media_coverage: newWriter.news_media_coverage,
+          newsletter_archive: newWriter.newsletter_archive,
+          thought_leadership: newWriter.thought_leadership,
+          workplace_stories: newWriter.workplace_stories,
+          events_webinars: newWriter.events_webinars,
+          international_regulatory_policy_watch: newWriter.international_regulatory_policy_watch,
+          united_kingdom_workplace: newWriter.united_kingdom_workplace,
+          us_workplace: newWriter.us_workplace
         })
       })
       if (res.ok) {
@@ -336,7 +522,25 @@ function AdminDashboardContent() {
           lastActive: ''
         }
         setWriters([...writers, local])
-        setNewWriter({ name: '', username: '', password: '', bio: '', field_allotted: '', expertise: '', phone: '' })
+        setNewWriter({ 
+          name: '', 
+          username: '', 
+          password: '', 
+          bio: '', 
+          phone: '',
+          image_url: '',
+          company_updates: false,
+          compliance_legal_insights: false,
+          news_media_coverage: false,
+          newsletter_archive: false,
+          thought_leadership: false,
+          workplace_stories: false,
+          events_webinars: false,
+          international_regulatory_policy_watch: false,
+          united_kingdom_workplace: false,
+          us_workplace: false
+        })
+        setWriterImagePreview(null)
         setShowAddWriter(false)
       } else {
         const data = await res.json()
@@ -344,6 +548,178 @@ function AdminDashboardContent() {
       }
     }
   };
+
+  // Photo upload functions
+  const validateImageFile = (file: File): { isValid: boolean; error?: string } => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      return { 
+        isValid: false, 
+        error: "Only JPEG, PNG, WebP, and GIF files are allowed." 
+      }
+    }
+
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      return { 
+        isValid: false, 
+        error: "Maximum file size is 5MB." 
+      }
+    }
+
+    return { isValid: true }
+  }
+
+  const handleImageUpload = async (file: File, type: 'writer' | 'editWriter' | 'person') => {
+    if (!file) return
+
+    const validation = validateImageFile(file)
+    if (!validation.isValid) {
+      toast({
+        title: "Invalid file",
+        description: validation.error,
+        variant: "destructive"
+      })
+      return
+    }
+
+    // Set uploading state based on type
+    if (type === 'writer') {
+      setUploadingWriterImage(true)
+      setWriterUploadProgress(0)
+    } else if (type === 'editWriter') {
+      setUploadingEditWriterImage(true)
+      setEditWriterUploadProgress(0)
+    } else if (type === 'person') {
+      setUploadingPersonImage(true)
+      setPersonUploadProgress(0)
+    }
+
+    try {
+      // Create preview immediately
+      const previewUrl = URL.createObjectURL(file)
+      if (type === 'writer') {
+        setWriterImagePreview(previewUrl)
+      } else if (type === 'editWriter') {
+        setEditWriterImagePreview(previewUrl)
+      } else if (type === 'person') {
+        setPersonImagePreview(previewUrl)
+      }
+
+      const formData = new FormData()
+      formData.append('image', file)
+
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        if (type === 'writer') {
+          setWriterUploadProgress(prev => {
+            if (prev >= 90) {
+              clearInterval(progressInterval)
+              return prev
+            }
+            return prev + 10
+          })
+        } else if (type === 'editWriter') {
+          setEditWriterUploadProgress(prev => {
+            if (prev >= 90) {
+              clearInterval(progressInterval)
+              return prev
+            }
+            return prev + 10
+          })
+        } else if (type === 'person') {
+          setPersonUploadProgress(prev => {
+            if (prev >= 90) {
+              clearInterval(progressInterval)
+              return prev
+            }
+            return prev + 10
+          })
+        }
+      }, 200)
+
+      const response = await fetch('/api/articles/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      clearInterval(progressInterval)
+      
+      if (type === 'writer') {
+        setWriterUploadProgress(100)
+      } else if (type === 'editWriter') {
+        setEditWriterUploadProgress(100)
+      } else if (type === 'person') {
+        setPersonUploadProgress(100)
+      }
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed')
+      }
+
+      // Update the appropriate form state
+      if (type === 'writer') {
+        setNewWriter(prev => ({ ...prev, image_url: result.image_url }))
+      } else if (type === 'editWriter') {
+        setEditWriterForm(prev => ({ ...prev, image_url: result.image_url }))
+      } else if (type === 'person') {
+        setNewPerson(prev => ({ ...prev, image_url: result.image_url }))
+      }
+      
+      toast({
+        title: "Success!",
+        description: "Image uploaded successfully",
+      })
+
+    } catch (error) {
+      console.error('Upload error:', error)
+      if (type === 'writer') {
+        setWriterImagePreview(null)
+      } else if (type === 'editWriter') {
+        setEditWriterImagePreview(null)
+      } else if (type === 'person') {
+        setPersonImagePreview(null)
+      }
+      toast({
+        title: "Upload failed",
+        description: error instanceof Error ? error.message : "Failed to upload image",
+        variant: "destructive"
+      })
+    } finally {
+      if (type === 'writer') {
+        setUploadingWriterImage(false)
+        setWriterUploadProgress(0)
+      } else if (type === 'editWriter') {
+        setUploadingEditWriterImage(false)
+        setEditWriterUploadProgress(0)
+      } else if (type === 'person') {
+        setUploadingPersonImage(false)
+        setPersonUploadProgress(0)
+      }
+    }
+  }
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>, type: 'writer' | 'editWriter' | 'person') => {
+    const file = event.target.files?.[0]
+    if (file) {
+      handleImageUpload(file, type)
+    }
+  }
+
+  const removeImage = (type: 'writer' | 'editWriter' | 'person') => {
+    if (type === 'writer') {
+      setNewWriter(prev => ({ ...prev, image_url: '' }))
+      setWriterImagePreview(null)
+    } else if (type === 'editWriter') {
+      setEditWriterForm(prev => ({ ...prev, image_url: '' }))
+      setEditWriterImagePreview(null)
+    } else if (type === 'person') {
+      setNewPerson(prev => ({ ...prev, image_url: '' }))
+      setPersonImagePreview(null)
+    }
+  }
 
   // Create Person
   const handleCreatePerson = async () => {
@@ -378,6 +754,7 @@ function AdminDashboardContent() {
       setNewPerson({
         name: '', title: '', specialization: '', description: '', detailed_description: '', experience: '', category: 'legal', email: '', phone: '', location: '', website: '', verified: false, featured: false, image_url: '', icon_name: 'Scale', color_gradient: 'from-pink-500 to-rose-600', accent_color: 'pink', languages: [], expertise: []
       });
+      setPersonImagePreview(null);
       setExpertiseInput('');
       setLanguagesInput('');
       fetchDashboardData();
@@ -2036,37 +2413,31 @@ function AdminDashboardContent() {
                             {/* Action Buttons */}
                             <div className="flex gap-2">
                               <button
-                                onClick={async () => {
-                                  try {
-                                    const updatedData = { ...writer, verified: !writer.verified };
-                                    const res = await fetch(`/api/admin/writers/${writer.id}`, {
-                                      method: 'PUT',
-                                      headers: { 'Content-Type': 'application/json' },
-                                      body: JSON.stringify({ verified: !writer.verified }),
-                                    });
-                                    if (!res.ok) throw new Error('Failed to update verification');
-                                    setWriters(prev => prev.map(w => w.id === writer.id ? updatedData : w));
-                                  } catch (e: any) {
-                                    alert(e?.message || 'Failed to update verification');
-                                  }
-                                }}
+                                onClick={() => handleToggleWriterStatus(writer)}
                                 className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                  writer.verified
+                                  writer.status === 'Active'
                                     ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
-                                    : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
+                                    : 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100'
                                 }`}
                               >
-                                {writer.verified ? (
+                                {writer.status === 'Active' ? (
                                   <>
                                     <CheckCircle className="w-4 h-4 mr-1" />
-                                    Verified
+                                    Active
                                   </>
                                 ) : (
                                   <>
-                                    <Shield className="w-4 h-4 mr-1" />
-                                    Verify
+                                    <X className="w-4 h-4 mr-1" />
+                                    Inactive
                                   </>
                                 )}
+                              </button>
+                              <button
+                                onClick={() => handleEditWriter(writer)}
+                                className="px-3 py-2 rounded-lg text-sm bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors"
+                                title="Edit Writer"
+                              >
+                                <Edit3 className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => {
@@ -2074,18 +2445,10 @@ function AdminDashboardContent() {
                                   setActiveTab('posts');
                                   setSearchTerm(writer.username);
                                 }}
-                                className="px-3 py-2 rounded-lg text-sm bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors"
+                                className="px-3 py-2 rounded-lg text-sm bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 transition-colors"
+                                title="View Posts"
                               >
                                 <FileText className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  // Edit functionality - could open a modal with edit form
-                                  alert('Edit functionality will be implemented');
-                                }}
-                                className="px-3 py-2 rounded-lg text-sm bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 transition-colors"
-                              >
-                                <Edit3 className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={async () => {
@@ -2100,6 +2463,7 @@ function AdminDashboardContent() {
                                   }
                                 }}
                                 className="px-3 py-2 rounded-lg text-sm bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
+                                title="Delete Writer"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -2232,9 +2596,91 @@ function AdminDashboardContent() {
                           <option value="psychology">Psychology</option>
                         </select>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-                        <input value={newPerson.image_url} onChange={(e)=>setNewPerson({...newPerson,image_url:e.target.value})} className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80" placeholder="https://..." />
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                        <div className="space-y-3">
+                          {/* Upload Interface */}
+                          <div className="border-2 border-dashed border-pink-200 rounded-xl p-4 text-center hover:border-pink-300 transition-colors">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleFileSelect(e, 'person')}
+                              className="hidden"
+                              id="person-photo-upload"
+                            />
+                            <label htmlFor="person-photo-upload" className="cursor-pointer">
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center">
+                                  <ImageIcon className="w-6 h-6 text-pink-600" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700">
+                                    {uploadingPersonImage ? 'Uploading...' : 'Click to upload photo'}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    JPEG, PNG, WebP, GIF up to 5MB
+                                  </p>
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+
+                          {/* Upload Progress */}
+                          {uploadingPersonImage && (
+                            <div className="space-y-2">
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${personUploadProgress}%` }}
+                                ></div>
+                              </div>
+                              <p className="text-xs text-gray-500 text-center">{personUploadProgress}% complete</p>
+                            </div>
+                          )}
+
+                          {/* Image Preview */}
+                          {(personImagePreview || newPerson.image_url) && (
+                            <div className="relative group">
+                              <div className="rounded-xl overflow-hidden border border-pink-200 bg-gray-50">
+                                <img 
+                                  src={personImagePreview || newPerson.image_url} 
+                                  alt="Person preview" 
+                                  className="w-full h-32 object-cover"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none'
+                                    e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                                  }}
+                                />
+                                <div className="hidden w-full h-32 flex items-center justify-center text-gray-400">
+                                  <div className="text-center">
+                                    <ImageIcon className="w-8 h-8 mx-auto mb-2" />
+                                    <p className="text-sm">Image not found</p>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Remove Button */}
+                              <button
+                                type="button"
+                                onClick={() => removeImage('person')}
+                                className="absolute top-2 right-2 p-1.5 bg-red-500/90 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                                title="Remove image"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+
+                              {/* Upload Success Indicator */}
+                              {newPerson.image_url && (
+                                <div className="absolute top-2 left-2">
+                                  <div className="flex items-center gap-1 px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-lg text-xs">
+                                    <CheckCircle className="w-3 h-3" />
+                                    <span>Uploaded</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Short Description <span className="text-red-500">*</span></label>
@@ -2332,15 +2778,15 @@ function AdminDashboardContent() {
            {showAddWriter && (
              <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddWriter(false)}></div>
-               <div className="relative z-10 w-full max-w-2xl mt-10">
+               <div className="relative z-10 w-full max-w-3xl mt-8">
                  <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200">
-                   <div className="flex items-center justify-between px-5 py-4 border-b border-pink-100">
+                   <div className="flex items-center justify-between px-4 py-2 border-b border-pink-100">
                      <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Add Writer</h3>
                      <button onClick={() => setShowAddWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
                        <X className="w-5 h-5" />
                      </button>
                    </div>
-                   <div className="px-5 py-4">
+                   <div className="px-6 py-2">
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                        <div>
                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
@@ -2348,7 +2794,7 @@ function AdminDashboardContent() {
                            type="text"
                            value={newWriter.name}
                            onChange={(e) => setNewWriter({ ...newWriter, name: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           className="w-full px-3 py-1.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
                            placeholder="e.g., John Doe"
                          />
                        </div>
@@ -2358,7 +2804,7 @@ function AdminDashboardContent() {
                            type="text"
                            value={newWriter.username}
                            onChange={(e) => setNewWriter({ ...newWriter, username: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           className="w-full px-3 py-1.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
                            placeholder="unique handle"
                          />
                        </div>
@@ -2368,7 +2814,7 @@ function AdminDashboardContent() {
                            type="password"
                            value={newWriter.password}
                            onChange={(e) => setNewWriter({ ...newWriter, password: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           className="w-full px-3 py-1.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
                            placeholder="secure password"
                          />
                        </div>
@@ -2378,42 +2824,224 @@ function AdminDashboardContent() {
                            type="tel"
                            value={newWriter.phone}
                            onChange={(e) => setNewWriter({ ...newWriter, phone: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                           className="w-full px-3 py-1.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
                            placeholder="optional"
                          />
                        </div>
-                       <div className="md:col-span-1">
-                         <label className="block text-sm font-medium text-gray-700 mb-1">Field Allotted</label>
-                         <input
-                           type="text"
-                           value={newWriter.field_allotted}
-                           onChange={(e) => setNewWriter({ ...newWriter, field_allotted: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                           placeholder="Technology, Sports, Politics"
-                         />
-                       </div>
-                       <div className="md:col-span-1">
-                         <label className="block text-sm font-medium text-gray-700 mb-1">Expertise</label>
-                         <input
-                           type="text"
-                           value={newWriter.expertise}
-                           onChange={(e) => setNewWriter({ ...newWriter, expertise: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
-                           placeholder="Comma-separated areas"
-                         />
+                                                <div className="md:col-span-2">
+                           <label className="block text-sm font-medium text-gray-700 mb-3 text-lg font-semibold">Field Allotted - Select Content Areas</label>
+                           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 p-3 bg-gray-50 rounded-xl border border-gray-200">
+                           <div className="flex items-center gap-2">
+                             <input
+                               type="checkbox"
+                               id="company_updates"
+                               checked={newWriter.company_updates}
+                               onChange={() => setNewWriter({ ...newWriter, company_updates: !newWriter.company_updates })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="company_updates" className="text-xs font-medium text-gray-700">Company Updates</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-2">
+                             <input
+                               type="checkbox"
+                               id="compliance_legal_insights"
+                               checked={newWriter.compliance_legal_insights}
+                               onChange={() => setNewWriter({ ...newWriter, compliance_legal_insights: !newWriter.compliance_legal_insights })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="compliance_legal_insights" className="text-xs font-medium text-gray-700">Compliance & Legal Insights</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-2">
+                             <input
+                               type="checkbox"
+                               id="news_media_coverage"
+                               checked={newWriter.news_media_coverage}
+                               onChange={() => setNewWriter({ ...newWriter, news_media_coverage: !newWriter.news_media_coverage })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="news_media_coverage" className="text-xs font-medium text-gray-700">News & Media Coverage</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-2">
+                             <input
+                               type="checkbox"
+                               id="newsletter_archive"
+                               checked={newWriter.newsletter_archive}
+                               onChange={() => setNewWriter({ ...newWriter, newsletter_archive: !newWriter.newsletter_archive })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="newsletter_archive" className="text-xs font-medium text-gray-700">Newsletter Archive</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-2">
+                             <input
+                               type="checkbox"
+                               id="thought_leadership"
+                               checked={newWriter.thought_leadership}
+                               onChange={() => setNewWriter({ ...newWriter, thought_leadership: !newWriter.thought_leadership })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="thought_leadership" className="text-xs font-medium text-xs font-medium text-gray-700">Thought Leadership</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="workplace_stories"
+                               checked={newWriter.workplace_stories}
+                               onChange={() => setNewWriter({ ...newWriter, workplace_stories: !newWriter.workplace_stories })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="workplace_stories" className="text-xs font-medium text-gray-700">Workplace Stories</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="events_webinars"
+                               checked={newWriter.events_webinars}
+                               onChange={() => setNewWriter({ ...newWriter, events_webinars: !newWriter.events_webinars })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="events_webinars" className="text-xs font-medium text-gray-700">Events & Webinars</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="international_regulatory_policy_watch"
+                               checked={newWriter.international_regulatory_policy_watch}
+                               onChange={() => setNewWriter({ ...newWriter, international_regulatory_policy_watch: !newWriter.international_regulatory_policy_watch })}
+                               className="w-5 h-5 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="international_regulatory_policy_watch" className="text-xs font-medium text-gray-700">International Regulatory & Policy Watch</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="united_kingdom_workplace"
+                               checked={newWriter.united_kingdom_workplace}
+                               onChange={() => setNewWriter({ ...newWriter, united_kingdom_workplace: !newWriter.united_kingdom_workplace })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="united_kingdom_workplace" className="text-xs font-medium text-gray-700">United Kingdom Workplace</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="us_workplace"
+                               checked={newWriter.us_workplace}
+                               onChange={() => setNewWriter({ ...newWriter, us_workplace: !newWriter.us_workplace })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="us_workplace" className="text-xs font-medium text-gray-700">US Workplace</label>
+                           </div>
+                         </div>
                        </div>
                        <div className="md:col-span-2">
                          <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
                          <textarea
-                           rows={2}
+                           rows={1}
                            value={newWriter.bio}
                            onChange={(e) => setNewWriter({ ...newWriter, bio: e.target.value })}
-                           className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black resize-none"
+                           className="w-full px-3 py-1.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black resize-none"
                            placeholder="Brief bio about the writer"
                          />
                        </div>
+                       
+                       {/* Photo Upload Section */}
+                       <div className="md:col-span-2">
+                         <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                         <div className="space-y-3">
+                           {/* Upload Interface */}
+                           <div className="border-2 border-dashed border-pink-200 rounded-xl p-4 text-center hover:border-pink-300 transition-colors">
+                             <input
+                               type="file"
+                               accept="image/*"
+                               onChange={(e) => handleFileSelect(e, 'writer')}
+                               className="hidden"
+                               id="writer-photo-upload"
+                             />
+                             <label htmlFor="writer-photo-upload" className="cursor-pointer">
+                               <div className="flex flex-col items-center gap-2">
+                                 <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center">
+                                   <ImageIcon className="w-6 h-6 text-pink-600" />
+                                 </div>
+                                 <div>
+                                   <p className="text-sm font-medium text-gray-700">
+                                     {uploadingWriterImage ? 'Uploading...' : 'Click to upload photo'}
+                                   </p>
+                                   <p className="text-xs text-gray-500 mt-1">
+                                     JPEG, PNG, WebP, GIF up to 5MB
+                                   </p>
+                                 </div>
+                               </div>
+                             </label>
+                           </div>
+
+                           {/* Upload Progress */}
+                           {uploadingWriterImage && (
+                             <div className="space-y-2">
+                               <div className="w-full bg-gray-200 rounded-full h-2">
+                                 <div 
+                                   className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                                   style={{ width: `${writerUploadProgress}%` }}
+                                 ></div>
+                               </div>
+                               <p className="text-xs text-gray-500 text-center">{writerUploadProgress}% complete</p>
+                             </div>
+                           )}
+
+                           {/* Image Preview */}
+                           {(writerImagePreview || newWriter.image_url) && (
+                             <div className="relative group">
+                               <div className="rounded-xl overflow-hidden border border-pink-200 bg-gray-50">
+                                 <img 
+                                   src={writerImagePreview || newWriter.image_url} 
+                                   alt="Writer preview" 
+                                   className="w-full h-32 object-cover"
+                                   onError={(e) => {
+                                     e.currentTarget.style.display = 'none'
+                                     e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                                   }}
+                                 />
+                                 <div className="hidden w-full h-32 flex items-center justify-center text-gray-400">
+                                   <div className="text-center">
+                                     <ImageIcon className="w-8 h-8 mx-auto mb-2" />
+                                     <p className="text-sm">Image not found</p>
+                                   </div>
+                                 </div>
+                               </div>
+                               
+                               {/* Remove Button */}
+                               <button
+                                 type="button"
+                                 onClick={() => removeImage('writer')}
+                                 className="absolute top-2 right-2 p-1.5 bg-red-500/90 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                                 title="Remove image"
+                               >
+                                 <Trash2 className="w-3 h-3" />
+                               </button>
+
+                               {/* Upload Success Indicator */}
+                               {newWriter.image_url && (
+                                 <div className="absolute top-2 left-2">
+                                   <div className="flex items-center gap-1 px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-lg text-xs">
+                                     <CheckCircle className="w-3 h-3" />
+                                     <span>Uploaded</span>
+                                   </div>
+                                 </div>
+                               )}
+                             </div>
+                           )}
+                         </div>
+                       </div>
                      </div>
-                     <div className="flex items-center justify-end gap-3 pt-4">
+                     <div className="flex items-center justify-end gap-4 pt-4">
                        <button onClick={() => setShowAddWriter(false)} className="px-4 py-2 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200">Cancel</button>
                        <button onClick={handleAddWriter} className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700">Create Writer</button>
                      </div>
@@ -2427,7 +3055,7 @@ function AdminDashboardContent() {
            {showPreview && selectedPost && (
              <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowPreview(false)}></div>
-               <div className="relative z-10 w-full max-w-4xl mt-10 max-h-[90vh] overflow-y-auto">
+                                <div className="relative z-10 w-full max-w-3xl mt-8 max-h-[80vh] overflow-y-auto">
                  <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200">
                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                      <h3 className="text-lg font-semibold text-gray-900">Article Preview</h3>
@@ -2499,6 +3127,324 @@ function AdminDashboardContent() {
                        <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                          {selectedPost.content}
                        </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           )}
+
+           {/* Edit Writer Modal */}
+           {showEditWriter && editingWriter && (
+             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+               <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowEditWriter(false)}></div>
+               <div className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                 <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200">
+                   <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                     <div>
+                       <h3 className="text-xl font-semibold text-gray-900">Edit Writer</h3>
+                       <p className="text-sm text-gray-600">Update writer information and permissions</p>
+                     </div>
+                     <button onClick={() => setShowEditWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                       <X className="w-5 h-5" />
+                     </button>
+                   </div>
+                   
+                   <div className="px-6 py-6">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       {/* Basic Information */}
+                       <div className="space-y-4">
+                         <div>
+                           <label className="block text-sm font-medium text-gray-700 mb-1">Name <span className="text-red-500">*</span></label>
+                           <input
+                             type="text"
+                             value={editWriterForm.name}
+                             onChange={(e) => setEditWriterForm({ ...editWriterForm, name: e.target.value })}
+                             className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                             placeholder="Writer's full name"
+                           />
+                         </div>
+                         
+                         <div>
+                           <label className="block text-sm font-medium text-gray-700 mb-1">Username <span className="text-red-500">*</span></label>
+                           <input
+                             type="text"
+                             value={editWriterForm.username}
+                             onChange={(e) => setEditWriterForm({ ...editWriterForm, username: e.target.value })}
+                             className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                             placeholder="Unique username"
+                           />
+                         </div>
+                         
+                         <div>
+                           <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                           <input
+                             type="tel"
+                             value={editWriterForm.phone}
+                             onChange={(e) => setEditWriterForm({ ...editWriterForm, phone: e.target.value })}
+                             className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black"
+                             placeholder="Phone number"
+                           />
+                         </div>
+
+                         <div>
+                           <label className="block text-sm font-medium text-gray-700 mb-1">Account Status</label>
+                           <div className="flex items-center gap-3 p-3 border border-pink-200 rounded-xl bg-white/80">
+                             <input
+                               type="checkbox"
+                               id="is_active"
+                               checked={editWriterForm.is_active}
+                               onChange={(e) => setEditWriterForm({ ...editWriterForm, is_active: e.target.checked })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                               Active Account
+                             </label>
+                             <div className="ml-auto">
+                               <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                                 editWriterForm.is_active 
+                                   ? 'bg-green-100 text-green-800' 
+                                   : 'bg-red-100 text-red-800'
+                               }`}>
+                                 {editWriterForm.is_active ? 'Active' : 'Inactive'}
+                               </span>
+                             </div>
+                           </div>
+                           <p className="text-xs text-gray-500 mt-1">
+                             Inactive writers cannot access the system and will see a deactivation message.
+                           </p>
+                         </div>
+                       </div>
+
+                       {/* Field Allotted */}
+                       <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-3">Field Allotted <span className="text-red-500">*</span></label>
+                         <div className="grid grid-cols-1 gap-3 p-4 border border-pink-200 rounded-xl bg-white/80">
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_company_updates"
+                               checked={editWriterForm.company_updates}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, company_updates: !editWriterForm.company_updates })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_company_updates" className="text-xs font-medium text-gray-700">Company Updates</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_compliance_legal_insights"
+                               checked={editWriterForm.compliance_legal_insights}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, compliance_legal_insights: !editWriterForm.compliance_legal_insights })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_compliance_legal_insights" className="text-xs font-medium text-gray-700">Compliance & Legal Insights</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_news_media_coverage"
+                               checked={editWriterForm.news_media_coverage}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, news_media_coverage: !editWriterForm.news_media_coverage })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_news_media_coverage" className="text-xs font-medium text-gray-700">News & Media Coverage</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_newsletter_archive"
+                               checked={editWriterForm.newsletter_archive}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, newsletter_archive: !editWriterForm.newsletter_archive })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_newsletter_archive" className="text-xs font-medium text-gray-700">Newsletter Archive</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_thought_leadership"
+                               checked={editWriterForm.thought_leadership}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, thought_leadership: !editWriterForm.thought_leadership })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_thought_leadership" className="text-xs font-medium text-gray-700">Thought Leadership</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_workplace_stories"
+                               checked={editWriterForm.workplace_stories}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, workplace_stories: !editWriterForm.workplace_stories })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_workplace_stories" className="text-xs font-medium text-gray-700">Workplace Stories</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_events_webinars"
+                               checked={editWriterForm.events_webinars}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, events_webinars: !editWriterForm.events_webinars })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_events_webinars" className="text-xs font-medium text-gray-700">Events & Webinars</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_international_regulatory_policy_watch"
+                               checked={editWriterForm.international_regulatory_policy_watch}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, international_regulatory_policy_watch: !editWriterForm.international_regulatory_policy_watch })}
+                               className="w-5 h-5 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_international_regulatory_policy_watch" className="text-xs font-medium text-gray-700">International Regulatory & Policy Watch</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_united_kingdom_workplace"
+                               checked={editWriterForm.united_kingdom_workplace}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, united_kingdom_workplace: !editWriterForm.united_kingdom_workplace })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_united_kingdom_workplace" className="text-xs font-medium text-gray-700">United Kingdom Workplace</label>
+                           </div>
+                           
+                           <div className="flex items-center gap-3">
+                             <input
+                               type="checkbox"
+                               id="edit_us_workplace"
+                               checked={editWriterForm.us_workplace}
+                               onChange={() => setEditWriterForm({ ...editWriterForm, us_workplace: !editWriterForm.us_workplace })}
+                               className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                             />
+                             <label htmlFor="edit_us_workplace" className="text-xs font-medium text-gray-700">US Workplace</label>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                     
+                     <div className="mt-6">
+                       <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                       <textarea
+                         rows={3}
+                         value={editWriterForm.bio}
+                         onChange={(e) => setEditWriterForm({ ...editWriterForm, bio: e.target.value })}
+                         className="w-full px-3 py-2 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black resize-none"
+                         placeholder="Brief bio about the writer"
+                       />
+                     </div>
+                     
+                     {/* Photo Upload Section */}
+                     <div className="mt-6">
+                       <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                       <div className="space-y-3">
+                         {/* Upload Interface */}
+                         <div className="border-2 border-dashed border-pink-200 rounded-xl p-4 text-center hover:border-pink-300 transition-colors">
+                           <input
+                             type="file"
+                             accept="image/*"
+                             onChange={(e) => handleFileSelect(e, 'editWriter')}
+                             className="hidden"
+                             id="edit-writer-photo-upload"
+                           />
+                           <label htmlFor="edit-writer-photo-upload" className="cursor-pointer">
+                             <div className="flex flex-col items-center gap-2">
+                               <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center">
+                                 <ImageIcon className="w-6 h-6 text-pink-600" />
+                               </div>
+                               <div>
+                                 <p className="text-sm font-medium text-gray-700">
+                                   {uploadingEditWriterImage ? 'Uploading...' : 'Click to upload photo'}
+                                 </p>
+                                 <p className="text-xs text-gray-500 mt-1">
+                                   JPEG, PNG, WebP, GIF up to 5MB
+                                 </p>
+                               </div>
+                             </div>
+                           </label>
+                         </div>
+
+                         {/* Upload Progress */}
+                         {uploadingEditWriterImage && (
+                           <div className="space-y-2">
+                             <div className="w-full bg-gray-200 rounded-full h-2">
+                               <div 
+                                 className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                                 style={{ width: `${editWriterUploadProgress}%` }}
+                               ></div>
+                             </div>
+                             <p className="text-xs text-gray-500 text-center">{editWriterUploadProgress}% complete</p>
+                           </div>
+                         )}
+
+                         {/* Image Preview */}
+                         {(editWriterImagePreview || editWriterForm.image_url) && (
+                           <div className="relative group">
+                             <div className="rounded-xl overflow-hidden border border-pink-200 bg-gray-50">
+                               <img 
+                                 src={editWriterImagePreview || editWriterForm.image_url} 
+                                 alt="Writer preview" 
+                                 className="w-full h-32 object-cover"
+                                 onError={(e) => {
+                                   e.currentTarget.style.display = 'none'
+                                   e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                                 }}
+                               />
+                               <div className="hidden w-full h-32 flex items-center justify-center text-gray-400">
+                                 <div className="text-center">
+                                   <ImageIcon className="w-8 h-8 mx-auto mb-2" />
+                                   <p className="text-sm">Image not found</p>
+                                 </div>
+                               </div>
+                             </div>
+                             
+                             {/* Remove Button */}
+                             <button
+                               type="button"
+                               onClick={() => removeImage('editWriter')}
+                               className="absolute top-2 right-2 p-1.5 bg-red-500/90 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                               title="Remove image"
+                             >
+                               <Trash2 className="w-3 h-3" />
+                             </button>
+
+                             {/* Upload Success Indicator */}
+                             {editWriterForm.image_url && (
+                               <div className="absolute top-2 left-2">
+                                 <div className="flex items-center gap-1 px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-lg text-xs">
+                                   <CheckCircle className="w-3 h-3" />
+                                   <span>Uploaded</span>
+                                 </div>
+                               </div>
+                             )}
+                           </div>
+                         )}
+                       </div>
+                     </div>
+                     
+                     <div className="flex items-center justify-end gap-4 pt-6 border-t border-gray-200 mt-6">
+                       <button 
+                         onClick={() => setShowEditWriter(false)} 
+                         className="px-4 py-2 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200 transition-colors"
+                       >
+                         Cancel
+                       </button>
+                       <button 
+                         onClick={handleUpdateWriter} 
+                         className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700 transition-colors"
+                       >
+                         Update Writer
+                       </button>
                      </div>
                    </div>
                  </div>

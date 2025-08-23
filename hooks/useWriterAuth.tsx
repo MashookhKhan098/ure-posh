@@ -8,8 +8,19 @@ interface Writer {
   name: string
   username: string
   bio?: string
-  field_allotted?: string
-  expertise?: string
+  is_active?: boolean
+  field_allotted?: {
+    company_updates: boolean
+    compliance_legal_insights: boolean
+    news_media_coverage: boolean
+    newsletter_archive: boolean
+    thought_leadership: boolean
+    workplace_stories: boolean
+    events_webinars: boolean
+    international_regulatory_policy_watch: boolean
+    united_kingdom_workplace: boolean
+    us_workplace: boolean
+  }
   phone?: string
 }
 
@@ -47,6 +58,16 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
       
       if (response.ok) {
         const data = await response.json()
+        
+        // Check if writer is active
+        if (data.writer && data.writer.is_active === false) {
+          setWriter(null)
+          setIsAuthenticated(false)
+          // Redirect to deactivation page or show message
+          router.push('/writer/deactivated')
+          return
+        }
+        
         setWriter(data.writer)
         setIsAuthenticated(true)
       } else {
@@ -76,6 +97,11 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json()
 
       if (response.ok && data.success) {
+        // Check if writer is active
+        if (data.writer && data.writer.is_active === false) {
+          return { success: false, error: 'Your account has been deactivated by the administrator. Please contact admin for assistance.' }
+        }
+        
         setWriter(data.writer)
         setIsAuthenticated(true)
         router.push('/writer/dashboard')

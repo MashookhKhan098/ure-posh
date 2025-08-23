@@ -42,6 +42,70 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
   const fileInputRef = useRef<HTMLInputElement>(null)
   const dropZoneRef = useRef<HTMLDivElement>(null)
 
+  // Get writer's allowed categories based on field_allotted
+  const getWriterAllowedCategories = async () => {
+    if (!writer?.field_allotted) {
+      console.log('No field_allotted data found')
+      return []
+    }
+    
+    try {
+      // Fetch all categories from the database
+      const categoriesResponse = await fetch('/api/categories')
+      if (!categoriesResponse.ok) {
+        console.error('Failed to fetch categories')
+        return []
+      }
+      
+      const categoriesData = await categoriesResponse.json()
+      const allCategories = categoriesData.data || []
+      
+      console.log('All categories from database:', allCategories)
+      
+             // Create a mapping between field names and category slugs
+       const fieldToCategoryMap: Record<string, string> = {
+         company_updates: 'company-updates',
+         compliance_legal_insights: 'compliance-legal-insights',
+         news_media_coverage: 'news-media-coverage',
+         newsletter_archive: 'newsletter-archive',
+         thought_leadership: 'thought-leadership',
+         workplace_stories: 'workplace-stories',
+         events_webinars: 'events-webinars',
+         international_regulatory_policy_watch: 'international-regulatory-policy-watch',
+         united_kingdom_workplace: 'united-kingdom-workplace',
+         us_workplace: 'us-workplace'
+       }
+       
+       const allowedCategories: Category[] = []
+       
+       // Map field_allotted boolean values to actual categories
+       Object.entries(writer.field_allotted).forEach(([fieldName, isAllowed]) => {
+         if (isAllowed) {
+           const categorySlug = fieldToCategoryMap[fieldName]
+           if (categorySlug) {
+             const category = allCategories.find((cat: any) => cat.slug === categorySlug)
+             if (category) {
+               allowedCategories.push({
+                 id: category.id,
+                 name: category.name
+               })
+             } else {
+               console.warn(`Category with slug '${categorySlug}' not found in database`)
+             }
+           }
+         }
+       })
+      
+      console.log('Field allotted values:', writer.field_allotted)
+      console.log('Allowed categories result:', allowedCategories)
+      
+      return allowedCategories
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      return []
+    }
+  }
+
   const contentRef = React.useRef<HTMLTextAreaElement | null>(null)
 
   const wrapSelection = (before: string, after: string = '') => {
@@ -79,22 +143,19 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
     setFormData((prev) => ({ ...prev, content: newValue }))
   }
 
-  // Fetch categories on component mount
+  // Set writer's allowed categories on component mount
   useEffect(() => {
-    fetchCategories()
-  }, [])
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/categories')
-      const result = await response.json()
-      if (result.data) {
-        setCategories(result.data)
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error)
+    console.log('Writer data:', writer)
+    console.log('Field allotted data:', writer?.field_allotted)
+    
+    const fetchCategories = async () => {
+      const allowedCategories = await getWriterAllowedCategories()
+      console.log('Allowed categories:', allowedCategories)
+      setCategories(allowedCategories)
     }
-  }
+    
+    fetchCategories()
+  }, [writer])
 
   // Auto-generate slug from title
   const generateSlug = (title: string) => {
@@ -131,6 +192,22 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
       })
       return false
     }
+    if (categories.length === 0) {
+      toast({
+        title: "Validation Error",
+        description: "No content areas assigned. Please contact admin.",
+        variant: "destructive"
+      })
+      return false
+    }
+    if (!formData.category_id) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a category",
+        variant: "destructive"
+      })
+      return false
+    }
     return true
   }
 
@@ -159,7 +236,7 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
           content: formData.content,
           image_url: formData.image_url || null,
           author: author,
-          category_id: formData.category_id || null,
+          category_id: formData.category_id,
           is_breaking: false,
           is_hot: false,
           is_featured: false,
@@ -735,29 +812,95 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
                   )}
                 </div>
 
-                {/* Category */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <Select
-                    value={formData.category_id}
-                    onValueChange={(value) => handleInputChange('category_id', value)}
-                  >
-                    <SelectTrigger className="w-full border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black">
-                      <SelectValue placeholder="Choose a category..." />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl border border-pink-200 bg-white">
-                      {categories.map((category) => (
-                        <SelectItem 
-                          key={category.id} 
-                          value={category.id}
-                          className="hover:bg-pink-50 focus:bg-pink-50 text-sm"
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                                 {/* Category */}
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                   {categories.length > 0 && (
+                     <div className="mb-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl shadow-sm">
+                       <div className="flex items-center gap-2 mb-2">
+                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                         <span className="text-xs font-semibold text-green-800">Your Assigned Content Areas</span>
+                       </div>
+                       <div className="flex flex-wrap gap-1.5">
+                         {categories.map((category) => (
+                           <span key={category.id} className="px-2.5 py-1 bg-white/70 border border-green-200 text-green-800 rounded-lg text-xs font-medium shadow-sm backdrop-blur-sm">
+                             {category.name}
+                           </span>
+                         ))}
+                       </div>
+                     </div>
+                   )}
+                   {categories.length > 0 ? (
+                     <div className="relative">
+                       <Select
+                         value={formData.category_id}
+                         onValueChange={(value) => handleInputChange('category_id', value)}
+                       >
+                         <SelectTrigger className="w-full h-12 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/90 backdrop-blur-sm text-black shadow-sm hover:border-pink-300 transition-all duration-200 group">
+                           <div className="flex items-center gap-3">
+                             <div className="w-5 h-5 bg-gradient-to-br from-pink-100 to-rose-100 rounded-lg flex items-center justify-center">
+                               <Tag className="w-3 h-3 text-pink-600" />
+                             </div>
+                             <SelectValue placeholder="Select your content area..." className="text-sm font-medium" />
+                           </div>
+                           <div className="w-5 h-5 bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg flex items-center justify-center group-hover:from-pink-100 group-hover:to-rose-100 transition-all duration-200">
+                             <svg className="w-3 h-3 text-pink-600 transform group-data-[state=open]:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                             </svg>
+                           </div>
+                         </SelectTrigger>
+                         <SelectContent className="rounded-xl border-2 border-pink-200 bg-white/95 backdrop-blur-md shadow-xl max-h-60 overflow-hidden">
+                           <div className="p-2">
+                             <div className="text-xs font-semibold text-pink-700 mb-2 px-2">Available Categories</div>
+                             {categories.map((category, index) => (
+                               <SelectItem 
+                                 key={category.id} 
+                                 value={category.id}
+                                 className="relative rounded-lg border border-transparent hover:border-pink-200 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 focus:bg-gradient-to-r focus:from-pink-50 focus:to-rose-50 text-sm font-medium transition-all duration-200 cursor-pointer group/item"
+                               >
+                                 <div className="flex items-center gap-3 py-2.5 px-3">
+                                   <div className="w-6 h-6 bg-gradient-to-br from-pink-100 to-rose-100 rounded-lg flex items-center justify-center group-hover/item:from-pink-200 group-hover/item:to-rose-200 transition-all duration-200">
+                                     <span className="text-xs font-bold text-pink-700">
+                                       {String.fromCharCode(65 + index)}
+                                     </span>
+                                   </div>
+                                   <span className="text-gray-800 group-hover/item:text-pink-800 transition-colors duration-200">
+                                     {category.name}
+                                   </span>
+                                   <div className="ml-auto opacity-0 group-hover/item:opacity-100 transition-opacity duration-200">
+                                     <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                                   </div>
+                                 </div>
+                               </SelectItem>
+                             ))}
+                           </div>
+                         </SelectContent>
+                       </Select>
+                       {formData.category_id && (
+                         <div className="absolute -bottom-8 left-0 right-0">
+                           <div className="flex items-center gap-2 text-xs text-green-600 animate-in slide-in-from-bottom-2 duration-300">
+                             <CheckCircle className="w-3 h-3" />
+                             <span>Category selected successfully</span>
+                           </div>
+                         </div>
+                       )}
+                     </div>
+                   ) : (
+                     <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl shadow-sm">
+                       <div className="flex items-start gap-3">
+                         <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                           <AlertCircle className="w-4 h-4 text-yellow-600" />
+                         </div>
+                         <div className="space-y-1">
+                           <div className="text-sm font-semibold text-yellow-800">No Content Areas Assigned</div>
+                           <div className="text-xs text-yellow-700">Please contact your administrator to assign content areas for your account.</div>
+                         </div>
+                       </div>
+                     </div>
+                   )}
+                 </div>
+
+
 
                 {/* Article Stats */}
                 <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-4 border border-pink-200/50">

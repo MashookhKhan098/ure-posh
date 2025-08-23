@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useAdminAuth } from "@/hooks/useAdminAuth"
-import { X, Save, ArrowLeft } from "lucide-react"
+import { X, Save, ArrowLeft, Upload, Image as ImageIcon } from "lucide-react"
 
 export default function AdminPeopleNewPage() {
   const router = useRouter()
@@ -36,6 +36,10 @@ export default function AdminPeopleNewPage() {
 
   const [expertiseInput, setExpertiseInput] = useState("")
   const [languagesInput, setLanguagesInput] = useState("")
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [dragActive, setDragActive] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (loading) return
@@ -51,6 +55,88 @@ export default function AdminPeopleNewPage() {
 
   const removeTag = (key: "expertise" | "languages", value: string) => {
     setForm((prev: any) => ({ ...prev, [key]: prev[key].filter((t: string) => t !== value) }))
+  }
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      setUploadingImage(true)
+      setError(null)
+
+      const formData = new FormData()
+      formData.append('image', file)
+
+      const response = await fetch('/api/people/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to upload image')
+      }
+
+      setForm((prev: any) => ({ ...prev, image_url: data.image_url }))
+      setImagePreview(data.image_url)
+    } catch (e: any) {
+      setError(e.message || 'Error uploading image')
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      // Create preview
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+      
+      // Upload the file
+      handleImageUpload(file)
+    }
+  }
+
+  const removeImage = () => {
+    setForm((prev: any) => ({ ...prev, image_url: "" }))
+    setImagePreview(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+  }
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true)
+    } else if (e.type === "dragleave") {
+      setDragActive(false)
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0]
+      if (file.type.startsWith('image/')) {
+        // Create preview
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          setImagePreview(e.target?.result as string)
+        }
+        reader.readAsDataURL(file)
+        
+        // Upload the file
+        handleImageUpload(file)
+      }
+    }
   }
 
   const validate = () => {
@@ -137,8 +223,87 @@ export default function AdminPeopleNewPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-              <input value={form.image_url} onChange={(e)=>setForm({...form, image_url: e.target.value})} placeholder="https://..." className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
+              <div className="space-y-3">
+                {/* Image Preview */}
+                {(imagePreview || form.image_url) && (
+                  <div className="relative inline-block">
+                    <img 
+                      src={imagePreview || form.image_url} 
+                      alt="Profile preview" 
+                      className="w-24 h-24 object-cover rounded-xl border-2 border-gray-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+                
+                {/* Upload Area */}
+                <div 
+                  className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${
+                    dragActive 
+                      ? 'border-blue-400 bg-blue-50' 
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                >
+                  <div className="space-y-3">
+                    <ImageIcon className="w-8 h-8 mx-auto text-gray-400" />
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={uploadingImage}
+                          className="text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                          Click to upload
+                        </button>
+                        {' '}or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        PNG, JPG, WebP, GIF up to 5MB
+                      </p>
+                    </div>
+                    
+                    {uploadingImage && (
+                      <div className="flex items-center justify-center gap-2 text-sm text-blue-600">
+                        <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        Uploading...
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Hidden file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                </div>
+                
+                {/* Manual URL input as fallback */}
+                <div>
+                  <input 
+                    value={form.image_url} 
+                    onChange={(e)=>setForm({...form, image_url: e.target.value})} 
+                    placeholder="Or enter image URL manually" 
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 text-sm" 
+                  />
+                </div>
+                
+
+              </div>
             </div>
 
             <div className="md:col-span-2">

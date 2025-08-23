@@ -84,7 +84,18 @@ export async function GET(req: NextRequest) {
         draftCount: 0,
         verified: writer.verified || false,
         bio: writer.bio,
-        specializations: [writer.field_allotted, writer.expertise].filter(Boolean),
+        specializations: [
+          writer.company_updates && 'Company Updates',
+          writer.compliance_legal_insights && 'Compliance & Legal Insights',
+          writer.news_media_coverage && 'News & Media Coverage',
+          writer.newsletter_archive && 'Newsletter Archive',
+          writer.thought_leadership && 'Thought Leadership',
+          writer.workplace_stories && 'Workplace Stories',
+          writer.events_webinars && 'Events & Webinars',
+          writer.international_regulatory_policy_watch && 'International Regulatory & Policy Watch',
+          writer.united_kingdom_workplace && 'United Kingdom Workplace',
+          writer.us_workplace && 'US Workplace'
+        ].filter(Boolean),
         lastActive: writer.updated_at ? new Date(writer.updated_at).toISOString().split('T')[0] : 'Never',
         avatar: writer.full_name ? writer.full_name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : 'U'
       }));
@@ -120,7 +131,24 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { username, name, password, bio, field_allotted, expertise, phone } = await req.json()
+    const { 
+      username, 
+      name, 
+      password, 
+      bio, 
+      phone,
+      // Field Allotted Checkboxes
+      company_updates,
+      compliance_legal_insights,
+      news_media_coverage,
+      newsletter_archive,
+      thought_leadership,
+      workplace_stories,
+      events_webinars,
+      international_regulatory_policy_watch,
+      united_kingdom_workplace,
+      us_workplace
+    } = await req.json()
 
     if (!username || !password || !name) {
       return NextResponse.json({ error: 'username, name and password are required' }, { status: 400 })
@@ -131,7 +159,25 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabase
       .from('writer')
-      .insert({ username, full_name: name, password_hash: passwordHash, bio, field_allotted, expertise, phone, is_active: true })
+      .insert({ 
+        username, 
+        full_name: name, 
+        password_hash: passwordHash, 
+        bio, 
+        phone, 
+        is_active: true,
+        // Field Allotted Checkboxes
+        company_updates: company_updates || false,
+        compliance_legal_insights: compliance_legal_insights || false,
+        news_media_coverage: news_media_coverage || false,
+        newsletter_archive: newsletter_archive || false,
+        thought_leadership: thought_leadership || false,
+        workplace_stories: workplace_stories || false,
+        events_webinars: events_webinars || false,
+        international_regulatory_policy_watch: international_regulatory_policy_watch || false,
+        united_kingdom_workplace: united_kingdom_workplace || false,
+        us_workplace: us_workplace || false
+      })
       .select()
       .single()
 

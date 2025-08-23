@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const supabase = createAdminClient()
     const { data: writer } = await supabase
       .from('writer')
-      .select('id, username, full_name, bio, field_allotted, expertise, phone, is_active')
+      .select('id, username, full_name, bio, phone, is_active, company_updates, compliance_legal_insights, news_media_coverage, newsletter_archive, thought_leadership, workplace_stories, events_webinars, international_regulatory_policy_watch, united_kingdom_workplace, us_workplace')
       .eq('id', writerId)
       .single()
 
@@ -29,8 +29,18 @@ export async function GET(req: NextRequest) {
         name: writer.full_name,
         username: writer.username,
         bio: writer.bio,
-        field_allotted: writer.field_allotted,
-        expertise: writer.expertise,
+        field_allotted: {
+          company_updates: writer.company_updates,
+          compliance_legal_insights: writer.compliance_legal_insights,
+          news_media_coverage: writer.news_media_coverage,
+          newsletter_archive: writer.newsletter_archive,
+          thought_leadership: writer.thought_leadership,
+          workplace_stories: writer.workplace_stories,
+          events_webinars: writer.events_webinars,
+          international_regulatory_policy_watch: writer.international_regulatory_policy_watch,
+          united_kingdom_workplace: writer.united_kingdom_workplace,
+          us_workplace: writer.us_workplace
+        },
         phone: writer.phone,
       },
     })

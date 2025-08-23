@@ -32,6 +32,10 @@ import {
   UserCheck,
   Eye,
   Zap,
+  Flag,
+  Gavel,
+  Users2,
+  Building2,
 } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -75,7 +79,7 @@ export default function ExternalMembersRenownedNGOPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <Badge className="bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 text-blue-800 hover:from-blue-200 hover:via-blue-300 hover:to-blue-200 px-6 py-3 text-base font-semibold border border-blue-200/50 shadow-lg shadow-blue-500/10">
                 <Users className="w-4 h-4 mr-2" />
-                Equality Compliance
+                Global Compliance
               </Badge>
             </motion.div>
             <motion.h1
@@ -84,9 +88,9 @@ export default function ExternalMembersRenownedNGOPage() {
               transition={{ delay: 0.3 }}
               className="text-5xl lg:text-6xl font-bold text-black leading-tight"
             >
-              External Members from{" "}
+              POSH Committee and{" "}
               <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                Renowned NGOs
+                External NGO Members
               </span>
             </motion.h1>
             <motion.p
@@ -95,8 +99,8 @@ export default function ExternalMembersRenownedNGOPage() {
               transition={{ delay: 0.4 }}
               className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed"
             >
-              Connect with experienced external committee members from established NGOs to ensure impartial, 
-              professional, and credible handling of workplace harassment cases with the highest ethical standards.
+              India, UK, and US Compliance Guide - Expert external members from renowned NGOs 
+              to ensure impartial, professional, and credible handling of workplace harassment cases.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -105,8 +109,8 @@ export default function ExternalMembersRenownedNGOPage() {
               className="flex flex-wrap justify-center gap-4"
             >
               <div className="flex items-center gap-2 text-gray-600">
-                <Clock className="w-5 h-5" />
-                <span>1-2 weeks</span>
+                <Flag className="w-5 h-5" />
+                <span>India, UK, US</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600">
                 <Users className="w-5 h-5" />
@@ -114,7 +118,7 @@ export default function ExternalMembersRenownedNGOPage() {
               </div>
               <div className="flex items-center gap-2 text-gray-600">
                 <Scale className="w-5 h-5" />
-                <span>Impartial Investigation</span>
+                <span>Legal Compliance</span>
               </div>
             </motion.div>
           </div>
@@ -127,44 +131,50 @@ export default function ExternalMembersRenownedNGOPage() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-12 bg-gray-100 p-1 rounded-xl">
               <TabsTrigger value="overview" className="rounded-lg">Overview</TabsTrigger>
-              <TabsTrigger value="process" className="rounded-lg">Process</TabsTrigger>
-              <TabsTrigger value="benefits" className="rounded-lg">Benefits</TabsTrigger>
+              <TabsTrigger value="india" className="rounded-lg">India</TabsTrigger>
+              <TabsTrigger value="international" className="rounded-lg">UK & US</TabsTrigger>
               <TabsTrigger value="contact" className="rounded-lg">Get Started</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-12">
               <motion.div variants={staggerContainer} initial="initial" animate="animate" className="space-y-8">
+                <motion.div variants={fadeInUp} className="text-center">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">What is a POSH Committee?</h2>
+                  <p className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                    A POSH Committee, also known as the Internal Committee (IC), is a specialized team that helps 
+                    organizations prevent and address workplace sexual harassment. Having an effective POSH Committee 
+                    is crucial not only for legal compliance but also for building a truly safe and inclusive environment.
+                  </p>
+                </motion.div>
+
                 <motion.div variants={fadeInUp} className="grid lg:grid-cols-2 gap-8 items-center">
                   <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                      Expert External Committee Members
-                    </h2>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-6">The Power of External Members</h3>
                     <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                      Our network of external committee members from renowned NGOs brings extensive experience 
-                      in workplace investigations, legal compliance, and social justice. They ensure impartial 
-                      and professional handling of all POSH cases.
+                      External members provide an unbiased voice, ensuring fair investigations and decisions. 
+                      Their presence reassures employees that the process is trustworthy and professional.
                     </p>
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
                         <div>
-                          <h4 className="font-semibold text-gray-900">Vetted Professionals</h4>
-                          <p className="text-gray-600">Carefully selected experts with proven track records</p>
+                          <h4 className="font-semibold text-gray-900">Neutrality & Objectivity</h4>
+                          <p className="text-gray-600">External members provide an unbiased voice, ensuring fair investigations</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
                         <div>
-                          <h4 className="font-semibold text-gray-900">Impartial Investigations</h4>
-                          <p className="text-gray-600">Unbiased case handling and decision-making</p>
+                          <h4 className="font-semibold text-gray-900">Credibility</h4>
+                          <p className="text-gray-600">Their presence reassures employees that the process is trustworthy</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
                         <div>
-                          <h4 className="font-semibold text-gray-900">Legal Expertise</h4>
-                          <p className="text-gray-600">Deep understanding of POSH Act and workplace laws</p>
+                          <h4 className="font-semibold text-gray-900">Expertise</h4>
+                          <p className="text-gray-600">NGO professionals bring deep experience in gender issues and legal requirements</p>
                         </div>
                       </div>
                     </div>
@@ -173,16 +183,16 @@ export default function ExternalMembersRenownedNGOPage() {
                     <div className="bg-gradient-to-br from-blue-50 to-green-50 p-8 rounded-2xl border border-blue-100">
                       <div className="text-center space-y-4">
                         <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-green-500 rounded-full flex items-center justify-center mx-auto">
-                          <Users className="w-10 h-10 text-white" />
+                          <Users2 className="w-10 h-10 text-white" />
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900">What You Get</h3>
+                        <h3 className="text-xl font-bold text-gray-900">Benefits of External Members</h3>
                         <ul className="text-left space-y-2 text-gray-600">
-                          <li>• Pre-vetted External Members</li>
-                          <li>• Impartial Investigation Support</li>
-                          <li>• Legal Compliance Assurance</li>
-                          <li>• Professional Case Handling</li>
-                          <li>• Ongoing Support & Guidance</li>
-                          <li>• Credible Outcomes</li>
+                          <li>• Unbiased investigation and resolution</li>
+                          <li>• Up-to-date knowledge of local and global laws</li>
+                          <li>• Enhanced employee trust and confidence</li>
+                          <li>• Public demonstration of ethical leadership</li>
+                          <li>• Professional case handling expertise</li>
+                          <li>• Reduced risk of bias allegations</li>
                         </ul>
                       </div>
                     </div>
@@ -190,39 +200,39 @@ export default function ExternalMembersRenownedNGOPage() {
                 </motion.div>
 
                 <motion.div variants={fadeInUp} className="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-2xl">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Key Features</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Global Standards</h3>
                   <div className="grid md:grid-cols-3 gap-6">
                     <Card className="bg-white border-gray-200 hover:border-blue-300 transition-colors">
                       <CardHeader className="text-center">
                         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <UserCheck className="w-6 h-6 text-blue-600" />
+                          <Flag className="w-6 h-6 text-blue-600" />
                         </div>
-                        <CardTitle className="text-lg">Vetted Professionals</CardTitle>
+                        <CardTitle className="text-lg">India</CardTitle>
                       </CardHeader>
                       <CardContent className="text-center text-gray-600">
-                        Carefully selected experts with proven track records in workplace investigations
+                        POSH Act 2013 mandates external members for companies with 10+ employees
                       </CardContent>
                     </Card>
-                    <Card className="bg-white border-gray-200 hover:border-blue-300 transition-colors">
+                    <Card className="bg-white border-gray-200 hover:border-green-300 transition-colors">
                       <CardHeader className="text-center">
                         <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Eye className="w-6 h-6 text-green-600" />
+                          <Building2 className="w-6 h-6 text-green-600" />
                         </div>
-                        <CardTitle className="text-lg">Impartial Handling</CardTitle>
+                        <CardTitle className="text-lg">UK</CardTitle>
                       </CardHeader>
                       <CardContent className="text-center text-gray-600">
-                        Unbiased investigation and decision-making processes for all cases
+                        Best practice to include external advisors for impartiality and transparency
                       </CardContent>
                     </Card>
-                    <Card className="bg-white border-gray-200 hover:border-blue-300 transition-colors">
+                    <Card className="bg-white border-gray-200 hover:border-purple-300 transition-colors">
                       <CardHeader className="text-center">
                         <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Scale className="w-6 h-6 text-purple-600" />
+                          <Gavel className="w-6 h-6 text-purple-600" />
                         </div>
-                        <CardTitle className="text-lg">Legal Compliance</CardTitle>
+                        <CardTitle className="text-lg">US</CardTitle>
                       </CardHeader>
                       <CardContent className="text-center text-gray-600">
-                        Deep understanding of POSH Act and workplace harassment laws
+                        External legal experts and NGO specialists ensure unbiased perspectives
                       </CardContent>
                     </Card>
                   </div>
@@ -230,138 +240,166 @@ export default function ExternalMembersRenownedNGOPage() {
               </motion.div>
             </TabsContent>
 
-            {/* Process Tab */}
-            <TabsContent value="process" className="space-y-12">
+            {/* India Tab */}
+            <TabsContent value="india" className="space-y-12">
               <motion.div variants={staggerContainer} initial="initial" animate="animate" className="space-y-8">
                 <motion.div variants={fadeInUp} className="text-center">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Selection & Integration Process</h2>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">POSH Committee Structure in India</h2>
                   <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                    We follow a rigorous process to identify, vet, and integrate external committee members 
-                    who meet the highest standards of professionalism and expertise.
+                    Under India's POSH Act, 2013, every company with 10 or more employees is required to establish 
+                    an Internal Committee to address complaints of sexual harassment.
                   </p>
                 </motion.div>
 
-                <motion.div variants={fadeInUp} className="space-y-8">
-                  {[
-                    {
-                      step: "01",
-                      title: "NGO Partnership Identification",
-                      description: "We identify and establish partnerships with renowned NGOs that have proven track records in social justice and workplace issues.",
-                      icon: Handshake,
-                      color: "from-blue-500 to-blue-600"
-                    },
-                    {
-                      step: "02",
-                      title: "Expert Screening & Selection",
-                      description: "Rigorous screening process to identify individuals with the right qualifications, experience, and ethical standards.",
-                      icon: UserCheck,
-                      color: "from-green-500 to-green-600"
-                    },
-                    {
-                      step: "03",
-                      title: "Background Verification",
-                      description: "Comprehensive background checks, reference verification, and assessment of professional credentials.",
-                      icon: Shield,
-                      color: "from-purple-500 to-purple-600"
-                    },
-                    {
-                      step: "04",
-                      title: "Training & Orientation",
-                      description: "Specialized training on POSH Act, investigation procedures, and your organization's specific policies.",
-                      icon: GraduationCap,
-                      color: "from-orange-500 to-orange-600"
-                    },
-                    {
-                      step: "05",
-                      title: "Integration & Support",
-                      description: "Seamless integration into your Internal Committee with ongoing support and guidance.",
-                      icon: TrendingUp,
-                      color: "from-pink-500 to-pink-600"
-                    }
-                  ].map((item, index) => (
-                    <div key={index} className="flex gap-6 items-start">
-                      <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0`}>
-                        {item.step}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <item.icon className="w-6 h-6 text-gray-600" />
-                          <h3 className="text-xl font-bold text-gray-900">{item.title}</h3>
-                        </div>
-                        <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                      </div>
+                <motion.div variants={fadeInUp} className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-2xl border border-blue-100">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Mandatory External Member Requirement</h3>
+                  <p className="text-lg text-gray-600 mb-6 text-center">
+                    A unique feature of this law is the mandatory inclusion of an external member, a representative 
+                    from a respected NGO or a professional with experience in women's issues.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white p-6 rounded-xl">
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">Why Include External Members from Renowned NGOs?</h4>
+                      <ul className="space-y-3 text-gray-700">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span><strong>Neutrality & Objectivity:</strong> External members provide an unbiased voice, ensuring fair investigations and decisions.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span><strong>Credibility:</strong> Their presence reassures employees that the process is trustworthy and professional.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span><strong>Expertise:</strong> NGO professionals bring deep experience in gender issues, legal requirements, and trauma-sensitive care.</span>
+                        </li>
+                      </ul>
                     </div>
-                  ))}
+                    <div className="bg-white p-6 rounded-xl">
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">Well-known NGOs</h4>
+                      <p className="text-gray-700 mb-4">Whose members serve as external IC members include:</p>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>• WCRT</li>
+                        <li>• Breakthrough India</li>
+                        <li>• Jagori</li>
+                        <li>• Majlis Legal Centre</li>
+                        <li>• CSR India</li>
+                        <li>• SAKSHI</li>
+                      </ul>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={fadeInUp} className="space-y-6">
+                  <h3 className="text-2xl font-bold text-gray-900 text-center">Legal Framework</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <Card className="bg-white border-gray-200">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <FileText className="w-5 h-5 text-blue-600" />
+                          POSH Act 2013 Requirements
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <p className="text-gray-700">• Companies with 10+ employees must establish Internal Committee</p>
+                        <p className="text-gray-700">• External member is mandatory</p>
+                        <p className="text-gray-700">• Must be from NGO or professional with women's issues experience</p>
+                        <p className="text-gray-700">• Ensures impartial investigation and resolution</p>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-white border-gray-200">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Shield className="w-5 h-5 text-green-600" />
+                          Compliance Benefits
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <p className="text-gray-700">• Fulfills legal requirements</p>
+                        <p className="text-gray-700">• Shows genuine commitment to respectful workplace</p>
+                        <p className="text-gray-700">• Enhances organizational reputation</p>
+                        <p className="text-gray-700">• Reduces legal liabilities</p>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </motion.div>
               </motion.div>
             </TabsContent>
 
-            {/* Benefits Tab */}
-            <TabsContent value="benefits" className="space-y-12">
+            {/* International Tab */}
+            <TabsContent value="international" className="space-y-12">
               <motion.div variants={staggerContainer} initial="initial" animate="animate" className="space-y-8">
                 <motion.div variants={fadeInUp} className="text-center">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6">Why Choose Our External Members?</h2>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">POSH & Harassment Committees: UK and US Standards</h2>
                   <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                    Our external committee members bring credibility, expertise, and impartiality that enhance 
-                    your organization's POSH compliance framework and investigation processes.
+                    While the UK and US do not have a law identical to India's POSH Act, workplace harassment and 
+                    gender equality are taken very seriously.
                   </p>
                 </motion.div>
 
                 <motion.div variants={fadeInUp} className="grid lg:grid-cols-2 gap-8">
                   <div className="space-y-6">
-                    <h3 className="text-2xl font-bold text-gray-900">Immediate Benefits</h3>
-                    <div className="space-y-4">
-                      {[
-                        "Impartial and unbiased investigations",
-                        "Enhanced credibility of outcomes",
-                        "Professional case handling expertise",
-                        "Reduced risk of bias allegations",
-                        "Compliance with legal requirements",
-                        "Improved stakeholder confidence"
-                      ].map((benefit, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                          <span className="text-gray-700">{benefit}</span>
-                        </div>
-                      ))}
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Flag className="w-6 h-6 text-blue-600" />
+                        UK Approach
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        Businesses may invite external HR professionals or NGO representatives—such as those from 
+                        the Equality and Human Rights Commission or Women's Aid—to ensure transparency and fairness in investigations.
+                      </p>
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold text-blue-800">Key Organizations:</p>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• Equality and Human Rights Commission</li>
+                          <li>• Women's Aid</li>
+                          <li>• External HR professionals</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <h3 className="text-2xl font-bold text-gray-900">Long-term Advantages</h3>
-                    <div className="space-y-4">
-                      {[
-                        "Sustainable investigation framework",
-                        "Enhanced organizational reputation",
-                        "Reduced legal liabilities",
-                        "Better employee trust",
-                        "Improved workplace culture",
-                        "Competitive compliance advantage"
-                      ].map((advantage, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <Star className="w-5 h-5 text-yellow-600 mt-1 flex-shrink-0" />
-                          <span className="text-gray-700">{advantage}</span>
-                        </div>
-                      ))}
+                    <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <Gavel className="w-6 h-6 text-green-600" />
+                        US Practice
+                      </h3>
+                      <p className="text-gray-700 mb-4">
+                        US firms often include external legal experts or NGO specialists like those from the National 
+                        Women's Law Center (NWLC) or RAINN to bring unbiased perspectives in sensitive cases.
+                      </p>
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold text-green-800">Key Organizations:</p>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• National Women's Law Center (NWLC)</li>
+                          <li>• RAINN</li>
+                          <li>• External legal experts</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
 
-                <motion.div variants={fadeInUp} className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-2xl border border-blue-100">
-                  <div className="text-center space-y-6">
-                    <h3 className="text-2xl font-bold text-gray-900">Success Metrics</h3>
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-blue-600 mb-2">100%</div>
-                        <div className="text-gray-700">Impartial Investigations</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-green-600 mb-2">1-2</div>
-                        <div className="text-gray-700">Weeks Setup</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-purple-600 mb-2">24/7</div>
-                        <div className="text-gray-700">Support Available</div>
-                      </div>
+                <motion.div variants={fadeInUp} className="bg-gradient-to-r from-purple-50 to-purple-100 p-8 rounded-2xl border border-purple-200">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">International Best Practices</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">Companies are encouraged to:</h4>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>• Form harassment committees or ethics boards</li>
+                        <li>• Deal with complaints professionally</li>
+                        <li>• Involve external advisors for impartiality</li>
+                        <li>• Ensure transparency and fairness</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">Benefits of External Involvement:</h4>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>• Unbiased investigation and resolution</li>
+                        <li>• Up-to-date knowledge of local and global laws</li>
+                        <li>• Enhanced employee trust and confidence</li>
+                        <li>• Public demonstration of ethical leadership</li>
+                      </ul>
                     </div>
                   </div>
                 </motion.div>
@@ -372,64 +410,67 @@ export default function ExternalMembersRenownedNGOPage() {
             <TabsContent value="contact" className="space-y-12">
               <motion.div variants={staggerContainer} initial="initial" animate="animate" className="space-y-8">
                 <motion.div variants={fadeInUp} className="text-center">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to Get Started?</h2>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">How UREPosh Can Help</h2>
                   <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                    Enhance your Internal Committee with experienced external members who bring credibility, 
-                    expertise, and impartiality to your POSH compliance framework.
+                    Our network includes leading NGO professionals and compliance specialists ready to serve as external 
+                    POSH Committee members for organizations in India and as external advisors for companies in the UK and US.
                   </p>
                 </motion.div>
 
                 <motion.div variants={fadeInUp} className="grid lg:grid-cols-2 gap-8">
                   <div className="space-y-6">
-                    <h3 className="text-2xl font-bold text-gray-900">What Happens Next?</h3>
+                    <h3 className="text-2xl font-bold text-gray-900">We Help You:</h3>
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-blue-600 font-bold">1</span>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900">Initial Assessment</h4>
-                          <p className="text-gray-600">Assessment of your current committee structure and specific needs</p>
-                        </div>
+                        <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
+                        <span className="text-gray-700">Select qualified external IC members</span>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-green-600 font-bold">2</span>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900">Member Selection</h4>
-                          <p className="text-gray-600">Selection of appropriate external members based on your requirements</p>
-                        </div>
+                        <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
+                        <span className="text-gray-700">Stay audit-ready and compliant with the latest laws</span>
                       </div>
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-purple-600 font-bold">3</span>
+                        <CheckCircle className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
+                        <span className="text-gray-700">Foster a culture of respect, trust, and safety</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl">
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="font-semibold text-gray-900">Who can be an external member of the POSH Committee in India?</p>
+                          <p className="text-sm text-gray-700 mt-1">
+                            An external member is typically a person who is not an employee of the organization and brings relevant expertise in areas such as legal matters, gender sensitivity, or workplace harassment prevention.
+                          </p>
                         </div>
                         <div>
-                          <h4 className="font-semibold text-gray-900">Integration</h4>
-                          <p className="text-gray-600">Seamless integration and orientation of external members</p>
+                          <p className="font-semibold text-gray-900">Why should my company have an external NGO member?</p>
+                          <p className="text-sm text-gray-700 mt-1">
+                            External NGO members bring unbiased, specialized expertise and demonstrate your company's commitment to upholding gender sensitivity and compliance with legal requirements.
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-2xl">
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
+                  <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-2xl border border-blue-200">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Connect with Us</h3>
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <Phone className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-700">+91 98765 43210</span>
+                        <Phone className="w-5 h-5 text-blue-600" />
+                        <span className="text-gray-700 font-semibold">+91 99999 44807</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Mail className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-700">info@ureposh.com</span>
+                        <Mail className="w-5 h-5 text-green-600" />
+                        <span className="text-gray-700">ea@ureposh.com</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <MapPin className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-700">Mumbai, Maharashtra, India</span>
+                        <MapPin className="w-5 h-5 text-purple-600" />
+                        <span className="text-gray-700">C 84, Sector 2, Noida, 201301</span>
                       </div>
                     </div>
                     <div className="mt-6">
-                      <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl text-lg font-bold">
+                      <Button className="w-full bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-600 hover:to-green-700 text-white py-3 rounded-xl text-lg font-bold">
                         Schedule Free Consultation
                       </Button>
                     </div>
@@ -452,14 +493,14 @@ export default function ExternalMembersRenownedNGOPage() {
             className="space-y-8"
           >
             <h2 className="text-4xl font-bold text-gray-900">
-              Enhance Your Committee Today
+              UREPosh: Trusted Partners for POSH, Harassment Committee Compliance, and Workplace Inclusion
             </h2>
             <p className="text-xl text-gray-600">
               Don't compromise on the quality of your workplace investigations. Partner with experienced 
               external members who bring credibility and expertise to your POSH compliance framework.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl text-lg font-bold">
+              <Button className="bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-600 hover:to-green-700 text-white px-8 py-3 rounded-xl text-lg font-bold">
                 Get Started Now
               </Button>
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-xl text-lg font-bold">

@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, MessageCircle, Calendar, ArrowRight, User, Building, CheckCircle, Clock, Shield, Award, Send, FileText, Coffee } from "lucide-react"
+import { Phone, Mail, MapPin, MessageCircle, Calendar, ArrowRight, User, Building, CheckCircle, Clock, Shield, Award, Send, FileText } from "lucide-react"
 
 export default function ConnectPage() {
   const [formData, setFormData] = useState({
@@ -349,57 +349,39 @@ export default function ConnectPage() {
 
                    </div>
 
-                                     {/* Floating Mug Section */}
-                   <div className="mt-8">
-                     <motion.div
-                       initial={{ opacity: 0, y: 20 }}
-                       animate={{ opacity: 1, y: 0 }}
-                       transition={{ duration: 0.6, delay: 0.6 }}
-                       className="relative overflow-hidden"
-                     >
-                                               <Card className="relative shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105">
-                          {/* Background Mug */}
-                          <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                            <iframe 
-                              src="https://floating-mug.vercel.app/"
-                              className="w-64 h-64 rounded-lg"
-                              style={{ minHeight: '256px', minWidth: '256px' }}
-                              title="Floating Mug Background"
-                              frameBorder="0"
-                              allowFullScreen
-                            />
+                                                                           {/* Floating Mug Section */}
+                    <div>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.6 }}
+                        className="relative"
+                      >
+                                                        <div className="relative">
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.8 }}
+                              className="text-center"
+                            >
+                                                                                                                                                          {/* Interactive Mug in Foreground */}
+                                  <div>
+                                    <iframe 
+                                      src="https://floating-mug.vercel.app/"
+                                      className="w-80 h-64 mx-auto cursor-pointer transition-all duration-300"
+                                      style={{ minHeight: '256px', minWidth: '320px' }}
+                                      title="Interactive Floating Mug"
+                                      frameBorder="0"
+                                      allowFullScreen
+                                      onClick={() => window.open('https://floating-mug.vercel.app/', '_blank')}
+                                    />
+                                  </div>
+                              
+                              
+                            </motion.div>
                           </div>
-                          
-                          <CardContent className="p-12 relative z-10">
-                           <motion.div
-                             initial={{ opacity: 0 }}
-                             animate={{ opacity: 1 }}
-                             transition={{ delay: 0.8 }}
-                             className="text-center space-y-6"
-                           >
-                             <motion.div
-                               whileHover={{ scale: 1.02 }}
-                               whileTap={{ scale: 0.98 }}
-                             >
-                               <Button 
-                                 className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-600 hover:via-orange-600 hover:to-red-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base relative z-20"
-                                 onClick={() => window.open('mailto:ea@ureposh.com?subject=Free Coffee Meeting Request&body=Hi! I would love to take you up on your free coffee offer and discuss my project requirements. Please let me know your availability for a coffee meeting.', '_blank')}
-                               >
-                                 <motion.div
-                                   className="flex items-center justify-center"
-                                   animate={{ x: [0, 5, 0] }}
-                                   transition={{ duration: 2, repeat: Infinity }}
-                                 >
-                                   <Coffee className="w-5 h-5 mr-2" />
-                                   Claim Free Coffee Meeting
-                                 </motion.div>
-                               </Button>
-                             </motion.div>
-                           </motion.div>
-                         </CardContent>
-                       </Card>
-                     </motion.div>
-                   </div>
+                      </motion.div>
+                    </div>
                 </div>
 
                                
