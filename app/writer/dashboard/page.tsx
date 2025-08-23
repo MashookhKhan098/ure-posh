@@ -48,12 +48,14 @@ type Post = {
 }
 
 export default function WriterDashboardPage() {
+
 	const { writer, isAuthenticated, loading: authLoading, logout } = useWriterAuth()
 	const [articles, setArticles] = useState<Post[]>([])
 	const [loading, setLoading] = useState<boolean>(true)
 	const [error, setError] = useState<string | null>(null)
 	const [showCreateForm, setShowCreateForm] = useState<boolean>(false)
 	const [writerStatusFilter, setWriterStatusFilter] = useState<'All' | 'Published' | 'Pending' | 'Reverted'>('All')
+	const [assignedCategories, setAssignedCategories] = useState<{id: string, name: string}[]>([])
 
 	const supabase = useMemo(() => {
 		try {
@@ -62,6 +64,45 @@ export default function WriterDashboardPage() {
 			return null
 		}
 	}, [])
+
+	// Fetch assigned categories for the writer
+	useEffect(() => {
+		async function fetchAssignedCategories() {
+			if (!writer?.field_allotted) return setAssignedCategories([])
+			try {
+				const res = await fetch('/api/categories')
+				if (!res.ok) return setAssignedCategories([])
+				const data = await res.json()
+				const allCategories = data.data || []
+				const fieldToCategoryMap = {
+					company_updates: 'company-updates',
+					compliance_legal_insights: 'compliance-legal-insights',
+					news_media_coverage: 'news-media-coverage',
+					newsletter_archive: 'newsletter-archive',
+					thought_leadership: 'thought-leadership',
+					workplace_stories: 'workplace-stories',
+					events_webinars: 'events-webinars',
+					international_regulatory_policy_watch: 'international-regulatory-policy-watch',
+					united_kingdom_workplace: 'united-kingdom-workplace',
+					us_workplace: 'us-workplace'
+				}
+				const allowed = []
+				Object.entries(writer.field_allotted).forEach(([field, isAllowed]) => {
+					if (isAllowed) {
+						const slug = fieldToCategoryMap[field]
+						if (slug) {
+							const cat = allCategories.find((c: any) => c.slug === slug)
+							if (cat) allowed.push({ id: cat.id, name: cat.name })
+						}
+					}
+				})
+				setAssignedCategories(allowed)
+			} catch {
+				setAssignedCategories([])
+			}
+		}
+		fetchAssignedCategories()
+	}, [writer])
 
 	useEffect(() => {
 		if (authLoading) return
@@ -182,6 +223,14 @@ export default function WriterDashboardPage() {
 								<p className="text-gray-600 mt-1">
 									Manage your articles and track your writing progress
 								</p>
+								{assignedCategories.length > 0 && (
+									<div className="mt-2 flex flex-wrap gap-2">
+										<span className="text-sm text-gray-500 mr-2">Assigned Categories:</span>
+										{assignedCategories.map(cat => (
+											<Badge key={cat.id} variant="secondary" className="bg-blue-50 text-blue-700 border border-blue-200">{cat.name}</Badge>
+										))}
+									</div>
+								)}
 							</div>
 						</div>
 						<div className="flex items-center gap-3">

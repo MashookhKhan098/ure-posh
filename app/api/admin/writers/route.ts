@@ -4,53 +4,8 @@ import { createAdminClient } from '@/utils/supabase/admin'
 
 export async function GET(req: NextRequest) {
   try {
-    console.log('🔥 Writers API called!');
-    
-    // For now, let's return hardcoded test data to verify the connection works
-    const testWriters = [
-      {
-        id: "e5b4a7ab-8074-42dd-a7bc-267374026a78",
-        name: "Ankit Pal",
-        username: "Ankit500ak",
-        email: "Ankit500ak@example.com",
-        status: "Active",
-        joinDate: "2025-08-18",
-        postsCount: 12,
-        publishedCount: 8,
-        draftCount: 4,
-        verified: true,
-        bio: "he he",
-        specializations: ["politics", "somrthing"],
-        lastActive: "2025-08-18",
-        avatar: "AP"
-      },
-      {
-        id: "626e487c-3235-4231-8284-639f936637e8",
-        name: "trial2.1",
-        username: "chagan",
-        email: "chagan@example.com",
-        status: "Active",
-        joinDate: "2025-08-21",
-        postsCount: 5,
-        publishedCount: 3,
-        draftCount: 2,
-        verified: true,
-        bio: "sports writer",
-        specializations: ["sports", "something"],
-        lastActive: "2025-08-21",
-        avatar: "T"
-      }
-    ];
-
-    console.log('✅ Returning', testWriters.length, 'test writers');
-    return NextResponse.json(testWriters);
-
-    // Original database fetch code (commented out for testing)
-    /*
     // Use admin client instead of regular client for admin endpoints
     const supabase = createAdminClient();
-
-    console.log('Fetching writers from database...');
 
     // Try fetching from writers table first
     let { data: writers, error: writersError } = await supabase
@@ -60,17 +15,13 @@ export async function GET(req: NextRequest) {
 
     // If writers table doesn't exist, try the writer table
     if (writersError) {
-      console.log('Writers table not found, trying writer table...');
       const { data: writerData, error: writerError } = await supabase
         .from('writer')
         .select('*')
         .order('created_at', { ascending: false });
-      
       if (writerError) {
-        console.error('Error fetching from writer table:', writerError);
         return NextResponse.json({ error: 'No writers table found' }, { status: 404 });
       }
-
       // Transform writer table data to match writers format
       writers = writerData.map(writer => ({
         id: writer.id,
@@ -97,7 +48,7 @@ export async function GET(req: NextRequest) {
           writer.us_workplace && 'US Workplace'
         ].filter(Boolean),
         lastActive: writer.updated_at ? new Date(writer.updated_at).toISOString().split('T')[0] : 'Never',
-        avatar: writer.full_name ? writer.full_name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : 'U'
+  avatar: writer.full_name ? writer.full_name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : 'U'
       }));
     } else if (writers) {
       // Transform writers table data to match expected format
@@ -115,16 +66,11 @@ export async function GET(req: NextRequest) {
         bio: writer.bio,
         specializations: writer.specializations || [],
         lastActive: writer.updated_at ? new Date(writer.updated_at).toISOString().split('T')[0] : 'Never',
-        avatar: writer.name ? writer.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : 'U'
+  avatar: writer.name ? writer.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : 'U'
       }));
     }
-
-    console.log(`Successfully fetched ${writers?.length || 0} writers`);
     return NextResponse.json(writers || []);
-    */
-
   } catch (error) {
-    console.error('Error in writers API:', error);
     return NextResponse.json({ error: 'Failed to fetch writers' }, { status: 500 });
   }
 }

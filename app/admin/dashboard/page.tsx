@@ -35,6 +35,8 @@ interface Post {
 }
 
 interface Writer {
+  image_url: string;
+  phone: string;
   draftCount: number;
   publishedCount: number;
   specializations: string[];
@@ -44,11 +46,7 @@ interface Writer {
   username: string;
   status: string;  
   joinDate: string;
-  postsCount: number;
-  avatar: string;
-  email?: string; // Added email property
-  verified?: boolean; // Added verified property
-  lastActive?: string; // Added lastActive property
+  // ...existing code...
 }
 
 interface DashboardStats {
@@ -91,7 +89,7 @@ function AdminDashboardContent() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   
-  // Writer type definition
+  // Writer type definition (add postsCount property)
   type Writer = {
     id: number;
     name: string;
@@ -100,19 +98,19 @@ function AdminDashboardContent() {
     joinDate: string;
     postsCount: number;
     avatar?: string;
-    draftCount: number;
-    publishedCount: number;
-    specializations: string[];
+    draftCount?: number;
+    publishedCount?: number;
+    specializations?: string[];
     bio?: React.ReactNode;
-    email: string;
-    verified: boolean;
+    email?: string;
+    verified?: boolean;
     lastActive?: string;
-    phone?: string; // <-- Added phone property
     image_url?: string;
+    phone?: string;
   };
-  
+
   // Real data from database
-    const [writers, setWriters] = useState<Writer[]>([]);
+  const [writers, setWriters] = useState<Writer[]>([]);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [posters, setPosters] = useState<any[]>([]);
@@ -129,7 +127,7 @@ function AdminDashboardContent() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAddWriter, setShowAddWriter] = useState(false);
-  const [showAddPerson, setShowAddPerson] = useState(true);
+  const [showAddPerson, setShowAddPerson] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [verifiedFilter, setVerifiedFilter] = useState('All');
@@ -164,19 +162,35 @@ function AdminDashboardContent() {
     try {
       setLoading(true);
       
-      // Fetch dashboard statistics
-      const statsResponse = await fetch('/api/admin/dashboard/stats');
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        setDashboardStats(statsData);
-      }
-
       // Fetch posts for admin (including unverified)
       const postsResponse = await fetch('/api/admin/posts');
+      let postsData = [];
       if (postsResponse.ok) {
-        const postsData = await postsResponse.json();
+        postsData = await postsResponse.json();
         setPosts(postsData);
       }
+
+      // Calculate pending review count (not published)
+      const pendingPosts = postsData.filter((post: any) => post.status !== 'Published');
+
+      // Fetch dashboard statistics
+      const statsResponse = await fetch('/api/admin/dashboard/stats');
+      let statsData = null;
+      if (statsResponse.ok) {
+        statsData = await statsResponse.json();
+      }
+      setDashboardStats({
+        ...(statsData || {}),
+        totalPosts: {
+          count: postsData.length,
+          growth: (statsData && statsData.totalPosts && statsData.totalPosts.growth) || '0%',
+          trend: (statsData && statsData.totalPosts && statsData.totalPosts.trend) || 'from last month',
+        },
+        pendingReview: {
+          count: pendingPosts.length,
+          trend: (statsData && statsData.pendingReview && statsData.pendingReview.trend) || 'All caught up',
+        },
+      });
 
       // Fetch writers
       console.log('🔄 Dashboard: Fetching writers...');
@@ -375,7 +389,11 @@ function AdminDashboardContent() {
     setEditWriterForm({
       name: writer.name || '',
       username: writer.username || '',
-      bio: writer.bio && typeof writer.bio === 'object' && 'props' in writer.bio ? writer.bio.props.children : (writer.bio || ''),
+      bio: typeof writer.bio === 'object' && writer.bio !== null && 'props' in writer.bio
+        ? writer.bio.props.children
+        : typeof writer.bio === 'string'
+        ? writer.bio
+        : '',
       phone: writer.phone || '',
       image_url: writer.image_url || '',
       is_active: writer.status === 'Active',
@@ -539,7 +557,9 @@ function AdminDashboardContent() {
           bio: <span>{newWriter.bio}</span>,
           email: '', // or writer.email if available
           verified: false,
-          lastActive: ''
+          lastActive: '',
+          image_url: '',
+          phone: ''
         }
         setWriters([...writers, local])
         setNewWriter({ 
@@ -685,7 +705,7 @@ function AdminDashboardContent() {
       } else if (type === 'editWriter') {
         setEditWriterForm(prev => ({ ...prev, image_url: result.image_url }))
       } else if (type === 'person') {
-        setNewPerson((prev: typeof newPerson) => ({ ...prev, image_url: result.image_url }))
+        setNewPerson((prev: any) => ({ ...prev, image_url: result.image_url }))
       }
       
       toast({
@@ -736,7 +756,7 @@ function AdminDashboardContent() {
       setEditWriterForm(prev => ({ ...prev, image_url: '' }))
       setEditWriterImagePreview(null)
     } else if (type === 'person') {
-      setNewPerson((prev: typeof newPerson) => ({ ...prev, image_url: '' }))
+      setNewPerson((prev: any) => ({ ...prev, image_url: '' }))
       setPersonImagePreview(null)
     }
   }
@@ -1467,7 +1487,7 @@ function AdminDashboardContent() {
 
               {/* Add Person Tab */}
               {peopleTab === 'add' && (
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg pb-4 mt-2">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg">
                   <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-8">
                       <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -1600,12 +1620,11 @@ function AdminDashboardContent() {
   }
 
   const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'posts', label: 'Articles', icon: FileText },
-    { id: 'people', label: 'People', icon: Users },
-    { id: 'writers', label: 'Writers', icon: Users },
-    { id: 'posters', label: 'Posters', icon: ImageIcon },
-    { id: 'settings', label: 'Settings', icon: Settings }
+  { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+  { id: 'posts', label: 'Articles', icon: FileText },
+  { id: 'writers', label: 'Writers', icon: Users },
+  { id: 'posters', label: 'Posters', icon: ImageIcon },
+  { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
   // Show loading state while checking authentication
@@ -2331,107 +2350,70 @@ function AdminDashboardContent() {
                   <div className="p-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                       {filteredWriters.map((writer) => (
-                        <div key={writer.id} className="group bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200">
-                          {/* Writer Header */}
-                          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-16 rounded-t-2xl relative overflow-hidden">
-                            <div className="absolute inset-0 bg-black/10"></div>
-                            <div className="absolute top-3 right-3 flex gap-2">
-                              {writer.verified && (
-                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
-                                  <CheckCircle className="h-3 w-3 text-white" />
-                                </div>
+                        <div key={writer.id} className="group bg-white/90 rounded-2xl border border-gray-200/70 shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1">
+                          {/* Header: Avatar + Status + Verified */}
+                          <div className="flex items-center gap-4 p-5 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-2xl relative">
+                            <div className="w-14 h-14 rounded-full bg-white border-2 border-blue-200 shadow flex items-center justify-center overflow-hidden">
+                              {writer.image_url ? (
+                                <img src={writer.image_url} alt={writer.name} className="w-full h-full object-cover rounded-full" />
+                              ) : (
+                                <span className="text-blue-600 font-bold text-lg">
+                                  {writer.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                                </span>
                               )}
-                              <div className={`bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 ${
-                                writer.status === 'Active' ? 'text-green-300' :
-                                writer.status === 'Inactive' ? 'text-red-300' : 'text-yellow-300'
-                              }`}>
-                                <div className={`w-2 h-2 rounded-full ${
-                                  writer.status === 'Active' ? 'bg-green-300' :
-                                  writer.status === 'Inactive' ? 'bg-red-300' : 'bg-yellow-300'
-                                }`}></div>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-bold text-gray-900 text-lg truncate">{writer.name}</h3>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-blue-600 font-semibold text-sm">@{writer.username}</span>
+                                {writer.verified && <CheckCircle className="w-4 h-4 text-green-500" title="Verified" />}
                               </div>
                             </div>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(writer.status)} ml-2`}>{writer.status}</span>
                           </div>
 
-                          {/* Writer Content */}
-                          <div className="p-6 -mt-4 relative">
-                            {/* Profile Section */}
-                            <div className="flex items-start gap-4 mb-4">
-                              <div className="w-12 h-12 bg-white rounded-xl shadow-lg border-2 border-white flex items-center justify-center">
-                                {writer.avatar ? (
-                                  <img src={writer.avatar} alt={writer.name} className="w-full h-full rounded-xl object-cover" />
-                                ) : (
-                                  <span className="text-gray-600 font-bold text-sm">
-                                    {writer.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-bold text-gray-900 line-clamp-1">{writer.name}</h3>
-                                <p className="text-blue-600 font-semibold text-sm">@{writer.username}</p>
-                                <p className="text-gray-600 text-xs">{writer.email}</p>
-                              </div>
-                            </div>
-
-                            {/* Quick Stats */}
-                            <div className="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+                          {/* Content: Stats, Dates, Bio, Specializations, Actions */}
+                          <div className="p-6">
+                            <div className="grid grid-cols-3 gap-3 mb-4">
                               <div className="text-center">
-                                <div className="text-sm font-bold text-gray-900">{writer.postsCount || 0}</div>
+                                <div className="text-base font-bold text-gray-900">{writer.postsCount || 0}</div>
                                 <div className="text-xs text-gray-500">Posts</div>
                               </div>
                               <div className="text-center">
-                                <div className="text-sm font-bold text-green-600">{writer.publishedCount || 0}</div>
+                                <div className="text-base font-bold text-green-600">{writer.publishedCount || 0}</div>
                                 <div className="text-xs text-gray-500">Published</div>
                               </div>
                               <div className="text-center">
-                                <div className="text-sm font-bold text-orange-600">{writer.draftCount || 0}</div>
+                                <div className="text-base font-bold text-orange-600">{writer.draftCount || 0}</div>
                                 <div className="text-xs text-gray-500">Drafts</div>
                               </div>
                             </div>
-
-                            {/* Writer Details */}
-                            <div className="space-y-2 mb-4 text-xs text-gray-600">
-                              <div className="flex items-center justify-between">
-                                <span>Status:</span>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(writer.status)}`}>
-                                  {writer.status}
-                                </span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span>Joined:</span>
-                                <span>{writer.joinDate}</span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span>Last Active:</span>
-                                <span>{writer.lastActive || 'Never'}</span>
-                              </div>
-                              {writer.bio && (
-                                <div className="pt-2">
-                                  <p className="text-gray-700 text-xs line-clamp-2">{writer.bio}</p>
-                                </div>
-                              )}
+                            <div className="flex flex-wrap gap-4 mb-2 text-xs text-gray-600">
+                              <div>Joined: <span className="font-medium text-gray-800">{writer.joinDate}</span></div>
+                              <div>Last Active: <span className="font-medium text-gray-800">{writer.lastActive || 'Never'}</span></div>
                             </div>
-
-                            {/* Specializations */}
+                            {writer.bio && (
+                              <div className="mb-2">
+                                <p className="text-gray-700 text-xs line-clamp-2 italic">{writer.bio}</p>
+                              </div>
+                            )}
                             {Array.isArray(writer.specializations) && writer.specializations.length > 0 && (
                               <div className="mb-4">
-                                <div className="flex flex-wrap gap-1">
+                                <div className="flex flex-wrap gap-2">
                                   {writer.specializations.slice(0, 2).map((spec: string, index: number) => (
-                                    <span key={index} className="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-medium border border-blue-200">
+                                    <span key={index} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-medium border border-blue-200">
                                       {spec}
                                     </span>
                                   ))}
                                   {writer.specializations.length > 2 && (
-                                    <span className="px-2 py-1 bg-gray-50 text-gray-600 rounded-md text-xs font-medium border border-gray-200">
+                                    <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium border border-gray-200">
                                       +{writer.specializations.length - 2} more
                                     </span>
                                   )}
                                 </div>
                               </div>
                             )}
-
-                            {/* Action Buttons */}
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 mt-2">
                               <button
                                 onClick={() => handleToggleWriterStatus(writer)}
                                 className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -2461,7 +2443,6 @@ function AdminDashboardContent() {
                               </button>
                               <button
                                 onClick={() => {
-                                  // View writer posts - could navigate to posts filtered by writer
                                   setActiveTab('posts');
                                   setSearchTerm(writer.username);
                                 }}
@@ -2582,7 +2563,7 @@ function AdminDashboardContent() {
           {showAddPerson && (
             <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
               <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddPerson(false)}></div>
-              <div className="relative z-10 w-full max-w-3xl mt-10 max-h-[90vh] overflow-y-auto">
+              <div className="relative z-10 w-full max-w-3xl mt-10 max-h-[92vh] overflow-y-auto">
                 <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200">
                   <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900">Create Person</h3>
@@ -2798,28 +2779,15 @@ function AdminDashboardContent() {
            {showAddWriter && (
              <div className="fixed inset-0 z-50 flex items-start justify-center p-4">
                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddWriter(false)}></div>
-               <div className="relative z-10 w-full max-w-3xl mt-8 max-h-[90vh] overflow-y-auto">
-                 <style>{`
-                   .custom-scrollbar::-webkit-scrollbar {
-                     width: 10px;
-                   }
-                   .custom-scrollbar::-webkit-scrollbar-thumb {
-                     background: linear-gradient(90deg, #ec4899 0%, #f43f5e 100%);
-                     border-radius: 8px;
-                   }
-                   .custom-scrollbar::-webkit-scrollbar-track {
-                     background: #f3f4f6;
-                     border-radius: 8px;
-                   }
-                 `}</style>
-                 <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200 custom-scrollbar">
+               <div className="relative z-10 w-full max-w-3xl mt-8">
+                 <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-pink-200">
                    <div className="flex items-center justify-between px-4 py-2 border-b border-pink-100">
                      <h3 className="text-lg font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Add Writer</h3>
                      <button onClick={() => setShowAddWriter(false)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
                        <X className="w-5 h-5" />
                      </button>
                    </div>
-                   <div className="px-6 py-2">
+                   <div className="px-6 py-2 max-h-[70vh] overflow-y-auto">
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                        <div>
                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>

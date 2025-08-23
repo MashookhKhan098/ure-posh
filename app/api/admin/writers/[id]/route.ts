@@ -14,12 +14,13 @@ export async function PUT(
     // Prepare update data
     const updateData: any = {}
     
-    // Basic fields
-    if (body.name !== undefined) updateData.full_name = body.name
-    if (body.username !== undefined) updateData.username = body.username
-    if (body.bio !== undefined) updateData.bio = body.bio
-    if (body.phone !== undefined) updateData.phone = body.phone
-    if (body.is_active !== undefined) updateData.is_active = body.is_active
+  // Basic fields
+  if (body.name !== undefined) updateData.full_name = body.name
+  if (body.username !== undefined) updateData.username = body.username
+  if (body.bio !== undefined) updateData.bio = body.bio
+  if (body.phone !== undefined) updateData.phone = body.phone
+  if (body.is_active !== undefined) updateData.is_active = body.is_active
+  if (body.image_url !== undefined) updateData.image_url = body.image_url
     
     // Field allotted checkboxes
     if (body.company_updates !== undefined) updateData.company_updates = body.company_updates
