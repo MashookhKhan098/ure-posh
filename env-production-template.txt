@@ -1,0 +1,49 @@
+# ========================================
+# PRODUCTION ENVIRONMENT VARIABLES
+# Copy these to your Vercel Environment Variables
+# ========================================
+
+# SUPABASE CONFIGURATION
+NEXT_PUBLIC_SUPABASE_URL=https://vewlslufctaslcpobnev.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# JWT & SECURITY
+JWT_SECRET=your_jwt_secret
+
+# APP CONFIGURATION
+NODE_ENV=production
+NEXT_PUBLIC_APP_URL=https://ureposh-one.vercel.app
+
+# EMAIL CONFIGURATION (Gmail)
+CONTACT_RECIPIENT_EMAIL=ureposh@gmail.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=ureposh@gmail.com
+SMTP_PASS=your_gmail_app_password
+
+# ========================================
+# VERCEL DEPLOYMENT STEPS:
+# ========================================
+# 1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
+# 2. Add each variable above with your actual values
+# 3. Make sure to set them for "Production", "Preview", and "Development" environments
+# 4. Redeploy your application after adding environment variables
+
+# ========================================
+# GMAIL SETUP STEPS:
+# ========================================
+# 1. Enable 2-Factor Authentication on your Gmail account
+# 2. Go to Google Account → Security → 2-Step Verification → App passwords
+# 3. Generate a new App Password for "Mail"
+# 4. Use this 16-character app password as SMTP_PASS (not your regular Gmail password)
+
+# ========================================
+# TROUBLESHOOTING:
+# ========================================
+# If emails not sending in production:
+# 1. Check Vercel Function logs for errors
+# 2. Verify all environment variables are set correctly
+# 3. Test Gmail app password by trying to login with it
+# 4. Check function timeout limits (Vercel has 10s limit for Hobby plan)
+# 5. Try using a different SMTP service like SendGrid or Mailgun

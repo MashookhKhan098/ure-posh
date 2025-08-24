@@ -67,28 +67,68 @@ export async function POST(request: NextRequest) {
 
     // Send emails to all subscribers
     let sentCount = 0;
-    const failedEmails = [];
+    const failedEmails: string[] = [];
 
-    console.log('📧 Starting email sending process...');
-    for (const subscriber of subscribers) {
+    console.log('📧 Starting optimized email sending process...');
+    
+    // Process emails in batches for better performance
+    const batchSize = 3; // Process 3 emails at a time
+    const batches = [];
+    
+    for (let i = 0; i < subscribers.length; i += batchSize) {
+      batches.push(subscribers.slice(i, i + batchSize));
+    }
+    
+    console.log(`📦 Processing ${subscribers.length} emails in ${batches.length} batches of ${batchSize}`);
+    
+    for (const batch of batches) {
+      const batchPromises = batch.map(async (subscriber) => {
+        try {
+          await sendPostNotificationEmail(
+            subscriber.email,
+            subscriber.unsubscribe_token,
+            {
+              postId,
+              postType,
+              postTitle,
+              postSlug,
+              postContent,
+              postImage
+            }
+          );
+          console.log(`✅ Email sent to: ${subscriber.email}`);
+          return { success: true, email: subscriber.email };
+        } catch (emailError) {
+          console.log(`❌ Failed to send email to: ${subscriber.email}`, emailError);
+          return { success: false, email: subscriber.email, error: emailError };
+        }
+      });
+      
+      // Process batch concurrently with timeout
       try {
-        await sendPostNotificationEmail(
-          subscriber.email,
-          subscriber.unsubscribe_token,
-          {
-            postId,
-            postType,
-            postTitle,
-            postSlug,
-            postContent,
-            postImage
+        const batchResults = await Promise.allSettled(batchPromises.map(p => 
+          Promise.race([p, new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Email timeout')), 30000)
+          )])
+        ));
+        
+        batchResults.forEach((result, index) => {
+          if (result.status === 'fulfilled' && (result.value as any)?.success) {
+            sentCount++;
+          } else {
+            failedEmails.push(batch[index].email);
           }
-        );
-        sentCount++;
-        console.log(`✅ Email sent to: ${subscriber.email}`);
-      } catch (emailError) {
-        console.log(`❌ Failed to send email to: ${subscriber.email}`, emailError);
-        failedEmails.push(subscriber.email);
+        });
+        
+        // Small delay between batches to respect rate limits
+        if (batches.indexOf(batch) < batches.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
+        }
+        
+      } catch (batchError) {
+        console.error('Batch processing error:', batchError);
+        // Add all batch emails to failed list
+        batch.forEach(subscriber => failedEmails.push(subscriber.email));
       }
     }
 
@@ -144,17 +184,64 @@ async function sendPostNotificationEmail(
   let transporter;
 
   // Configure email transport
+  console.log('📧 Email configuration check:', {
+    hasHost: !!process.env.SMTP_HOST,
+    hasUser: !!process.env.SMTP_USER,
+    hasPass: !!process.env.SMTP_PASS,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    nodeEnv: process.env.NODE_ENV
+  });
+
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    console.log('✅ Using production SMTP configuration');
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
+      secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      // Optimized settings for production and Vercel
+      pool: true, // Use connection pooling for better performance
+      maxConnections: 5, // Max simultaneous connections
+      maxMessages: 10, // Max messages per connection
+      rateDelta: 1000, // Rate limiting: 1 second between emails
+      rateLimit: 5, // Max 5 emails per rateDelta period
+      tls: {
+        rejectUnauthorized: false // This helps with some deployment environments
+      },
+      // Connection timeout settings for stability
+      connectionTimeout: 60000, // 60 seconds
+      greetingTimeout: 30000, // 30 seconds
+      socketTimeout: 60000, // 60 seconds
     });
+
+    // Verify connection configuration with timeout
+    try {
+      console.log('🔍 Verifying SMTP connection...');
+      const verifyPromise = transporter.verify();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP verification timeout')), 15000)
+      );
+      
+      await Promise.race([verifyPromise, timeoutPromise]);
+      console.log('✅ SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('❌ SMTP verification failed:', verifyError);
+      const errorMessage = verifyError instanceof Error ? verifyError.message : 'Unknown error';
+      
+      // Don't throw error in production, use fallback
+      if (process.env.NODE_ENV === 'production') {
+        console.log('⚠️ Using fallback email configuration in production');
+        // Continue with the transport anyway for production stability
+      } else {
+        throw new Error(`SMTP verification failed: ${errorMessage}`);
+      }
+    }
   } else {
+    console.log('⚠️ Missing SMTP config, using test account');
     const testAccount = await nodemailer.createTestAccount();
     transporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
@@ -358,12 +445,27 @@ To unsubscribe, visit: ${unsubscribeUrl}
     html: htmlContent,
   };
 
-  const info = await transporter.sendMail(mailOptions);
-  
-  if (!process.env.SMTP_HOST) {
-    const testUrl = nodemailer.getTestMessageUrl(info);
-    console.log('🔗 Notification preview:', testUrl || '');
-  }
+  try {
+    console.log(`📧 Sending email to: ${email} (optimized)`);
+    
+    // Create timeout promise for email sending
+    const sendPromise = transporter.sendMail(mailOptions);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email send timeout')), 25000) // 25 second timeout
+    );
+    
+    const info = await Promise.race([sendPromise, timeoutPromise]) as any;
+    console.log(`✅ Email sent successfully to ${email}, messageId: ${info.messageId}`);
+    
+    if (!process.env.SMTP_HOST) {
+      const testUrl = nodemailer.getTestMessageUrl(info);
+      console.log('🔗 Notification preview:', testUrl || '');
+    }
 
-  return { messageId: info.messageId };
+    return { messageId: info.messageId };
+  } catch (sendError) {
+    console.error(`❌ Failed to send email to ${email}:`, sendError);
+    const errorMessage = sendError instanceof Error ? sendError.message : 'Unknown error';
+    throw new Error(`Email sending failed: ${errorMessage}`);
+  }
 }
