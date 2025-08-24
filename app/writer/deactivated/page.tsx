@@ -39,7 +39,7 @@ export default function WriterDeactivatedPage() {
             <div className="space-y-2 text-sm text-gray-600">
               <div className="flex items-center justify-center gap-2">
                 <Mail className="w-4 h-4" />
-                <span>ea@ureposh.com</span>
+                <span>ureposh@gmail.com</span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <Phone className="w-4 h-4" />

@@ -3188,7 +3188,7 @@ export default function SlugPage() {
               </a>
               
               <a 
-                href="mailto:ea@ureposh.com"
+                href="mailto:ureposh@gmail.com"
                 className="group flex flex-col items-center p-2 rounded-lg bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
               >
                 <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center mb-1.5 group-hover:bg-pink-700 transition-colors duration-300 shadow-md">
@@ -3196,7 +3196,7 @@ export default function SlugPage() {
                 </div>
                 <div className="space-y-0.5">
                   <h3 className="font-semibold text-gray-800 text-sm">Email Us</h3>
-                  <p className="font-bold text-gray-800 text-base">ea@ureposh.com</p>
+                  <p className="font-bold text-gray-800 text-base">ureposh@gmail.com</p>
                   <p className="text-xs text-gray-500">Detailed responses</p>
                 </div>
               </a>

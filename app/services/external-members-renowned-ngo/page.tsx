@@ -462,7 +462,7 @@ export default function ExternalMembersRenownedNGOPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <Mail className="w-5 h-5 text-green-600" />
-                        <span className="text-gray-700">ea@ureposh.com</span>
+                        <span className="text-gray-700">ureposh@gmail.com</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <MapPin className="w-5 h-5 text-purple-600" />

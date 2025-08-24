@@ -615,7 +615,7 @@ export default function POSHComplianceInitiationPage() {
                     </div>
                     <div className="text-xs">
                       <div className="font-semibold">Email Us</div>
-                      <div className="text-gray-600">ea@ureposh.com</div>
+                      <div className="text-gray-600">ureposh@gmail.com</div>
                     </div>
                   </div>
                 </div>

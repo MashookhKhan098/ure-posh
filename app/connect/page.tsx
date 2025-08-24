@@ -317,7 +317,7 @@ export default function ConnectPage() {
                        </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 text-sm">Email</h4>
-                         <p className="text-gray-600 text-xs">ea@ureposh.com</p>
+                         <p className="text-gray-600 text-xs">ureposh@gmail.com</p>
                       </div>
                     </motion.div>
 

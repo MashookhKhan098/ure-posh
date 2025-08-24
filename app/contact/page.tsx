@@ -773,7 +773,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">ea@ureposh.com</p>
+                    <p className="text-gray-600">ureposh@gmail.com</p>
                   </div>
                 </motion.div>
 
@@ -918,7 +918,7 @@ export default function ContactPage() {
                       <button 
                         onClick={() => {
                           // You can add navigation or modal trigger here
-                          window.open('mailto:ea@ureposh.com?subject=Let\'s grab a coffee!&body=Hi! I\'d love to meet for coffee and discuss workplace solutions.', '_blank')
+                          window.open('mailto:ureposh@gmail.com?subject=Let\'s grab a coffee!&body=Hi! I\'d love to meet for coffee and discuss workplace solutions.', '_blank')
                         }}
                         className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                       >

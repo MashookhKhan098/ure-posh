@@ -566,7 +566,7 @@ export default function CompliantRedressalPage() {
               </div>
               <div className="flex items-center justify-center gap-3">
                 <Mail className="w-6 h-6 text-green-600" />
-                <span className="text-gray-700">ea@ureposh.com</span>
+                <span className="text-gray-700">ureposh@gmail.com</span>
               </div>
               <div className="flex items-center justify-center gap-3">
                 <Globe className="w-6 h-6 text-purple-600" />
