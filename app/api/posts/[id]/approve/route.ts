@@ -44,25 +44,30 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     console.log('✅ Article approved:', article.title);
 
-    // Send newsletter notification to all subscribers
-    try {
-      console.log('📧 Triggering newsletter notification...');
-      const notificationResult = await notifyArticleApproved(article);
-      
-      if (notificationResult.success) {
-        console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`);
-      } else {
-        console.log('⚠️ Newsletter notification failed:', notificationResult.error);
+    // Send newsletter notification in background without blocking response
+    Promise.resolve().then(async () => {
+      try {
+        console.log('📧 Triggering newsletter notification...');
+        const notificationResult = await notifyArticleApproved(article);
+        
+        if (notificationResult.success) {
+          console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`);
+        } else {
+          console.log('⚠️ Newsletter notification failed:', notificationResult.error);
+        }
+      } catch (notificationError) {
+        console.error('❌ Newsletter notification error:', notificationError);
       }
-    } catch (notificationError) {
-      console.error('❌ Newsletter notification error:', notificationError);
-      // Don't fail the approval if newsletter fails
-    }
+    }).catch(error => {
+      console.error('Background email task error:', error);
+    });
 
+    // Return immediately after article is approved (don't wait for email)
     return NextResponse.json({
       success: true,
-      message: 'Article approved and verified successfully. Newsletter sent to subscribers.',
-      article
+      message: 'Article approved and verified successfully. Newsletter notification is being sent in background.',
+      article,
+      emailStatus: 'processing'
     });
 
   } catch (error) {

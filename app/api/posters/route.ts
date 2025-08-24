@@ -79,22 +79,30 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Poster created:', data.title);
 
-    // Send newsletter notification to all subscribers for new poster
-    try {
-      console.log('📧 Triggering newsletter notification for new poster...');
-      const notificationResult = await notifyPosterCreated(data);
-      
-      if (notificationResult.success) {
-        console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`);
-      } else {
-        console.log('⚠️ Newsletter notification failed:', notificationResult.error);
+    // Send newsletter notification in background without blocking response
+    Promise.resolve().then(async () => {
+      try {
+        console.log('📧 Triggering newsletter notification for new poster...');
+        const notificationResult = await notifyPosterCreated(data);
+        
+        if (notificationResult.success) {
+          console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`);
+        } else {
+          console.log('⚠️ Newsletter notification failed:', notificationResult.error);
+        }
+      } catch (notificationError) {
+        console.error('❌ Newsletter notification error:', notificationError);
       }
-    } catch (notificationError) {
-      console.error('❌ Newsletter notification error:', notificationError);
-      // Don't fail the poster creation if newsletter fails
-    }
+    }).catch(error => {
+      console.error('Background email task error:', error);
+    });
 
-    return NextResponse.json({ poster: data }, { status: 201 });
+    // Return immediately after poster is saved (don't wait for email)
+    return NextResponse.json({ 
+      poster: data, 
+      message: 'Poster created successfully! Newsletter notification is being sent in background.',
+      emailStatus: 'processing'
+    }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

@@ -182,24 +182,112 @@ async function sendPostNotificationEmail(
   const postTypeDisplay = postData.postType === 'posts' ? 'Blog Post' : 'Poster';
   const emoji = postData.postType === 'posts' ? '📝' : '🎨';
 
-  const mailOptions = {
-    from: process.env.SMTP_USER || 'no-reply@ureposh.local',
-    to: email,
-    subject: `${emoji} New ${postTypeDisplay}: ${postData.postTitle}`,
-    text: `
-New ${postTypeDisplay} Published!
-
-${postData.postTitle}
-
-${contentPreview}
-
-Read more: ${postUrl}
-
----
-This email was sent because you subscribed to the Ureposh newsletter.
-To unsubscribe, visit: ${unsubscribeUrl}
-    `,
-    html: `
+  // Create different email designs for posts vs posters
+  let htmlContent = '';
+  
+  if (postData.postType === 'posters') {
+    // Special design for poster emails
+    htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 New Poster Available - ${postData.postTitle}</title>
+</head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        
+        <!-- Header with gradient background -->
+        <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 40px 30px; text-align: center; color: white;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🎨</div>
+            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">New Creative Poster!</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Fresh design just added to our collection</p>
+        </div>
+        
+        <!-- Main content -->
+        <div style="padding: 40px 30px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="color: #2d3436; font-size: 24px; margin: 0 0 15px 0; font-weight: 600;">${postData.postTitle}</h2>
+                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #ff6b6b, #ee5a24); margin: 0 auto;"></div>
+            </div>
+            
+            ${postData.postImage ? `
+            <!-- Poster Image -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="display: inline-block; padding: 8px; background: white; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                    <img src="${postData.postImage}" alt="${postData.postTitle}" 
+                         style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; display: block;">
+                </div>
+            </div>
+            ` : ''}
+            
+            <!-- Description -->
+            ${contentPreview ? `
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 30px; border-left: 5px solid #ff6b6b;">
+                <p style="margin: 0; color: #2d3436; font-size: 16px; line-height: 1.6;">${contentPreview}</p>
+            </div>
+            ` : ''}
+            
+            <!-- Call to Action -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <a href="${postUrl}" 
+                   style="display: inline-block; background: linear-gradient(135deg, #ff6b6b, #ee5a24); 
+                          color: white; padding: 16px 32px; text-decoration: none; border-radius: 50px; 
+                          font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+                          transition: transform 0.2s;">
+                    🖼️ View Full Poster
+                </a>
+            </div>
+            
+            <!-- Features -->
+            <div style="display: table; width: 100%; margin-bottom: 30px;">
+                <div style="display: table-row;">
+                    <div style="display: table-cell; width: 33%; text-align: center; padding: 15px;">
+                        <div style="color: #ff6b6b; font-size: 24px; margin-bottom: 8px;">📐</div>
+                        <div style="color: #636e72; font-size: 14px;">High Quality</div>
+                    </div>
+                    <div style="display: table-cell; width: 33%; text-align: center; padding: 15px;">
+                        <div style="color: #ff6b6b; font-size: 24px; margin-bottom: 8px;">💫</div>
+                        <div style="color: #636e72; font-size: 14px;">Creative Design</div>
+                    </div>
+                    <div style="display: table-cell; width: 33%; text-align: center; padding: 15px;">
+                        <div style="color: #ff6b6b; font-size: 24px; margin-bottom: 8px;">⚡</div>
+                        <div style="color: #636e72; font-size: 14px;">Ready to Use</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Engagement box -->
+            <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); padding: 25px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
+                <p style="margin: 0; font-size: 16px; font-weight: 500;">
+                    🚀 <strong>Stay Creative!</strong> Get notified about our latest poster designs and creative content.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #2d3436; padding: 30px; text-align: center; color: white;">
+            <p style="margin: 0 0 15px 0; font-size: 16px;">
+                <strong>Thank you for being part of the Ureposh community!</strong>
+            </p>
+            <p style="margin: 0 0 20px 0; color: #b2bec3; font-size: 14px;">
+                We're excited to share our latest creative works with you.
+            </p>
+            <div style="margin: 20px 0;">
+                <a href="${baseUrl}" style="color: #74b9ff; text-decoration: none; margin: 0 15px;">🏠 Visit Website</a>
+                <a href="${unsubscribeUrl}" style="color: #74b9ff; text-decoration: none; margin: 0 15px;">✉️ Unsubscribe</a>
+            </div>
+            <p style="margin: 20px 0 0 0; color: #636e72; font-size: 12px;">
+                © 2025 Ureposh. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>`;
+  } else {
+    // Original design for blog posts
+    htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -247,8 +335,27 @@ To unsubscribe, visit: ${unsubscribeUrl}
         </p>
     </div>
 </body>
-</html>
+</html>`;
+  }
+
+  const mailOptions = {
+    from: process.env.SMTP_USER || 'no-reply@ureposh.local',
+    to: email,
+    subject: postData.postType === 'posters' ? `🎨 New Creative Poster: ${postData.postTitle}` : `${emoji} New ${postTypeDisplay}: ${postData.postTitle}`,
+    text: `
+New ${postTypeDisplay} Published!
+
+${postData.postTitle}
+
+${contentPreview}
+
+${postData.postType === 'posters' ? 'View this amazing poster design at:' : 'Read more at:'} ${postUrl}
+
+---
+This email was sent because you subscribed to the Ureposh newsletter.
+To unsubscribe, visit: ${unsubscribeUrl}
     `,
+    html: htmlContent,
   };
 
   const info = await transporter.sendMail(mailOptions);
