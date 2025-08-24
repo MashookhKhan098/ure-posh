@@ -435,447 +435,480 @@ export default function CreatePostForm({ onClose, onSubmit }: CreatePostFormProp
     }
   }
 
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate loading for categories and writer
+    if (!writer) {
+      setLoading(true)
+      return
+    }
+    setLoading(false)
+  }, [writer, categories])
+
+  const [dropdownLoading, setDropdownLoading] = useState(true)
+
+  useEffect(() => {
+    setDropdownLoading(true)
+    // Wait for categoryMap to be populated
+    if (Object.keys(categoryMap).length > 0) {
+      setDropdownLoading(false)
+    }
+  }, [categoryMap])
+
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 z-50 flex items-center justify-center p-6">
-      <div className="bg-white/85 backdrop-blur-xl rounded-2xl shadow-xl border border-pink-100 w-full max-w-5xl max-h-[95vh] overflow-hidden">
-        {/* Debug Panel */}
-        {debugInfo && (
-          <div className="m-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-gray-800">
-            <div className="font-bold mb-2">Debug Info</div>
-            <div><b>fieldAllotted:</b> <pre>{JSON.stringify(debugInfo.fieldAllotted, null, 2)}</pre></div>
-            <div><b>allCategories:</b> <pre>{JSON.stringify(debugInfo.allCategories, null, 2)}</pre></div>
-            <div><b>allowedCategories:</b> <pre>{JSON.stringify(debugInfo.allowedCategories, null, 2)}</pre></div>
-          </div>
-        )}
-        {/* Admin Style Header */}
-        <div className="px-8 py-5 border-b border-pink-200/50">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Create New Article</h2>
-              <p className="text-sm text-gray-600 mt-1">Share your knowledge and insights with readers</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2.5 rounded-xl bg-white/70 border border-pink-200 text-pink-700 hover:bg-white hover:text-pink-800 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-500 rounded-full animate-spin mb-4" />
+          <div className="text-pink-600 font-semibold text-lg">Loading...</div>
         </div>
-
-        {/* Admin Style Form Content */}
-        <div className="max-h-[calc(95vh-120px)] overflow-y-auto">
-          <form onSubmit={handleSubmit} className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column - Main Content */}
-              <div className="lg:col-span-2 space-y-4">
-                {/* Title */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Article Title <span className="text-red-500">*</span></label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    placeholder="Enter a compelling title for your article..."
-                    className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
-                    required
-                  />
-                </div>
-
-                {/* Excerpt */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Article Excerpt <span className="text-red-500">*</span></label>
-                  <textarea
-                    rows={3}
-                    value={formData.excerpt}
-                    onChange={(e) => handleInputChange('excerpt', e.target.value)}
-                    placeholder="Write a captivating summary that hooks your readers..."
-                    className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500 resize-none"
-                    required
-                  />
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-xs text-gray-500">Keep it engaging and under 160 characters</span>
-                    <span className={`text-xs font-medium ${formData.excerpt.length > 160 ? 'text-red-500' : 'text-pink-600'}`}>
-                      {formData.excerpt.length}/160
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Article Content <span className="text-red-500">*</span></label>
-                  {/* Emoji toolbar for structured sections */}
-                  <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    <span className="text-xs text-gray-500 mr-2">Insert sections:</span>
-                    {[
-                      { e: '🚨', label: 'Breaking' },
-                      { e: '📊', label: 'Stats' },
-                      { e: '🏢', label: 'Corporate' },
-                      { e: '💡', label: 'Tips' },
-                      { e: '🔮', label: 'Future' },
-                    ].map((b) => (
-                      <button
-                        key={b.e}
-                        type="button"
-                        title={b.label}
-                        onClick={() => {
-                          const snippetMap: Record<string, string> = {
-                            '🚨': '🚨 Breaking News: ',
-                            '📊': '📊 Why This Matters',
-                            '🏢': '🏢 Corporate Reactions',
-                            '💡': '💡 What Employees Need to Know',
-                            '🔮': '🔮 Looking Ahead',
-                          }
-                          const snippet = snippetMap[b.e]
-                          setFormData((prev) => ({
-                            ...prev,
-                            content: (prev.content ? prev.content + "\n\n" : '') + snippet + "\n\n",
-                          }))
-                        }}
-                        className="px-2 py-1 rounded-lg bg-white/70 border border-pink-200 text-gray-700 hover:bg-pink-50 text-sm"
-                      >
-                        {b.e}
-                      </button>
-                    ))}
-                    <span className="mx-3 h-4 w-px bg-pink-200" />
-                    <span className="text-xs text-gray-500">Format:</span>
-                    <button type="button" title="Bold" onClick={() => wrapSelection('[b]', '[/b]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Bold className="w-4 h-4" /></button>
-                    <button type="button" title="Italic" onClick={() => wrapSelection('[i]', '[/i]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Italic className="w-4 h-4" /></button>
-                    <button type="button" title="Underline" onClick={() => wrapSelection('[u]', '[/u]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Underline className="w-4 h-4" /></button>
-                    <button type="button" title="Strikethrough" onClick={() => wrapSelection('[s]', '[/s]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Strikethrough className="w-4 h-4" /></button>
-                    <button type="button" title="Small" onClick={() => wrapSelection('[small]', '[/small]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Type className="w-4 h-4" /></button>
-                    <button type="button" title="Large" onClick={() => wrapSelection('[large]', '[/large]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Heading2 className="w-4 h-4" /></button>
-                    <button type="button" title="Align Left" onClick={() => wrapSelection('[left]', '[/left]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignLeft className="w-4 h-4" /></button>
-                    <button type="button" title="Align Center" onClick={() => wrapSelection('[center]', '[/center]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignCenter className="w-4 h-4" /></button>
-                    <button type="button" title="Align Right" onClick={() => wrapSelection('[right]', '[/right]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignRight className="w-4 h-4" /></button>
-                    <button type="button" title="Quote" onClick={() => wrapSelection('[quote]', '[/quote]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Quote className="w-4 h-4" /></button>
-                    <button type="button" title="Link" onClick={() => {
-                      const url = prompt('Enter URL', 'https://') || 'https://'
-                      const text = prompt('Link text', 'Click here') || 'Link'
-                      insertBlock(`[link url="${url}"]${text}[/link]`)
-                    }} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><LinkIcon className="w-4 h-4" /></button>
-                    <button type="button" title="Bulleted List" onClick={() => insertBlock('[ul]\n[li]Item 1[/li]\n[li]Item 2[/li]\n[li]Item 3[/li]\n[/ul]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><List className="w-4 h-4" /></button>
-                    <button type="button" title="Numbered List" onClick={() => insertBlock('[ol]\n[li]First[/li]\n[li]Second[/li]\n[li]Third[/li]\n[/ol]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><ListOrdered className="w-4 h-4" /></button>
-                    <button type="button" title="Highlight" onClick={() => wrapSelection('[mark]', '[/mark]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Highlighter className="w-4 h-4" /></button>
-                    <button type="button" title="Separator" onClick={() => insertBlock('[hr]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50">—</button>
-                  </div>
-                  <textarea
-                    rows={16}
-                    value={formData.content}
-                    onChange={(e) => handleInputChange('content', e.target.value)}
-                    placeholder="Start writing your article here. Share your knowledge, insights, and experiences..."
-                    className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500 resize-none leading-relaxed"
-                    ref={contentRef}
-                    required
-                  />
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-xs text-gray-500">
-                      Reading time: ~{Math.ceil(formData.content.split(' ').filter(word => word.length > 0).length / 200)} min
-                    </span>
-                    <span className="text-xs text-pink-600 font-medium">
-                      {formData.content.split(' ').filter(word => word.length > 0).length} words
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs text-gray-500">Tip: Use the buttons above to add structured sections like Breaking, Stats, Corporate reactions, Tips, and Future outlook.</p>
-                </div>
-              </div>
-
-              {/* Right Sidebar */}
-              <div className="lg:col-span-1 space-y-4">
-                {/* Enhanced Featured Image Upload */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
-                  
-                  {/* Upload Method Tabs */}
-                  <div className="flex bg-gray-100 rounded-lg p-1 mb-3">
-                    <button
-                      type="button"
-                      onClick={() => setUploadMethod('device')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
-                        uploadMethod === 'device'
-                          ? 'bg-white text-pink-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-800'
-                      }`}
-                    >
-                      <Camera className="w-4 h-4" />
-                      Device
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setUploadMethod('url')}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
-                        uploadMethod === 'url'
-                          ? 'bg-white text-pink-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-800'
-                      }`}
-                    >
-                      <Link className="w-4 h-4" />
-                      URL
-                    </button>
-                  </div>
-
-                  {uploadMethod === 'device' ? (
-                    /* Device Upload Section */
-                    <div className="space-y-3">
-                      {/* Drag & Drop Zone */}
-                      <div
-                        ref={dropZoneRef}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
-                        className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all ${
-                          isDragOver
-                            ? 'border-pink-400 bg-pink-50'
-                            : 'border-pink-200 hover:border-pink-300'
-                        } ${uploadingImage ? 'pointer-events-none opacity-50' : ''}`}
-                      >
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileSelect}
-                          className="hidden"
-                        />
-                        
-                        {uploadingImage ? (
-                          /* Upload Progress */
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-center">
-                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
-                            </div>
-                            <div className="space-y-2">
-                              <p className="text-sm font-medium text-gray-700">Uploading to Supabase...</p>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div 
-                                  className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
-                                  style={{ width: `${uploadProgress}%` }}
-                                ></div>
-                              </div>
-                              <p className="text-xs text-gray-500">{uploadProgress}% complete</p>
-                            </div>
-                          </div>
-                        ) : (
-                          /* Upload Interface */
-                          <div className="space-y-4">
-                            <div className="flex flex-col items-center gap-3">
-                              <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center">
-                                <Cloud className="w-6 h-6 text-pink-600" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-gray-700">
-                                  Drop image here or click to browse
-                                </p>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Supports JPEG, PNG, WebP, GIF up to 5MB
-                                </p>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => fileInputRef.current?.click()}
-                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all text-sm font-medium"
-                              >
-                                <Upload className="w-4 h-4" />
-                                Choose File
-                              </button>
-                              <button
-                                type="button"
-                                onClick={handleCameraCapture}
-                                className="flex items-center gap-2 px-4 py-2 bg-white border border-pink-200 text-pink-600 rounded-lg hover:bg-pink-50 transition-all text-sm font-medium"
-                              >
-                                <Camera className="w-4 h-4" />
-                                Camera
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Upload Status */}
-                      {uploadingImage && (
-                        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                          <span className="text-sm text-blue-700">Uploading to Supabase bucket...</span>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    /* URL Input Section */
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                        <input
-                          type="url"
-                          value={formData.image_url}
-                          onChange={(e) => {
-                            handleInputChange('image_url', e.target.value)
-                            setImagePreview(e.target.value)
-                          }}
-                          placeholder="https://example.com/image.jpg"
-                          className="w-full pl-10 pr-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
-                        />
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        Enter a direct link to an image hosted online
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Enhanced Image Preview */}
-                  {(imagePreview || formData.image_url) && (
-                    <div className="space-y-3">
-                      <div className="relative group">
-                        <div className="rounded-xl overflow-hidden border border-pink-200 bg-gray-50">
-                          <img 
-                            src={imagePreview || formData.image_url} 
-                            alt="Preview" 
-                            className="w-full h-40 object-cover transition-transform group-hover:scale-105"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none'
-                              e.currentTarget.nextElementSibling?.classList.remove('hidden')
-                            }}
-                          />
-                          <div className="hidden w-full h-40 flex items-center justify-center text-gray-400">
-                            <div className="text-center">
-                              <Image className="w-8 h-8 mx-auto mb-2" />
-                              <p className="text-sm">Image not found</p>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Action Buttons */}
-                        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            type="button"
-                            onClick={() => window.open(imagePreview || formData.image_url, '_blank')}
-                            className="p-1.5 bg-white/90 backdrop-blur-sm text-gray-600 rounded-lg hover:bg-white hover:text-gray-800 transition-colors"
-                            title="View full size"
-                          >
-                            <Eye className="w-3 h-3" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={removeImage}
-                            className="p-1.5 bg-red-500/90 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-colors"
-                            title="Remove image"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-
-                        {/* Upload Success Indicator */}
-                        {formData.image_url && formData.image_url.startsWith('https://') && (
-                          <div className="absolute top-2 left-2">
-                            <div className="flex items-center gap-1 px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-lg text-xs">
-                              <CheckCircle className="w-3 h-3" />
-                              <span>Uploaded</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Image Info */}
-                      <div className="text-xs text-gray-500 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <Cloud className="w-3 h-3" />
-                          <span>Stored in Supabase bucket</span>
-                        </div>
-                        <p>• Supported formats: JPEG, PNG, WebP, GIF</p>
-                        <p>• Maximum file size: 5MB</p>
-                        <p>• Recommended size: 1200x630 pixels</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Category */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  {categories.length > 0 ? (
-                    <select
-                      value={formData.category_id}
-                      onChange={e => setFormData(prev => ({ ...prev, category_id: e.target.value }))}
-                      className="w-full h-12 border border-pink-200 rounded-xl px-3 py-2 bg-white text-black focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                      required
-                    >
-                      <option value="" disabled>Select your content area...</option>
-                      {categories.map(category => (
-                        <option key={category.id} value={category.id}>{category.name}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl shadow-sm">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <AlertCircle className="w-4 h-4 text-yellow-600" />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="text-sm font-semibold text-yellow-800">No Content Areas Assigned</div>
-                          <div className="text-xs text-yellow-700">Please contact your administrator to assign content areas for your account.</div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Article Stats */}
-                <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-4 border border-pink-200/50">
-                  <h3 className="text-sm font-semibold text-pink-800 mb-3">Article Preview</h3>
-                  <div className="space-y-3">
-                    <div className="bg-white/60 rounded-lg p-3 border border-pink-200/30">
-                      <div className="text-xs text-gray-600 mb-1">Author</div>
-                      <div className="text-sm font-medium text-gray-900">
-                        {writer?.name || writer?.username || 'Anonymous'}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-white/60 rounded-lg p-2 border border-pink-200/30">
-                        <div className="text-xs text-gray-600">Words</div>
-                        <div className="text-sm font-bold text-pink-700">
-                          {formData.content.split(' ').filter(word => word.length > 0).length}
-                        </div>
-                      </div>
-                      <div className="bg-white/60 rounded-lg p-2 border border-pink-200/30">
-                        <div className="text-xs text-gray-600">Characters</div>
-                        <div className="text-sm font-bold text-pink-700">
-                          {formData.content.length}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-white/60 rounded-lg p-3 border border-pink-200/30">
-                      <div className="text-xs text-gray-600 mb-1">URL Slug</div>
-                      <code className="text-xs text-pink-800 font-mono break-all">
-                        {formData.title ? generateSlug(formData.title) : 'auto-generated-from-title'}
-                      </code>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      ) : (
+        <div className="bg-white/85 backdrop-blur-xl rounded-2xl shadow-xl border border-pink-100 w-full max-w-5xl max-h-[95vh] overflow-hidden">
+          {/* Debug Panel */}
+          {debugInfo && (
+            <div className="m-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-gray-800">
+              <div className="font-bold mb-2">Debug Info</div>
+              <div><b>fieldAllotted:</b> <pre>{JSON.stringify(debugInfo.fieldAllotted, null, 2)}</pre></div>
+              <div><b>allCategories:</b> <pre>{JSON.stringify(debugInfo.allCategories, null, 2)}</pre></div>
+              <div><b>allowedCategories:</b> <pre>{JSON.stringify(debugInfo.allowedCategories, null, 2)}</pre></div>
             </div>
-
-            {/* Admin Style Action Buttons */}
-            <div className="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-pink-200/50">
+          )}
+          {/* Admin Style Header */}
+          <div className="px-8 py-5 border-b border-pink-200/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Create New Article</h2>
+                <p className="text-sm text-gray-600 mt-1">Share your knowledge and insights with readers</p>
+              </div>
               <button
-                type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200 transition-colors"
+                className="p-2.5 rounded-xl bg-white/70 border border-pink-200 text-pink-700 hover:bg-white hover:text-pink-800 transition-colors"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700 disabled:opacity-70 transition-all"
-              >
-                <Save className="w-4 h-4" />
-                {submitting ? 'Creating Article...' : 'Publish Article'}
+                <X className="w-5 h-5" />
               </button>
             </div>
-          </form>
+          </div>
+
+          {/* Admin Style Form Content */}
+          <div className="max-h-[calc(95vh-120px)] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left Column - Main Content */}
+                <div className="lg:col-span-2 space-y-4">
+                  {/* Title */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Article Title <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => handleInputChange('title', e.target.value)}
+                      placeholder="Enter a compelling title for your article..."
+                      className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
+                      required
+                    />
+                  </div>
+
+                  {/* Excerpt */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Article Excerpt <span className="text-red-500">*</span></label>
+                    <textarea
+                      rows={3}
+                      value={formData.excerpt}
+                      onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                      placeholder="Write a captivating summary that hooks your readers..."
+                      className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500 resize-none"
+                      required
+                    />
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-xs text-gray-500">Keep it engaging and under 160 characters</span>
+                      <span className={`text-xs font-medium ${formData.excerpt.length > 160 ? 'text-red-500' : 'text-pink-600'}`}>
+                        {formData.excerpt.length}/160
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Article Content <span className="text-red-500">*</span></label>
+                    {/* Emoji toolbar for structured sections */}
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                      <span className="text-xs text-gray-500 mr-2">Insert sections:</span>
+                      {[
+                        { e: '🚨', label: 'Breaking' },
+                        { e: '📊', label: 'Stats' },
+                        { e: '🏢', label: 'Corporate' },
+                        { e: '💡', label: 'Tips' },
+                        { e: '🔮', label: 'Future' },
+                      ].map((b) => (
+                        <button
+                          key={b.e}
+                          type="button"
+                          title={b.label}
+                          onClick={() => {
+                            const snippetMap: Record<string, string> = {
+                              '🚨': '🚨 Breaking News: ',
+                              '📊': '📊 Why This Matters',
+                              '🏢': '🏢 Corporate Reactions',
+                              '💡': '💡 What Employees Need to Know',
+                              '🔮': '🔮 Looking Ahead',
+                            }
+                            const snippet = snippetMap[b.e]
+                            setFormData((prev) => ({
+                              ...prev,
+                              content: (prev.content ? prev.content + "\n\n" : '') + snippet + "\n\n",
+                            }))
+                          }}
+                          className="px-2 py-1 rounded-lg bg-white/70 border border-pink-200 text-gray-700 hover:bg-pink-50 text-sm"
+                        >
+                          {b.e}
+                        </button>
+                      ))}
+                      <span className="mx-3 h-4 w-px bg-pink-200" />
+                      <span className="text-xs text-gray-500">Format:</span>
+                      <button type="button" title="Bold" onClick={() => wrapSelection('[b]', '[/b]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Bold className="w-4 h-4" /></button>
+                      <button type="button" title="Italic" onClick={() => wrapSelection('[i]', '[/i]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Italic className="w-4 h-4" /></button>
+                      <button type="button" title="Underline" onClick={() => wrapSelection('[u]', '[/u]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Underline className="w-4 h-4" /></button>
+                      <button type="button" title="Strikethrough" onClick={() => wrapSelection('[s]', '[/s]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Strikethrough className="w-4 h-4" /></button>
+                      <button type="button" title="Small" onClick={() => wrapSelection('[small]', '[/small]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Type className="w-4 h-4" /></button>
+                      <button type="button" title="Large" onClick={() => wrapSelection('[large]', '[/large]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Heading2 className="w-4 h-4" /></button>
+                      <button type="button" title="Align Left" onClick={() => wrapSelection('[left]', '[/left]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignLeft className="w-4 h-4" /></button>
+                      <button type="button" title="Align Center" onClick={() => wrapSelection('[center]', '[/center]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignCenter className="w-4 h-4" /></button>
+                      <button type="button" title="Align Right" onClick={() => wrapSelection('[right]', '[/right]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><AlignRight className="w-4 h-4" /></button>
+                      <button type="button" title="Quote" onClick={() => wrapSelection('[quote]', '[/quote]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Quote className="w-4 h-4" /></button>
+                      <button type="button" title="Link" onClick={() => {
+                        const url = prompt('Enter URL', 'https://') || 'https://'
+                        const text = prompt('Link text', 'Click here') || 'Link'
+                        insertBlock(`[link url="${url}"]${text}[/link]`)
+                      }} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><LinkIcon className="w-4 h-4" /></button>
+                      <button type="button" title="Bulleted List" onClick={() => insertBlock('[ul]\n[li]Item 1[/li]\n[li]Item 2[/li]\n[li]Item 3[/li]\n[/ul]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><List className="w-4 h-4" /></button>
+                      <button type="button" title="Numbered List" onClick={() => insertBlock('[ol]\n[li]First[/li]\n[li]Second[/li]\n[li]Third[/li]\n[/ol]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><ListOrdered className="w-4 h-4" /></button>
+                      <button type="button" title="Highlight" onClick={() => wrapSelection('[mark]', '[/mark]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50"><Highlighter className="w-4 h-4" /></button>
+                      <button type="button" title="Separator" onClick={() => insertBlock('[hr]')} className="p-1.5 rounded-lg bg-white/70 border border-pink-200 hover:bg-pink-50">—</button>
+                    </div>
+                    <textarea
+                      rows={16}
+                      value={formData.content}
+                      onChange={(e) => handleInputChange('content', e.target.value)}
+                      placeholder="Start writing your article here. Share your knowledge, insights, and experiences..."
+                      className="w-full px-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500 resize-none leading-relaxed"
+                      ref={contentRef}
+                      required
+                    />
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-xs text-gray-500">
+                        Reading time: ~{Math.ceil(formData.content.split(' ').filter(word => word.length > 0).length / 200)} min
+                      </span>
+                      <span className="text-xs text-pink-600 font-medium">
+                        {formData.content.split(' ').filter(word => word.length > 0).length} words
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-gray-500">Tip: Use the buttons above to add structured sections like Breaking, Stats, Corporate reactions, Tips, and Future outlook.</p>
+                  </div>
+                </div>
+
+                {/* Right Sidebar */}
+                <div className="lg:col-span-1 space-y-4">
+                  {/* Enhanced Featured Image Upload */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
+                    
+                    {/* Upload Method Tabs */}
+                    <div className="flex bg-gray-100 rounded-lg p-1 mb-3">
+                      <button
+                        type="button"
+                        onClick={() => setUploadMethod('device')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+                          uploadMethod === 'device'
+                            ? 'bg-white text-pink-600 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <Camera className="w-4 h-4" />
+                        Device
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUploadMethod('url')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+                          uploadMethod === 'url'
+                            ? 'bg-white text-pink-600 shadow-sm'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <Link className="w-4 h-4" />
+                        URL
+                      </button>
+                    </div>
+
+                    {uploadMethod === 'device' ? (
+                      /* Device Upload Section */
+                      <div className="space-y-3">
+                        {/* Drag & Drop Zone */}
+                        <div
+                          ref={dropZoneRef}
+                          onDragOver={handleDragOver}
+                          onDragLeave={handleDragLeave}
+                          onDrop={handleDrop}
+                          className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all ${
+                            isDragOver
+                              ? 'border-pink-400 bg-pink-50'
+                              : 'border-pink-200 hover:border-pink-300'
+                          } ${uploadingImage ? 'pointer-events-none opacity-50' : ''}`}
+                        >
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                          />
+                          
+                          {uploadingImage ? (
+                            /* Upload Progress */
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+                              </div>
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium text-gray-700">Uploading to Supabase...</p>
+                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                  <div 
+                                    className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${uploadProgress}%` }}
+                                  ></div>
+                                </div>
+                                <p className="text-xs text-gray-500">{uploadProgress}% complete</p>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Upload Interface */
+                            <div className="space-y-4">
+                              <div className="flex flex-col items-center gap-3">
+                                <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center">
+                                  <Cloud className="w-6 h-6 text-pink-600" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700">
+                                    Drop image here or click to browse
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Supports JPEG, PNG, WebP, GIF up to 5MB
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div className="flex items-center justify-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => fileInputRef.current?.click()}
+                                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all text-sm font-medium"
+                                >
+                                  <Upload className="w-4 h-4" />
+                                  Choose File
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={handleCameraCapture}
+                                  className="flex items-center gap-2 px-4 py-2 bg-white border border-pink-200 text-pink-600 rounded-lg hover:bg-pink-50 transition-all text-sm font-medium"
+                                >
+                                  <Camera className="w-4 h-4" />
+                                  Camera
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Upload Status */}
+                        {uploadingImage && (
+                          <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                            <span className="text-sm text-blue-700">Uploading to Supabase bucket...</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      /* URL Input Section */
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <Link className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input
+                            type="url"
+                            value={formData.image_url}
+                            onChange={(e) => {
+                              handleInputChange('image_url', e.target.value)
+                              setImagePreview(e.target.value)
+                            }}
+                            placeholder="https://example.com/image.jpg"
+                            className="w-full pl-10 pr-3.5 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white/80 text-black placeholder:text-gray-500"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Enter a direct link to an image hosted online
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Enhanced Image Preview */}
+                    {(imagePreview || formData.image_url) && (
+                      <div className="space-y-3">
+                        <div className="relative group">
+                          <div className="rounded-xl overflow-hidden border border-pink-200 bg-gray-50">
+                            <img 
+                              src={imagePreview || formData.image_url} 
+                              alt="Preview" 
+                              className="w-full h-40 object-cover transition-transform group-hover:scale-105"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                                e.currentTarget.nextElementSibling?.classList.remove('hidden')
+                              }}
+                            />
+                            <div className="hidden w-full h-40 flex items-center justify-center text-gray-400">
+                              <div className="text-center">
+                                <Image className="w-8 h-8 mx-auto mb-2" />
+                                <p className="text-sm">Image not found</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Action Buttons */}
+                          <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              type="button"
+                              onClick={() => window.open(imagePreview || formData.image_url, '_blank')}
+                              className="p-1.5 bg-white/90 backdrop-blur-sm text-gray-600 rounded-lg hover:bg-white hover:text-gray-800 transition-colors"
+                              title="View full size"
+                            >
+                              <Eye className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={removeImage}
+                              className="p-1.5 bg-red-500/90 backdrop-blur-sm text-white rounded-lg hover:bg-red-600 transition-colors"
+                              title="Remove image"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+
+                          {/* Upload Success Indicator */}
+                          {formData.image_url && formData.image_url.startsWith('https://') && (
+                            <div className="absolute top-2 left-2">
+                              <div className="flex items-center gap-1 px-2 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-lg text-xs">
+                                <CheckCircle className="w-3 h-3" />
+                                <span>Uploaded</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Image Info */}
+                        <div className="text-xs text-gray-500 space-y-1">
+                          <div className="flex items-center gap-2">
+                            <Cloud className="w-3 h-3" />
+                            <span>Stored in Supabase bucket</span>
+                          </div>
+                          <p>• Supported formats: JPEG, PNG, WebP, GIF</p>
+                          <p>• Maximum file size: 5MB</p>
+                          <p>• Recommended size: 1200x630 pixels</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Category */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    {dropdownLoading ? (
+                      <div className="flex items-center gap-2 py-4">
+                        <div className="w-6 h-6 border-2 border-pink-200 border-t-pink-500 rounded-full animate-spin" />
+                        <span className="text-pink-600 font-medium">Loading categories...</span>
+                      </div>
+                    ) : categories.length > 0 ? (
+                      <select
+                        value={formData.category_id}
+                        onChange={e => setFormData(prev => ({ ...prev, category_id: e.target.value }))}
+                        className="w-full h-12 border border-pink-200 rounded-xl px-3 py-2 bg-white text-black focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                        required
+                      >
+                        <option value="" disabled>Select your content area...</option>
+                        {categories.map(category => (
+                          <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl shadow-sm">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <AlertCircle className="w-4 h-4 text-yellow-600" />
+                          </div>
+                          <div className="space-y-1">
+                            <div className="text-sm font-semibold text-yellow-800">No Content Areas Assigned</div>
+                            <div className="text-xs text-yellow-700">Please contact your administrator to assign content areas for your account.</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Article Stats */}
+                  <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-4 border border-pink-200/50">
+                    <h3 className="text-sm font-semibold text-pink-800 mb-3">Article Preview</h3>
+                    <div className="space-y-3">
+                      <div className="bg-white/60 rounded-lg p-3 border border-pink-200/30">
+                        <div className="text-xs text-gray-600 mb-1">Author</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {writer?.name || writer?.username || 'Anonymous'}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-white/60 rounded-lg p-2 border border-pink-200/30">
+                          <div className="text-xs text-gray-600">Words</div>
+                          <div className="text-sm font-bold text-pink-700">
+                            {formData.content.split(' ').filter(word => word.length > 0).length}
+                          </div>
+                        </div>
+                        <div className="bg-white/60 rounded-lg p-2 border border-pink-200/30">
+                          <div className="text-xs text-gray-600">Characters</div>
+                          <div className="text-sm font-bold text-pink-700">
+                            {formData.content.length}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white/60 rounded-lg p-3 border border-pink-200/30">
+                        <div className="text-xs text-gray-600 mb-1">URL Slug</div>
+                        <code className="text-xs text-pink-800 font-mono break-all">
+                          {formData.title ? generateSlug(formData.title) : 'auto-generated-from-title'}
+                        </code>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Admin Style Action Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-pink-200/50">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-5 py-2.5 rounded-xl bg-white text-pink-700 hover:bg-pink-50 border border-pink-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700 disabled:opacity-70 transition-all"
+                >
+                  <Save className="w-4 h-4" />
+                  {submitting ? 'Creating Article...' : 'Publish Article'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -301,7 +301,8 @@ export default function Navbar() {
                       {category.items.map((item, itemIdx) => (
                         <div key={itemIdx}>
                           <Link 
-                            href={`/services/${item.slug}`} 
+                            href={`/${item.slug}`} 
+                            onClick={() => setIsExpertiseOpen(false)}
                             className={`group relative block py-2 px-3 rounded-lg transition-all duration-300 text-left w-full hover:shadow-lg hover:shadow-pink-100/50 flex items-center min-h-10 leading-snug whitespace-normal break-words ${
                               item.name.includes('Internal Committees') || item.name.includes('Quarterly Training') || item.name.includes('Workplace Respect')
                                 ? 'text-[12px] font-medium text-gray-800 hover:text-pink-600 hover:bg-gradient-to-r hover:from-pink-50 hover:to-pink-100 hover:scale-105 hover:-translate-y-0.5 border border-transparent hover:border-pink-200'
@@ -369,7 +370,8 @@ export default function Navbar() {
                         {category.items.map((item, itemIdx) => (
                           <li key={itemIdx}>
                             <Link
-                              href={`/services/${item.slug}`}
+                              href={`/${item.slug}`}
+                              onClick={() => setIsExpertiseOpen(false)}
                               className="block text-base text-gray-600 hover:text-black py-3 px-4 rounded-lg transition-all text-left w-full hover:bg-gray-100"
                             >
                               {item.name}
