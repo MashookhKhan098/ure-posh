@@ -191,7 +191,7 @@ export default function AboutPage() {
       </section>
 
       {/* Interactive Floating Mug Section */}
-      <section className="py-16 bg-gradient-to-br from-white via-pink-50/20 to-white">
+      <section className="py-8 bg-gradient-to-br from-white via-pink-50/20 to-white">
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Experience Our Interactive Platform</h2>
@@ -343,7 +343,7 @@ export default function AboutPage() {
       </section>
 
       {/* Six Foundational Pillars - Light white-pink */}
-      <section className="py-12 bg-gradient-to-b from-white to-pink-50/50">
+      <section className="py-8 bg-gradient-to-b from-white to-pink-50/50">
         <div className="max-w-7xl mx-auto px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Approach: Six Foundational Pillars</h2>
@@ -382,7 +382,7 @@ export default function AboutPage() {
       </section>
 
       {/* Why Choose URE POSH - Light white-pink */}
-      <section className="py-12 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Why Choose URE POSH?</h2>

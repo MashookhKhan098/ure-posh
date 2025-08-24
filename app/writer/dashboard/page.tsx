@@ -86,10 +86,10 @@ export default function WriterDashboardPage() {
 					united_kingdom_workplace: 'united-kingdom-workplace',
 					us_workplace: 'us-workplace'
 				}
-				const allowed = []
+				const allowed: ((prevState: { id: string; name: string }[]) => { id: string; name: string }[]) | { id: any; name: any }[] = []
 				Object.entries(writer.field_allotted).forEach(([field, isAllowed]) => {
 					if (isAllowed) {
-						const slug = fieldToCategoryMap[field]
+						const slug = fieldToCategoryMap[field as keyof typeof fieldToCategoryMap]
 						if (slug) {
 							const cat = allCategories.find((c: any) => c.slug === slug)
 							if (cat) allowed.push({ id: cat.id, name: cat.name })

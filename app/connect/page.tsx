@@ -91,7 +91,7 @@ export default function ConnectPage() {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-16"
+                    className="text-center py-8"
                   >
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircle className="w-10 h-10 text-green-600" />
@@ -266,7 +266,7 @@ export default function ConnectPage() {
                        <Button
                          type="submit"
                          disabled={status === 'submitting'}
-                         className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-sm"
+                         className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 disabled:opacity-60 disabled:cursor-not-allowed text-white py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold text-sm"
                        >
                       {status === 'submitting' ? (
                         <div className="flex items-center">

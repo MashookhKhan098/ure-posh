@@ -2366,7 +2366,7 @@ function AdminDashboardContent() {
                               <h3 className="font-bold text-gray-900 text-lg truncate">{writer.name}</h3>
                               <div className="flex items-center gap-2 mt-1">
                                 <span className="text-blue-600 font-semibold text-sm">@{writer.username}</span>
-                                {writer.verified && <CheckCircle className="w-4 h-4 text-green-500" title="Verified" />}
+                                {writer.verified && <CheckCircle className="w-4 h-4 text-green-500" />}
                               </div>
                             </div>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(writer.status)} ml-2`}>{writer.status}</span>

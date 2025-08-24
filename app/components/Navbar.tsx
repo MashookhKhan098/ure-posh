@@ -209,7 +209,7 @@ export default function Navbar() {
         {/* CTA Button - Free Coffee */}
         <div className="hidden lg:flex items-center">
           <Button 
-            className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-6 py-2 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 group"
+            className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-4 py-1.5 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2 group"
             asChild
           >
             <Link href="/connect">
@@ -277,7 +277,7 @@ export default function Navbar() {
       {isExpertiseOpen && (
         <div ref={dropdownRef} className="absolute left-0 right-0 top-full mt-1 bg-white shadow-xl border border-gray-200 z-50 transition-all duration-300 hover:shadow-2xl">
           <div className="w-full pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-8">
-            <div className="py-8 pl-0">
+            <div className="py-4 pl-0">
               <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 lg:gap-8 items-start">
                 {/* Expertise Header Column */}
                 <div className="w-48 pr-4">
@@ -339,7 +339,7 @@ export default function Navbar() {
             className="lg:hidden fixed top-20 left-0 w-full bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-2xl z-50"
             style={{ maxHeight: 'calc(100dvh - 5rem)', overflowY: 'auto' }}
           >
-            <div className="space-y-4 px-4 py-6" style={{ maxHeight: 'calc(100dvh - 5rem)', overflowY: 'auto' }}>
+            <div className="space-y-4 px-4 py-4" style={{ maxHeight: 'calc(100dvh - 5rem)', overflowY: 'auto' }}>
               {navItems.map((item) => (
                 <Link
                   key={item.name}
@@ -386,7 +386,7 @@ export default function Navbar() {
 
               <div className="pt-6 space-y-3">
                 <Button 
-                  className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-3 rounded-xl text-lg font-bold flex items-center justify-center gap-2 group"
+                  className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white py-2.5 rounded-xl text-lg font-bold flex items-center justify-center gap-2 group"
                   asChild
                 >
                   <Link href="/connect" onClick={() => setIsMenuOpen(false)}>

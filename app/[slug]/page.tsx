@@ -5,6 +5,241 @@ import { ChevronDown, Shield, Users, FileText, Award, Phone, Mail, Globe, CheckC
 
 // Reusable component structure for different slugs
 const SlugPageData = {
+  'poster-and-policy-discloser': {
+    title: "POSH Poster & Policy Disclosure – Workplace Safety Compliance",
+    subtitle: "Legally Compliant POSH Posters & Policy Disclosure Services",
+    description: "URE POSH provides legally compliant POSH posters and workplace policy disclosure services. We help corporates in India, UK & US comply with POSH Act, Equality Act, and EEOC standards with audit-ready documentation.",
+    sections: [
+      {
+        id: "about",
+        title: "About URE POSH Poster & Policy Services",
+        icon: Shield,
+        content: {
+          description: "At URE POSH, we understand that compliance is not complete until it is visible. The POSH Act, 2013 and global workplace laws mandate that organizations display posters and disclose policies to ensure employees are aware of their rights and reporting mechanisms.",
+          features: [
+            "Legally compliant POSH posters (English + regional languages)",
+            "Workplace harassment policies (India, UK & US frameworks)",
+            "Public disclosure protocols (digital & physical)",
+            "Employee awareness through policy accessibility",
+            "Annual compliance audits & certifications"
+          ]
+        }
+      },
+      {
+        id: "importance",
+        title: "Why Poster & Policy Disclosure Matters",
+        icon: Users,
+        content: {
+          description: "Legal compliance and employee empowerment through visible workplace policies:",
+          features: [
+            "Legal Mandate (India): Section 19 of POSH Act, 2013 requires prominent display of posters",
+            "UK Standards: Equality Act 2010 and ACAS guidelines require policy disclosure",
+            "US Standards: EEOC mandates display of anti-harassment and EEO rights posters",
+            "Employee Empowerment: Visible disclosures build trust and encourage reporting",
+            "Audit Readiness: Serves as proof of compliance during inspections and ESG reviews"
+          ]
+        }
+      },
+      {
+        id: "services",
+        title: "Our Poster & Policy Disclosure Services",
+        icon: FileText,
+        content: {
+          description: "Comprehensive poster and policy disclosure solutions for global compliance:",
+          services: [
+            {
+              name: "POSH Act-Compliant Posters (India)",
+              description: "Multilingual posters with IC details, complaint procedures, timelines, and QR codes for digital access."
+            },
+            {
+              name: "Anti-Harassment Policy Drafting",
+              description: "Customized policies for India, UK, and US jurisdictions with legally defensible frameworks."
+            },
+            {
+              name: "Workplace Policy Disclosure",
+              description: "Digital and physical policy display via intranet, notice boards, and cloud-stored access."
+            },
+            {
+              name: "Compliance Reporting & Audits",
+              description: "Annual audit of posters, disclosure compliance reports, and ESG certification preparation."
+            },
+            {
+              name: "International Policy Harmonization",
+              description: "Unified global policies with local addendums for India (POSH Act), UK (Equality Act), US (EEOC)."
+            }
+          ]
+        }
+      },
+      {
+        id: "benefits",
+        title: "Key Benefits of URE POSH Disclosure Services",
+        icon: Award,
+        content: {
+          description: "Comprehensive advantages of professional poster and policy disclosure services:",
+          features: [
+            "100% Legal Compliance across India, UK, and US jurisdictions",
+            "Audit & ESG Ready documentation for investor confidence",
+            "Enhanced employee awareness of rights & complaint processes",
+            "Global standard posters & policies with local compliance",
+            "Investor-friendly compliance certification and reporting"
+          ]
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "What does 'POSH poster disclosure' mean?",
+        answer: "It refers to mandatory workplace display of POSH-related information including IC details, complaint process, and employee rights under POSH Act, 2013."
+      },
+      {
+        question: "Is poster display legally mandatory in India?",
+        answer: "Yes. Section 19(b) of POSH Act, 2013 requires employers to display details of the IC and complaint redressal system at conspicuous places in the workplace."
+      },
+      {
+        question: "What must be included in a POSH poster in India?",
+        answer: "Contact details of IC members, procedure for filing complaints, timelines for redressal (90 days inquiry, 10 days report, 60 days action), and statement of zero tolerance."
+      },
+      {
+        question: "In what languages should POSH posters be displayed?",
+        answer: "At least in English and the regional/local language where the workplace is located."
+      },
+      {
+        question: "What are the penalties for not displaying posters in India?",
+        answer: "Fine up to ₹50,000 and cancellation of business license on repeat offense."
+      },
+      {
+        question: "What are the UK requirements for harassment policy disclosure?",
+        answer: "Employers must ensure policies are accessible to all staff via handbooks, notice boards, or intranet. Employment Tribunals often ask for proof of awareness training and policy display."
+      },
+      {
+        question: "What posters are mandatory in the US for harassment compliance?",
+        answer: "The EEOC 'Know Your Rights' poster must be displayed prominently, along with any state-specific harassment/EEO posters (e.g., California, New York)."
+      },
+      {
+        question: "Can posters be digital?",
+        answer: "Yes. In India, UK, and US, digital disclosure is allowed, provided it is accessible, documented, and communicated to employees. However, physical posters remain a best practice."
+      },
+      {
+        question: "How often should posters/policies be updated?",
+        answer: "India: Whenever IC members change. UK/US: Whenever laws or company policies are updated. At least annual review is recommended."
+      },
+      {
+        question: "What are 'conspicuous places' for posters?",
+        answer: "Reception areas, HR departments, notice boards, washrooms, cafeterias, and digital intranet dashboards."
+      },
+      {
+        question: "Can policy disclosure be part of induction training?",
+        answer: "Yes. Disclosure must be included in employee onboarding, with acknowledgment forms for legal proof."
+      },
+      {
+        question: "How does URE POSH support multinational companies?",
+        answer: "We draft unified global harassment policies, create country-specific annexures for India/UK/US, provide multilingual posters, and conduct annual compliance audits & certifications."
+      }
+    ]
+  },
+  'safe-workplace-audit-services': {
+    title: "Safe Workplace Audit Services",
+    subtitle: "Comprehensive Workplace Safety Compliance Solutions", 
+    description: "Professional audit services ensuring complete workplace safety compliance across India, UK, and US standards",
+    sections: [
+      {
+        id: "audit-services",
+        title: "Our Safe Workplace Audit Services",
+        icon: CheckCircle,
+        content: {
+          description: "Comprehensive audit services covering all workplace safety compliance aspects:",
+          services: [
+            {
+              name: "Policy & Document Review",
+              description: "POSH/Anti-harassment policies, disclosures, handbooks. Legal alignment verification."
+            },
+            {
+              name: "IC Assessment", 
+              description: "Constitution per POSH Act 2013. External member compliance. Meeting records."
+            },
+            {
+              name: "Training & Awareness",
+              description: "Employee sensitization records. IC training. Leadership accountability programs."
+            },
+            {
+              name: "Reporting & Records",
+              description: "Annual POSH filing (India), EEOC compliance (US), UK grievance docs."
+            },
+            {
+              name: "Workplace Disclosures",
+              description: "Poster displays, digital policy access, multilingual availability."
+            },
+            {
+              name: "Complaint Redressal",
+              description: "Complaint registers, inquiry procedures, disciplinary measures."
+            },
+            {
+              name: "ESG Certification",
+              description: "Investor-ready reports, sustainability integration, URE POSH certification."
+            }
+          ]
+        }
+      },
+      {
+        id: "about",
+        title: "About URE POSH Safe Workplace Audits",
+        icon: Shield,
+        content: {
+          description: "Compliance is proof of commitment to safety, equality, and governance. Our 360° audit benchmarks against Indian POSH Act 2013, UK Equality Act 2010 (ACAS), US EEOC & Title VII, UN Women's Principles, ILO conventions, and ESG standards.",
+          features: [
+            "Legal compliance & audit-ready certification",
+            "Global standards integration (India, UK, US)",
+            "ESG & investor-trusted documentation",
+            "Risk mitigation & penalty prevention"
+          ]
+        }
+      },
+      {
+        id: "importance",
+        title: "Why Safe Workplace Audits Matter",
+        icon: Users,
+        content: {
+          description: "Essential for comprehensive organizational protection:",
+          features: [
+            "Legal compliance (POSH India, EEO UK/US)",
+            "Risk mitigation (fines, litigation prevention)",
+            "Investor confidence (ESG/CSR proof)",
+            "Employee trust (transparency & retention)",
+            "Global standardization (multi-country operations)"
+          ]
+        }
+      },
+      {
+        id: "benefits",
+        title: "Key Benefits of URE POSH Audit",
+        icon: Award,
+        content: {
+          description: "Transform compliance posture with comprehensive benefits:",
+          features: [
+            "100% Compliance – prevents penalties & ensures audit readiness",
+            "Global alignment – India, UK, US standards integrated",
+            "Strong governance – ESG & CSR-ready reports",
+            "Risk mitigation – prevents harassment claims escalation",
+            "Reputation protection – trusted employer brand"
+          ]
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "What does a Safe Workplace Audit include?",
+        answer: "Our audits cover policy review, IC assessment, training evaluation, documentation compliance, reporting systems, and ESG certification across India, UK, and US standards."
+      },
+      {
+        question: "How long does the audit process take?",
+        answer: "Typical audit duration is 2-4 weeks depending on organization size, with preliminary findings available within one week of completion."
+      },
+      {
+        question: "Do you provide post-audit support?",
+        answer: "Yes, we offer ongoing compliance monitoring, policy updates, training refreshers, and annual re-certification services."
+      }
+    ]
+  },
   'posh-compliance-initiation': {
     title: "POSH Compliance Initiation",
     subtitle: "India's Next-Generation Workplace Safety Platform",
@@ -696,14 +931,12 @@ const SlugPageData = {
         title: "About URE POSH Safe Workplace Audits",
         icon: Shield,
         content: {
-          description: "At URE POSH, we believe compliance is more than a policy—it's proof of commitment to safety, equality, and global governance. Our Safe Workplace Audit is a 360° compliance assessment that benchmarks your organization against:",
+          description: "Compliance is proof of commitment to safety, equality, and governance. Our 360° audit benchmarks against Indian POSH Act 2013, UK Equality Act 2010 (ACAS), US EEOC & Title VII, UN Women's Principles, ILO conventions, and ESG standards.",
           features: [
-            "Indian POSH Act, 2013",
-            "UK Equality Act, 2010 (ACAS standards)",
-            "US EEOC & Title VII requirements",
-            "UN Women's Empowerment Principles & ILO conventions",
-            "ESG (Environmental, Social, Governance) global standards",
-            "Legal compliance, audit-ready, and investor-trusted certification"
+            "Legal compliance & audit-ready certification",
+            "Global standards integration (India, UK, US)",
+            "ESG & investor-trusted documentation",
+            "Risk mitigation & penalty prevention"
           ]
         }
       },
@@ -712,13 +945,13 @@ const SlugPageData = {
         title: "Why Safe Workplace Audits Matter",
         icon: Award,
         content: {
-          description: "Safe workplace audits are essential for comprehensive organizational protection:",
+          description: "Essential for comprehensive organizational protection:",
           features: [
-            "Legal Requirement – POSH compliance in India, EEO/Equality compliance in UK & US",
-            "Risk Mitigation – Prevent fines, litigation, and reputational loss",
-            "Investor Confidence – ESG/CSR reports demand proof of safe workplace practices",
-            "Employee Trust – Builds transparency, safety, and retention",
-            "Global Standardization – Unified compliance across multi-country operations"
+            "Legal compliance (POSH India, EEO UK/US)",
+            "Risk mitigation (fines, litigation prevention)",
+            "Investor confidence (ESG/CSR proof)",
+            "Employee trust (transparency & retention)",
+            "Global standardization (multi-country operations)"
           ]
         }
       },
@@ -727,35 +960,35 @@ const SlugPageData = {
         title: "Our Safe Workplace Audit Services",
         icon: FileText,
         content: {
-          description: "Comprehensive audit services covering all aspects of workplace safety compliance:",
+          description: "Comprehensive audit services covering all workplace safety compliance aspects:",
           services: [
             {
               name: "Policy & Document Review",
-              description: "POSH policy (India), Anti-harassment policy (UK/US). Disclosures, posters, HR manuals, handbooks. Verification of policy updates & legal alignment."
+              description: "POSH/Anti-harassment policies, disclosures, handbooks. Legal alignment verification."
             },
             {
-              name: "Internal Committee (IC) Assessment",
-              description: "Constitution as per POSH Act, 2013. External member appointment & compliance. Meeting frequency, records, and resolutions."
+              name: "IC Assessment",
+              description: "Constitution per POSH Act 2013. External member compliance. Meeting records."
             },
             {
-              name: "Training & Awareness Audit",
-              description: "Employee sensitization records. IC training sessions. Leadership accountability programs."
+              name: "Training & Awareness",
+              description: "Employee sensitization records. IC training. Leadership accountability programs."
             },
             {
-              name: "Reporting & Recordkeeping",
-              description: "Annual POSH report filing under Section 21 (India). EEOC recordkeeping compliance (US). UK grievance documentation requirements."
+              name: "Reporting & Records",
+              description: "Annual POSH filing (India), EEOC compliance (US), UK grievance docs."
             },
             {
-              name: "Workplace Disclosure Check",
-              description: "Posters displayed at conspicuous locations. Digital policy disclosures via intranet/HRMS. Multilingual availability."
+              name: "Workplace Disclosures",
+              description: "Poster displays, digital policy access, multilingual availability."
             },
             {
-              name: "Complaint Redressal Audit",
-              description: "Complaint registers & timelines. Inquiry procedures & confidentiality adherence. Implementation of disciplinary measures."
+              name: "Complaint Redressal",
+              description: "Complaint registers, inquiry procedures, disciplinary measures."
             },
             {
-              name: "ESG & Investor-Readiness Certification",
-              description: "Audit-ready reports for investors, boards, and CSR disclosures. Integration with sustainability & governance frameworks. Certification issued by URE POSH."
+              name: "ESG Certification",
+              description: "Investor-ready reports, sustainability integration, URE POSH certification."
             }
           ]
         }
@@ -765,13 +998,13 @@ const SlugPageData = {
         title: "Key Benefits of URE POSH Audit",
         icon: Zap,
         content: {
-          description: "Transform your compliance posture with comprehensive audit benefits:",
+          description: "Transform compliance posture with comprehensive benefits:",
           features: [
-            "100% Compliance Proof – Prevents penalties & ensures audit readiness",
-            "Global Policy Alignment – India, UK, US standards integrated",
-            "Stronger Governance – ESG & CSR-ready reports",
-            "Legal Risk Mitigation – Prevents harassment claims escalating to courts",
-            "Reputation Shield – Trusted employer brand for employees & investors"
+            "100% Compliance – prevents penalties & ensures audit readiness",
+            "Global alignment – India, UK, US standards integrated",
+            "Strong governance – ESG & CSR-ready reports",
+            "Risk mitigation – prevents harassment claims escalation",
+            "Reputation protection – trusted employer brand"
           ]
         }
       }
@@ -2251,90 +2484,88 @@ const FeatureCard = ({
   description,
   features,
   services,
+  isLarge = false,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   description?: string;
   features?: string[];
   services?: { name: string; description: string }[];
+  isLarge?: boolean;
 }) => (
-  <div className="group bg-white rounded-2xl p-8 shadow-lg border border-pink-100 hover:shadow-xl transition-all duration-300 relative overflow-hidden transform hover:scale-[1.02]">
-    {/* Simple background element */}
-    <div className="absolute top-0 right-0 w-32 h-32 bg-pink-50 rounded-full blur-2xl opacity-50"></div>
+  <div className={`group bg-white rounded-xl shadow-lg border border-pink-100 hover:shadow-xl transition-all duration-300 relative overflow-hidden h-full ${isLarge ? 'p-6' : 'p-4'}`}>
+    {/* Enhanced background elements */}
+    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-pink-50 to-pink-100 rounded-full blur-2xl opacity-40"></div>
+    <div className="absolute bottom-0 left-0 w-16 h-16 bg-pink-50 rounded-full blur-xl opacity-30"></div>
     
-    <div className="relative z-10">
-      <div className="flex items-start gap-8">
-        {/* Clean icon container */}
-        <div className="flex-shrink-0">
-          <div className="w-16 h-16 bg-pink-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-pink-700 transition-all duration-300 shadow-lg">
-            <Icon className="w-8 h-8 text-white" />
-          </div>
+    <div className="relative z-10 h-full flex flex-col">
+      {/* Enhanced Header Section */}
+      <div className={`flex items-center gap-3 ${isLarge ? 'mb-4' : 'mb-3'}`}>
+        <div className={`${isLarge ? 'w-12 h-12' : 'w-10 h-10'} bg-gradient-to-br from-pink-600 to-pink-700 rounded-xl flex items-center justify-center group-hover:from-pink-700 group-hover:to-pink-800 transition-all duration-300 shadow-lg group-hover:shadow-xl`}>
+          <Icon className={`${isLarge ? 'w-6 h-6' : 'w-5 h-5'} text-white`} />
         </div>
+        <div className="flex-1">
+          <h3 className={`${isLarge ? 'text-xl md:text-2xl' : 'text-lg'} font-bold text-gray-900 group-hover:text-pink-600 transition-colors duration-300 leading-tight`}>
+            {title}
+          </h3>
+        </div>
+      </div>
 
-        {/* Content area */}
-        <div className="flex-1 space-y-6">
-          {/* Title */}
-          <div className="space-y-3">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors duration-300 leading-tight">
-              {title}
-            </h3>
-            <div className="w-0 h-0.5 bg-pink-600 group-hover:w-24 transition-all duration-500 rounded-full"></div>
-          </div>
+      {/* Enhanced Description */}
+      {description && (
+        <div className={`${isLarge ? 'mb-5' : 'mb-3'}`}>
+          <p className={`text-gray-700 leading-relaxed ${isLarge ? 'text-base' : 'text-sm'} font-medium`}>
+            {description}
+          </p>
+        </div>
+      )}
 
-          {/* Description */}
-          {description && (
-            <p className="text-gray-700 leading-relaxed text-lg font-medium">
-              {description}
-            </p>
-          )}
-          
-          {/* Features list */}
-          {features && (
-            <div className="space-y-4">
-              <h4 className="text-lg font-bold text-gray-800">Key Features</h4>
-              <div className="grid gap-3">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-start hover:bg-pink-50 rounded-xl p-3 -mx-3 transition-all duration-300">
-                    <div className="flex-shrink-0">
-                      <div className="w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                        <CheckCircle className="w-3 h-3 text-white" />
-                      </div>
-                    </div>
-                    <span className="text-gray-800 text-base leading-relaxed font-medium">
-                      {feature}
-                    </span>
+      {/* Content Area */}
+      <div className="flex-1 space-y-3">
+        {/* Features */}
+        {features && (
+          <div className={`space-y-${isLarge ? '2' : '1'}`}>
+            <h4 className={`${isLarge ? 'text-sm' : 'text-xs'} font-bold text-gray-800 uppercase tracking-wide`}>Key Features</h4>
+            <div className={`space-y-${isLarge ? '2' : '1'}`}>
+              {features.map((feature, index) => (
+                <div key={index} className="flex items-start hover:bg-pink-50 rounded-lg p-2 -mx-2 transition-all duration-300 group/item">
+                  <div className={`${isLarge ? 'w-4 h-4' : 'w-3 h-3'} bg-pink-600 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 group-hover/item:bg-pink-700 transition-colors duration-300`}>
+                    <CheckCircle className={`${isLarge ? 'w-2.5 h-2.5' : 'w-2 h-2'} text-white`} />
                   </div>
-                ))}
-              </div>
+                  <span className={`text-gray-800 ${isLarge ? 'text-sm' : 'text-xs'} leading-relaxed font-medium`}>
+                    {feature}
+                  </span>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Services list */}
-          {services && (
-            <div className="space-y-6">
-              <h4 className="text-lg font-bold text-gray-800">Our Services</h4>
-              <div className="space-y-4">
-                {services.map((service, index) => (
-                  <div key={index} className="bg-pink-50 rounded-xl p-6 border border-pink-100 hover:border-pink-200 transition-all duration-300">
-                    <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-pink-600 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 mt-1">
-                        {index + 1}
-                      </div>
-                      <div className="space-y-2">
-                        <h5 className="font-bold text-gray-800 text-lg">
-                          {service.name}
-                        </h5>
-                        <p className="text-gray-700 text-base leading-relaxed">
-                          {service.description}
-                        </p>
-                      </div>
+        {/* Services */}
+        {services && (
+          <div className={`space-y-${isLarge ? '3' : '2'}`}>
+            <h4 className={`${isLarge ? 'text-sm' : 'text-xs'} font-bold text-gray-800 uppercase tracking-wide`}>Our Services</h4>
+            <div className={`space-y-${isLarge ? '3' : '2'}`}>
+              {services.map((service, index) => (
+                <div key={index} className="bg-gradient-to-r from-pink-50 to-white rounded-xl p-3 border border-pink-100 hover:border-pink-200 transition-all duration-300 hover:shadow-md group/service">
+                  <div className="flex items-start gap-3">
+                    <div className={`${isLarge ? 'w-8 h-8' : 'w-6 h-6'} bg-gradient-to-br from-pink-600 to-pink-700 rounded-lg flex items-center justify-center text-white font-bold ${isLarge ? 'text-sm' : 'text-xs'} flex-shrink-0 mt-0.5 group-hover/service:from-pink-700 group-hover/service:to-pink-800 transition-all duration-300 shadow-sm`}>
+                      {index + 1}
+                    </div>
+                    <div className="space-y-1 flex-1">
+                      <h5 className={`font-bold text-gray-900 ${isLarge ? 'text-base' : 'text-sm'} group-hover/service:text-pink-600 transition-colors duration-300`}>
+                        {service.name}
+                      </h5>
+                      <p className={`text-gray-700 ${isLarge ? 'text-sm' : 'text-xs'} leading-relaxed`}>
+                        {service.description}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   </div>
@@ -2348,36 +2579,36 @@ type FAQItemProps = {
 };
 
 const FAQItem = ({ question, answer, isOpen, onClick }: FAQItemProps) => (
-  <div className="group bg-white rounded-xl shadow-lg border border-pink-100 overflow-hidden hover:shadow-xl transition-all duration-300">
+  <div className="group bg-white rounded-lg shadow-md border border-pink-100 overflow-hidden hover:shadow-lg transition-all duration-300">
     {/* Question Button */}
     <button
       onClick={onClick}
-      className="w-full p-6 md:p-8 text-left flex justify-between items-center hover:bg-pink-50 transition-all duration-300"
+      className="w-full p-3 text-left flex justify-between items-center hover:bg-pink-50 transition-all duration-300"
     >
-      <div className="flex-1 pr-6">
-        <h4 className="font-bold text-gray-800 text-lg md:text-xl group-hover:text-pink-600 transition-colors duration-300 leading-relaxed">
+      <div className="flex-1 pr-3">
+        <h4 className="font-semibold text-gray-800 text-sm md:text-base group-hover:text-pink-600 transition-colors duration-300 leading-snug">
           {question}
         </h4>
       </div>
       
       {/* Toggle Button */}
-      <div className={`w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center transition-all duration-300 flex-shrink-0 shadow-md ${
+      <div className={`w-6 h-6 bg-pink-600 rounded-md flex items-center justify-center transition-all duration-300 flex-shrink-0 shadow-sm ${
         isOpen 
           ? 'rotate-180 bg-pink-700' 
           : 'hover:bg-pink-700'
       }`}>
-        <ChevronDown className="w-5 h-5 text-white" />
+        <ChevronDown className="w-3 h-3 text-white" />
       </div>
     </button>
     
     {/* Answer Section */}
-    <div className={`transition-all duration-500 ease-in-out ${
+    <div className={`transition-all duration-300 ease-in-out ${
       isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
     } overflow-hidden`}>
-      <div className="px-6 md:px-8 pb-6 md:pb-8">
-        <div className="w-full h-px bg-pink-200 mb-6"></div>
-        <div className="bg-pink-50 rounded-xl p-6 border border-pink-100">
-          <p className="text-gray-700 leading-relaxed text-base md:text-lg">
+      <div className="px-3 pb-3">
+        <div className="w-full h-px bg-pink-200 mb-2"></div>
+        <div className="bg-pink-50 rounded-lg p-3 border border-pink-100">
+          <p className="text-gray-700 leading-relaxed text-xs md:text-sm">
             {answer}
           </p>
         </div>
@@ -2395,27 +2626,7 @@ export default function SlugPage() {
   // Ensure slug is a string (Next.js can return string | string[])
   const slugStr = Array.isArray(slug) ? slug[0] : slug;
 
-  // Handle redirects
-  useEffect(() => {
-    if (slugStr === 'poster-and-policy-discloser') {
-      router.push('/services/poster-and-policy-discloser');
-      return;
-    }
-  }, [slugStr, router]);
-
   const pageData = SlugPageData[slugStr as keyof typeof SlugPageData];
-
-  // Show loading state for redirects
-  if (slugStr === 'poster-and-policy-discloser') {
-    return (
-      <main className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Redirecting...</p>
-        </div>
-      </main>
-    );
-  }
 
   if (!pageData) {
     return (
@@ -2493,102 +2704,274 @@ export default function SlugPage() {
           animation: pulse-glow 3s ease-in-out infinite;
         }
       `}</style>
-      {/* Hero Section - Clean Pink & White Professional Design */}
-      <section className="relative pt-24 pb-20 bg-white overflow-hidden min-h-[85vh] flex items-center">
+      {/* Hero Section - Compact Left Content, Right Image Card Layout */}
+      <section className="relative pt-12 pb-8 bg-white overflow-hidden min-h-[60vh] flex items-center">
         {/* Simple background elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-pink-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-pink-50/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        <div className="absolute top-0 left-0 w-64 h-64 bg-pink-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-48 h-48 bg-pink-50/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
         
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 w-full">
-          <div className="text-center space-y-8 lg:space-y-12">
-            {/* Clean badge */}
-            <div className="inline-flex items-center gap-4 bg-pink-50 px-8 py-4 rounded-full border border-pink-200 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="w-3 h-3 bg-pink-500 rounded-full"></div>
-              <span className="text-pink-700 font-semibold text-sm md:text-base">Empowering Workplace Rights</span>
-            </div>
-            
-            {/* Main heading */}
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-gray-900 leading-[0.9] tracking-tight">
-                <span className="text-pink-600">
-                  {pageData.title}
-                </span>
-              </h1>
-              <div className="flex justify-center">
-                <div className="w-24 h-1.5 bg-pink-500 rounded-full"></div>
+        <div className="relative max-w-6xl mx-auto px-2 lg:px-4 w-full">
+          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6 items-center">
+            {/* Left Content */}
+            <div className="space-y-3">
+              {/* Clean badge */}
+              <div className="inline-flex items-center gap-2 bg-pink-50 px-2 py-1 rounded-full border border-pink-200 shadow-sm hover:shadow-md transition-all duration-300">
+                <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                <span className="text-pink-700 font-semibold text-sm">Empowering Workplace Rights</span>
               </div>
-            </div>
-            
-            {/* Description */}
-            <div className="space-y-8 max-w-5xl mx-auto">
-              <div className="bg-pink-50/80 rounded-2xl p-6 md:p-8 border border-pink-100 shadow-sm">
-                <p className="text-lg md:text-xl lg:text-2xl text-gray-800 leading-relaxed font-medium">
-                  <strong className="text-pink-600">{pageData.subtitle}</strong>
+              
+              {/* Main heading */}
+              <div className="space-y-2">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight tracking-tight">
+                  <span className="text-pink-600">
+                    {pageData.title}
+                  </span>
+                </h1>
+                <div className="w-16 h-1 bg-pink-500 rounded-full"></div>
+              </div>
+              
+              {/* Subtitle */}
+              <div className="space-y-2">
+                <div className="bg-pink-50/80 rounded-lg p-1.5 border border-pink-100 shadow-sm">
+                  <p className="text-base md:text-lg text-gray-800 leading-relaxed font-medium">
+                    <strong className="text-pink-600">{pageData.subtitle}</strong>
+                  </p>
+                </div>
+                
+                {/* Description */}
+                <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  {pageData.description}
                 </p>
               </div>
-              <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
-                {pageData.description}
-              </p>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                <button className="group bg-pink-600 text-white px-3 py-2 rounded-lg font-bold text-sm hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                  <div className="flex items-center justify-center gap-2">
+                    <Zap className="w-4 h-4" />
+                    <span>Start Compliance Journey</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </button>
+                <button className="group border-2 border-pink-600 bg-white text-pink-600 px-3 py-2 rounded-lg font-bold text-sm hover:bg-pink-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  <span>Download Resources</span>
+                  <div className="w-2 h-2 bg-pink-600 rounded-full"></div>
+                </button>
+              </div>
             </div>
-            
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 pt-8 justify-center">
-              <button className="group bg-pink-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                <div className="flex items-center justify-center gap-3">
-                  <Zap className="w-6 h-6" />
-                  <span>Start Compliance Journey</span>
-                  <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+
+            {/* Right Image Bar */}
+            <div className="lg:pl-2">
+              <div className="relative group">
+                {/* Image Container */}
+                <div className="bg-gradient-to-br from-pink-50 to-white rounded-2xl p-3 shadow-xl border border-pink-100 hover:shadow-2xl transition-all duration-500 group-hover:scale-105 overflow-hidden">
+                  <div className="relative rounded-xl overflow-hidden bg-gray-100 aspect-[4/3]">
+                    {/* Placeholder for actual image */}
+                    <div className="w-full h-full bg-gradient-to-br from-pink-100 via-pink-50 to-white flex items-center justify-center">
+                      <div className="text-center space-y-3">
+                        {/* Large Icon */}
+                        <div className="w-16 h-16 bg-pink-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                          <Shield className="w-10 h-10 text-white" />
+                        </div>
+                        {/* Placeholder Text */}
+                        <div className="space-y-1">
+                          <h3 className="text-lg font-bold text-gray-800">POSH Compliance</h3>
+                          <p className="text-pink-600 font-semibold text-sm">Professional Solutions</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Image Overlay - can be replaced with actual image */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  
+                  {/* Simple Caption */}
+                  <div className="mt-3 text-center">
+                    <p className="text-xs text-gray-600 font-medium">Empowering Safe Workplaces</p>
+                  </div>
                 </div>
-              </button>
-              <button className="group border-2 border-pink-600 bg-white text-pink-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-pink-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3">
-                <FileText className="w-6 h-6" />
-                <span>Download Resources</span>
-                <div className="w-3 h-3 bg-pink-600 rounded-full"></div>
-              </button>
+
+                {/* Floating Accent Elements */}
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-pink-200 rounded-full blur-sm opacity-60 animate-pulse"></div>
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-pink-300 rounded-full blur-sm opacity-40 animate-pulse" style={{animationDelay: '1s'}}></div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content Sections - Same style as About page */}
-      <section className="py-12 bg-gradient-to-b from-white to-pink-50/50">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="space-y-12">
-            {pageData.sections.map((section, index) => (
-              <div key={section.id}>
-                <FeatureCard 
-                  icon={section.icon}
-                  title={section.title}
-                  description={section.content.description}
-                  features={section.content.features}
-                  services={section.content.services}
-                />
+      {/* Main Content Sections - Redesigned Clean Layout */}
+      <section className="py-12 bg-gradient-to-b from-white via-gray-50/30 to-white">
+        <div className="max-w-7xl mx-auto px-2 lg:px-4">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <span className="text-pink-600">Professional</span> Audit Services
+            </h2>
+            <div className="w-20 h-1.5 bg-gradient-to-r from-pink-600 to-pink-500 mx-auto rounded-full mb-6"></div>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="space-y-8">
+            {/* Top Row - Three Cards */}
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* About URE POSH */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 group">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-600 to-pink-700 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors duration-300">
+                    About URE POSH Safe Workplace Audits
+                  </h3>
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  Compliance is proof of commitment to safety, equality, and governance. Our 360° audit benchmarks against Indian POSH Act 2013, UK Equality Act 2010 (ACAS), US EEOC & Title VII, UN Women's Principles, ILO conventions, and ESG standards.
+                </p>
+                <div className="space-y-3">
+                  <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">Key Features</h4>
+                  {[
+                    "Legal compliance & audit-ready certification",
+                    "Global standards integration (India, UK, US)",
+                    "ESG & investor-trusted documentation",
+                    "Risk mitigation & penalty prevention"
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-pink-600 rounded-full flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+
+              {/* Why Audits Matter */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 group">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                    Why Safe Workplace Audits Matter
+                  </h3>
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  Essential for comprehensive organizational protection:
+                </p>
+                <div className="space-y-3">
+                  <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">Key Features</h4>
+                  {[
+                    "Legal compliance (POSH India, EEO UK/US)",
+                    "Risk mitigation (fines, litigation prevention)",
+                    "Investor confidence (ESG/CSR proof)",
+                    "Employee trust (transparency & retention)",
+                    "Global standardization (multi-country operations)"
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Key Benefits */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 group">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-700 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300">
+                    Key Benefits of URE POSH Audit
+                  </h3>
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  Transform compliance posture with comprehensive benefits:
+                </p>
+                <div className="space-y-3">
+                  <h4 className="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">Key Features</h4>
+                  {[
+                    "100% Compliance – prevents penalties & ensures audit readiness",
+                    "Global alignment – India, UK, US standards integrated",
+                    "Strong governance – ESG & CSR-ready reports",
+                    "Risk mitigation – prevents harassment claims escalation",
+                    "Reputation protection – trusted employer brand"
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-green-600 rounded-full flex-shrink-0"></div>
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Row - Main Services Card */}
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-gradient-to-br from-pink-600 to-pink-700 rounded-xl flex items-center justify-center shadow-lg">
+                  <CheckCircle className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+                    Our Safe Workplace Audit Services
+                  </h3>
+                  <p className="text-gray-600">Comprehensive audit services covering all workplace safety compliance aspects:</p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {[
+                  { name: "Policy & Document Review", desc: "POSH/Anti-harassment policies, disclosures, handbooks. Legal alignment verification." },
+                  { name: "IC Assessment", desc: "Constitution per POSH Act 2013. External member compliance. Meeting records." },
+                  { name: "Training & Awareness", desc: "Employee sensitization records. IC training. Leadership accountability programs." },
+                  { name: "Reporting & Records", desc: "Annual POSH filing (India), EEOC compliance (US), UK grievance docs." },
+                  { name: "Workplace Disclosures", desc: "Poster displays, digital policy access, multilingual availability." },
+                  { name: "Complaint Redressal", desc: "Complaint registers, inquiry procedures, disciplinary measures." },
+                  { name: "ESG Certification", desc: "Investor-ready reports, sustainability integration, URE POSH certification." }
+                ].map((service, index) => (
+                  <div key={index} className="bg-gradient-to-br from-pink-50 to-white rounded-xl p-4 border border-pink-100 hover:border-pink-200 transition-all duration-300 hover:shadow-md group">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-pink-600 to-pink-700 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-sm mb-2 group-hover:text-pink-600 transition-colors duration-300">
+                          {service.name}
+                        </h4>
+                        <p className="text-gray-700 text-xs leading-relaxed">
+                          {service.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Legal Penalties Section */}
       {slugStr === 'compliant-redressal' && (
-        <section className="py-12 bg-white">
-          <div className="max-w-7xl mx-auto px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Legal Penalties for Non-Compliance</h2>
-              <div className="w-16 h-1 bg-pink-400 mx-auto"></div>
+        <section className="py-3 bg-white">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-2">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Legal Penalties for Non-Compliance</h2>
+              <div className="w-12 h-0.5 bg-pink-400 mx-auto"></div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-2">
               {[
                 { amount: "₹50,000", desc: "Maximum penalty for first-time violations in India", color: "red" },
                 { amount: "License Cancellation", desc: "For repeated non-compliance incidents", color: "orange" },
                 { amount: "Reputational Risk", desc: "Public disclosure and brand damage", color: "purple" }
               ].map((penalty, index) => (
-                <div key={index} className="bg-red-50 rounded-2xl p-6 border border-red-100 hover:bg-red-100 transition-colors text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-red-600 mb-2">
+                <div key={index} className="bg-red-50 rounded-lg p-3 border border-red-100 hover:bg-red-100 transition-colors text-center">
+                  <div className="text-lg md:text-xl font-bold text-red-600 mb-1">
                     {penalty.amount}
                   </div>
-                  <p className="text-sm text-gray-700">{penalty.desc}</p>
+                  <p className="text-xs text-gray-700">{penalty.desc}</p>
                 </div>
               ))}
             </div>
@@ -2598,24 +2981,24 @@ export default function SlugPage() {
 
       {/* Legal Penalties Section */}
       {slugStr !== 'compliant-redressal' && (
-        <section className="py-12 bg-white">
-          <div className="max-w-7xl mx-auto px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Legal Penalties for Non-Compliance</h2>
-              <div className="w-16 h-1 bg-pink-400 mx-auto"></div>
+        <section className="py-3 bg-white">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-2">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Legal Penalties for Non-Compliance</h2>
+              <div className="w-12 h-0.5 bg-pink-400 mx-auto"></div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-3">
               {[
                 { amount: "₹50,000", desc: "Maximum penalty for first-time violations", color: "red" },
                 { amount: "License Cancellation", desc: "For repeated non-compliance incidents", color: "orange" },
                 { amount: "Public Disclosure", desc: "Reputational damage from public filings", color: "purple" }
               ].map((penalty, index) => (
-                <div key={index} className="bg-pink-50 rounded-2xl p-6 border border-pink-100 hover:bg-pink-100 transition-colors text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-red-600 mb-2">
+                <div key={index} className="bg-pink-50 rounded-lg p-3 border border-pink-100 hover:bg-pink-100 transition-colors text-center">
+                  <div className="text-lg md:text-xl font-bold text-red-600 mb-1">
                     {penalty.amount}
                   </div>
-                  <p className="text-sm text-gray-700">{penalty.desc}</p>
+                  <p className="text-xs text-gray-700">{penalty.desc}</p>
                 </div>
               ))}
             </div>
@@ -2624,14 +3007,14 @@ export default function SlugPage() {
       )}
 
       {/* Benefits Section */}
-      <section className="py-12 bg-gradient-to-b from-pink-50/50 to-white">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Why Partner with URE POSH?</h2>
-            <div className="w-16 h-1 bg-pink-400 mx-auto"></div>
+      <section className="py-3 bg-gradient-to-b from-pink-50/50 to-white">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-2">
+            <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-1">Why Partner with URE POSH?</h2>
+            <div className="w-12 h-0.5 bg-pink-400 mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
             {[
               { icon: Shield, title: "Zero Legal Risk", desc: "100% POSH compliance guarantee" },
               { icon: Award, title: "Global Standards", desc: "International benchmarked solutions" },
@@ -2640,12 +3023,12 @@ export default function SlugPage() {
               { icon: Zap, title: "AI-Powered", desc: "Next-generation compliance technology" },
               { icon: CheckCircle, title: "Continuous Support", desc: "24/7 compliance monitoring" }
             ].map((benefit, index) => (
-              <div key={index} className="bg-white rounded-2xl p-6 border border-pink-100 hover:bg-pink-50 transition-colors text-center group">
-                <div className="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-pink-200 transition-colors">
-                  <benefit.icon className="w-7 h-7 text-pink-600" />
+              <div key={index} className="bg-white rounded-lg p-3 border border-pink-100 hover:bg-pink-50 transition-colors text-center group">
+                <div className="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center mx-auto mb-1.5 group-hover:bg-pink-200 transition-colors">
+                  <benefit.icon className="w-4 h-4 text-pink-600" />
                 </div>
-                <h3 className="font-bold text-gray-800 mb-2">{benefit.title}</h3>
-                <p className="text-sm text-gray-600">{benefit.desc}</p>
+                <h3 className="font-semibold text-gray-800 mb-0.5 text-sm">{benefit.title}</h3>
+                <p className="text-xs text-gray-600">{benefit.desc}</p>
               </div>
             ))}
           </div>
@@ -2653,56 +3036,59 @@ export default function SlugPage() {
       </section>
 
       {/* Testimonial Section - Clean Pink & White Design */}
-      <section className="py-20 bg-pink-50/50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full border border-pink-200 mb-8 shadow-sm">
-              <div className="w-3 h-3 bg-pink-600 rounded-full"></div>
-              <span className="text-pink-700 font-semibold text-sm">Client Success Stories</span>
+      <section className="py-4 bg-pink-50/50">
+        <div className="max-w-6xl mx-auto px-4">
+          {/* Left-Right Layout */}
+          <div className="grid lg:grid-cols-2 gap-6 items-center">
+            {/* Left Content */}
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 bg-white px-3 py-1 rounded-full border border-pink-200 shadow-sm">
+                <div className="w-2 h-2 bg-pink-600 rounded-full"></div>
+                <span className="text-pink-700 font-semibold text-xs">Client Success Stories</span>
+              </div>
+              
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
+                <span className="text-pink-600">Transforming Workplaces</span>
+                <br />
+                <span className="text-gray-800">Across Industries</span>
+              </h2>
+              
+              <div className="w-16 h-0.5 bg-pink-600 rounded-full"></div>
+              
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Hear from organizations that have transformed their workplace culture with our expert guidance
+              </p>
             </div>
-            
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              <span className="text-pink-600">Transforming Workplaces</span>
-              <br />
-              <span className="text-gray-800">Across Industries</span>
-            </h2>
-            
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full mb-6"></div>
-            
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Hear from organizations that have transformed their workplace culture with our expert guidance
-            </p>
-          </div>
 
-          {/* Testimonial Card */}
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl p-10 shadow-lg border border-pink-100 hover:shadow-xl transition-all duration-300">
-              <div className="text-center">
-                {/* Star Rating */}
-                <div className="flex items-center justify-center gap-2 mb-8">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-6 h-6 text-pink-600 fill-current" />
-                    ))}
+            {/* Right Testimonial Card */}
+            <div className="lg:pl-4">
+              <div className="bg-white rounded-xl p-4 shadow-md border border-pink-100 hover:shadow-lg transition-all duration-300">
+                <div className="text-center">
+                  {/* Star Rating */}
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 text-pink-600 fill-current" />
+                      ))}
+                    </div>
+                    <span className="text-xs font-medium text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full ml-2">Excellent Service</span>
                   </div>
-                  <span className="text-sm font-medium text-pink-600 bg-pink-50 px-3 py-1 rounded-full ml-3">Excellent Service</span>
-                </div>
-                
-                {/* Quote */}
-                <blockquote className="text-gray-700 mb-8 italic leading-relaxed text-xl font-medium">
-                  "Professional and comprehensive workplace compliance solutions. Highly recommended for organizations serious about creating safe work environments."
-                </blockquote>
-                
-                {/* Author */}
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-16 h-16 bg-pink-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                    U
-                  </div>
-                  <div>
-                    <div className="font-bold text-gray-900 text-lg">URE POSH Client</div>
-                    <div className="text-gray-600 text-sm font-medium">Verified Customer</div>
-                    <div className="text-pink-600 text-sm font-semibold">Workplace Safety Solutions</div>
+                  
+                  {/* Quote */}
+                  <blockquote className="text-gray-700 mb-4 italic leading-relaxed text-sm font-medium">
+                    "Professional and comprehensive workplace compliance solutions. Highly recommended for organizations serious about creating safe work environments."
+                  </blockquote>
+                  
+                  {/* Author */}
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center text-white font-bold text-base shadow-md">
+                      U
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900 text-sm">URE POSH Client</div>
+                      <div className="text-gray-600 text-xs font-medium">Verified Customer</div>
+                      <div className="text-pink-600 text-xs font-semibold">Workplace Safety Solutions</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2710,137 +3096,108 @@ export default function SlugPage() {
           </div>
 
           {/* Enhanced Call-to-Action Section */}
-          <div className="text-center mt-20">
-            <div className="relative bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 rounded-3xl p-16 text-white overflow-hidden animate-glow group">
+          <div className="text-center mt-4">
+            <div className="relative bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 rounded-2xl p-4 md:p-5 text-white overflow-hidden group">
               {/* CTA Background Elements */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-50"></div>
-              <div className="absolute top-0 left-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-x-10 -translate-y-10 animate-pulse"></div>
-              <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/15 rounded-full blur-2xl translate-x-8 translate-y-8 animate-pulse" style={{animationDelay: '1s'}}></div>
-              
-              {/* Floating Particles */}
-              <div className="absolute inset-0 overflow-hidden">
-                {[...Array(8)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 bg-white/30 rounded-full animate-float"
-                    style={{
-                      left: `${15 + i * 10}%`,
-                      top: `${20 + (i % 4) * 15}%`,
-                      animationDelay: `${i * 0.3}s`,
-                      animationDuration: `${4 + i * 0.2}s`
-                    }}
-                  ></div>
-                ))}
-              </div>
+              <div className="absolute top-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -translate-x-5 -translate-y-5 animate-pulse"></div>
+              <div className="absolute bottom-0 right-0 w-20 h-20 bg-white/15 rounded-full blur-xl translate-x-4 translate-y-4 animate-pulse" style={{animationDelay: '1s'}}></div>
               
               <div className="relative z-10">
                 {/* CTA Badge */}
-                <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30 mb-8">
-                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-white font-semibold text-sm">Limited Time Offer</span>
+                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full border border-white/30 mb-2">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  <span className="text-white font-semibold text-xs">Limited Time Offer</span>
                 </div>
                 
                 {/* CTA Heading */}
-                <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                <h3 className="text-base md:text-lg font-bold mb-2 leading-tight">
                   Ready to Transform Your Workplace?
                 </h3>
                 
                 {/* CTA Subheading */}
-                <p className="text-xl md:text-2xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-xs md:text-sm mb-4 opacity-90 max-w-2xl mx-auto leading-relaxed">
                   Join thousands of organizations creating safer, more inclusive work environments with our expert guidance and comprehensive solutions.
                 </p>
                 
                 {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                  <button className="group/cta bg-white text-pink-600 px-12 py-6 rounded-2xl font-bold text-lg hover:bg-pink-50 transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center justify-center gap-4 relative overflow-hidden">
-                    {/* Button Background Animation */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-pink-50 to-white opacity-0 group-hover/cta:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div className="relative z-10 flex items-center gap-4">
-                      <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center group-hover/cta:scale-110 transition-transform duration-300">
-                        <Zap className="w-5 h-5 text-white group-hover/cta:animate-pulse" />
+                <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                  <button className="group/cta bg-white text-pink-600 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-pink-50 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 relative overflow-hidden">
+                    <div className="relative z-10 flex items-center gap-2">
+                      <div className="w-6 h-6 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center group-hover/cta:scale-110 transition-transform duration-300">
+                        <Zap className="w-3 h-3 text-white" />
                       </div>
                       <span>Start Your Journey</span>
-                      <ArrowRight className="w-6 h-6 group-hover/cta:translate-x-2 transition-transform duration-300" />
+                      <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-1 transition-transform duration-300" />
                     </div>
-                    
-                    {/* Button Border Glow */}
-                    <div className="absolute inset-0 rounded-2xl border-2 border-pink-300/0 group-hover/cta:border-pink-300/50 transition-all duration-300"></div>
                   </button>
                   
-                  <button className="group/cta2 border-2 border-white text-white px-12 py-6 rounded-2xl font-bold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 flex items-center justify-center gap-4 relative overflow-hidden">
-                    {/* Button Background Animation */}
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover/cta2:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div className="relative z-10 flex items-center gap-4">
-                      <div className="w-10 h-10 border-2 border-white group-hover/cta2:border-pink-500 rounded-xl flex items-center justify-center group-hover/cta2:scale-110 transition-all duration-300">
-                        <FileText className="w-5 h-5 group-hover/cta2:text-pink-600 transition-colors duration-300" />
+                  <button className="group/cta2 border border-white text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-white hover:text-pink-600 transition-all duration-300 flex items-center justify-center gap-2">
+                    <div className="relative z-10 flex items-center gap-2">
+                      <div className="w-6 h-6 border border-white group-hover/cta2:border-pink-500 rounded-lg flex items-center justify-center group-hover/cta2:scale-110 transition-all duration-300">
+                        <FileText className="w-3 h-3 group-hover/cta2:text-pink-600 transition-colors duration-300" />
                       </div>
                       <span>Get Free Consultation</span>
-                      <div className="w-3 h-3 bg-white group-hover/cta2:bg-pink-500 rounded-full group-hover/cta2:scale-150 transition-all duration-300"></div>
+                      <div className="w-2 h-2 bg-white group-hover/cta2:bg-pink-500 rounded-full group-hover/cta2:scale-125 transition-all duration-300"></div>
                     </div>
                   </button>
                 </div>
               </div>
-              
-              {/* CTA Border Animation */}
-              <div className="absolute inset-0 rounded-3xl border-2 border-white/20 group-hover:border-white/40 transition-all duration-500"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section - Clean Pink & White */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
+      <section className="py-2 bg-white">
+        <div className="max-w-5xl mx-auto px-4">
           {/* Contact Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-3 bg-pink-50 px-6 py-3 rounded-full border border-pink-200 mb-6 shadow-sm">
-              <div className="w-3 h-3 bg-pink-600 rounded-full"></div>
-              <span className="text-pink-700 font-semibold text-sm">Get In Touch</span>
+          <div className="text-center mb-2">
+            <div className="inline-flex items-center gap-1.5 bg-pink-50 px-1.5 py-0.5 rounded-full border border-pink-200 mb-1 shadow-sm">
+              <div className="w-1.5 h-1.5 bg-pink-600 rounded-full"></div>
+              <span className="text-pink-700 font-semibold text-xs">Get In Touch</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
+            <h2 className="text-lg md:text-xl font-bold mb-1 text-gray-900">
               <span className="text-pink-600">Ready to Transform</span>
-              <br />
-              <span className="text-gray-800">Your Workplace?</span>
+              <span className="text-gray-800"> Your Workplace?</span>
             </h2>
             
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full mb-4"></div>
+            <div className="w-12 h-0.5 bg-pink-600 mx-auto rounded-full mb-1"></div>
             
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Start your compliance journey today with expert guidance and comprehensive solutions
+            <p className="text-sm text-gray-600 max-w-xl mx-auto">
+              Start your compliance journey with expert guidance
             </p>
           </div>
 
           {/* Contact Cards */}
-          <div className="bg-pink-50/50 rounded-2xl border border-pink-100 p-8 md:p-12 mb-8 shadow-lg">
-            <div className="grid lg:grid-cols-3 gap-8 text-center">
+          <div className="bg-pink-50/50 rounded-xl border border-pink-100 p-1.5 mb-2 shadow-md">
+            <div className="grid lg:grid-cols-3 gap-2 text-center">
               <a 
                 href="tel:+919999944807"
-                className="group flex flex-col items-center p-6 rounded-xl bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
+                className="group flex flex-col items-center p-2 rounded-lg bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
               >
-                <div className="w-16 h-16 bg-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-700 transition-colors duration-300 shadow-lg">
-                  <Phone className="w-8 h-8 text-white" />
+                <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center mb-1.5 group-hover:bg-pink-700 transition-colors duration-300 shadow-md">
+                  <Phone className="w-4 h-4 text-white" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-bold text-gray-800 text-lg">Call Us Directly</h3>
-                  <p className="font-semibold text-gray-800 text-xl">+91-99999 44807</p>
-                  <p className="text-sm text-gray-600">Available 24/7 for support</p>
+                <div className="space-y-0.5">
+                  <h3 className="font-semibold text-gray-800 text-sm">Call Us</h3>
+                  <p className="font-bold text-gray-800 text-base">+91-99999 44807</p>
+                  <p className="text-xs text-gray-500">24/7 support</p>
                 </div>
               </a>
               
               <a 
                 href="mailto:ea@ureposh.com"
-                className="group flex flex-col items-center p-6 rounded-xl bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
+                className="group flex flex-col items-center p-2 rounded-lg bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
               >
-                <div className="w-16 h-16 bg-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-700 transition-colors duration-300 shadow-lg">
-                  <Mail className="w-8 h-8 text-white" />
+                <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center mb-1.5 group-hover:bg-pink-700 transition-colors duration-300 shadow-md">
+                  <Mail className="w-4 h-4 text-white" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-bold text-gray-800 text-lg">Email Us</h3>
-                  <p className="font-semibold text-gray-800 text-xl">ea@ureposh.com</p>
-                  <p className="text-sm text-gray-600">Get detailed responses</p>
+                <div className="space-y-0.5">
+                  <h3 className="font-semibold text-gray-800 text-sm">Email Us</h3>
+                  <p className="font-bold text-gray-800 text-base">ea@ureposh.com</p>
+                  <p className="text-xs text-gray-500">Detailed responses</p>
                 </div>
               </a>
               
@@ -2848,15 +3205,15 @@ export default function SlugPage() {
                 href="https://www.ureposh.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center p-6 rounded-xl bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
+                className="group flex flex-col items-center p-2 rounded-lg bg-white hover:bg-pink-50 transition-all duration-300 border border-pink-100 hover:border-pink-200 shadow-sm hover:shadow-md"
               >
-                <div className="w-16 h-16 bg-pink-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-700 transition-colors duration-300 shadow-lg">
-                  <Globe className="w-8 h-8 text-white" />
+                <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center mb-1.5 group-hover:bg-pink-700 transition-colors duration-300 shadow-md">
+                  <Globe className="w-4 h-4 text-white" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-bold text-gray-800 text-lg">Visit Website</h3>
-                  <p className="font-semibold text-gray-800 text-xl">www.ureposh.com</p>
-                  <p className="text-sm text-gray-600">Explore our platform</p>
+                <div className="space-y-0.5">
+                  <h3 className="font-semibold text-gray-800 text-sm">Visit Website</h3>
+                  <p className="font-bold text-gray-800 text-base">www.ureposh.com</p>
+                  <p className="text-xs text-gray-500">Explore platform</p>
                 </div>
               </a>
             </div>
@@ -2864,26 +3221,26 @@ export default function SlugPage() {
 
           {/* CTA Button */}
           <div className="text-center">
-            <button className="group bg-pink-600 text-white px-12 py-6 rounded-xl font-bold text-lg hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-4 mx-auto">
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
+            <button className="group bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mx-auto">
+              <div className="w-5 h-5 bg-white/20 rounded-md flex items-center justify-center">
+                <Zap className="w-3 h-3 text-white" />
               </div>
               <span>Schedule Free Consultation</span>
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Frequently Asked Questions</h2>
-            <div className="w-16 h-1 bg-pink-400 mx-auto"></div>
+      <section className="py-3 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-2">
+            <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-0.5">Frequently Asked Questions</h2>
+            <div className="w-8 h-0.5 bg-pink-400 mx-auto"></div>
           </div>
 
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-3">
             {pageData.faqs.map((faq, index) => (
               <FAQItem
                 key={index}

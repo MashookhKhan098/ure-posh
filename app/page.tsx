@@ -457,7 +457,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <main>
         {/* Hero Section */}
-        <section className="relative pt-8 sm:pt-10 lg:pt-12 mt-4 sm:mt-6 lg:mt-8 flex items-center justify-center overflow-hidden bg-white">
+        <section className="relative pt-4 sm:pt-6 lg:pt-8 mt-2 sm:mt-4 lg:mt-6 flex items-center justify-center overflow-hidden bg-white">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 w-24 h-24 sm:w-32 sm:h-32 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -468,7 +468,7 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-[80vh] py-6 sm:py-8 lg:py-8">
+            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-[75vh] py-4 sm:py-6 lg:py-6">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -476,7 +476,7 @@ export default function HomePage() {
                 className="space-y-4 sm:space-y-6 lg:space-y-8 lg:pr-12 order-2 lg:order-1"
               >
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="inline-block">
-                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-1.5 sm:space-x-2 lg:space-x-3">
+                  <Badge className="bg-gradient-to-r from-pink-100 via-purple-50 to-blue-100 text-black px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 text-xs sm:text-sm lg:text-base font-bold border border-white/50 shadow-lg shadow-pink-200/50 rounded-full flex items-center space-x-1.5 sm:space-x-2 lg:space-x-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-full bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
                       <span className="text-white text-xs sm:text-sm lg:text-lg font-bold">♀</span>
                     </div>
@@ -529,13 +529,13 @@ export default function HomePage() {
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
                     <Link href="/contact">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base lg:text-lg">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base lg:text-lg">
                         Get Started
                         <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-1.5 sm:ml-2" />
                       </Button>
                     </Link>
                     <Link href="/about">
-                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-6 sm:px-8 lg:px-10 py-3 sm:py-3 lg:py-4 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base lg:text-lg">
+                      <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base lg:text-lg">
                         Learn More
                       </Button>
                     </Link>
@@ -683,7 +683,7 @@ export default function HomePage() {
         </section>
 
         {/* Team Carousel Section */}
-        <section className="relative py-6 sm:py-8 lg:py-10 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+        <section className="relative py-4 sm:py-6 lg:py-8 flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 w-28 h-28 sm:w-36 sm:h-36 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -723,7 +723,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="text-center mt-2 sm:mt-4"
             >
-              <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 border-0 text-sm sm:text-base">
+              <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 border-0 text-sm sm:text-base">
                 Meet Our Full Team
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
               </Button>
