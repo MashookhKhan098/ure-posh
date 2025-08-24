@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import dynamic from "next/dynamic"
 
 const NavbarWrapper = dynamic(() => import('./components/NavbarWrapper'), { ssr: false })
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NavbarWrapper />
           <main className="min-h-screen">{children}</main>
           <ConditionalFooter />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
