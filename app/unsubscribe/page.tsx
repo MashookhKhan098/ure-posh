@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, AlertCircle, Mail, Home } from 'lucide-react';
 import Link from 'next/link';
 
-export default function UnsubscribePage() {
+// Tell Next.js this page should be dynamically rendered
+export const dynamic = 'force-dynamic';
+
+function UnsubscribeContent() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'not-found'>('loading');
   const [message, setMessage] = useState('');
   const searchParams = useSearchParams();
@@ -168,5 +171,30 @@ export default function UnsubscribePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrapper component with Suspense boundary
+export default function UnsubscribePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full">
+          <Card>
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <Mail className="h-16 w-16 text-blue-500 animate-pulse" />
+              </div>
+              <CardTitle className="text-2xl">Loading...</CardTitle>
+              <CardDescription className="text-base">
+                Please wait while we load the unsubscribe page...
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      </div>
+    }>
+      <UnsubscribeContent />
+    </Suspense>
   );
 }
