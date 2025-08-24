@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import NewsletterSubscription from "../../components/NewsletterSubscription"
 import { 
   Newspaper, 
   Calendar, 
@@ -144,6 +145,11 @@ export default function NewsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Newsletter subscription state
+  const [newsletterLoading, setNewsletterLoading] = useState(false)
+  const [newsletterMessage, setNewsletterMessage] = useState("")
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error' | 'exists'>('idle')
 
   useEffect(() => {
     fetchPosts();
@@ -564,23 +570,83 @@ export default function NewsPage() {
               Subscribe to Our <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">Newsletter</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Get the latest posts, insights, and updates delivered directly to your inbox every week.
+              Get the latest news and updates delivered directly to your inbox. Never miss important stories.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mt-8">
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target as HTMLFormElement);
+              const email = formData.get('email') as string;
+              
+              setNewsletterLoading(true);
+              setNewsletterMessage("");
+              setNewsletterStatus('idle');
+              
+              try {
+                const response = await fetch('/api/newsletter', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email }),
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                  if (data.alreadySubscribed) {
+                    setNewsletterStatus('exists');
+                    setNewsletterMessage('You are already a member! 🎉');
+                  } else {
+                    setNewsletterStatus('success');
+                    setNewsletterMessage('Successfully subscribed! Check your email for confirmation. ✅');
+                    (e.target as HTMLFormElement).reset();
+                  }
+                } else {
+                  setNewsletterStatus('error');
+                  setNewsletterMessage(data.error || 'Failed to subscribe. Please try again.');
+                }
+              } catch (error) {
+                setNewsletterStatus('error');
+                setNewsletterMessage('Network error. Please try again.');
+              } finally {
+                setNewsletterLoading(false);
+              }
+            }} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mt-8">
               <input
+                name="email"
                 type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200"
+                required
+                disabled={newsletterLoading}
+                placeholder="ankit200211222@gmail.com"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 disabled:opacity-50"
               />
-              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                Subscribe
+              <Button 
+                type="submit"
+                disabled={newsletterLoading}
+                className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 min-w-[120px] disabled:opacity-50"
+              >
+                {newsletterLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'Subscribe'
+                )}
               </Button>
-            </div>
+            </form>
             
-            <p className="text-sm text-gray-500 mt-4">
-              Join our community and stay informed with the latest posts
-            </p>
+            {/* Status Message */}
+            {newsletterMessage && (
+              <div className={`text-sm p-4 rounded-lg mt-6 border max-w-md mx-auto ${
+                newsletterStatus === 'success' 
+                  ? 'bg-green-50 text-green-700 border-green-200' 
+                  : newsletterStatus === 'exists'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                  : newsletterStatus === 'error'
+                  ? 'bg-red-50 text-red-700 border-red-200'
+                  : ''
+              }`}>
+                <div className="text-center font-medium">
+                  {newsletterMessage}
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>

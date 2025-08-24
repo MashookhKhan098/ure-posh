@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { notifyPosterCreated } from '@/lib/newsletter-notifications';
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,8 +27,10 @@ export async function GET(request: NextRequest) {
       query = query.limit(parseInt(limit));
     }
 
-    if (offset) {
-      query = query.range(parseInt(offset), parseInt(offset) + (parseInt(limit) || 10) - 1);
+    if (offset && limit) {
+      const offsetNum = parseInt(offset);
+      const limitNum = parseInt(limit);
+      query = query.range(offsetNum, offsetNum + limitNum - 1);
     }
 
     const { data, error } = await query.order('created_at', { ascending: false });
@@ -72,6 +75,23 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    console.log('✅ Poster created:', data.title);
+
+    // Send newsletter notification to all subscribers for new poster
+    try {
+      console.log('📧 Triggering newsletter notification for new poster...');
+      const notificationResult = await notifyPosterCreated(data);
+      
+      if (notificationResult.success) {
+        console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`);
+      } else {
+        console.log('⚠️ Newsletter notification failed:', notificationResult.error);
+      }
+    } catch (notificationError) {
+      console.error('❌ Newsletter notification error:', notificationError);
+      // Don't fail the poster creation if newsletter fails
     }
 
     return NextResponse.json({ poster: data }, { status: 201 });

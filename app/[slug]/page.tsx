@@ -2703,27 +2703,90 @@ export default function SlugPage() {
         .animate-pulse-glow {
           animation: pulse-glow 3s ease-in-out infinite;
         }
+
+        /* Enhanced Design Styles */
+        .text-focus {
+          background: linear-gradient(135deg, #ffffff 0%, #fef7ff 100%);
+          border: 2px solid #fce7f3;
+          box-shadow: 0 8px 32px rgba(236, 72, 153, 0.12);
+          backdrop-filter: blur(10px);
+        }
+
+        .content-highlight {
+          background: linear-gradient(135deg, #ffffff 0%, #fdf4ff 50%, #ffffff 100%);
+          border: 1px solid #f3e8ff;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(236, 72, 153, 0.08);
+        }
+
+        .content-highlight::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #ec4899, transparent);
+          animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer-highlight {
+          100% {
+            left: 100%;
+          }
+        }
+
+        .high-contrast-text {
+          color: #111827;
+          font-weight: 700;
+          line-height: 1.4;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .focus-card {
+          background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+          border: 2px solid #f9a8d4;
+          box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+          transform: perspective(1000px) rotateX(2deg);
+          transition: all 0.3s ease;
+        }
+
+        .focus-card:hover {
+          transform: perspective(1000px) rotateX(0deg) translateY(-5px);
+          box-shadow: 0 30px 60px rgba(236, 72, 153, 0.25);
+        }
+
+        .section-divider {
+          background: linear-gradient(90deg, transparent, #ec4899, transparent);
+          height: 2px;
+          opacity: 0.6;
+        }
+
+        .enhanced-gradient-bg {
+          background: linear-gradient(135deg, #f8fafc 0%, #ffffff 25%, #fdf2f8 50%, #ffffff 75%, #f1f5f9 100%);
+        }
       `}</style>
-      {/* Hero Section - Compact Left Content, Right Image Card Layout */}
-      <section className="relative pt-12 pb-8 bg-white overflow-hidden min-h-[60vh] flex items-center">
-        {/* Simple background elements */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-pink-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+      {/* Hero Section - Enhanced Design with Better Contrast */}
+      <section className="relative pt-16 pb-12 enhanced-gradient-bg overflow-hidden min-h-[70vh] flex items-center">
+        {/* Enhanced background elements */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-pink-100/40 to-purple-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-48 h-48 bg-pink-50/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
         
         <div className="relative max-w-6xl mx-auto px-2 lg:px-4 w-full">
           <div className="grid lg:grid-cols-2 gap-4 lg:gap-6 items-center">
             {/* Left Content */}
             <div className="space-y-3">
-              {/* Clean badge */}
-              <div className="inline-flex items-center gap-2 bg-pink-50 px-2 py-1 rounded-full border border-pink-200 shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                <span className="text-pink-700 font-semibold text-sm">Empowering Workplace Rights</span>
+              {/* Enhanced badge with glow */}
+              <div className="inline-flex items-center gap-2 text-focus px-4 py-2 rounded-full border border-pink-300 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse-glow">
+                <div className="w-3 h-3 bg-pink-600 rounded-full animate-pulse"></div>
+                <span className="text-pink-800 font-bold text-sm">Empowering Workplace Rights</span>
               </div>
               
-              {/* Main heading */}
-              <div className="space-y-2">
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight tracking-tight">
-                  <span className="text-pink-600">
+              {/* Enhanced main heading with better typography */}
+              <div className="space-y-4">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl high-contrast-text leading-tight tracking-tight">
+                  <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-pink-700 bg-clip-text text-transparent">
                     {pageData.title}
                   </span>
                 </h1>
@@ -3090,57 +3153,6 @@ export default function SlugPage() {
                       <div className="text-pink-600 text-xs font-semibold">Workplace Safety Solutions</div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Call-to-Action Section */}
-          <div className="text-center mt-4">
-            <div className="relative bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 rounded-2xl p-4 md:p-5 text-white overflow-hidden group">
-              {/* CTA Background Elements */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-50"></div>
-              <div className="absolute top-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -translate-x-5 -translate-y-5 animate-pulse"></div>
-              <div className="absolute bottom-0 right-0 w-20 h-20 bg-white/15 rounded-full blur-xl translate-x-4 translate-y-4 animate-pulse" style={{animationDelay: '1s'}}></div>
-              
-              <div className="relative z-10">
-                {/* CTA Badge */}
-                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full border border-white/30 mb-2">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-white font-semibold text-xs">Limited Time Offer</span>
-                </div>
-                
-                {/* CTA Heading */}
-                <h3 className="text-base md:text-lg font-bold mb-2 leading-tight">
-                  Ready to Transform Your Workplace?
-                </h3>
-                
-                {/* CTA Subheading */}
-                <p className="text-xs md:text-sm mb-4 opacity-90 max-w-2xl mx-auto leading-relaxed">
-                  Join thousands of organizations creating safer, more inclusive work environments with our expert guidance and comprehensive solutions.
-                </p>
-                
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                  <button className="group/cta bg-white text-pink-600 px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-pink-50 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 relative overflow-hidden">
-                    <div className="relative z-10 flex items-center gap-2">
-                      <div className="w-6 h-6 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center group-hover/cta:scale-110 transition-transform duration-300">
-                        <Zap className="w-3 h-3 text-white" />
-                      </div>
-                      <span>Start Your Journey</span>
-                      <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-1 transition-transform duration-300" />
-                    </div>
-                  </button>
-                  
-                  <button className="group/cta2 border border-white text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-white hover:text-pink-600 transition-all duration-300 flex items-center justify-center gap-2">
-                    <div className="relative z-10 flex items-center gap-2">
-                      <div className="w-6 h-6 border border-white group-hover/cta2:border-pink-500 rounded-lg flex items-center justify-center group-hover/cta2:scale-110 transition-all duration-300">
-                        <FileText className="w-3 h-3 group-hover/cta2:text-pink-600 transition-colors duration-300" />
-                      </div>
-                      <span>Get Free Consultation</span>
-                      <div className="w-2 h-2 bg-white group-hover/cta2:bg-pink-500 rounded-full group-hover/cta2:scale-125 transition-all duration-300"></div>
-                    </div>
-                  </button>
                 </div>
               </div>
             </div>

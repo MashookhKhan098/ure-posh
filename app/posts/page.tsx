@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import NewsletterSubscription from "../../components/NewsletterSubscription"
 import {
   Clock,
   Eye,
@@ -29,9 +30,9 @@ import {
   Grid3X3,
   Users,
   Radio,
+  Loader2,
   TrendingUp,
   Newspaper,
-  Loader2,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -219,6 +220,11 @@ function ArticleCard({ article, featured = false, compact = false }: { article: 
 
 export default function PostsPage() {
   const [activeCategory, setActiveCategory] = useState("all")
+  
+  // Newsletter subscription state
+  const [newsletterLoading, setNewsletterLoading] = useState(false)
+  const [newsletterMessage, setNewsletterMessage] = useState("")
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error' | 'exists'>('idle')
   
   const selectedCategory = activeCategory !== "all" ? activeCategory : undefined
   
@@ -517,13 +523,78 @@ export default function PostsPage() {
                                      <p className="text-sm text-gray-600 leading-relaxed font-medium">
                      Get the latest news and updates delivered directly to your inbox. Never miss important stories.
                    </p>
-                                     <Input 
-                     placeholder="Enter your email address" 
-                     className="bg-white/50 border-gray-200 focus:border-pink-500"
-                   />
-                                     <Button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg">
-                     Subscribe to Newsletter
-                   </Button>
+                                     <form onSubmit={async (e) => {
+                     e.preventDefault();
+                     const formData = new FormData(e.target as HTMLFormElement);
+                     const email = formData.get('email') as string;
+                     
+                     setNewsletterLoading(true);
+                     setNewsletterMessage("");
+                     setNewsletterStatus('idle');
+                     
+                     try {
+                       const response = await fetch('/api/newsletter', {
+                         method: 'POST',
+                         headers: { 'Content-Type': 'application/json' },
+                         body: JSON.stringify({ email }),
+                       });
+                       
+                       const data = await response.json();
+                       if (response.ok) {
+                         if (data.alreadySubscribed) {
+                           setNewsletterStatus('exists');
+                           setNewsletterMessage('You are already a member! 🎉');
+                         } else {
+                           setNewsletterStatus('success');
+                           setNewsletterMessage('Successfully subscribed! Check your email for confirmation. ✅');
+                           (e.target as HTMLFormElement).reset();
+                         }
+                       } else {
+                         setNewsletterStatus('error');
+                         setNewsletterMessage(data.error || 'Failed to subscribe. Please try again.');
+                       }
+                     } catch (error) {
+                       setNewsletterStatus('error');
+                       setNewsletterMessage('Network error. Please try again.');
+                     } finally {
+                       setNewsletterLoading(false);
+                     }
+                   }} className="flex gap-2">
+                     <Input 
+                       name="email"
+                       type="email"
+                       required
+                       disabled={newsletterLoading}
+                       placeholder="ankit200211222@gmail.com" 
+                       className="bg-white/50 border-gray-200 focus:border-pink-500 flex-1"
+                     />
+                     <Button 
+                       type="submit"
+                       disabled={newsletterLoading}
+                       className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg min-w-[100px]"
+                     >
+                       {newsletterLoading ? (
+                         <Loader2 className="h-4 w-4 animate-spin" />
+                       ) : (
+                         'Subscribe'
+                       )}
+                     </Button>
+                   </form>
+                   
+                   {/* Status Message */}
+                   {newsletterMessage && (
+                     <div className={`text-sm p-3 rounded-md border ${
+                       newsletterStatus === 'success' 
+                         ? 'bg-green-50 text-green-700 border-green-200' 
+                         : newsletterStatus === 'exists'
+                         ? 'bg-blue-50 text-blue-700 border-blue-200'
+                         : newsletterStatus === 'error'
+                         ? 'bg-red-50 text-red-700 border-red-200'
+                         : ''
+                     }`}>
+                       {newsletterMessage}
+                     </div>
+                   )}
                 </CardContent>
               </Card>
 

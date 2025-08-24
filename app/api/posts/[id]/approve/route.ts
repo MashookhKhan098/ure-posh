@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
+import { notifyArticleApproved } from '@/lib/newsletter-notifications';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,9 +42,26 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       );
     }
 
+    console.log('✅ Article approved:', article.title);
+
+    // Send newsletter notification to all subscribers
+    try {
+      console.log('📧 Triggering newsletter notification...');
+      const notificationResult = await notifyArticleApproved(article);
+      
+      if (notificationResult.success) {
+        console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`);
+      } else {
+        console.log('⚠️ Newsletter notification failed:', notificationResult.error);
+      }
+    } catch (notificationError) {
+      console.error('❌ Newsletter notification error:', notificationError);
+      // Don't fail the approval if newsletter fails
+    }
+
     return NextResponse.json({
       success: true,
-      message: 'Article approved and verified successfully',
+      message: 'Article approved and verified successfully. Newsletter sent to subscribers.',
       article
     });
 
