@@ -273,7 +273,7 @@ async function sendPostNotificationEmail(
   let htmlContent = '';
   
   if (postData.postType === 'posters') {
-    // Special design for poster emails
+    // Enhanced design for poster emails with View All Posters button
     htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -281,93 +281,159 @@ async function sendPostNotificationEmail(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎨 New Poster Available - ${postData.postTitle}</title>
+    <style>
+        @media (max-width: 600px) {
+            .mobile-padding { padding: 20px !important; }
+            .mobile-button { width: 90% !important; padding: 15px 20px !important; }
+            .mobile-text { font-size: 14px !important; }
+        }
+    </style>
 </head>
-<body style="font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+<body style="font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); line-height: 1.6;">
+    <div style="max-width: 650px; margin: 0 auto; background: white; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border-radius: 0;">
         
-        <!-- Header with gradient background -->
-        <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 40px 30px; text-align: center; color: white;">
-            <div style="font-size: 48px; margin-bottom: 10px;">🎨</div>
-            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">New Creative Poster!</h1>
-            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Fresh design just added to our collection</p>
+        <!-- Header with dynamic gradient background -->
+        <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #fd79a8 100%); padding: 50px 30px; text-align: center; color: white; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.3;"></div>
+            <div style="position: absolute; bottom: -30px; left: -30px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.3;"></div>
+            <div style="font-size: 60px; margin-bottom: 15px; animation: bounce 2s infinite;">🎨</div>
+            <h1 style="margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -1px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Fresh Creative Poster!</h1>
+            <p style="margin: 15px 0 0 0; font-size: 18px; opacity: 0.95; font-weight: 300;">Just added to our exclusive design collection</p>
+            <div style="margin-top: 20px; padding: 12px 24px; background: rgba(255,255,255,0.2); border-radius: 25px; display: inline-block;">
+                <span style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">✨ Premium Quality Design ✨</span>
+            </div>
         </div>
         
-        <!-- Main content -->
-        <div style="padding: 40px 30px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="color: #2d3436; font-size: 24px; margin: 0 0 15px 0; font-weight: 600;">${postData.postTitle}</h2>
-                <div style="width: 60px; height: 4px; background: linear-gradient(90deg, #ff6b6b, #ee5a24); margin: 0 auto;"></div>
+        <!-- Main content with enhanced styling -->
+        <div class="mobile-padding" style="padding: 50px 40px;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2 style="color: #2d3436; font-size: 28px; margin: 0 0 20px 0; font-weight: 700; line-height: 1.3;">${postData.postTitle}</h2>
+                <div style="width: 80px; height: 5px; background: linear-gradient(90deg, #ff6b6b, #ee5a24, #fd79a8); margin: 0 auto; border-radius: 3px;"></div>
+                <p style="margin: 20px 0 0 0; color: #636e72; font-size: 16px; font-style: italic;">Professionally crafted for maximum impact</p>
             </div>
             
             ${postData.postImage ? `
-            <!-- Poster Image -->
-            <div style="text-align: center; margin-bottom: 30px;">
-                <div style="display: inline-block; padding: 8px; background: white; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
-                    <img src="${postData.postImage}" alt="${postData.postTitle}" 
-                         style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; display: block;">
+            <!-- Featured Poster Image with enhanced presentation -->
+            <div style="text-align: center; margin-bottom: 40px;">
+                <div style="display: inline-block; padding: 12px; background: linear-gradient(45deg, #ff6b6b, #ee5a24); border-radius: 16px; box-shadow: 0 12px 35px rgba(0,0,0,0.2);">
+                    <div style="background: white; padding: 8px; border-radius: 12px;">
+                        <img src="${postData.postImage}" alt="${postData.postTitle}" 
+                             style="width: 100%; max-width: 450px; height: auto; border-radius: 8px; display: block;">
+                    </div>
                 </div>
+                <p style="margin: 15px 0 0 0; color: #636e72; font-size: 14px; font-style: italic;">Click to view full resolution</p>
             </div>
             ` : ''}
             
-            <!-- Description -->
+            <!-- Enhanced Description -->
             ${contentPreview ? `
-            <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 30px; border-left: 5px solid #ff6b6b;">
-                <p style="margin: 0; color: #2d3436; font-size: 16px; line-height: 1.6;">${contentPreview}</p>
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px; margin-bottom: 35px; border-left: 6px solid #ff6b6b; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div style="position: absolute; top: 15px; right: 20px; color: #ff6b6b; font-size: 24px; opacity: 0.3;">💬</div>
+                <h3 style="margin: 0 0 15px 0; color: #2d3436; font-size: 18px; font-weight: 600;">About This Design:</h3>
+                <p style="margin: 0; color: #2d3436; font-size: 16px; line-height: 1.7;">${contentPreview}</p>
             </div>
             ` : ''}
             
-            <!-- Call to Action -->
-            <div style="text-align: center; margin-bottom: 30px;">
-                <a href="${postUrl}" 
-                   style="display: inline-block; background: linear-gradient(135deg, #ff6b6b, #ee5a24); 
-                          color: white; padding: 16px 32px; text-decoration: none; border-radius: 50px; 
-                          font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-                          transition: transform 0.2s;">
-                    🖼️ View Full Poster
-                </a>
+            <!-- Dual Call to Action Buttons -->
+            <div style="text-align: center; margin-bottom: 40px;">
+                <div style="margin-bottom: 15px;">
+                    <a href="${postUrl}" 
+                       class="mobile-button"
+                       style="display: inline-block; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); 
+                              color: white; padding: 18px 40px; text-decoration: none; border-radius: 50px; 
+                              font-weight: 700; font-size: 16px; box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+                              transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 10px;">
+                        🖼️ View This Poster
+                    </a>
+                </div>
+                <div>
+                    <a href="${baseUrl}/services/poster-and-policy-discloser" 
+                       class="mobile-button"
+                       style="display: inline-block; background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); 
+                              color: white; padding: 18px 40px; text-decoration: none; border-radius: 50px; 
+                              font-weight: 700; font-size: 16px; box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+                              transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 10px;">
+                        🎨 View All Posters
+                    </a>
+                </div>
+                <p class="mobile-text" style="margin: 15px 0 0 0; color: #636e72; font-size: 14px; font-style: italic;">Discover our complete collection of professional designs</p>
             </div>
             
-            <!-- Features -->
-            <div style="display: table; width: 100%; margin-bottom: 30px;">
-                <div style="display: table-row;">
-                    <div style="display: table-cell; width: 33%; text-align: center; padding: 15px;">
-                        <div style="color: #ff6b6b; font-size: 24px; margin-bottom: 8px;">📐</div>
-                        <div style="color: #636e72; font-size: 14px;">High Quality</div>
-                    </div>
-                    <div style="display: table-cell; width: 33%; text-align: center; padding: 15px;">
-                        <div style="color: #ff6b6b; font-size: 24px; margin-bottom: 8px;">💫</div>
-                        <div style="color: #636e72; font-size: 14px;">Creative Design</div>
-                    </div>
-                    <div style="display: table-cell; width: 33%; text-align: center; padding: 15px;">
-                        <div style="color: #ff6b6b; font-size: 24px; margin-bottom: 8px;">⚡</div>
-                        <div style="color: #636e72; font-size: 14px;">Ready to Use</div>
+            <!-- Enhanced Features Grid -->
+            <div style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 15px; padding: 30px; margin-bottom: 35px; border: 1px solid #e9ecef; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <h3 style="text-align: center; margin: 0 0 25px 0; color: #2d3436; font-size: 20px; font-weight: 600;">What Makes Our Posters Special</h3>
+                <div style="display: table; width: 100%;">
+                    <div style="display: table-row;">
+                        <div style="display: table-cell; width: 25%; text-align: center; padding: 20px 10px;">
+                            <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 20px; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);">📐</div>
+                            <div style="color: #2d3436; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Premium Quality</div>
+                            <div style="color: #636e72; font-size: 12px;">High-resolution designs</div>
+                        </div>
+                        <div style="display: table-cell; width: 25%; text-align: center; padding: 20px 10px;">
+                            <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 20px; box-shadow: 0 4px 12px rgba(116, 185, 255, 0.3);">💫</div>
+                            <div style="color: #2d3436; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Creative Excellence</div>
+                            <div style="color: #636e72; font-size: 12px;">Unique artistic vision</div>
+                        </div>
+                        <div style="display: table-cell; width: 25%; text-align: center; padding: 20px 10px;">
+                            <div style="background: linear-gradient(135deg, #00b894, #00a085); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 20px; box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);">⚡</div>
+                            <div style="color: #2d3436; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Ready to Use</div>
+                            <div style="color: #636e72; font-size: 12px;">Download instantly</div>
+                        </div>
+                        <div style="display: table-cell; width: 25%; text-align: center; padding: 20px 10px;">
+                            <div style="background: linear-gradient(135deg, #fd79a8, #e84393); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 20px; box-shadow: 0 4px 12px rgba(253, 121, 168, 0.3);">🎯</div>
+                            <div style="color: #2d3436; font-size: 14px; font-weight: 600; margin-bottom: 5px;">Purpose-Built</div>
+                            <div style="color: #636e72; font-size: 12px;">Targeted messaging</div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Engagement box -->
-            <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); padding: 25px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;">
-                <p style="margin: 0; font-size: 16px; font-weight: 500;">
-                    🚀 <strong>Stay Creative!</strong> Get notified about our latest poster designs and creative content.
+            <!-- Engagement Section -->
+            <div style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #6c5ce7 100%); padding: 35px; border-radius: 15px; text-align: center; color: white; margin-bottom: 30px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.3;"></div>
+                <div style="position: absolute; bottom: -30px; left: -30px; width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.3;"></div>
+                <h3 style="margin: 0 0 15px 0; font-size: 22px; font-weight: 700;">🚀 Stay Creative & Inspired!</h3>
+                <p style="margin: 0; font-size: 16px; font-weight: 400; line-height: 1.6; opacity: 0.95;">
+                    Join thousands of creative professionals who trust Ureposh for their design needs. Get exclusive access to new posters, creative resources, and design insights delivered straight to your inbox!
+                </p>
+                <div style="margin-top: 20px; padding: 15px 25px; background: rgba(255,255,255,0.15); border-radius: 25px; display: inline-block;">
+                    <span style="font-size: 14px; font-weight: 600;">✨ Premium Member Benefits ✨</span>
+                </div>
+            </div>
+            
+            <!-- Social Proof Section -->
+            <div style="text-align: center; margin-bottom: 30px; padding: 25px; background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 12px;">
+                <p style="margin: 0; color: #2d3436; font-size: 16px; font-weight: 600;">
+                    🌟 <strong>Loved by Creators Worldwide</strong> 🌟
+                </p>
+                <p style="margin: 10px 0 0 0; color: #636e72; font-size: 14px;">
+                    "These posters have transformed our workplace communication!" - Happy Customer
                 </p>
             </div>
         </div>
         
-        <!-- Footer -->
-        <div style="background: #2d3436; padding: 30px; text-align: center; color: white;">
-            <p style="margin: 0 0 15px 0; font-size: 16px;">
-                <strong>Thank you for being part of the Ureposh community!</strong>
-            </p>
-            <p style="margin: 0 0 20px 0; color: #b2bec3; font-size: 14px;">
-                We're excited to share our latest creative works with you.
-            </p>
-            <div style="margin: 20px 0;">
-                <a href="${baseUrl}" style="color: #74b9ff; text-decoration: none; margin: 0 15px;">🏠 Visit Website</a>
-                <a href="${unsubscribeUrl}" style="color: #74b9ff; text-decoration: none; margin: 0 15px;">✉️ Unsubscribe</a>
+        <!-- Enhanced Footer -->
+        <div style="background: linear-gradient(135deg, #2d3436 0%, #636e72 100%); padding: 40px 30px; text-align: center; color: white;">
+            <div style="margin-bottom: 25px;">
+                <h3 style="margin: 0 0 10px 0; font-size: 20px; font-weight: 700;">Thank You for Being Creative!</h3>
+                <p style="margin: 0; color: #b2bec3; font-size: 16px; line-height: 1.5;">
+                    We're thrilled to share our latest design creations with amazing people like you. Your creativity inspires us to keep designing!
+                </p>
             </div>
-            <p style="margin: 20px 0 0 0; color: #636e72; font-size: 12px;">
-                © 2025 Ureposh. All rights reserved.
-            </p>
+            
+            <!-- Action Links -->
+            <div style="margin: 25px 0; border-top: 1px solid #636e72; border-bottom: 1px solid #636e72; padding: 20px 0;">
+                <a href="${baseUrl}" style="color: #74b9ff; text-decoration: none; margin: 0 20px; font-size: 16px; font-weight: 500;">🏠 Visit Website</a>
+                <a href="${baseUrl}/services/poster-and-policy-discloser" style="color: #74b9ff; text-decoration: none; margin: 0 20px; font-size: 16px; font-weight: 500;">🎨 All Posters</a>
+                <a href="${unsubscribeUrl}" style="color: #74b9ff; text-decoration: none; margin: 0 20px; font-size: 16px; font-weight: 500;">✉️ Unsubscribe</a>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p style="margin: 0; color: #636e72; font-size: 12px; line-height: 1.4;">
+                    © 2025 Ureposh - Professional Creative Solutions<br>
+                    Designing the future, one poster at a time.
+                </p>
+            </div>
         </div>
     </div>
 </body>
