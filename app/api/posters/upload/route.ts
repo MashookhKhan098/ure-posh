@@ -115,9 +115,48 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Database error: ${insertError.message}` }, { status: 500 })
     }
 
+    console.log('✅ Poster created:', poster.title)
+
+    // 📧 SEND NEWSLETTER NOTIFICATION IN BACKGROUND
+    Promise.resolve().then(async () => {
+      try {
+        console.log('📧 Triggering newsletter notification for uploaded poster...')
+        
+        // Call the newsletter API with poster data
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ureposh-one.vercel.app'
+        const notificationResponse = await fetch(`${baseUrl}/api/newsletter/notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            postId: poster.id,
+            postType: 'posters',
+            postTitle: poster.title,
+            postSlug: poster.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+            postContent: poster.description || 'New poster available for download.',
+            postImage: poster.image_url
+          })
+        })
+        
+        if (notificationResponse.ok) {
+          const notificationResult = await notificationResponse.json()
+          console.log(`✅ Newsletter sent to ${notificationResult.sentCount} subscribers`)
+        } else {
+          console.log('⚠️ Newsletter notification failed:', await notificationResponse.text())
+        }
+      } catch (notificationError) {
+        console.error('❌ Newsletter notification error:', notificationError)
+      }
+    }).catch(error => {
+      console.error('Background email task error:', error)
+    })
+
     console.log('Poster inserted successfully:', poster)
 
-    return NextResponse.json({ poster }, { status: 201 })
+    return NextResponse.json({ 
+      poster,
+      message: 'Poster uploaded successfully! Newsletter notification is being sent in background.',
+      emailStatus: 'processing'
+    }, { status: 201 })
   } catch (error) {
     console.error('Unexpected error in poster upload:', error)
     return NextResponse.json({ 
