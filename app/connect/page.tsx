@@ -364,20 +364,18 @@ export default function ConnectPage() {
                               transition={{ delay: 0.8 }}
                               className="text-center"
                             >
-                                                                                                                                                          {/* Interactive Mug in Foreground */}
-                                  <div>
-                                    <iframe 
-                                      src="https://floating-mug.vercel.app/"
-                                      className="w-80 h-64 mx-auto cursor-pointer transition-all duration-300"
-                                      style={{ minHeight: '256px', minWidth: '320px' }}
-                                      title="Interactive Floating Mug"
-                                      frameBorder="0"
-                                      allowFullScreen
-                                      onClick={() => window.open('https://floating-mug.vercel.app/', '_blank')}
-                                    />
-                                  </div>
-                              
-                              
+                              {/* Well-designed "Let's have a coffee" text section */}
+                              <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-6 border border-amber-200/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                                <div className="flex items-center justify-center mb-4">
+                                  <div className="text-5xl animate-bounce">☕</div>
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                                  Let's Have a Coffee!
+                                </h3>
+                                <p className="text-base text-gray-600 max-w-sm mx-auto leading-relaxed">
+                                  Great conversations start over a warm cup of coffee. Let's discuss how we can make your workplace safer and more inclusive.
+                                </p>
+                              </div>
                             </motion.div>
                           </div>
                       </motion.div>
