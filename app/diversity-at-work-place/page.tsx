@@ -1,475 +1,387 @@
-"use client";
-import React, { useState } from 'react';
-import { ChevronDown, Users, Globe, Heart, Target, CheckCircle, Mail, ArrowRight, Shield, Star, Award, Sparkles, Palette, HandHeart } from 'lucide-react';
+import { CheckCircle, Phone, Mail, Shield, Building, ArrowRight, Globe } from "lucide-react"
 
-// FAQ Item Props Interface
-interface FAQItemProps {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onClick: () => void;
-}
-
-const FAQItem = ({ question, answer, isOpen, onClick }: FAQItemProps) => (
-  <div className="group bg-white rounded-lg shadow-md border border-violet-100 overflow-hidden hover:shadow-lg transition-all duration-300">
-    <button
-      onClick={onClick}
-      className="w-full p-3 text-left flex justify-between items-center hover:bg-violet-50 transition-all duration-300"
-    >
-      <div className="flex-1 pr-3">
-        <h4 className="font-semibold text-gray-800 text-sm md:text-base group-hover:text-violet-600 transition-colors duration-300 leading-snug">
-          {question}
-        </h4>
-      </div>
-      <div className={`w-6 h-6 bg-violet-600 rounded-md flex items-center justify-center transition-all duration-300 flex-shrink-0 shadow-sm ${
-        isOpen ? 'rotate-180 bg-violet-700' : 'hover:bg-violet-700'
-      }`}>
-        <ChevronDown className="w-3 h-3 text-white" />
-      </div>
-    </button>
-    <div className={`transition-all duration-300 ease-in-out ${
-      isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-    } overflow-hidden`}>
-      <div className="px-3 pb-3">
-        <div className="w-full h-px bg-violet-200 mb-2"></div>
-        <div className="bg-violet-50 rounded-lg p-3 border border-violet-100">
-          <p className="text-gray-700 leading-relaxed text-xs md:text-sm">
-            {answer}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-export default function DiversityAtWorkPlacePage() {
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
-  const pageData = {
-    title: "Diversity at Work Place: Building Inclusive Organizations",
-    subtitle: "Comprehensive Workplace Diversity & Inclusion Solutions",
-    description: "Creating truly inclusive workplace environments through comprehensive diversity programs, cultural competency training, bias awareness, inclusive leadership development, and systematic organizational transformation initiatives.",
-    faqs: [
-      {
-        question: "What constitutes a comprehensive workplace diversity and inclusion program?",
-        answer: "A comprehensive D&I program includes bias awareness training, inclusive leadership development, diverse recruitment practices, cultural competency education, employee resource groups, accessibility initiatives, policy development, measurement systems, and ongoing organizational culture transformation efforts."
-      },
-      {
-        question: "How does workplace diversity contribute to harassment prevention and POSH compliance?",
-        answer: "Diversity initiatives create more inclusive environments where all employees feel valued and respected, reducing the likelihood of harassment. D&I programs promote understanding across different groups, establish clear behavioral expectations, and create supportive systems that align with and strengthen POSH compliance efforts."
-      },
-      {
-        question: "What measurable benefits can organizations expect from diversity and inclusion investments?",
-        answer: "Organizations report improved innovation and creativity, better decision-making, enhanced employee engagement, increased productivity, improved company reputation, better talent attraction and retention, expanded market reach, reduced legal risks, and stronger financial performance through diverse perspectives and inclusive practices."
-      },
-      {
-        question: "How are diversity programs customized for different industries and organizational cultures?",
-        answer: "Programs are tailored based on industry-specific challenges, organizational size and structure, existing cultural dynamics, geographic considerations, demographic composition, business objectives, regulatory requirements, and stakeholder needs to ensure maximum relevance and effectiveness in each unique organizational context."
-      }
-    ]
-  };
-
+export default function POSHCompliancePage() {
   return (
-    <main className="min-h-screen bg-white">
-      <style jsx>{`
-        .text-focus {
-          background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-          border: 2px solid #c4b5fd;
-          box-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
-          backdrop-filter: blur(10px);
-        }
-
-        .content-highlight {
-          background: linear-gradient(135deg, #ffffff 0%, #f3e8ff 50%, #ffffff 100%);
-          border: 1px solid #c4b5fd;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
-        }
-
-        .high-contrast-text {
-          color: #111827;
-          font-weight: 700;
-          line-height: 1.4;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .focus-card {
-          background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-          border: 2px solid #a78bfa;
-          box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
-          transition: all 0.3s ease;
-        }
-
-        .focus-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 30px 60px rgba(139, 92, 246, 0.25);
-        }
-
-        .diversity-glow {
-          animation: diversityGlow 3s infinite;
-        }
-
-        @keyframes diversityGlow {
-          0%, 100% { 
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-          }
-          50% { 
-            box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
-          }
-        }
-
-        .rainbow-gradient {
-          background: linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #ec4899);
-          background-size: 200% 100%;
-          animation: rainbow 3s linear infinite;
-        }
-
-        @keyframes rainbow {
-          0% { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
-        }
-      `}</style>
-
+    <div className="min-h-screen bg-white">
+      
       {/* Hero Section */}
-      <section className="relative pt-16 pb-12 bg-gradient-to-br from-white via-violet-50/30 to-white overflow-hidden min-h-[70vh] flex items-center">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-violet-100/40 to-purple-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        
-        <div className="relative max-w-6xl mx-auto px-4 lg:px-8 w-full">
-          <div className="text-center space-y-8">
-            <div className="inline-flex items-center gap-2 text-focus px-4 py-2 rounded-full border border-violet-300 shadow-lg">
-              <div className="w-3 h-3 rainbow-gradient rounded-full"></div>
-              <span className="text-violet-800 font-bold text-sm">Diversity & Inclusion Excellence</span>
+      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-20 overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+              <Shield className="h-4 w-4 mr-2" />
+              Diversity at Workplace | Global DEI Consulting & Compliance | URE POSH
             </div>
-            
-            <div className="space-y-4">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl high-contrast-text leading-tight tracking-tight">
-                <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-violet-700 bg-clip-text text-transparent">
-                  {pageData.title}
-                </span>
-              </h1>
-              <div className="w-24 h-2 rainbow-gradient rounded-full shadow-lg mx-auto"></div>
-            </div>
-            
-            <div className="space-y-4 max-w-4xl mx-auto">
-              <div className="content-highlight rounded-xl p-4 border-2 border-violet-200 shadow-xl">
-                <p className="text-lg md:text-xl high-contrast-text leading-relaxed">
-                  <strong className="bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent">
-                    {pageData.subtitle}
-                  </strong>
-                </p>
-              </div>
-              
-              <div className="text-focus rounded-xl p-6 shadow-lg">
-                <p className="text-base md:text-lg text-gray-800 leading-relaxed font-medium">
-                  {pageData.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Diversity Program Components */}
-      <section className="py-16 bg-gradient-to-b from-white via-violet-50/20 to-white">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            
-            {/* Inclusive Culture Development */}
-            <div className="focus-card p-8 rounded-2xl shadow-xl diversity-glow">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl shadow-lg">
-                  <Heart className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                    Inclusive Culture Development
-                  </h2>
-                  <div className="w-20 h-2 rainbow-gradient rounded-full shadow-sm"></div>
-                </div>
-              </div>
-              
-              <div className="text-focus p-6 rounded-xl mb-6">
-                <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                  Building truly inclusive organizational cultures where every individual feels valued, respected, 
-                  and empowered to contribute their unique perspectives and talents.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    title: "Cultural Assessment & Analysis",
-                    desc: "Comprehensive evaluation of current organizational culture, bias identification, and inclusion gaps"
-                  },
-                  {
-                    title: "Bias Awareness Training",
-                    desc: "Unconscious bias education, microaggression awareness, and inclusive behavior development"
-                  },
-                  {
-                    title: "Inclusive Leadership",
-                    desc: "Leadership development focused on creating psychologically safe and inclusive environments"
-                  },
-                  {
-                    title: "Employee Resource Groups",
-                    desc: "Supporting affinity groups, mentorship programs, and employee-led diversity initiatives"
-                  },
-                  {
-                    title: "Communication & Language",
-                    desc: "Inclusive communication training and culturally sensitive language development"
-                  }
-                ].map((element, index) => (
-                  <div key={index} className="content-highlight p-4 rounded-lg">
-                    <div className="flex items-start gap-3 mb-2">
-                      <Sparkles className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                      <h4 className="font-bold text-gray-900">{element.title}</h4>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed ml-8">{element.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Diversity Strategy & Implementation */}
-            <div className="focus-card p-8 rounded-2xl shadow-xl">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-purple-600 to-violet-600 rounded-xl shadow-lg">
-                  <Target className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                    Strategic Diversity Implementation
-                  </h2>
-                  <div className="w-20 h-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-full shadow-sm"></div>
-                </div>
-              </div>
-              
-              <div className="text-focus p-6 rounded-xl mb-6">
-                <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                  Systematic approach to implementing diversity and inclusion strategies that create lasting 
-                  organizational change and measurable outcomes.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    icon: <Globe className="w-5 h-5 text-blue-600" />,
-                    title: "Diverse Recruitment & Hiring",
-                    desc: "Inclusive recruitment practices, diverse candidate sourcing, and equitable selection processes"
-                  },
-                  {
-                    icon: <Users className="w-5 h-5 text-green-600" />,
-                    title: "Retention & Development",
-                    desc: "Career development programs, mentorship opportunities, and advancement pathways for all"
-                  },
-                  {
-                    icon: <Shield className="w-5 h-5 text-red-600" />,
-                    title: "Policy & Procedure Review",
-                    desc: "Updating organizational policies to ensure equity, accessibility, and inclusive practices"
-                  },
-                  {
-                    icon: <Award className="w-5 h-5 text-yellow-600" />,
-                    title: "Measurement & Analytics",
-                    desc: "D&I metrics, progress tracking, and continuous improvement based on data insights"
-                  }
-                ].map((strategy, index) => (
-                  <div key={index} className="content-highlight p-4 rounded-lg">
-                    <div className="flex items-start gap-3 mb-2">
-                      {strategy.icon}
-                      <h4 className="font-bold text-gray-900">{strategy.title}</h4>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed ml-8">{strategy.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Diversity Dimensions & Focus Areas */}
-          <div className="focus-card p-8 rounded-2xl shadow-xl mb-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold high-contrast-text mb-4">
-                Comprehensive Diversity Dimensions
-              </h2>
-              <div className="w-20 h-2 rainbow-gradient mx-auto rounded-full shadow-lg mb-6"></div>
-              <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-                Our diversity and inclusion programs address multiple dimensions of human diversity to create 
-                truly inclusive workplace environments.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Gender Diversity",
-                  desc: "Gender equality, women's leadership, work-life balance, and gender-inclusive policies",
-                  highlight: "Gender",
-                  color: "from-pink-500 to-purple-600"
-                },
-                {
-                  title: "Cultural & Ethnic Diversity", 
-                  desc: "Cross-cultural understanding, ethnic inclusion, and multicultural competency development",
-                  highlight: "Culture",
-                  color: "from-orange-500 to-red-600"
-                },
-                {
-                  title: "Age & Generational",
-                  desc: "Multi-generational workforce integration, age discrimination prevention, and knowledge transfer",
-                  highlight: "Age",
-                  color: "from-blue-500 to-teal-600"
-                },
-                {
-                  title: "Accessibility & Disabilities",
-                  desc: "Disability inclusion, accessibility compliance, and assistive technology integration",
-                  highlight: "Access",
-                  color: "from-green-500 to-emerald-600"
-                },
-                {
-                  title: "Socioeconomic Inclusion",
-                  desc: "Economic background diversity, educational opportunity equality, and social mobility support",
-                  highlight: "Economic",
-                  color: "from-yellow-500 to-orange-600"
-                },
-                {
-                  title: "Neurodiversity",
-                  desc: "Neurodiverse talent inclusion, cognitive diversity appreciation, and adaptive work environments",
-                  highlight: "Cognitive",
-                  color: "from-violet-500 to-purple-600"
-                }
-              ].map((dimension, index) => (
-                <div key={index} className="content-highlight p-6 rounded-lg group hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className={`p-2 bg-gradient-to-br ${dimension.color} rounded-lg group-hover:scale-110 transition-transform duration-300`}>
-                      <Palette className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-900 mb-1">{dimension.title}</h3>
-                      <span className="inline-block px-2 py-1 bg-violet-100 text-violet-800 text-xs font-bold rounded-full mb-2">
-                        {dimension.highlight}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">{dimension.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Program Impact & Benefits */}
-          <div className="focus-card p-8 rounded-2xl shadow-xl">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 bg-gradient-to-br from-green-600 to-violet-600 rounded-xl shadow-lg">
-                <Star className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                  Diversity Program Impact & Benefits
-                </h2>
-                <div className="w-20 h-2 bg-gradient-to-r from-green-500 to-violet-600 rounded-full shadow-sm"></div>
-              </div>
-            </div>
-            
-            <div className="text-focus p-6 rounded-xl mb-6">
-              <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                Organizations with comprehensive diversity and inclusion programs demonstrate superior performance 
-                across multiple business metrics and employee satisfaction indicators.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                {
-                  icon: <Users className="w-6 h-6 text-blue-600" />,
-                  title: "Enhanced Innovation",
-                  desc: "Increased creativity, diverse perspectives, better problem-solving, and innovative solutions"
-                },
-                {
-                  icon: <Target className="w-6 h-6 text-purple-600" />,
-                  title: "Improved Decision-Making",
-                  desc: "Better strategic decisions, reduced groupthink, comprehensive risk assessment capabilities"
-                },
-                {
-                  icon: <Globe className="w-6 h-6 text-green-600" />,
-                  title: "Market Expansion",
-                  desc: "Better understanding of diverse markets, improved customer relations, global competitiveness"
-                },
-                {
-                  icon: <Heart className="w-6 h-6 text-red-600" />,
-                  title: "Employee Engagement",
-                  desc: "Higher job satisfaction, increased loyalty, better retention, and stronger workplace culture"
-                },
-                {
-                  icon: <Award className="w-6 h-6 text-yellow-600" />,
-                  title: "Talent Attraction",
-                  desc: "Access to broader talent pools, enhanced employer brand, competitive recruitment advantage"
-                },
-                {
-                  icon: <CheckCircle className="w-6 h-6 text-emerald-600" />,
-                  title: "Financial Performance",
-                  desc: "Improved profitability, reduced legal risks, better investor relations, sustainable growth"
-                }
-              ].map((benefit, index) => (
-                <div key={index} className="content-highlight p-4 rounded-lg flex items-start gap-4">
-                  <div className="p-2 bg-gray-50 rounded-lg">
-                    {benefit.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-2">{benefit.title}</h4>
-                    <p className="text-gray-700 text-sm leading-relaxed">{benefit.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact CTA */}
-      <section className="py-16 bg-gradient-to-b from-violet-50/30 to-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="focus-card p-8 rounded-2xl shadow-xl">
-            <h3 className="text-2xl md:text-3xl font-bold high-contrast-text mb-4">
-              Ready to Build a <span className="text-violet-600">Truly Inclusive</span> Workplace?
-            </h3>
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Transform your organization with comprehensive diversity and inclusion programs that create lasting change
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+              Diversity at <span className="text-pink-600">Workplace</span> & Modern Issues
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 text-balance leading-relaxed">
+              URE POSH offers Diversity at Workplace consulting aligned with global standards (POSH Act, Equality Act,
+              EEOC). We help organizations address modern DEI issues, implement policies, and achieve compliance across
+              India, UK, and US.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="mailto:ureposh@gmail.com" className="inline-flex items-center gap-3 bg-violet-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-violet-700 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
-                <Mail className="w-5 h-5" />
-                <span>Start Diversity Program</span>
-                <ArrowRight className="w-5 h-5" />
+              <a
+                href="tel:+919999944807"
+                className="group bg-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+              >
+                Get Free Consultation
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a
+                href="#services"
+                className="border-2 border-pink-200 text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 flex items-center justify-center"
+              >
+                Learn More
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold high-contrast-text mb-4">
-              Frequently Asked Questions
+      {/* About Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-6">
+              <Building className="h-8 w-8 text-pink-600" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🏢 About URE POSH Diversity Consulting
             </h2>
-            <div className="w-20 h-2 rainbow-gradient mx-auto rounded-full shadow-lg"></div>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
+          <div className="max-w-4xl mx-auto">
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+              At URE POSH, we believe workplace diversity is not just a moral imperative, but a compliance and business
+              requirement. We support organizations in India, the UK, and the US with strategic diversity consulting,
+              helping them:
+            </p>
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              {[
+                "✔️ Draft & implement Diversity, Equity, and Inclusion (DEI) policies.",
+                "✔️ Align with legal mandates: POSH Act (India), Equality Act (UK), EEOC & Title VII (US).",
+                "✔️ Address modern challenges like unconscious bias, generational diversity, and intersectionality.",
+                "✔️ Achieve ESG and CSR-linked diversity metrics for global investors.",
+              ].map((service, index) => (
+                <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+                  <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
+                    <CheckCircle className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-gray-700 font-medium leading-relaxed">{service}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-1 gap-6">
-            {pageData.faqs.map((faq, index) => (
-              <FAQItem
-                key={index}
-                question={faq.question}
-                answer={faq.answer}
-                isOpen={openFAQ === index}
-                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-              />
+      {/* Why Section */}
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">🔹 Why Diversity Consulting Matters</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+            {[
+              {
+                title: "India – POSH Act + Equal Remuneration Act mandate non-discrimination.",
+                desc: "",
+              },
+              {
+                title:
+                  "UK – Equality Act, 2010 requires fair treatment across gender, race, disability, age, and religion.",
+                desc: "",
+              },
+              {
+                title: "US – EEOC enforces anti-discrimination laws under Title VII, ADA, and ADEA.",
+                desc: "",
+              },
+              {
+                title: "Investors & ESG Standards – Global boards demand diversity data in governance reports.",
+                desc: "",
+              },
+            ].map((step, index) => (
+              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-700 leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-12">
+            <p className="text-lg text-gray-700 leading-relaxed">
+              <strong>Talent & Innovation</strong> – Companies with diverse teams report 19% higher innovation revenue
+              (BCG).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Modern Issues Section */}
+      <section id="services" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🔹 Modern Issues in Workplace Diversity
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[
+              {
+                title: "1. Gender Pay Gap & Leadership Representation",
+                items: [
+                  "Women & non-binary employees underrepresented in leadership.",
+                  "Compliance: Equal Pay Act (India/UK/US).",
+                ],
+              },
+              {
+                title: "2. Unconscious Bias & Hiring Practices",
+                items: ["Recruitment algorithms replicating bias.", "Blind hiring as compliance best practice."],
+              },
+              {
+                title: "3. Generational Diversity (Gen Z to Boomers)",
+                items: ["Differing work styles causing friction.", "Cross-generational mentoring as a solution."],
+              },
+              {
+                title: "4. Disability Inclusion & Accessibility",
+                items: [
+                  "ADA (US), Equality Act (UK), RPwD Act (India) mandate accommodations.",
+                  "Gaps in implementation remain.",
+                ],
+              },
+              {
+                title: "5. LGBTQ+ Inclusion",
+                items: [
+                  "US: EEOC protects sexual orientation/gender identity.",
+                  "India: Supreme Court decriminalized Section 377 but workplace bias persists.",
+                ],
+              },
+              {
+                title: "6. Cultural & Linguistic Diversity",
+                items: ["Multilingual communication challenges.", "Training to reduce miscommunication & prejudice."],
+              },
+              {
+                title: "7. Intersectionality",
+                items: [
+                  "Employees facing multiple layers of discrimination (e.g., race + gender + disability).",
+                  "Global best practice: Intersectional DEI strategies.",
+                ],
+              },
+            ].map((service, index) => (
+              <div key={index} className="bg-pink-50 p-8 rounded-2xl">
+                <h3 className="font-semibold text-gray-900 mb-4 text-lg">{service.title}</h3>
+                <ul className="space-y-3">
+                  {service.items.map((item, itemIndex) => (
+                    <li key={itemIndex} className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-2 h-2 bg-pink-600 rounded-full mt-2"></div>
+                      <span className="text-gray-700 leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </div>
       </section>
-    </main>
-  );
+
+      {/* Consulting Approach Section */}
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">🔹 Our Consulting Approach</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Assessment & Audit",
+                desc: "Workforce demographics, policy review, diversity gap analysis.",
+              },
+              {
+                title: "Policy Drafting & Customization",
+                desc: "DEI frameworks aligned with global + local laws.",
+              },
+              {
+                title: "Training & Sensitization",
+                desc: "Unconscious bias, inclusive leadership, IC training.",
+              },
+              {
+                title: "Complaint Handling Support",
+                desc: "Integration with POSH/EEOC grievance systems.",
+              },
+              {
+                title: "Monitoring & Reporting",
+                desc: "ESG/CSR-linked diversity dashboards, annual reports.",
+              },
+            ].map((step, index) => (
+              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-700 leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🔹 Key Benefits of URE POSH Diversity Consulting
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              "✔️ Legal Compliance – India, UK, US diversity laws.",
+              "✔️ Audit-Ready Documentation – for regulators, boards, investors.",
+              "✔️ Inclusive Culture – better retention, lower attrition.",
+              "✔️ ESG/CSR Metrics – strengthens global governance reports.",
+              "✔️ Reputation Shield – progressive employer brand.",
+            ].map((benefit, index) => (
+              <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+                <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-gray-700 font-medium leading-relaxed">{benefit}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs Section */}
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">❓ 12 Detailed & Technical FAQs</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[
+              {
+                question: "1. What is workplace diversity?",
+                answer:
+                  "It means representation of employees across gender, race, age, disability, sexual orientation, religion, and socioeconomic backgrounds.",
+              },
+              {
+                question: "2. Is workplace diversity a compliance requirement?",
+                answer:
+                  "Yes. India (Equal Remuneration Act, POSH), UK (Equality Act), US (EEOC Title VII) all mandate non-discrimination.",
+              },
+              {
+                question: "3. How do modern MNCs address diversity gaps?",
+                answer:
+                  "Through structured DEI strategies, employee resource groups (ERGs), diversity councils, and leadership accountability.",
+              },
+              {
+                question: "4. What is intersectionality in workplace diversity?",
+                answer:
+                  "It refers to employees facing multiple forms of bias simultaneously (e.g., a woman of color with disability). Compliance strategies must recognize these overlaps.",
+              },
+              {
+                question: "5. How is diversity linked with ESG?",
+                answer:
+                  'Diversity metrics are part of the "S" in ESG (Social Governance), impacting investor ratings and funding.',
+              },
+              {
+                question: "6. What are penalties for non-compliance?",
+                answer:
+                  "India: Fines under POSH/Equal Remuneration Acts. UK: Tribunal penalties, unlimited compensation. US: EEOC lawsuits, multi-million-dollar settlements.",
+              },
+              {
+                question: "7. What role do managers play in diversity compliance?",
+                answer:
+                  "Managers are first responders—they must prevent bias, escalate complaints, and enforce inclusive policies.",
+              },
+              {
+                question: "8. How do we measure diversity progress?",
+                answer:
+                  "Gender pay gap analysis. Leadership representation ratios. Employee satisfaction surveys. Attrition trends.",
+              },
+              {
+                question: "9. Can SMEs adopt global diversity standards?",
+                answer: "Yes. Scaled DEI frameworks with training, audits, and policy updates can be cost-effective.",
+              },
+              {
+                question: "10. How does URE POSH customize diversity consulting?",
+                answer:
+                  "By aligning policies with local labor laws and embedding them into global governance frameworks.",
+              },
+              {
+                question: "11. Is diversity training mandatory?",
+                answer:
+                  'While not always explicit, most regulators (POSH in India, ACAS in UK, EEOC in US) expect regular training as "reasonable steps."',
+              },
+              {
+                question: "12. Does URE POSH provide certifications?",
+                answer:
+                  "Yes—we issue Diversity Compliance Certificates for ESG reporting, audits, and investor due diligence.",
+              },
+            ].map((faq, index) => (
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-4 text-lg">{faq.question}</h3>
+                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-6 text-balance">📢 Call to Action</h2>
+          <p className="text-2xl mb-4 text-pink-100 font-semibold">
+            ✨ Diversity is not an initiative—it's compliance, culture, and competitiveness.
+          </p>
+          <p className="text-xl mb-12 text-pink-100 text-balance max-w-3xl mx-auto">
+            Partner with URE POSH for International Diversity Consulting that meets modern challenges and global legal
+            standards.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+            <a
+              href="tel:+919999944807"
+              className="group flex items-center space-x-3 bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Phone className="h-5 w-5" />
+              <span>📞 +91-99999 44807</span>
+            </a>
+            <a
+              href="mailto:ea@ureposh.com"
+              className="group flex items-center space-x-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-200"
+            >
+              <Mail className="h-5 w-5" />
+              <span>📧 ea@ureposh.com</span>
+            </a>
+            <a
+              href="https://www.ureposh.com"
+              className="group flex items-center space-x-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-200"
+            >
+              <Globe className="h-5 w-5" />
+              <span>🌍 www.ureposh.com</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-xl">
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-2xl font-bold">URE POSH</span>
+          </div>
+          <p className="text-gray-400 text-lg">
+            Diversity at Workplace | Global DEI Consulting & Compliance | URE POSH
+          </p>
+        </div>
+      </footer>
+    </div>
+  )
 }

@@ -1,438 +1,354 @@
-"use client";
-import React, { useState } from 'react';
-import { ChevronDown, GraduationCap, Users, Shield, CheckCircle, Mail, ArrowRight, Clock, Target, BookOpen, Award, Lightbulb, Brain, Star } from 'lucide-react';
+import { CheckCircle, Phone, Mail, Shield, Building, ArrowRight, Globe } from "lucide-react"
 
-// FAQ Item Props Interface
-interface FAQItemProps {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onClick: () => void;
-}
-
-const FAQItem = ({ question, answer, isOpen, onClick }: FAQItemProps) => (
-  <div className="group bg-white rounded-lg shadow-md border border-teal-100 overflow-hidden hover:shadow-lg transition-all duration-300">
-    <button
-      onClick={onClick}
-      className="w-full p-3 text-left flex justify-between items-center hover:bg-teal-50 transition-all duration-300"
-    >
-      <div className="flex-1 pr-3">
-        <h4 className="font-semibold text-gray-800 text-sm md:text-base group-hover:text-teal-600 transition-colors duration-300 leading-snug">
-          {question}
-        </h4>
-      </div>
-      <div className={`w-6 h-6 bg-teal-600 rounded-md flex items-center justify-center transition-all duration-300 flex-shrink-0 shadow-sm ${
-        isOpen ? 'rotate-180 bg-teal-700' : 'hover:bg-teal-700'
-      }`}>
-        <ChevronDown className="w-3 h-3 text-white" />
-      </div>
-    </button>
-    <div className={`transition-all duration-300 ease-in-out ${
-      isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-    } overflow-hidden`}>
-      <div className="px-3 pb-3">
-        <div className="w-full h-px bg-teal-200 mb-2"></div>
-        <div className="bg-teal-50 rounded-lg p-3 border border-teal-100">
-          <p className="text-gray-700 leading-relaxed text-xs md:text-sm">
-            {answer}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-export default function RespectfulWorkplaceTrainingCompliancePage() {
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
-  const pageData = {
-    title: "Respectful Workplace Training & Compliance Programs",
-    subtitle: "Comprehensive Workplace Respect Training Solutions",
-    description: "Interactive training programs designed to foster behavioral change, ensure compliance monitoring, and create respectful workplace environments through comprehensive respect and dignity education.",
-    faqs: [
-      {
-        question: "What topics are covered in respectful workplace training programs?",
-        answer: "Our training covers workplace respect fundamentals, recognizing inappropriate behavior, communication skills, conflict resolution, diversity and inclusion, bystander intervention, reporting procedures, legal obligations, and creating inclusive environments for all employees."
-      },
-      {
-        question: "How often should organizations conduct respectful workplace training?",
-        answer: "We recommend initial comprehensive training for all employees, annual refresher sessions, specialized training for new hires within 30 days, additional sessions after policy updates, and targeted training following any workplace incidents or complaints."
-      },
-      {
-        question: "What makes workplace respect training effective in changing behavior?",
-        answer: "Effective training combines interactive scenarios, real-world case studies, peer discussions, practical exercises, measurable learning outcomes, follow-up assessments, ongoing reinforcement activities, and integration with organizational culture and values."
-      },
-      {
-        question: "How do you measure the effectiveness of respectful workplace training?",
-        answer: "We measure effectiveness through pre and post-training assessments, behavioral observation metrics, incident reporting trends, employee feedback surveys, culture assessment scores, compliance tracking, and long-term workplace climate improvements."
-      }
-    ]
-  };
-
+export default function POSHCompliancePage() {
   return (
-    <main className="min-h-screen bg-white">
-      <style jsx>{`
-        .text-focus {
-          background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
-          border: 2px solid #a7f3d0;
-          box-shadow: 0 8px 32px rgba(20, 184, 166, 0.12);
-          backdrop-filter: blur(10px);
-        }
-
-        .content-highlight {
-          background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 50%, #ffffff 100%);
-          border: 1px solid #d1fae5;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 4px 20px rgba(20, 184, 166, 0.08);
-        }
-
-        .high-contrast-text {
-          color: #111827;
-          font-weight: 700;
-          line-height: 1.4;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .focus-card {
-          background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
-          border: 2px solid #5eead4;
-          box-shadow: 0 20px 40px rgba(20, 184, 166, 0.15);
-          transition: all 0.3s ease;
-        }
-
-        .focus-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 30px 60px rgba(20, 184, 166, 0.25);
-        }
-
-        .training-glow {
-          animation: trainingGlow 3s infinite;
-        }
-
-        @keyframes trainingGlow {
-          0%, 100% { 
-            box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
-          }
-          50% { 
-            box-shadow: 0 0 40px rgba(20, 184, 166, 0.6);
-          }
-        }
-      `}</style>
+    <div className="min-h-screen bg-white">
+    
 
       {/* Hero Section */}
-      <section className="relative pt-16 pb-12 bg-gradient-to-br from-white via-teal-50/30 to-white overflow-hidden min-h-[70vh] flex items-center">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-teal-100/40 to-emerald-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        
-        <div className="relative max-w-6xl mx-auto px-4 lg:px-8 w-full">
-          <div className="text-center space-y-8">
-            <div className="inline-flex items-center gap-2 text-focus px-4 py-2 rounded-full border border-teal-300 shadow-lg">
-              <div className="w-3 h-3 bg-teal-600 rounded-full animate-pulse"></div>
-              <span className="text-teal-800 font-bold text-sm">Respectful Workplace Training</span>
+      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-20 overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+              <Shield className="h-4 w-4 mr-2" />
+              Workplace Respect Training | Harassment Prevention & Compliance | URE POSH
             </div>
-            
-            <div className="space-y-4">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl high-contrast-text leading-tight tracking-tight">
-                <span className="bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-700 bg-clip-text text-transparent">
-                  {pageData.title}
-                </span>
-              </h1>
-              <div className="w-24 h-2 bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 rounded-full shadow-lg mx-auto"></div>
-            </div>
-            
-            <div className="space-y-4 max-w-4xl mx-auto">
-              <div className="content-highlight rounded-xl p-4 border-2 border-teal-200 shadow-xl">
-                <p className="text-lg md:text-xl high-contrast-text leading-relaxed">
-                  <strong className="bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">
-                    {pageData.subtitle}
-                  </strong>
-                </p>
-              </div>
-              
-              <div className="text-focus rounded-xl p-6 shadow-lg">
-                <p className="text-base md:text-lg text-gray-800 leading-relaxed font-medium">
-                  {pageData.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Training Programs */}
-      <section className="py-16 bg-gradient-to-b from-white via-teal-50/20 to-white">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            
-            {/* Core Training Components */}
-            <div className="focus-card p-8 rounded-2xl shadow-xl training-glow">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-teal-600 to-emerald-600 rounded-xl shadow-lg">
-                  <GraduationCap className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                    Interactive Training Modules
-                  </h2>
-                  <div className="w-20 h-2 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full shadow-sm"></div>
-                </div>
-              </div>
-              
-              <div className="text-focus p-6 rounded-xl mb-6">
-                <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                  Comprehensive training modules designed to create lasting behavioral change through interactive 
-                  learning experiences, practical scenarios, and ongoing reinforcement activities.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    title: "Workplace Respect Fundamentals",
-                    desc: "Foundation principles of respectful communication and professional behavior"
-                  },
-                  {
-                    title: "Recognizing Inappropriate Behavior",
-                    desc: "Identification of harassment, discrimination, and inappropriate workplace conduct"
-                  },
-                  {
-                    title: "Effective Communication Skills",
-                    desc: "Professional communication techniques and conflict resolution strategies"
-                  },
-                  {
-                    title: "Bystander Intervention Training",
-                    desc: "Empowering employees to address inappropriate behavior when witnessed"
-                  },
-                  {
-                    title: "Inclusive Environment Creation",
-                    desc: "Building and maintaining inclusive workplace cultures for all employees"
-                  }
-                ].map((module, index) => (
-                  <div key={index} className="content-highlight p-4 rounded-lg">
-                    <div className="flex items-start gap-3 mb-2">
-                      <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <h4 className="font-bold text-gray-900">{module.title}</h4>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed ml-8">{module.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Training Methodology */}
-            <div className="focus-card p-8 rounded-2xl shadow-xl">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl shadow-lg">
-                  <Brain className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                    Behavioral Change Methodology
-                  </h2>
-                  <div className="w-20 h-2 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full shadow-sm"></div>
-                </div>
-              </div>
-              
-              <div className="text-focus p-6 rounded-xl mb-6">
-                <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                  Evidence-based training approach combining adult learning principles with behavioral psychology 
-                  to create meaningful and lasting workplace culture transformation.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    icon: <Lightbulb className="w-5 h-5 text-yellow-600" />,
-                    title: "Interactive Learning Experiences",
-                    desc: "Engaging scenarios, role-playing, and practical exercises for active participation"
-                  },
-                  {
-                    icon: <Users className="w-5 h-5 text-blue-600" />,
-                    title: "Peer Learning & Discussion",
-                    desc: "Facilitated group discussions and collaborative learning opportunities"
-                  },
-                  {
-                    icon: <Target className="w-5 h-5 text-purple-600" />,
-                    title: "Real-World Case Studies",
-                    desc: "Industry-relevant examples and workplace scenarios for practical application"
-                  },
-                  {
-                    icon: <Clock className="w-5 h-5 text-green-600" />,
-                    title: "Continuous Reinforcement",
-                    desc: "Follow-up activities and ongoing support to reinforce learning outcomes"
-                  }
-                ].map((method, index) => (
-                  <div key={index} className="content-highlight p-4 rounded-lg">
-                    <div className="flex items-start gap-3 mb-2">
-                      {method.icon}
-                      <h4 className="font-bold text-gray-900">{method.title}</h4>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed ml-8">{method.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Training Options */}
-          <div className="focus-card p-8 rounded-2xl shadow-xl mb-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold high-contrast-text mb-4">
-                Flexible Training Delivery Options
-              </h2>
-              <div className="w-20 h-2 bg-gradient-to-r from-teal-600 to-emerald-600 mx-auto rounded-full shadow-lg mb-6"></div>
-              <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-                Choose from multiple delivery formats to meet your organization's specific needs, schedule, and preferences.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  title: "In-Person Workshops",
-                  desc: "Face-to-face interactive sessions with maximum engagement",
-                  highlight: "High Impact",
-                  duration: "1-2 Days"
-                },
-                {
-                  title: "Virtual Training",
-                  desc: "Online interactive sessions with real-time participation",
-                  highlight: "Cost Effective",
-                  duration: "Half-Day Sessions"
-                },
-                {
-                  title: "Blended Learning",
-                  desc: "Combination of online modules and in-person discussions",
-                  highlight: "Flexible",
-                  duration: "2-3 Weeks"
-                },
-                {
-                  title: "Customized Programs",
-                  desc: "Tailored content specific to your industry and organizational needs",
-                  highlight: "Personalized",
-                  duration: "As Required"
-                }
-              ].map((option, index) => (
-                <div key={index} className="content-highlight p-6 rounded-lg group hover:shadow-lg transition-all duration-300 text-center">
-                  <div className="p-3 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-full w-16 h-16 mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
-                    <BookOpen className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{option.title}</h3>
-                  <div className="inline-block px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full mb-3">
-                    {option.highlight}
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-3">{option.desc}</p>
-                  <div className="text-xs text-gray-500 font-semibold">Duration: {option.duration}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Training Outcomes */}
-          <div className="focus-card p-8 rounded-2xl shadow-xl">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 bg-gradient-to-br from-green-600 to-teal-600 rounded-xl shadow-lg">
-                <Award className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                  Measurable Training Outcomes
-                </h2>
-                <div className="w-20 h-2 bg-gradient-to-r from-green-500 to-teal-600 rounded-full shadow-sm"></div>
-              </div>
-            </div>
-            
-            <div className="text-focus p-6 rounded-xl mb-6">
-              <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                Our training programs deliver measurable results in workplace culture transformation, 
-                behavioral change, and organizational compliance enhancement.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                {
-                  icon: <Star className="w-6 h-6 text-yellow-600" />,
-                  title: "Improved Workplace Culture",
-                  desc: "Measurable improvement in employee satisfaction and workplace climate scores"
-                },
-                {
-                  icon: <CheckCircle className="w-6 h-6 text-green-600" />,
-                  title: "Enhanced Compliance",
-                  desc: "Strengthened adherence to workplace policies and legal requirements"
-                },
-                {
-                  icon: <Users className="w-6 h-6 text-blue-600" />,
-                  title: "Better Communication",
-                  desc: "Improved interpersonal relationships and professional communication skills"
-                },
-                {
-                  icon: <Shield className="w-6 h-6 text-teal-600" />,
-                  title: "Reduced Incidents",
-                  desc: "Decreased workplace conflicts, complaints, and inappropriate behavior incidents"
-                }
-              ].map((outcome, index) => (
-                <div key={index} className="content-highlight p-4 rounded-lg flex items-start gap-4">
-                  <div className="p-2 bg-gray-50 rounded-lg">
-                    {outcome.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-2">{outcome.title}</h4>
-                    <p className="text-gray-700 text-sm leading-relaxed">{outcome.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact CTA */}
-      <section className="py-16 bg-gradient-to-b from-teal-50/30 to-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="focus-card p-8 rounded-2xl shadow-xl">
-            <h3 className="text-2xl md:text-3xl font-bold high-contrast-text mb-4">
-              Ready to Build a <span className="text-teal-600">Respectful Workplace</span>?
-            </h3>
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Transform your workplace culture with comprehensive respect and dignity training programs
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+              Workplace Respect <span className="text-pink-600">Training</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 text-balance leading-relaxed">
+              URE POSH offers Workplace Respect & Harassment Prevention Training aligned with the POSH Act (India),
+              Equality Act (UK), and EEOC (US). Build respectful, inclusive, and globally compliant workplaces with
+              certified training programs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="mailto:ureposh@gmail.com" className="inline-flex items-center gap-3 bg-teal-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-teal-700 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
-                <Mail className="w-5 h-5" />
-                <span>Start Training Program</span>
-                <ArrowRight className="w-5 h-5" />
+              <a
+                href="tel:+919999944807"
+                className="group bg-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+              >
+                Get Free Consultation
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a
+                href="#services"
+                className="border-2 border-pink-200 text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 flex items-center justify-center"
+              >
+                Learn More
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold high-contrast-text mb-4">
-              Frequently Asked Questions
+      {/* About Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-6">
+              <Building className="h-8 w-8 text-pink-600" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🏢 About URE POSH Workplace Respect Training
             </h2>
-            <div className="w-20 h-2 bg-gradient-to-r from-teal-600 to-emerald-600 mx-auto rounded-full shadow-lg"></div>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
+          <div className="max-w-4xl mx-auto">
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+              At URE POSH, we believe that a safe workplace begins with respect. Policies and audits alone are not
+              enough—behaviors must change. Our Workplace Respect Training programs help employees, managers, and
+              leaders:
+            </p>
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              {[
+                "✔️ Understand the boundaries of professional conduct.",
+                "✔️ Recognize unconscious bias, microaggressions, and harassment.",
+                "✔️ Learn the global legal framework (India, UK, US).",
+                "✔️ Build a culture of dignity, inclusivity, and accountability.",
+              ].map((service, index) => (
+                <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+                  <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
+                    <CheckCircle className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-gray-700 font-medium leading-relaxed">{service}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-lg text-gray-700 leading-relaxed text-center">
+              Our programs are interactive, scenario-based, and legally compliant—designed for both in-person and
+              digital learning formats.
+            </p>
+          </div>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-1 gap-6">
-            {pageData.faqs.map((faq, index) => (
-              <FAQItem
-                key={index}
-                question={faq.question}
-                answer={faq.answer}
-                isOpen={openFAQ === index}
-                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-              />
+      {/* Why Section */}
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🔹 Why Workplace Respect Training Matters
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                title: "India – POSH Act, 2013",
+                desc: "mandates regular awareness & sensitization.",
+              },
+              {
+                title: "UK – Equality Act, 2010",
+                desc: "+ ACAS guidelines require training to prevent Employment Tribunal claims.",
+              },
+              {
+                title: "US – EEOC & state laws",
+                desc: "(e.g., California, New York) mandate annual harassment prevention training.",
+              },
+              {
+                title: "Global ESG Standards",
+                desc: "– Investors and boards expect DEI & workplace respect metrics.",
+              },
+            ].map((reason, index) => (
+              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-3">{reason.title}</h3>
+                <p className="text-gray-700 leading-relaxed">{reason.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-12">
+            <p className="text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto">
+              Without training, compliance is incomplete—companies face legal penalties, litigation costs, and
+              reputational damage.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">🔹 Our Training Modules</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[
+              {
+                title: "1. Foundations of Workplace Respect",
+                items: [
+                  "Principles of dignity & inclusion.",
+                  "Legal overview: POSH Act, Equality Act, EEOC laws.",
+                  "Rights & responsibilities of employees.",
+                ],
+              },
+              {
+                title: "2. Recognizing Harassment & Discrimination",
+                items: [
+                  "Quid pro quo & hostile work environment.",
+                  "Subtle bias, bullying, microaggressions.",
+                  "Protected characteristics (gender, race, age, religion, disability, sexual orientation).",
+                ],
+              },
+              {
+                title: "3. Role of Managers & Leadership",
+                items: [
+                  "Duty of care and accountability.",
+                  "Handling complaints without retaliation.",
+                  "Role modeling respectful behavior.",
+                ],
+              },
+              {
+                title: "4. Complaint Redressal & Reporting",
+                items: [
+                  "How to raise concerns safely.",
+                  "Role of Internal Committee (India), grievance panels (UK), HR/EEOC (US).",
+                  "Confidentiality obligations.",
+                ],
+              },
+              {
+                title: "5. Global Best Practices",
+                items: [
+                  "Case studies from India, UK, and US.",
+                  "Cross-cultural communication.",
+                  "ESG-linked respect programs.",
+                ],
+              },
+              {
+                title: "6. Interactive Workshops & E-Learning",
+                items: [
+                  "Role-plays and simulations.",
+                  "Quizzes & certifications.",
+                  "Digital learning dashboards for large organizations.",
+                ],
+              },
+            ].map((service, index) => (
+              <div key={index} className="bg-pink-50 p-8 rounded-2xl">
+                <h3 className="font-semibold text-gray-900 mb-4 text-lg">{service.title}</h3>
+                <ul className="space-y-3">
+                  {service.items.map((item, itemIndex) => (
+                    <li key={itemIndex} className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-2 h-2 bg-pink-600 rounded-full mt-2"></div>
+                      <span className="text-gray-700 leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </div>
       </section>
-    </main>
-  );
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">🔹 Key Benefits of URE POSH Training</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              "✔️ 100% Legal Compliance – POSH Act, Equality Act, EEOC.",
+              "✔️ Improved Workplace Culture – safer, more inclusive, more productive.",
+              "✔️ Reduced Litigation Risk – employees trained to prevent and report respectfully.",
+              "✔️ Stronger Employer Brand – trusted by employees, investors, and clients.",
+              "✔️ Certification – training completion certificates for compliance audits.",
+            ].map((benefit, index) => (
+              <div
+                key={index}
+                className="flex items-start space-x-4 p-6 bg-white rounded-2xl shadow-sm border border-pink-100"
+              >
+                <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-gray-700 font-medium leading-relaxed">{benefit}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">❓ 12 Detailed & Technical FAQs</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[
+              {
+                question: "1. Is Workplace Respect Training legally mandatory?",
+                answer:
+                  'India: Yes, POSH Act, 2013 mandates regular awareness. UK: Equality Act, 2010 expects "reasonable steps" including training. US: EEOC recommends it; many states (e.g., CA, NY) mandate annual sessions.',
+              },
+              {
+                question: "2. What is included in respect training?",
+                answer:
+                  "Understanding harassment & discrimination. Respectful communication. Bystander intervention. Complaint handling.",
+              },
+              {
+                question: "3. Who must attend the training?",
+                answer:
+                  "All employees (staff, contractual, interns). Managers & leadership (with advanced modules). IC members (India) must undergo specialized POSH training.",
+              },
+              {
+                question: "4. How often should training be conducted?",
+                answer:
+                  "India: At least once a year. US: Annually in mandated states. UK: Regular refreshers; best practice = annual or biennial.",
+              },
+              {
+                question: "5. Can online training fulfill legal requirements?",
+                answer:
+                  "Yes, provided it is interactive, trackable, and certified. India, UK, and US regulators accept e-learning if documentation is maintained.",
+              },
+              {
+                question: "6. What proof of compliance is needed?",
+                answer: "Training attendance logs. Certificates issued. Annual compliance report updates.",
+              },
+              {
+                question: "7. How is confidentiality handled during training discussions?",
+                answer:
+                  "Trainers ensure safe, non-judgmental environments, with anonymized case studies and no recording of personal disclosures.",
+              },
+              {
+                question: "8. What are consequences of not providing training?",
+                answer:
+                  "India: Penalties under POSH Act (₹50,000 fine, license cancellation). UK: Tribunal penalties, compensation to victims. US: EEOC lawsuits, multimillion-dollar settlements.",
+              },
+              {
+                question: "9. Can global companies adopt a single training framework?",
+                answer: "Yes—with a core global curriculum + jurisdiction-specific modules for India, UK, US laws.",
+              },
+              {
+                question: "10. What role do managers play in respect training?",
+                answer:
+                  "Managers are first responders—trained to recognize, de-escalate, and report harassment without bias or retaliation.",
+              },
+              {
+                question: "11. How is training effectiveness measured?",
+                answer: "Pre/post training assessments. Complaint trend monitoring. Employee feedback surveys.",
+              },
+              {
+                question: "12. Does URE POSH provide certification?",
+                answer:
+                  "Yes, we issue Workplace Respect Training Certificates recognized for legal audits, ESG reports, and investor governance checks.",
+              },
+            ].map((faq, index) => (
+              <div key={index} className="bg-pink-50 p-8 rounded-2xl">
+                <h3 className="font-semibold text-gray-900 mb-4 text-lg">{faq.question}</h3>
+                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-6 text-balance">📢 Call to Action</h2>
+          <p className="text-2xl mb-4 text-pink-100 font-semibold">✨ Respect Builds Safety. Safety Builds Trust.</p>
+          <p className="text-xl mb-12 text-pink-100 text-balance max-w-3xl mx-auto">
+            Partner with URE POSH for Workplace Respect Training that meets Indian laws and global compliance standards.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+            <a
+              href="tel:+919999944807"
+              className="group flex items-center space-x-3 bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Phone className="h-5 w-5" />
+              <span>📞 +91-99999 44807</span>
+            </a>
+            <a
+              href="mailto:ea@ureposh.com"
+              className="group flex items-center space-x-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-200"
+            >
+              <Mail className="h-5 w-5" />
+              <span>📧 ea@ureposh.com</span>
+            </a>
+            <a
+              href="https://www.ureposh.com"
+              className="group flex items-center space-x-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-200"
+            >
+              <Globe className="h-5 w-5" />
+              <span>🌍 www.ureposh.com</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-xl">
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-2xl font-bold">URE POSH</span>
+          </div>
+          <p className="text-gray-400 text-lg">Workplace Respect Training | Harassment Prevention & Compliance</p>
+        </div>
+      </footer>
+    </div>
+  )
 }

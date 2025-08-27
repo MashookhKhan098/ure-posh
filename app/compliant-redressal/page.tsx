@@ -1,431 +1,346 @@
-"use client";
-import React, { useState } from 'react';
-import { ChevronDown, Scale, Shield, Users, FileText, CheckCircle, Mail, ArrowRight, Clock, Target, AlertTriangle, Award, Gavel, BookOpen } from 'lucide-react';
+import { CheckCircle, Phone, Mail, Shield, Building, ArrowRight, Globe, AlertTriangle } from "lucide-react"
 
-// FAQ Item Props Interface
-interface FAQItemProps {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onClick: () => void;
-}
-
-const FAQItem = ({ question, answer, isOpen, onClick }: FAQItemProps) => (
-  <div className="group bg-white rounded-lg shadow-md border border-orange-100 overflow-hidden hover:shadow-lg transition-all duration-300">
-    <button
-      onClick={onClick}
-      className="w-full p-3 text-left flex justify-between items-center hover:bg-orange-50 transition-all duration-300"
-    >
-      <div className="flex-1 pr-3">
-        <h4 className="font-semibold text-gray-800 text-sm md:text-base group-hover:text-orange-600 transition-colors duration-300 leading-snug">
-          {question}
-        </h4>
-      </div>
-      <div className={`w-6 h-6 bg-orange-600 rounded-md flex items-center justify-center transition-all duration-300 flex-shrink-0 shadow-sm ${
-        isOpen ? 'rotate-180 bg-orange-700' : 'hover:bg-orange-700'
-      }`}>
-        <ChevronDown className="w-3 h-3 text-white" />
-      </div>
-    </button>
-    <div className={`transition-all duration-300 ease-in-out ${
-      isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-    } overflow-hidden`}>
-      <div className="px-3 pb-3">
-        <div className="w-full h-px bg-orange-200 mb-2"></div>
-        <div className="bg-orange-50 rounded-lg p-3 border border-orange-100">
-          <p className="text-gray-700 leading-relaxed text-xs md:text-sm">
-            {answer}
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-export default function CompliantRedressalPage() {
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
-  const pageData = {
-    title: "Compliant Redressal: Expert Guidance for Workplace Harassment Resolution",
-    subtitle: "Professional Complaint Resolution Services",
-    description: "Expert guidance through complaint resolution processes ensuring legal compliance, fair procedures, comprehensive documentation, and effective resolution support for all workplace harassment cases.",
-    faqs: [
-      {
-        question: "What is the proper procedure for handling POSH complaints under the Act?",
-        answer: "Under POSH Act 2013, complaints must be filed within 3 months (extendable to 6 months), the Internal Committee must conduct a thorough investigation within 90 days, ensure confidentiality, provide fair hearing to all parties, maintain detailed records, and submit a final report with recommendations for action."
-      },
-      {
-        question: "How should organizations ensure fair and unbiased complaint resolution?",
-        answer: "Organizations should establish clear procedures, ensure IC members are trained, maintain confidentiality, provide equal opportunity for both parties to present their case, avoid conflicts of interest, document all proceedings, and follow due process as outlined in the POSH Act."
-      },
-      {
-        question: "What documentation is required throughout the complaint resolution process?",
-        answer: "Required documentation includes complaint registration, acknowledgment receipts, investigation notes, witness statements, evidence collection records, hearing minutes, interim orders (if any), final investigation report, action taken report, and compliance verification documents."
-      },
-      {
-        question: "What support should be provided to complainants during the process?",
-        answer: "Complainants should receive confidentiality assurance, protection from retaliation, regular updates on case progress, access to counseling services if needed, reasonable accommodations during investigation, and clear communication about their rights and the process timeline."
-      }
-    ]
-  };
-
+export default function POSHCompliancePage() {
   return (
-    <main className="min-h-screen bg-white">
-      <style jsx>{`
-        .text-focus {
-          background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
-          border: 2px solid #fed7aa;
-          box-shadow: 0 8px 32px rgba(249, 115, 22, 0.12);
-          backdrop-filter: blur(10px);
-        }
-
-        .content-highlight {
-          background: linear-gradient(135deg, #ffffff 0%, #fef3c7 50%, #ffffff 100%);
-          border: 1px solid #fde68a;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 4px 20px rgba(249, 115, 22, 0.08);
-        }
-
-        .high-contrast-text {
-          color: #111827;
-          font-weight: 700;
-          line-height: 1.4;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .focus-card {
-          background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
-          border: 2px solid #fdba74;
-          box-shadow: 0 20px 40px rgba(249, 115, 22, 0.15);
-          transition: all 0.3s ease;
-        }
-
-        .focus-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 30px 60px rgba(249, 115, 22, 0.25);
-        }
-      `}</style>
-
+    <div className="min-h-screen bg-white">
+      
       {/* Hero Section */}
-      <section className="relative pt-16 pb-12 bg-gradient-to-br from-white via-orange-50/30 to-white overflow-hidden min-h-[70vh] flex items-center">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-orange-100/40 to-amber-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        
-        <div className="relative max-w-6xl mx-auto px-4 lg:px-8 w-full">
-          <div className="text-center space-y-8">
-            <div className="inline-flex items-center gap-2 text-focus px-4 py-2 rounded-full border border-orange-300 shadow-lg">
-              <div className="w-3 h-3 bg-orange-600 rounded-full animate-pulse"></div>
-              <span className="text-orange-800 font-bold text-sm">Professional Complaint Resolution</span>
+      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-20 overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+              <Shield className="h-4 w-4 mr-2" />
+              POSH Compliance Services | Workplace Harassment Redressal
             </div>
-            
-            <div className="space-y-4">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl high-contrast-text leading-tight tracking-tight">
-                <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 bg-clip-text text-transparent">
-                  {pageData.title}
-                </span>
-              </h1>
-              <div className="w-24 h-2 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 rounded-full shadow-lg mx-auto"></div>
-            </div>
-            
-            <div className="space-y-4 max-w-4xl mx-auto">
-              <div className="content-highlight rounded-xl p-4 border-2 border-orange-200 shadow-xl">
-                <p className="text-lg md:text-xl high-contrast-text leading-relaxed">
-                  <strong className="bg-gradient-to-r from-orange-700 to-amber-700 bg-clip-text text-transparent">
-                    {pageData.subtitle}
-                  </strong>
-                </p>
-              </div>
-              
-              <div className="text-focus rounded-xl p-6 shadow-lg">
-                <p className="text-base md:text-lg text-gray-800 leading-relaxed font-medium">
-                  {pageData.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Services */}
-      <section className="py-16 bg-gradient-to-b from-white via-orange-50/20 to-white">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8">
-          
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            
-            {/* Complaint Resolution Process */}
-            <div className="focus-card p-8 rounded-2xl shadow-xl">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-orange-600 to-amber-600 rounded-xl shadow-lg">
-                  <Scale className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                    Professional Complaint Resolution
-                  </h2>
-                  <div className="w-20 h-2 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full shadow-sm"></div>
-                </div>
-              </div>
-              
-              <div className="text-focus p-6 rounded-xl mb-6">
-                <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                  Comprehensive support throughout the entire complaint resolution process, ensuring legal compliance, 
-                  fairness, and effective outcomes for all parties involved.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    title: "Initial Assessment & Registration",
-                    desc: "Proper complaint intake, preliminary assessment, and formal registration process"
-                  },
-                  {
-                    title: "Investigation Planning",
-                    desc: "Strategic investigation approach with timeline, methodology, and resource allocation"
-                  },
-                  {
-                    title: "Evidence Collection",
-                    desc: "Systematic collection and preservation of evidence, witness statements, and documentation"
-                  },
-                  {
-                    title: "Fair Hearing Process",
-                    desc: "Conducting impartial hearings with due process for all parties involved"
-                  },
-                  {
-                    title: "Resolution & Follow-up",
-                    desc: "Implementing appropriate remedies and ensuring ongoing compliance monitoring"
-                  }
-                ].map((step, index) => (
-                  <div key={index} className="content-highlight p-4 rounded-lg">
-                    <div className="flex items-start gap-3 mb-2">
-                      <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold text-sm">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-900">{step.title}</h4>
-                        <p className="text-gray-700 text-sm leading-relaxed mt-1">{step.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Legal Compliance Support */}
-            <div className="focus-card p-8 rounded-2xl shadow-xl">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-br from-amber-600 to-orange-600 rounded-xl shadow-lg">
-                  <Gavel className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                    Legal Compliance & Documentation
-                  </h2>
-                  <div className="w-20 h-2 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full shadow-sm"></div>
-                </div>
-              </div>
-              
-              <div className="text-focus p-6 rounded-xl mb-6">
-                <p className="text-lg leading-relaxed text-gray-800 font-medium">
-                  Ensure full legal compliance with POSH Act 2013 requirements while maintaining comprehensive 
-                  documentation throughout the resolution process.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    icon: <FileText className="w-5 h-5 text-blue-600" />,
-                    title: "Legal Framework Compliance",
-                    desc: "Adherence to all POSH Act 2013 requirements and recent amendments"
-                  },
-                  {
-                    icon: <BookOpen className="w-5 h-5 text-green-600" />,
-                    title: "Documentation Standards",
-                    desc: "Comprehensive record-keeping meeting legal and audit requirements"
-                  },
-                  {
-                    icon: <Clock className="w-5 h-5 text-purple-600" />,
-                    title: "Timeline Management",
-                    desc: "Strict adherence to statutory timelines and procedural deadlines"
-                  },
-                  {
-                    icon: <Shield className="w-5 h-5 text-orange-600" />,
-                    title: "Confidentiality Protocols",
-                    desc: "Robust confidentiality measures protecting all parties' privacy"
-                  }
-                ].map((feature, index) => (
-                  <div key={index} className="content-highlight p-4 rounded-lg">
-                    <div className="flex items-start gap-3 mb-2">
-                      {feature.icon}
-                      <h4 className="font-bold text-gray-900">{feature.title}</h4>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed ml-8">{feature.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Service Features */}
-          <div className="focus-card p-8 rounded-2xl shadow-xl mb-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold high-contrast-text mb-4">
-                Comprehensive Resolution Support
-              </h2>
-              <div className="w-20 h-2 bg-gradient-to-r from-orange-600 to-amber-600 mx-auto rounded-full shadow-lg mb-6"></div>
-              <p className="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-                Professional support services ensuring effective, compliant, and fair resolution of workplace harassment complaints.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Expert Investigation Team",
-                  desc: "Experienced professionals trained in harassment investigation procedures",
-                  highlight: "Certified Experts"
-                },
-                {
-                  title: "Legal Compliance Assurance",
-                  desc: "Complete adherence to POSH Act requirements and procedural guidelines",
-                  highlight: "100% Compliant"
-                },
-                {
-                  title: "Confidentiality Protection",
-                  desc: "Robust measures to protect privacy and prevent information leakage",
-                  highlight: "Secure Process"
-                },
-                {
-                  title: "Fair Hearing Management",
-                  desc: "Impartial proceedings ensuring due process for all parties",
-                  highlight: "Due Process"
-                },
-                {
-                  title: "Documentation Excellence",
-                  desc: "Comprehensive record-keeping meeting all legal requirements",
-                  highlight: "Audit Ready"
-                },
-                {
-                  title: "Resolution Implementation",
-                  desc: "Support for implementing recommendations and monitoring compliance",
-                  highlight: "Follow Through"
-                }
-              ].map((service, index) => (
-                <div key={index} className="content-highlight p-6 rounded-lg group hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="p-2 bg-gradient-to-br from-orange-500 to-amber-600 rounded-lg group-hover:scale-110 transition-transform duration-300">
-                      <Target className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-900 mb-1">{service.title}</h3>
-                      <div className="inline-block px-2 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-2">
-                        {service.highlight}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">{service.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Benefits */}
-          <div className="focus-card p-8 rounded-2xl shadow-xl">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="p-3 bg-gradient-to-br from-green-600 to-orange-600 rounded-xl shadow-lg">
-                <Award className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold high-contrast-text mb-3">
-                  Why Choose Professional Complaint Resolution?
-                </h2>
-                <div className="w-20 h-2 bg-gradient-to-r from-green-500 to-orange-600 rounded-full shadow-sm"></div>
-              </div>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                {
-                  icon: <CheckCircle className="w-6 h-6 text-green-600" />,
-                  title: "Legal Protection",
-                  desc: "Comprehensive protection against legal challenges and non-compliance issues"
-                },
-                {
-                  icon: <Users className="w-6 h-6 text-blue-600" />,
-                  title: "Employee Trust",
-                  desc: "Build confidence in organizational commitment to fair and effective resolution"
-                },
-                {
-                  icon: <Clock className="w-6 h-6 text-purple-600" />,
-                  title: "Efficient Process",
-                  desc: "Streamlined procedures ensuring timely resolution within statutory timeframes"
-                },
-                {
-                  icon: <Shield className="w-6 h-6 text-orange-600" />,
-                  title: "Risk Mitigation",
-                  desc: "Proactive approach to minimize legal, reputational, and operational risks"
-                }
-              ].map((benefit, index) => (
-                <div key={index} className="content-highlight p-4 rounded-lg flex items-start gap-4">
-                  <div className="p-2 bg-gray-50 rounded-lg">
-                    {benefit.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-2">{benefit.title}</h4>
-                    <p className="text-gray-700 text-sm leading-relaxed">{benefit.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact CTA */}
-      <section className="py-16 bg-gradient-to-b from-orange-50/30 to-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="focus-card p-8 rounded-2xl shadow-xl">
-            <h3 className="text-2xl md:text-3xl font-bold high-contrast-text mb-4">
-              Need <span className="text-orange-600">Professional Complaint Resolution</span>?
-            </h3>
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Get expert guidance for effective, compliant, and fair workplace harassment complaint resolution
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+              POSH-Compliant <span className="text-pink-600">Redressal</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 text-balance leading-relaxed">
+              India, UK & US Workplace Compliance Guide - Build safer, legally compliant workplaces with URE POSH
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="mailto:ureposh@gmail.com" className="inline-flex items-center gap-3 bg-orange-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-orange-700 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
-                <Mail className="w-5 h-5" />
-                <span>Get Resolution Support</span>
-                <ArrowRight className="w-5 h-5" />
+              <a
+                href="tel:+911199999444807"
+                className="group bg-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+              >
+                Get Free Consultation
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a
+                href="#services"
+                className="border-2 border-pink-200 text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 flex items-center justify-center"
+              >
+                Learn More
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold high-contrast-text mb-4">
-              Frequently Asked Questions
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-6">
+              <Building className="h-8 w-8 text-pink-600" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🏢 What Does POSH-Compliant Redressal Mean?
             </h2>
-            <div className="w-20 h-2 bg-gradient-to-r from-orange-600 to-amber-600 mx-auto rounded-full shadow-lg"></div>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
+          <div className="max-w-4xl mx-auto">
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+              POSH-compliant redressal means having a legally aligned, transparent, and fair system for preventing and
+              addressing workplace sexual harassment.
+            </p>
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+              It is not just a legal mandate—it signals that your company values:
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                "✔️ Employee safety",
+                "✔️ Workplace dignity",
+                "✔️ Equality of opportunity",
+                "✔️ Global compliance readiness",
+              ].map((value, index) => (
+                <div key={index} className="bg-pink-50 p-6 rounded-2xl text-center">
+                  <span className="text-gray-700 font-medium">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-1 gap-6">
-            {pageData.faqs.map((faq, index) => (
-              <FAQItem
-                key={index}
-                question={faq.question}
-                answer={faq.answer}
-                isOpen={openFAQ === index}
-                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-              />
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🇮🇳 India: POSH-Compliant Redressal Process
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="max-w-4xl mx-auto mb-12">
+            <p className="text-lg text-gray-700 leading-relaxed text-center">
+              The Prevention of Sexual Harassment (POSH) Act, 2013 makes it mandatory for organizations with 10+
+              employees to establish a compliance framework.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: "Policy", desc: "Draft & circulate a written POSH policy." },
+              {
+                title: "Internal Committee (IC)",
+                desc: "Formed with a Presiding Officer, employees, and one external NGO/legal expert.",
+              },
+              { title: "Training", desc: "Regular awareness for employees & IC members." },
+              { title: "Reporting", desc: "Confidential complaint reporting channels." },
+              { title: "Investigation", desc: "Impartial inquiries completed within 90 days." },
+              { title: "Recordkeeping", desc: "Registers, reports, and annual filings under Section 21." },
+            ].map((step, index) => (
+              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-700 leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 bg-red-50 border border-red-200 p-6 rounded-2xl">
+            <div className="flex items-center mb-4">
+              <AlertTriangle className="h-6 w-6 text-red-600 mr-3" />
+              <h3 className="font-semibold text-red-900">Penalty for Non-Compliance:</h3>
+            </div>
+            <p className="text-red-800">Up to ₹50,000, license cancellation, and reputational risk.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🇬🇧 UK: Workplace Harassment & Equality Compliance
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="max-w-4xl mx-auto mb-12">
+            <p className="text-lg text-gray-700 leading-relaxed text-center">
+              The Equality Act 2010 requires employers to provide a workplace free from harassment and discrimination.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              "Clear Anti-Harassment Policy with grievance procedure.",
+              "Equality & Diversity Training for employees & managers.",
+              "Grievance Redressal Mechanisms – internal panels or external advisors.",
+              "External Advisors – NGOs, HR, or legal experts in complex cases.",
+              "Documentation & Transparency – investigation reports and actions taken.",
+            ].map((practice, index) => (
+              <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+                <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-gray-700 font-medium leading-relaxed">{practice}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 bg-blue-50 border border-blue-200 p-6 rounded-2xl">
+            <p className="text-blue-800 font-medium">
+              UK Regulators Expect: Swift, fair, and documented responses to complaints.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🇺🇸 US: Workplace Harassment Redressal & Compliance
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="max-w-4xl mx-auto mb-12">
+            <p className="text-lg text-gray-700 leading-relaxed text-center">
+              In the US, sexual harassment is prohibited under Title VII of the Civil Rights Act of 1964, enforced by
+              the Equal Employment Opportunity Commission (EEOC).
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              "Anti-Harassment Policy – acknowledged by all staff.",
+              "Complaint Process – confidential reporting and escalation.",
+              "Prompt Investigation – impartial, time-bound inquiries.",
+              "Mandatory Training – in many states (e.g., California, New York).",
+              "External Investigators – for objectivity in sensitive cases.",
+              "Documentation – maintain records for litigation defense & audits.",
+            ].map((element, index) => (
+              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+                <p className="text-gray-700 font-medium leading-relaxed">{element}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
-    </main>
-  );
+
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+              🌍 Why Choose URE POSH for POSH & Harassment Compliance?
+            </h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              "✔️ End-to-End POSH Compliance (India) – Policy drafting, IC setup, training, reporting.",
+              "✔️ Global Alignment (UK & US) – Policies tailored to Equality Act 2010 & EEOC standards.",
+              "✔️ Training & Awareness Programs – for employees, managers, and IC.",
+              "✔️ Neutral Investigations – with external NGO/legal experts.",
+              "✔️ Audit-Ready Recordkeeping – compliant with ESG & investor due diligence.",
+            ].map((service, index) => (
+              <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+                <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-gray-700 font-medium leading-relaxed">{service}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <p className="text-xl font-semibold text-pink-600">
+              URE POSH = Your Global Partner for Safe, Compliant Workplaces.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">❓ 12 Detailed & Technical FAQs</h2>
+            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[
+              {
+                question: "1. What is POSH-compliant redressal?",
+                answer:
+                  "It is a structured grievance-handling process aligned with POSH Act 2013 in India, Equality Act 2010 in the UK, and Title VII in the US. It ensures complaints are addressed in a fair, timely, confidential, and documented manner.",
+              },
+              {
+                question: "2. How do you set up a POSH Internal Committee (IC) in India?",
+                answer:
+                  "Presiding Officer: Senior woman employee. At least two employees with credibility or legal knowledge. One external member (NGO/social worker/legal expert). At least 50% women representation. Formal notification and training are mandatory.",
+              },
+              {
+                question: "3. What timelines must be followed under POSH Act, 2013?",
+                answer:
+                  "Complaint filing: within 3 months of incident (extendable). IC inquiry: completed within 90 days. Report submission: within 10 days of inquiry. Employer action: within 60 days of report.",
+              },
+              {
+                question: "4. How are UK companies legally bound to address harassment?",
+                answer:
+                  'Under the Equality Act 2010, failure to prevent harassment can lead to claims in Employment Tribunals. Employers must show they took "reasonable steps" like training, policies, and swift investigations.',
+              },
+              {
+                question: "5. What are EEOC's expectations in the US?",
+                answer:
+                  "Employers must: Adopt zero-tolerance policies. Conduct prompt, impartial investigations. Provide remedies & corrective action. Prevent retaliation against complainants.",
+              },
+              {
+                question: "6. What is the role of external members in IC/HR panels?",
+                answer:
+                  "They bring neutrality, expertise, and credibility, preventing internal bias. In India, external members are legally mandatory. In the UK/US, external advisors are a best practice for complex or high-stakes cases.",
+              },
+              {
+                question: "7. How is confidentiality maintained across jurisdictions?",
+                answer:
+                  "India – Section 16 of POSH Act prohibits disclosure. UK – Confidentiality agreements & GDPR compliance. US – Non-retaliation policies + attorney-client privilege in legal reviews.",
+              },
+              {
+                question: "8. What records must be maintained for compliance?",
+                answer:
+                  "Complaint registers. IC meeting minutes. Training attendance logs. Annual reports filed with local authorities (India). Documentation for tribunal/EEOC defense (UK/US).",
+              },
+              {
+                question: "9. How do global companies align POSH compliance across India, UK, and US offices?",
+                answer:
+                  "By adopting a global anti-harassment policy framework with localized addendums for each jurisdiction's legal requirements, supported by cross-border compliance audits.",
+              },
+              {
+                question: "10. Can online training fulfill POSH/EEOC requirements?",
+                answer:
+                  "Yes, but it must be interactive, certified, and documented. Many regulators require annual refreshers and state-specific training (US: California, New York).",
+              },
+              {
+                question: "11. What corrective actions can employers take after inquiry?",
+                answer:
+                  "Warning or reprimand. Salary deduction or promotion freeze. Transfer or termination. Counseling and workplace environment changes.",
+              },
+              {
+                question: "12. How does POSH compliance align with ESG reporting?",
+                answer:
+                  "Investors and regulators increasingly demand Social Governance metrics. POSH compliance demonstrates: Commitment to human rights & equality. Mitigation of reputational and litigation risks. Strengthened ESG scores for global investment readiness.",
+              },
+            ].map((faq, index) => (
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-4 text-lg">{faq.question}</h3>
+                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-6 text-balance">📢 Call to Action</h2>
+          <p className="text-2xl mb-4 text-pink-100 font-semibold">
+            ✨ Protect your workplace. Safeguard your brand. Stay compliant.
+          </p>
+          <p className="text-xl mb-12 text-pink-100 text-balance max-w-3xl mx-auto">
+            Partner with URE POSH – India's Leading POSH & Global Workplace Compliance Firm.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+            <a
+              href="tel:+911199999444807"
+              className="group flex items-center space-x-3 bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Phone className="h-5 w-5" />
+              <span>📞 +91-11-99999 44807</span>
+            </a>
+            <a
+              href="mailto:ea@ureposh.com"
+              className="group flex items-center space-x-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-200"
+            >
+              <Mail className="h-5 w-5" />
+              <span>📧 ea@ureposh.com</span>
+            </a>
+            <a
+              href="https://www.ureposh.com"
+              className="group flex items-center space-x-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-200"
+            >
+              <Globe className="h-5 w-5" />
+              <span>🌍 www.ureposh.com</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-xl">
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-2xl font-bold">URE POSH</span>
+          </div>
+          <p className="text-gray-400 text-lg">
+            POSH-Compliant Redressal: India, UK, and US Workplace Compliance Guide
+          </p>
+        </div>
+      </footer>
+    </div>
+  )
 }
