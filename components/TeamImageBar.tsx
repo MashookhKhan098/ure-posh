@@ -24,115 +24,111 @@ interface TeamMember {
 const mockMembers: TeamMember[] = [
   {
     id: 1,
-    name: "Shringarika",
-    title: "Lead Designer",
-    specialization: "UI/UX Design",
-    description: "Crafting intuitive experiences that users love",
-    longDescription: "With over 8 years of experience in design, Sarah specializes in creating user-centered digital experiences that seamlessly blend aesthetics with functionality. She leads our design team with a passion for innovation and attention to detail.",
-    icon: Compass,
+    name: "Adv Shrigarika",
+    title: "Legal Advisor",
+    specialization: "Legal Compliance & POSH",
+    description: "Expert in workplace harassment prevention and legal compliance",
+    longDescription: "Adv Shrigarika brings extensive experience in legal compliance and workplace harassment prevention. She specializes in POSH (Prevention of Sexual Harassment) policies and ensures organizations maintain a safe and compliant work environment.",
+    icon: Scale,
     color: "from-purple-500 via-pink-500 to-rose-500",
     accentColor: "bg-purple-500",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b566?w=400&h=600&fit=crop&crop=face",
-    achievements: ["Design Awards 2024", "User Experience Expert", "Design Thinking Leader"],
-    skills: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
-    experience: "8+ Years",
-    location: "San Francisco, CA",
-    email: "sarah.chen@company.com",
-    linkedin: "linkedin.com/in/sarahchen",
-    github: "github.com/sarahchen"
+    image: "/images/URE%20POSH_/Adv%20Shrigarika.jpg",
+    achievements: ["Legal Expert", "POSH Specialist", "Compliance Leader"],
+    skills: ["Legal Compliance", "POSH Policies", "Workplace Safety", "Legal Advisory"],
+    experience: "12+ Years",
+    location: "India",
+    email: "shrigarika@ureposh.com",
+    linkedin: "linkedin.com/in/shrigarika"
   },
   {
     id: 2,
-    name: "Marcus Rodriguez",
-    title: "Senior Developer",
-    specialization: "Full Stack Development",
-    description: "Building scalable solutions with cutting-edge tech",
-    longDescription: "Marcus is a versatile full-stack developer with expertise in modern web technologies. He architected our core platform and mentors junior developers while staying at the forefront of emerging technologies.",
-    icon: Zap,
+    name: "CA Shweta",
+    title: "Chartered Accountant",
+    specialization: "Financial Compliance & Audit",
+    description: "Ensuring financial transparency and regulatory compliance",
+    longDescription: "CA Shweta is a qualified Chartered Accountant with expertise in financial compliance, audit, and regulatory requirements. She ensures organizations maintain proper financial governance and compliance with statutory requirements.",
+    icon: Briefcase,
     color: "from-blue-500 via-cyan-500 to-teal-500",
     accentColor: "bg-blue-500",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face",
-    achievements: ["Tech Lead", "Open Source Contributor", "Cloud Architecture Expert"],
-    skills: ["React", "Node.js", "Python", "Cloud Architecture"],
+    image: "/images/URE%20POSH_/Ca%20Shweta%20.jpg",
+    achievements: ["CA Qualified", "Audit Expert", "Financial Compliance Specialist"],
+    skills: ["Financial Audit", "Compliance", "Tax Planning", "Financial Advisory"],
     experience: "10+ Years",
-    location: "Austin, TX",
-    email: "marcus.rodriguez@company.com",
-    linkedin: "linkedin.com/in/marcusrodriguez",
-    github: "github.com/marcusrodriguez"
+    location: "India",
+    email: "shweta@ureposh.com",
+    linkedin: "linkedin.com/in/cashweta"
   },
   {
     id: 3,
-    name: "Emily Johnson",
-    title: "Product Manager",
-    specialization: "Strategy & Innovation",
-    description: "Driving product vision and strategic growth",
-    longDescription: "Emily combines analytical thinking with creative problem-solving to drive product strategy. She has successfully launched 15+ products and has a proven track record of turning complex requirements into user-friendly solutions.",
-    icon: Target,
+    name: "CS Aanchal",
+    title: "Company Secretary",
+    specialization: "Corporate Governance & Compliance",
+    description: "Expert in corporate governance and statutory compliance",
+    longDescription: "CS Aanchal is a qualified Company Secretary specializing in corporate governance, board management, and statutory compliance. She ensures organizations meet their regulatory obligations and maintain high standards of corporate governance.",
+    icon: Users,
     color: "from-emerald-500 via-green-500 to-teal-500",
     accentColor: "bg-emerald-500",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=face",
-    achievements: ["Product Innovation Award", "Strategy Expert", "Agile Certified"],
-    skills: ["Product Strategy", "Data Analysis", "Roadmapping", "Stakeholder Management"],
-    experience: "7+ Years",
-    location: "New York, NY",
-    email: "emily.johnson@company.com",
-    linkedin: "linkedin.com/in/emilyjohnson"
+    image: "/images/URE%20POSH_/CS%20Aanchal%20_1.jpeg",
+    achievements: ["CS Qualified", "Governance Expert", "Compliance Specialist"],
+    skills: ["Corporate Governance", "Board Management", "Regulatory Compliance", "Legal Documentation"],
+    experience: "8+ Years",
+    location: "India",
+    email: "aanchal@ureposh.com",
+    linkedin: "linkedin.com/in/csaanchal"
   },
   {
     id: 4,
-    name: "David Park",
-    title: "Creative Director",
-    specialization: "Brand & Visual Identity",
-    description: "Creating memorable brands that stand out",
-    longDescription: "David brings brands to life through compelling visual narratives. His creative vision has helped shape the identity of Fortune 500 companies and innovative startups alike, always pushing creative boundaries.",
-    icon: Lightbulb,
+    name: "CS Sarvargya",
+    title: "Company Secretary",
+    specialization: "Legal & Regulatory Affairs",
+    description: "Specialized in legal documentation and regulatory compliance",
+    longDescription: "CS Sarvargya brings expertise in legal affairs, regulatory compliance, and corporate secretarial practice. He assists organizations in navigating complex regulatory requirements and maintaining proper legal documentation.",
+    icon: Target,
     color: "from-orange-500 via-red-500 to-pink-500",
     accentColor: "bg-orange-500",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop&crop=face",
-    achievements: ["Creative Excellence", "Brand Specialist", "International Design Award"],
-    skills: ["Brand Strategy", "Visual Design", "Motion Graphics", "Creative Direction"],
-    experience: "12+ Years",
-    location: "Los Angeles, CA",
-    email: "david.park@company.com",
-    linkedin: "linkedin.com/in/davidpark",
-    github: "github.com/davidpark"
+    image: "/images/URE%20POSH_/CS%20Sarvargya%20_2.jpg",
+    achievements: ["CS Professional", "Legal Expert", "Regulatory Specialist"],
+    skills: ["Legal Documentation", "Regulatory Affairs", "Corporate Law", "Compliance Management"],
+    experience: "7+ Years",
+    location: "India",
+    email: "sarvargya@ureposh.com",
+    linkedin: "linkedin.com/in/cssarvargya"
   },
   {
     id: 5,
-    name: "Lisa Thompson",
-    title: "Business Analyst",
-    specialization: "Data & Analytics",
-    description: "Turning data into actionable insights",
-    longDescription: "Lisa transforms complex data into strategic insights that drive business decisions. Her analytical expertise helps teams make data-driven choices that accelerate growth and optimize performance.",
-    icon: Scale,
+    name: "Pankaj",
+    title: "Business Consultant",
+    specialization: "Strategic Planning & Operations",
+    description: "Driving business growth through strategic planning and operations",
+    longDescription: "Pankaj is an experienced business consultant who specializes in strategic planning, operational efficiency, and business development. He helps organizations optimize their processes and achieve sustainable growth.",
+    icon: Lightbulb,
     color: "from-indigo-500 via-purple-500 to-violet-500",
     accentColor: "bg-indigo-500",
-    image: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=600&fit=crop&crop=face",
-    achievements: ["Data Science Certified", "Analytics Expert", "Business Intelligence Leader"],
-    skills: ["SQL", "Python", "Tableau", "Statistical Analysis"],
-    experience: "9+ Years",
-    location: "Chicago, IL",
-    email: "lisa.thompson@company.com",
-    linkedin: "linkedin.com/in/lisathompson"
+    image: "/images/URE%20POSH_/Pankaj%202.jpeg",
+    achievements: ["Business Strategy Expert", "Operations Specialist", "Growth Consultant"],
+    skills: ["Strategic Planning", "Business Development", "Operations Management", "Process Optimization"],
+    experience: "11+ Years",
+    location: "India",
+    email: "pankaj@ureposh.com",
+    linkedin: "linkedin.com/in/pankaj"
   },
   {
     id: 6,
-    name: "Alex Kim",
-    title: "Tech Lead",
-    specialization: "Architecture & Systems",
-    description: "Building robust, scalable architectures",
-    longDescription: "Alex designs and implements large-scale system architectures that handle millions of users. His expertise in distributed systems and performance optimization ensures our platform scales seamlessly.",
-    icon: Briefcase,
+    name: "Pradeep",
+    title: "Operations Manager",
+    specialization: "Operations & Process Management",
+    description: "Optimizing operations for maximum efficiency and compliance",
+    longDescription: "Pradeep is an operations expert focused on process management, operational efficiency, and quality assurance. He ensures smooth operations while maintaining compliance with all regulatory requirements.",
+    icon: Compass,
     color: "from-slate-600 via-gray-700 to-zinc-800",
     accentColor: "bg-slate-600",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=face",
-    achievements: ["System Architecture", "Performance Optimization", "Cloud Native Expert"],
-    skills: ["Kubernetes", "Microservices", "DevOps", "System Design"],
-    experience: "11+ Years",
-    location: "Seattle, WA",
-    email: "alex.kim@company.com",
-    linkedin: "linkedin.com/in/alexkim",
-    github: "github.com/alexkim"
+    image: "/images/URE%20POSH_/Pradeep.jpeg",
+    achievements: ["Operations Excellence", "Process Management", "Quality Assurance"],
+    skills: ["Operations Management", "Process Improvement", "Quality Control", "Team Leadership"],
+    experience: "9+ Years",
+    location: "India",
+    email: "pradeep@ureposh.com",
+    linkedin: "linkedin.com/in/pradeep"
   }
 ];
 
@@ -223,13 +219,13 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
       )}
 
       {/* Enhanced Responsive Team Slider with Balanced Hover */}
-      <div className="relative z-10 w-full py-8 lg:py-12 px-4 sm:px-8">
+      <div className="relative z-10 w-full pt-12 pb-0 lg:pt-16 lg:pb-0 px-4 sm:px-8">
         <div className="flex justify-center">
           <div className="relative w-full max-w-7xl">
             {/* Outer Glow Container */}
             <div className="absolute -inset-1 lg:-inset-2 bg-gradient-to-r from-cyan-500/15 via-blue-500/15 via-purple-500/15 to-pink-500/15 rounded-2xl lg:rounded-3xl blur-xl opacity-60" />
             
-            <div className="relative flex rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl bg-black/20 backdrop-blur-2xl border border-white/10 min-h-[400px] lg:min-h-[500px]">
+            <div className="relative flex rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl bg-black/20 backdrop-blur-2xl border border-white/10 min-h-[450px] lg:min-h-[550px]">
               {members.map((member, index) => (
                 <div
                   key={member.id}
@@ -247,7 +243,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                   {/* Background Image with Enhanced Overlay */}
                   {member.image ? (
                     <div 
-                      className="h-[400px] lg:h-[500px] w-full bg-cover bg-center bg-no-repeat relative"
+                      className="h-[450px] lg:h-[550px] w-full bg-cover bg-center bg-no-repeat relative"
                       style={{ backgroundImage: `url(${member.image})` }}
                     >
                       <div className={`absolute inset-0 bg-gradient-to-t ${member.color} opacity-50 transition-all duration-700`} />
@@ -258,7 +254,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       <div className={`absolute right-0 top-0 w-1 h-full ${member.accentColor} transform transition-all duration-500 ${hoveredId === member.id ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'} origin-top`} style={{ transitionDelay: '100ms' }} />
                     </div>
                   ) : (
-                    <div className={`h-[400px] lg:h-[500px] w-full bg-gradient-to-br ${member.color} flex items-center justify-center relative`}>
+                    <div className={`h-[450px] lg:h-[550px] w-full bg-gradient-to-br ${member.color} flex items-center justify-center relative`}>
                       <member.icon className="h-16 w-16 lg:h-24 lg:w-24 text-white opacity-80" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                     </div>
