@@ -59,14 +59,14 @@ export default function WorkPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50 mb-6">
+            <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50 mb-3">
               <Briefcase className="w-5 h-5 mr-2" />
               Our Work
             </Badge>
-            <h1 className="text-4xl lg:text-5xl font-bold text-black mb-6">
+            <h1 className="text-2xl lg:text-xl font-bold text-black mb-3">
               Transforming <span className="text-black">Workplaces</span> Across India
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-600 mb-4">
               Discover how we've helped organizations create safer, more inclusive environments 
               through our comprehensive POSH solutions and expert guidance.
             </p>
@@ -75,20 +75,20 @@ export default function WorkPage() {
       </section>
 
       {/* Case Studies Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
+            className="text-center space-y-6 mb-4"
           >
             <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Award className="w-5 h-5 mr-2" />
               Success Stories
             </Badge>
-            <h2 className="text-4xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-slate-900">
               Real <span className="text-slate-900">Impact</span> Stories
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
@@ -107,10 +107,10 @@ export default function WorkPage() {
             {caseStudies.map((study, index) => (
               <motion.div key={index} variants={fadeInUp}>
                 <Card className="bg-white/95 backdrop-blur-sm border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <CardContent className="p-8">
-                    <div className="grid lg:grid-cols-2 gap-8 items-center">
+                  <CardContent className="p-4">
+                    <div className="grid lg:grid-cols-2 gap-4 items-center">
                       <div>
-                        <div className="flex items-center space-x-4 mb-6">
+                        <div className="flex items-center space-x-4 mb-3">
                           <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl flex items-center justify-center shadow-lg">
                             <Briefcase className="h-8 w-8 text-white" />
                           </div>
@@ -145,7 +145,7 @@ export default function WorkPage() {
                         </div>
                       </div>
                       
-                      <div className="bg-gradient-to-br from-gray-100 to-slate-100 rounded-2xl p-8">
+                      <div className="bg-gradient-to-br from-gray-100 to-slate-100 rounded-2xl p-4">
                         <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-slate-200 rounded-xl flex items-center justify-center mb-4">
                           <Briefcase className="h-16 w-16 text-gray-400" />
                         </div>
@@ -168,20 +168,20 @@ export default function WorkPage() {
       </section>
 
       {/* Impact Stats */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
+            className="text-center space-y-6 mb-4"
           >
             <Badge className="bg-gradient-to-r from-gray-100 to-slate-100 text-black px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Target className="w-5 h-5 mr-2" />
               Our Impact
             </Badge>
-            <h2 className="text-4xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-slate-900">
               Measurable <span className="text-slate-900">Results</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
@@ -195,7 +195,7 @@ export default function WorkPage() {
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-4"
           >
             {[
               { number: "500+", label: "Organizations Transformed", icon: Briefcase },
@@ -209,7 +209,7 @@ export default function WorkPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                       <stat.icon className="h-8 w-8 text-white" />
                     </div>
-                    <CardTitle className="text-3xl font-bold text-slate-900">{stat.number}</CardTitle>
+                    <CardTitle className="text-xl font-bold text-slate-900">{stat.number}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <CardDescription className="text-slate-600 font-medium">{stat.label}</CardDescription>

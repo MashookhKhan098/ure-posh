@@ -843,12 +843,12 @@ export default function TeamPage() {
       <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-fuchsia-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-2xl md:text-xl lg:text-6xl font-bold text-white mb-3 leading-tight">
               Meet Our Expert Team
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 mb-4 leading-relaxed">
               Certified professionals specializing in POSH compliance and workplace safety, dedicated to transforming
               workplaces and empowering lives
             </p>
@@ -872,22 +872,22 @@ export default function TeamPage() {
 
       {/* Stats Section */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-pink-600 mb-2">500+</div>
+              <div className="text-xl md:text-2xl font-bold text-pink-600 mb-2">500+</div>
               <div className="text-black font-medium">Projects Completed</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-rose-600 mb-2">98%</div>
+              <div className="text-xl md:text-2xl font-bold text-rose-600 mb-2">98%</div>
               <div className="text-black font-medium">Success Rate</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-fuchsia-600 mb-2">50+</div>
+              <div className="text-xl md:text-2xl font-bold text-fuchsia-600 mb-2">50+</div>
               <div className="text-black font-medium">Expert Team</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">24/7</div>
+              <div className="text-xl md:text-2xl font-bold text-purple-600 mb-2">24/7</div>
               <div className="text-black font-medium">Support Available</div>
             </div>
           </div>
@@ -897,7 +897,7 @@ export default function TeamPage() {
       {/* Filters and Search Section */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-pink-200 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black h-5 w-5" />
@@ -943,8 +943,8 @@ export default function TeamPage() {
       </div>
 
       {/* Team Grid - Fixed Card Design */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sortedMembers.map((member) => {
             const IconComponent = member.icon
             const isFlipped = flippedCards.has(member.id)
@@ -1180,8 +1180,8 @@ export default function TeamPage() {
 
         {/* No Results */}
         {sortedMembers.length === 0 && (
-          <div className="text-center py-16">
-            <div className="bg-gray-100 rounded-full p-6 w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+          <div className="text-center py-8">
+            <div className="bg-gray-100 rounded-full p-4 w-24 h-24 mx-auto mb-3 flex items-center justify-center">
               <Users className="h-12 w-12 text-gray-400" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">No experts found</h3>
@@ -1206,7 +1206,7 @@ export default function TeamPage() {
             {/* Close Button */}
             <button
               onClick={closeMemberProfile}
-              className="absolute top-6 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200"
+              className="absolute top-4 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200"
             >
               <X className="h-6 w-6 text-gray-600" />
             </button>
@@ -1219,13 +1219,13 @@ export default function TeamPage() {
 
               {/* Profile Header */}
               <div className="absolute bottom-6 left-6 right-6 text-white">
-                <div className="flex items-end gap-6">
+                <div className="flex items-end gap-4">
                   <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-5 border border-white/30 shadow-xl">
                     <selectedMember.icon className="h-20 w-20 text-white" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-4 mb-3">
-                      <h1 className="text-4xl font-bold">{selectedMember.name}</h1>
+                      <h1 className="text-2xl font-bold">{selectedMember.name}</h1>
                       {selectedMember.verified && (
                         <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
                           <CheckCircle className="h-6 w-6 text-white" />
@@ -1239,7 +1239,7 @@ export default function TeamPage() {
                     </div>
                     <p className="text-2xl text-white/95 mb-2 font-semibold">{selectedMember.title}</p>
                     <p className="text-white/85 text-lg">{selectedMember.specialization}</p>
-                    <div className="flex items-center gap-8 mt-4">
+                    <div className="flex items-center gap-4 mt-4">
                       <div className="flex items-center gap-2">
                         <Star className="h-5 w-5 text-yellow-300 fill-current" />
                         <span className="font-bold text-lg">{selectedMember.rating}</span>
@@ -1260,34 +1260,34 @@ export default function TeamPage() {
             </div>
 
             {/* Modal Content */}
-            <div className="p-8 overflow-y-auto max-h-[calc(95vh-220px)]">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="p-4 overflow-y-auto max-h-[calc(95vh-220px)]">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Main Content */}
                 <div className="lg:col-span-2 space-y-8">
                   {/* About Section */}
-                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-3xl p-8 border border-pink-200">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-3xl p-4 border border-pink-200">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-pink-500 rounded-2xl p-3">
                         <BookOpen className="h-6 w-6 text-white" />
                       </div>
-                      <h2 className="text-3xl font-bold text-gray-900">About</h2>
+                      <h2 className="text-xl font-bold text-gray-900">About</h2>
                     </div>
                     <p className="text-gray-700 leading-relaxed text-lg">{selectedMember.detailedDescription}</p>
                   </div>
 
                   {/* Skills & Expertise */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-8">
+                  <div className="bg-white rounded-3xl p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 mb-4">
                       <div className="bg-purple-500 rounded-2xl p-3">
                         <Target className="h-6 w-6 text-white" />
                       </div>
-                      <h2 className="text-3xl font-bold text-gray-900">Skills & Expertise</h2>
+                      <h2 className="text-xl font-bold text-gray-900">Skills & Expertise</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {selectedMember.skills.map((skill: any, index: number) => (
                         <div
                           key={index}
-                          className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200"
+                          className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border border-gray-200"
                         >
                           <div className="flex justify-between items-center mb-4">
                             <span className="font-bold text-gray-900 text-xl">{skill.name}</span>
@@ -1305,10 +1305,10 @@ export default function TeamPage() {
                   </div>
 
                   {/* Education & Certifications */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Education */}
-                    <div className="bg-blue-50 rounded-3xl p-8 border border-blue-200">
-                      <div className="flex items-center gap-4 mb-6">
+                    <div className="bg-blue-50 rounded-3xl p-4 border border-blue-200">
+                      <div className="flex items-center gap-4 mb-3">
                         <div className="bg-blue-500 rounded-2xl p-3">
                           <GraduationCap className="h-6 w-6 text-white" />
                         </div>
@@ -1316,7 +1316,7 @@ export default function TeamPage() {
                       </div>
                       <div className="space-y-4">
                         {selectedMember.education.map((edu: any, index: number) => (
-                          <div key={index} className="bg-white rounded-2xl p-6 border border-blue-100 shadow-sm">
+                          <div key={index} className="bg-white rounded-2xl p-4 border border-blue-100 shadow-sm">
                             <h4 className="font-bold text-gray-900 text-lg">{edu.degree}</h4>
                             <p className="text-blue-600 font-semibold text-lg">{edu.institution}</p>
                             <p className="text-gray-600">{edu.year}</p>
@@ -1326,8 +1326,8 @@ export default function TeamPage() {
                     </div>
 
                     {/* Certifications */}
-                    <div className="bg-green-50 rounded-3xl p-8 border border-green-200">
-                      <div className="flex items-center gap-4 mb-6">
+                    <div className="bg-green-50 rounded-3xl p-4 border border-green-200">
+                      <div className="flex items-center gap-4 mb-3">
                         <div className="bg-green-500 rounded-2xl p-3">
                           <Award className="h-6 w-6 text-white" />
                         </div>
@@ -1348,16 +1348,16 @@ export default function TeamPage() {
                   </div>
 
                   {/* Recent Projects */}
-                  <div className="bg-orange-50 rounded-3xl p-8 border border-orange-200">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-orange-50 rounded-3xl p-4 border border-orange-200">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-orange-500 rounded-2xl p-3">
                         <Briefcase className="h-6 w-6 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Recent Projects</h3>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {selectedMember.recentProjects.map((project: any, index: number) => (
-                        <div key={index} className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
+                        <div key={index} className="bg-white rounded-2xl p-4 border border-orange-100 shadow-sm">
                           <h4 className="font-bold text-gray-900 mb-3 text-lg">{project.title}</h4>
                           <p className="text-orange-600 font-semibold mb-2">{project.client}</p>
                           <div className="flex justify-between items-center">
@@ -1378,18 +1378,18 @@ export default function TeamPage() {
                   </div>
 
                   {/* Client Testimonials */}
-                  <div className="bg-purple-50 rounded-3xl p-8 border border-purple-200">
-                    <div className="flex items-center gap-4 mb-8">
+                  <div className="bg-purple-50 rounded-3xl p-4 border border-purple-200">
+                    <div className="flex items-center gap-4 mb-4">
                       <div className="bg-purple-500 rounded-2xl p-3">
                         <MessageCircle className="h-6 w-6 text-white" />
                       </div>
-                      <h2 className="text-3xl font-bold text-gray-900">Client Testimonials</h2>
+                      <h2 className="text-xl font-bold text-gray-900">Client Testimonials</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {selectedMember.testimonials.map((testimonial: any) => (
                         <div
                           key={testimonial.id}
-                          className="bg-white rounded-2xl p-8 border border-purple-100 shadow-sm"
+                          className="bg-white rounded-2xl p-4 border border-purple-100 shadow-sm"
                         >
                           <div className="flex items-center gap-1 mb-4">
                             {[...Array(5)].map((_, i) => (
@@ -1399,7 +1399,7 @@ export default function TeamPage() {
                               />
                             ))}
                           </div>
-                          <p className="text-gray-700 italic mb-6 leading-relaxed text-lg">"{testimonial.feedback}"</p>
+                          <p className="text-gray-700 italic mb-3 leading-relaxed text-lg">"{testimonial.feedback}"</p>
                           <div className="flex justify-between items-center">
                             <div>
                               <p className="font-bold text-gray-900 text-lg">{testimonial.client}</p>
@@ -1413,8 +1413,8 @@ export default function TeamPage() {
                   </div>
 
                   {/* Achievements */}
-                  <div className="bg-yellow-50 rounded-3xl p-8 border border-yellow-200">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-yellow-50 rounded-3xl p-4 border border-yellow-200">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-yellow-500 rounded-2xl p-3">
                         <Zap className="h-6 w-6 text-white" />
                       </div>
@@ -1424,7 +1424,7 @@ export default function TeamPage() {
                       {selectedMember.achievements.map((achievement: string, index: number) => (
                         <div
                           key={index}
-                          className="bg-white rounded-2xl p-6 border border-yellow-100 flex items-center gap-4 shadow-sm"
+                          className="bg-white rounded-2xl p-4 border border-yellow-100 flex items-center gap-4 shadow-sm"
                         >
                           <Award className="h-6 w-6 text-yellow-500" />
                           <span className="text-gray-700 font-semibold text-lg">{achievement}</span>
@@ -1437,8 +1437,8 @@ export default function TeamPage() {
                 {/* Sidebar */}
                 <div className="space-y-8">
                   {/* Contact Card */}
-                  <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-8 text-white shadow-xl">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-4 text-white shadow-xl">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-3">
                         <Mail className="h-6 w-6 text-white" />
                       </div>
@@ -1469,8 +1469,8 @@ export default function TeamPage() {
                   </div>
 
                   {/* Pricing Card */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-white rounded-3xl p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-green-500 rounded-2xl p-3">
                         <Calculator className="h-6 w-6 text-white" />
                       </div>
@@ -1493,29 +1493,29 @@ export default function TeamPage() {
                   </div>
 
                   {/* Quick Stats */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-white rounded-3xl p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-indigo-500 rounded-2xl p-3">
                         <TrendingUp className="h-6 w-6 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900">Statistics</h3>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-                        <p className="text-3xl font-bold text-green-600">{selectedMember.completionRate}%</p>
+                      <div className="text-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+                        <p className="text-xl font-bold text-green-600">{selectedMember.completionRate}%</p>
                         <p className="text-green-700 font-semibold">Success Rate</p>
                       </div>
-                      <div className="text-center p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
-                        <p className="text-3xl font-bold text-blue-600">{selectedMember.experience}</p>
+                      <div className="text-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
+                        <p className="text-xl font-bold text-blue-600">{selectedMember.experience}</p>
                         <p className="text-blue-700 font-semibold">Experience</p>
                       </div>
-                      <div className="text-center p-6 bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl border border-purple-200">
-                        <p className="text-3xl font-bold text-purple-600">{selectedMember.projects}</p>
+                      <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl border border-purple-200">
+                        <p className="text-xl font-bold text-purple-600">{selectedMember.projects}</p>
                         <p className="text-purple-700 font-semibold">Projects</p>
                       </div>
-                      <div className="text-center p-6 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
+                      <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
                         <p
-                          className={`text-3xl font-bold ${selectedMember.availability === "Available" ? "text-green-600" : "text-orange-600"}`}
+                          className={`text-xl font-bold ${selectedMember.availability === "Available" ? "text-green-600" : "text-orange-600"}`}
                         >
                           {selectedMember.availability === "Available" ? "✓" : "⏳"}
                         </p>
@@ -1529,8 +1529,8 @@ export default function TeamPage() {
                   </div>
 
                   {/* Languages */}
-                  <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-white rounded-3xl p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center gap-4 mb-3">
                       <div className="bg-teal-500 rounded-2xl p-3">
                         <Globe className="h-6 w-6 text-white" />
                       </div>
@@ -1578,8 +1578,8 @@ export default function TeamPage() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl p-3 shadow-lg">

@@ -63,7 +63,7 @@ export default function ConnectPage() {
              {/* Connect Form Section */}
        <section className="pt-28 pb-14 sm:pt-24 sm:pb-12">
          <div className="w-full">
-                       <div className="grid lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8">
+                       <div className="grid lg:grid-cols-3 gap-4 px-4 sm:px-6 lg:px-8">
                            {/* Connect Form - Left Side */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -93,7 +93,7 @@ export default function ConnectPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="text-center py-8"
                   >
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <CheckCircle className="w-10 h-10 text-green-600" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent Successfully!</h3>

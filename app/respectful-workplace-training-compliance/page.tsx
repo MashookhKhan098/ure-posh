@@ -6,17 +6,17 @@ export default function POSHCompliancePage() {
     
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-8 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <Shield className="h-4 w-4 mr-2" />
               Workplace Respect Training | Harassment Prevention & Compliance | URE POSH
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+            <h1 className="text-xl md:text-6xl font-bold text-gray-900 mb-3 text-balance leading-tight">
               Workplace Respect <span className="text-pink-600">Training</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 text-balance leading-relaxed">
+            <p className="text-xl text-gray-600 mb-4 text-balance leading-relaxed">
               URE POSH offers Workplace Respect & Harassment Prevention Training aligned with the POSH Act (India),
               Equality Act (UK), and EEOC (US). Build respectful, inclusive, and globally compliant workplaces with
               certified training programs.
@@ -41,31 +41,31 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* About Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-6">
+          <div className="text-center mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-3">
               <Building className="h-8 w-8 text-pink-600" />
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🏢 About URE POSH Workplace Respect Training
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-4">
               At URE POSH, we believe that a safe workplace begins with respect. Policies and audits alone are not
               enough—behaviors must change. Our Workplace Respect Training programs help employees, managers, and
               leaders:
             </p>
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="grid md:grid-cols-2 gap-4 mb-4">
               {[
                 "✔️ Understand the boundaries of professional conduct.",
                 "✔️ Recognize unconscious bias, microaggressions, and harassment.",
                 "✔️ Learn the global legal framework (India, UK, US).",
                 "✔️ Build a culture of dignity, inclusivity, and accountability.",
               ].map((service, index) => (
-                <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+                <div key={index} className="flex items-start space-x-4 p-4 bg-pink-50 rounded-2xl">
                   <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
                     <CheckCircle className="h-4 w-4 text-white" />
                   </div>
@@ -82,15 +82,15 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Why Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🔹 Why Workplace Respect Training Matters
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 title: "India – POSH Act, 2013",
@@ -109,7 +109,7 @@ export default function POSHCompliancePage() {
                 desc: "– Investors and boards expect DEI & workplace respect metrics.",
               },
             ].map((reason, index) => (
-              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+              <div key={index} className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
                 <h3 className="font-semibold text-gray-900 mb-3">{reason.title}</h3>
                 <p className="text-gray-700 leading-relaxed">{reason.desc}</p>
               </div>
@@ -125,13 +125,13 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 bg-white">
+      <section id="services" className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">🔹 Our Training Modules</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">🔹 Our Training Modules</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-4">
             {[
               {
                 title: "1. Foundations of Workplace Respect",
@@ -182,7 +182,7 @@ export default function POSHCompliancePage() {
                 ],
               },
             ].map((service, index) => (
-              <div key={index} className="bg-pink-50 p-8 rounded-2xl">
+              <div key={index} className="bg-pink-50 p-4 rounded-2xl">
                 <h3 className="font-semibold text-gray-900 mb-4 text-lg">{service.title}</h3>
                 <ul className="space-y-3">
                   {service.items.map((item, itemIndex) => (
@@ -199,13 +199,13 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">🔹 Key Benefits of URE POSH Training</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">🔹 Key Benefits of URE POSH Training</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4">
             {[
               "✔️ 100% Legal Compliance – POSH Act, Equality Act, EEOC.",
               "✔️ Improved Workplace Culture – safer, more inclusive, more productive.",
@@ -215,7 +215,7 @@ export default function POSHCompliancePage() {
             ].map((benefit, index) => (
               <div
                 key={index}
-                className="flex items-start space-x-4 p-6 bg-white rounded-2xl shadow-sm border border-pink-100"
+                className="flex items-start space-x-4 p-4 bg-white rounded-2xl shadow-sm border border-pink-100"
               >
                 <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
                   <CheckCircle className="h-4 w-4 text-white" />
@@ -228,13 +228,13 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* FAQs Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">❓ 12 Detailed & Technical FAQs</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">❓ 12 Detailed & Technical FAQs</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-4">
             {[
               {
                 question: "1. Is Workplace Respect Training legally mandatory?",
@@ -294,7 +294,7 @@ export default function POSHCompliancePage() {
                   "Yes, we issue Workplace Respect Training Certificates recognized for legal audits, ESG reports, and investor governance checks.",
               },
             ].map((faq, index) => (
-              <div key={index} className="bg-pink-50 p-8 rounded-2xl">
+              <div key={index} className="bg-pink-50 p-4 rounded-2xl">
                 <h3 className="font-semibold text-gray-900 mb-4 text-lg">{faq.question}</h3>
                 <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
               </div>
@@ -304,14 +304,14 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-20 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
+      <section className="py-8 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6 text-balance">📢 Call to Action</h2>
+          <h2 className="text-2xl font-bold mb-3 text-balance">📢 Call to Action</h2>
           <p className="text-2xl mb-4 text-pink-100 font-semibold">✨ Respect Builds Safety. Safety Builds Trust.</p>
-          <p className="text-xl mb-12 text-pink-100 text-balance max-w-3xl mx-auto">
+          <p className="text-xl mb-3 text-pink-100 text-balance max-w-3xl mx-auto">
             Partner with URE POSH for Workplace Respect Training that meets Indian laws and global compliance standards.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-3">
             <a
               href="tel:+919999944807"
               className="group flex items-center space-x-3 bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -338,9 +338,9 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center space-x-3 mb-6">
+          <div className="flex items-center justify-center space-x-3 mb-3">
             <div className="bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-xl">
               <Shield className="h-6 w-6 text-white" />
             </div>

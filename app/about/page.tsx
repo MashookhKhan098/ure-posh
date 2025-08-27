@@ -102,7 +102,7 @@ export default function AboutPage() {
               
               {/* Main heading */}
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-[0.9]">
+                <h1 className="text-xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-[0.9]">
                   Welcome to <br/>
                   <span className="bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
                     URE POSH
@@ -193,8 +193,8 @@ export default function AboutPage() {
       {/* Mission/Vision/Values - Better laptop layout */}
       <section className="py-10 bg-white">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Foundation</h2>
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Foundation</h2>
             <div className="w-20 h-1 bg-pink-500 mx-auto"></div>
           </div>
 
@@ -237,17 +237,17 @@ export default function AboutPage() {
             </div>
 
             {/* Tab Content - Optimized for laptop reading */}
-            <div className="bg-white p-8 md:p-10">
+            <div className="bg-white p-4 md:p-10">
               {activeTab === 'mission' && (
                 <div className="max-w-5xl mx-auto">
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">Our Mission</h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="bg-pink-50 rounded-xl p-6 md:p-6 border-l-4 border-pink-500">
+                  <h3 className="text-2xl md:text-xl font-bold text-gray-900 mb-3 text-center">Our Mission</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-pink-50 rounded-xl p-4 md:p-4 border-l-4 border-pink-500">
                       <p className="text-base md:text-lg text-gray-700 leading-relaxed">
                         At <strong>URE POSH</strong>, our mission is to empower organizations with expert POSH compliance solutions that promote mutual respect and safety in the workplace. We provide training, policy development, and strategic guidance that not only meet legal requirements but also encourage an environment where dignity, inclusivity, and equality are at the forefront.
                       </p>
                     </div>
-                    <div className="bg-pink-500 rounded-xl p-6 md:p-6 text-white">
+                    <div className="bg-pink-500 rounded-xl p-4 md:p-4 text-white">
                       <p className="text-base md:text-lg leading-relaxed">
                         We are dedicated to supporting businesses in creating a workplace where everyone feels protected, valued, and free from harassment, discrimination, or bias.
                       </p>
@@ -258,14 +258,14 @@ export default function AboutPage() {
 
               {activeTab === 'vision' && (
                 <div className="max-w-5xl mx-auto">
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">Our Vision</h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="bg-pink-50 rounded-xl p-6 md:p-6 border-l-4 border-pink-500">
+                  <h3 className="text-2xl md:text-xl font-bold text-gray-900 mb-3 text-center">Our Vision</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-pink-50 rounded-xl p-4 md:p-4 border-l-4 border-pink-500">
                       <p className="text-base md:text-lg text-gray-700 leading-relaxed">
                         Our vision is to lead the way in <strong>POSH compliance</strong>, known for our commitment to advancing workplace equality, safety, and integrity. We aim to offer world-class training, customized solutions, and effective consultation services that help organizations maintain the highest standards of professionalism and respect.
                       </p>
                     </div>
-                    <div className="bg-pink-500 rounded-xl p-6 md:p-6 text-white">
+                    <div className="bg-pink-500 rounded-xl p-4 md:p-4 text-white">
                       <p className="text-base md:text-lg leading-relaxed">
                         We envision a future where every workplace is a safe space for all, where sexual harassment no longer exists, and where respect is the foundation of every workplace culture.
                       </p>
@@ -276,8 +276,8 @@ export default function AboutPage() {
 
               {activeTab === 'values' && (
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Our Values</h3>
-                  <div className="grid grid-cols-5 gap-4 md:gap-6">
+                  <h3 className="text-2xl md:text-xl font-bold text-gray-900 mb-4 text-center">Our Values</h3>
+                  <div className="grid grid-cols-5 gap-4 md:gap-4">
                     {values.map((value, index) => {
                       const Icon = value.icon;
                       return (
@@ -301,20 +301,20 @@ export default function AboutPage() {
       {/* Six Foundational Pillars - Light white-pink */}
       <section className="py-8 bg-gradient-to-b from-white to-pink-50/50">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Approach: Six Foundational Pillars</h2>
+          <div className="text-center mb-3">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">Approach: Six Foundational Pillars</h2>
             <div className="w-16 h-1 bg-pink-400 mx-auto mb-4"></div>
             <p className="text-base md:text-lg text-gray-600 max-w-4xl mx-auto">
               URE POSH's work is guided by six foundational pillars—ensuring holistic support for organizations and individuals. These pillars shape our strategies and services, empowering workplaces at every level.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             {pillars.map((pillar, index) => {
               const Icon = pillar.icon;
               return (
-                <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-pink-100 hover:shadow-md transition-all group">
-                  <div className="flex items-start gap-6">
+                <div key={index} className="bg-white rounded-2xl p-4 shadow-sm border border-pink-100 hover:shadow-md transition-all group">
+                  <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-200 transition-colors">
                         <Icon className="w-7 h-7 text-pink-600" />
@@ -340,17 +340,17 @@ export default function AboutPage() {
       {/* Why Choose URE POSH - Light white-pink */}
       <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Why Choose URE POSH?</h2>
+          <div className="text-center mb-3">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">Why Choose URE POSH?</h2>
             <div className="w-16 h-1 bg-pink-400 mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             {whyChooseFeatures.map((item, index) => {
               const Icon = item.icon;
               return (
-                <div key={index} className="bg-pink-50 rounded-2xl p-6 border border-pink-100 hover:bg-pink-100 transition-colors group">
-                  <div className="flex items-start gap-6">
+                <div key={index} className="bg-pink-50 rounded-2xl p-4 border border-pink-100 hover:bg-pink-100 transition-colors group">
+                  <div className="flex items-start gap-4">
                     <div className="w-14 h-14 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-pink-200 transition-colors">
                       <Icon className="w-7 h-7 text-pink-600" />
                     </div>
@@ -369,9 +369,9 @@ export default function AboutPage() {
       {/* Company Summary and CTA - Light white-pink, refined content */}
       <section className="py-10 bg-gradient-to-r from-pink-50 to-rose-50">
         <div className="max-w-6xl mx-auto px-6 md:px-8 text-slate-800">
-          <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-center text-slate-900">URE POSH – Empowering Workplace Rights</h2>
+          <h2 className="text-2xl md:text-xl font-extrabold mb-4 text-center text-slate-900">URE POSH – Empowering Workplace Rights</h2>
 
-          <div className="bg-white rounded-xl border border-pink-100 p-5 md:p-6 mb-5 shadow-sm">
+          <div className="bg-white rounded-xl border border-pink-100 p-5 md:p-4 mb-5 shadow-sm">
             <div className="grid lg:grid-cols-2 gap-5 items-start">
               <div>
                 <p className="text-sm md:text-base leading-relaxed mb-2">

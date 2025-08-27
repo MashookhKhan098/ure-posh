@@ -269,7 +269,7 @@ export default function ServicesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-5xl lg:text-7xl font-bold text-black leading-tight"
+            className="text-xl lg:text-7xl font-bold text-black leading-tight"
           >
             Comprehensive{" "}
             <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
@@ -289,14 +289,14 @@ export default function ServicesPage() {
       </section>
 
       {/* Expertise Categories */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <motion.div
             variants={staggerContainer}
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 gap-8 mb-16"
+            className="grid md:grid-cols-2 gap-4 mb-4"
           >
             {expertiseCategories.map((category, index) => (
               <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.02, y: -5 }}>
@@ -349,20 +349,20 @@ export default function ServicesPage() {
       </section>
 
       {/* Detailed Service Tabs */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-gray-50/50">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-gray-50/50">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
+            className="text-center space-y-6 mb-4"
           >
             <Badge className="bg-white/90 text-gray-800 px-6 py-3 text-lg font-semibold border border-gray-200/50">
               <Sparkles className="w-5 h-5 mr-2" />
               Service Details
             </Badge>
-            <h2 className="text-4xl font-bold text-black">
+            <h2 className="text-2xl font-bold text-black">
               Explore Our{" "}
               <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
                 Comprehensive
@@ -373,7 +373,7 @@ export default function ServicesPage() {
           </motion.div>
 
           <Tabs defaultValue="compliance" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-8 bg-white/80 backdrop-blur-sm">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-4 bg-white/80 backdrop-blur-sm">
               {expertiseCategories.map((category) => (
                 <TabsTrigger key={category.id} value={category.id} className="text-xs lg:text-sm">
                   {category.title.split(" ")[0]}
@@ -384,8 +384,8 @@ export default function ServicesPage() {
             {expertiseCategories.map((category) => (
               <TabsContent key={category.id} value={category.id}>
                 <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-xl">
-                  <div className="p-8">
-                    <div className="flex items-center space-x-4 mb-8">
+                  <div className="p-4">
+                    <div className="flex items-center space-x-4 mb-4">
                       <div
                         className={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-xl flex items-center justify-center shadow-lg`}
                       >
@@ -397,7 +397,7 @@ export default function ServicesPage() {
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {category.services.map((service, idx) => (
                         <motion.div
                           key={idx}
@@ -406,7 +406,7 @@ export default function ServicesPage() {
                           transition={{ delay: idx * 0.1 }}
                           viewport={{ once: true }}
                           whileHover={{ scale: 1.02, y: -5 }}
-                          className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300"
+                          className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300"
                         >
                           <div className="space-y-4">
                             <div>
@@ -458,20 +458,20 @@ export default function ServicesPage() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center space-y-6 mb-16"
+            className="text-center space-y-6 mb-4"
           >
             <Badge className="bg-gradient-to-r from-gray-100 to-gray-100 text-gray-800 px-6 py-3 text-lg font-semibold">
               <Star className="w-5 h-5 mr-2" />
               Why Choose Ureposh
             </Badge>
-            <h2 className="text-4xl font-bold text-black">
+            <h2 className="text-2xl font-bold text-black">
               Expertise That{" "}
               <span className="bg-gradient-to-r from-gray-600 to-gray-700 bg-clip-text text-transparent">
                 Delivers Results
@@ -485,7 +485,7 @@ export default function ServicesPage() {
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-4"
           >
             {[
               {
@@ -532,7 +532,7 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -540,7 +540,7 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold text-black">Ready to Transform Your Workplace?</h2>
+            <h2 className="text-2xl font-bold text-black">Ready to Transform Your Workplace?</h2>
             <p className="text-xl text-gray-600 mt-4">
               Let's discuss how our expertise can help create a safer, more inclusive environment for your organization.
             </p>
@@ -573,7 +573,7 @@ export default function ServicesPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-4">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-lg flex items-center justify-center">

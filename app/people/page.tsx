@@ -145,11 +145,11 @@ export default function TeamPage() {
         {/* Hero Content Overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white max-w-4xl mx-auto px-4">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2 mb-3">
               <Users className="h-5 w-5" />
               <span className="text-sm font-medium">Meet Our Expert Team</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
+            <h1 className="text-2xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
               Exceptional Professionals
             </h1>
             <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
@@ -302,7 +302,7 @@ export default function TeamPage() {
       {/* Team Grid/List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         {loading && (
-          <div className="flex items-center justify-center py-20">
+          <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-2 border-blue-500 border-t-transparent mx-auto mb-4"></div>
               <p className="text-gray-600">Loading professionals...</p>
@@ -311,11 +311,11 @@ export default function TeamPage() {
         )}
         
         {error && (
-          <div className="text-center py-20">
-            <div className="bg-red-50 rounded-2xl p-8 max-w-md mx-auto">
+          <div className="text-center py-8">
+            <div className="bg-red-50 rounded-2xl p-4 max-w-md mx-auto">
               <X className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">Error Loading Data</h3>
-              <p className="text-gray-600 mb-6">{error}</p>
+              <p className="text-gray-600 mb-3">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="bg-red-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-600 transition-colors"
@@ -327,11 +327,11 @@ export default function TeamPage() {
         )}
         
         {!loading && !error && teamMembers.length === 0 && (
-          <div className="text-center py-20">
-            <div className="bg-gray-50 rounded-2xl p-8 max-w-md mx-auto">
+          <div className="text-center py-8">
+            <div className="bg-gray-50 rounded-2xl p-4 max-w-md mx-auto">
               <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">No Professionals Found</h3>
-              <p className="text-gray-600 mb-6">Try adjusting your search criteria or filters</p>
+              <p className="text-gray-600 mb-3">Try adjusting your search criteria or filters</p>
               <button
                 onClick={() => {
                   setSearchQuery("")
@@ -347,7 +347,7 @@ export default function TeamPage() {
         
         {!loading && !error && teamMembers.length > 0 && (
           <div className={viewMode === 'grid' 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" 
             : "space-y-6"
           }>
             {teamMembers.map((member) => {
@@ -355,8 +355,8 @@ export default function TeamPage() {
 
               if (viewMode === 'list') {
                 return (
-                  <div key={member.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
-                    <div className="flex items-start gap-6">
+                  <div key={member.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+                    <div className="flex items-start gap-4">
                       {/* Profile Image/Icon */}
                       <div className="flex-shrink-0">
                         {member.image_url ? (
@@ -501,7 +501,7 @@ export default function TeamPage() {
                     <p className="text-gray-700 text-sm mb-4 line-clamp-3">{member.description}</p>
 
                     {/* Skills */}
-                    <div className="mb-6">
+                    <div className="mb-3">
                       <div className="flex flex-wrap gap-2">
                         {member.expertise.slice(0, 3).map((skill, index) => (
                           <span
@@ -520,7 +520,7 @@ export default function TeamPage() {
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-2xl">
+                    <div className="grid grid-cols-3 gap-4 mb-3 p-4 bg-gray-50 rounded-2xl">
                       <div className="text-center">
                         <div className="text-lg font-bold text-gray-900">{member.projects}</div>
                         <div className="text-xs text-gray-500">Projects</div>
@@ -567,7 +567,7 @@ export default function TeamPage() {
             {/* Close Button */}
             <button
               onClick={closeMemberProfile}
-              className="absolute top-6 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200 hover:shadow-xl"
+              className="absolute top-4 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200 hover:shadow-xl"
             >
               <X className="h-5 w-5 text-gray-600" />
             </button>
@@ -582,7 +582,7 @@ export default function TeamPage() {
               
               {/* Content */}
               <div className="relative h-full flex items-center px-8">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                   {/* Profile Image */}
                   <div className="flex-shrink-0">
                     {selectedMember.image_url ? (
@@ -603,7 +603,7 @@ export default function TeamPage() {
                   {/* Basic Info */}
                   <div className="text-white">
                     <div className="flex items-center gap-3 mb-2">
-                      <h1 className="text-3xl font-bold">{selectedMember.name}</h1>
+                      <h1 className="text-xl font-bold">{selectedMember.name}</h1>
                       <div className="flex gap-2">
                         {selectedMember.verified && (
                           <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5">
@@ -619,7 +619,7 @@ export default function TeamPage() {
                     </div>
                     <p className="text-xl font-semibold text-white/90 mb-2">{selectedMember.title}</p>
                     <p className="text-white/80 mb-3">{selectedMember.specialization}</p>
-                    <div className="flex items-center gap-6 text-sm">
+                    <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4" />
                         <span>{selectedMember.location}</span>
@@ -640,14 +640,14 @@ export default function TeamPage() {
             </div>
 
             {/* Content Section */}
-            <div className="overflow-y-auto max-h-[calc(95vh-12rem)] p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="overflow-y-auto max-h-[calc(95vh-12rem)] p-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 
                 {/* Main Content */}
                 <div className="lg:col-span-2 space-y-8">
                   
                   {/* About */}
-                  <section className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
+                  <section className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-4 border border-gray-100">
                     <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                       <div className="bg-blue-500 rounded-xl p-2">
                         <BookOpen className="h-5 w-5 text-white" />
@@ -661,15 +661,15 @@ export default function TeamPage() {
 
                   {/* Skills & Expertise */}
                   {selectedMember.skills.length > 0 && (
-                    <section className="bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 border border-purple-100">
-                      <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <section className="bg-gradient-to-br from-purple-50 to-white rounded-2xl p-4 border border-purple-100">
+                      <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-3">
                         <div className="bg-purple-500 rounded-xl p-2">
                           <Target className="h-5 w-5 text-white" />
                         </div>
                         Skills & Expertise
                       </h2>
                       
-                      <div className="mb-6">
+                      <div className="mb-3">
                         <h3 className="text-sm font-semibold text-gray-600 mb-3">CORE COMPETENCIES</h3>
                         <div className="flex flex-wrap gap-2">
                           {selectedMember.expertise.map((skill, idx) => (
@@ -704,8 +704,8 @@ export default function TeamPage() {
 
                   {/* Recent Projects */}
                   {selectedMember.recent_projects.length > 0 && (
-                    <section className="bg-gradient-to-br from-green-50 to-white rounded-2xl p-6 border border-green-100">
-                      <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <section className="bg-gradient-to-br from-green-50 to-white rounded-2xl p-4 border border-green-100">
+                      <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-3">
                         <div className="bg-green-500 rounded-xl p-2">
                           <Briefcase className="h-5 w-5 text-white" />
                         </div>
@@ -734,8 +734,8 @@ export default function TeamPage() {
 
                   {/* Education */}
                   {selectedMember.education.length > 0 && (
-                    <section className="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 border border-blue-100">
-                      <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <section className="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-4 border border-blue-100">
+                      <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-3">
                         <div className="bg-blue-500 rounded-xl p-2">
                           <GraduationCap className="h-5 w-5 text-white" />
                         </div>
@@ -762,7 +762,7 @@ export default function TeamPage() {
                 <div className="space-y-6">
                   
                   {/* Key Stats */}
-                  <div className="bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-6 border border-indigo-100">
+                  <div className="bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-4 border border-indigo-100">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Key Stats</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
@@ -789,7 +789,7 @@ export default function TeamPage() {
                   </div>
 
                   {/* Contact Information */}
-                  <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
+                  <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-4 border border-gray-100">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Contact</h3>
                     <div className="space-y-3">
                       <div className="flex items-center gap-3">
@@ -823,7 +823,7 @@ export default function TeamPage() {
 
                   {/* Languages */}
                   {selectedMember.languages.length > 0 && (
-                    <div className="bg-gradient-to-br from-orange-50 to-white rounded-2xl p-6 border border-orange-100">
+                    <div className="bg-gradient-to-br from-orange-50 to-white rounded-2xl p-4 border border-orange-100">
                       <h3 className="text-lg font-bold text-gray-900 mb-4">Languages</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedMember.languages.map((lang, idx) => (
@@ -837,7 +837,7 @@ export default function TeamPage() {
 
                   {/* Certifications */}
                   {selectedMember.certifications.length > 0 && (
-                    <div className="bg-gradient-to-br from-yellow-50 to-white rounded-2xl p-6 border border-yellow-100">
+                    <div className="bg-gradient-to-br from-yellow-50 to-white rounded-2xl p-4 border border-yellow-100">
                       <h3 className="text-lg font-bold text-gray-900 mb-4">Certifications</h3>
                       <div className="space-y-2">
                         {selectedMember.certifications.map((cert, idx) => (

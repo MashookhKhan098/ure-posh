@@ -5,30 +5,30 @@ export default function POSHCompliancePage() {
     <div className="min-h-screen bg-white">
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-8 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <Shield className="h-4 w-4 mr-2" />
               POSH Compliance Services | Workplace Harassment Redressal
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 text-balance leading-tight">
               POSH-Compliant <span className="text-pink-600">Redressal</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 text-balance leading-relaxed">
+            <p className="text-base text-gray-600 mb-4 text-balance leading-relaxed">
               India, UK & US Workplace Compliance Guide - Build safer, legally compliant workplaces with URE POSH
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="tel:+911199999444807"
-                className="group bg-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
+                className="group bg-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center"
               >
                 Get Free Consultation
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
                 href="#services"
-                className="border-2 border-pink-200 text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 flex items-center justify-center"
+                className="border-2 border-pink-200 text-pink-600 px-6 py-3 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 flex items-center justify-center"
               >
                 Learn More
               </a>
@@ -37,33 +37,33 @@ export default function POSHCompliancePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-6">
-              <Building className="h-8 w-8 text-pink-600" />
+          <div className="text-center mb-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-pink-100 rounded-2xl mb-3">
+              <Building className="h-6 w-6 text-pink-600" />
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🏢 What Does POSH-Compliant Redressal Mean?
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-4">
               POSH-compliant redressal means having a legally aligned, transparent, and fair system for preventing and
               addressing workplace sexual harassment.
             </p>
-            <p className="text-lg text-gray-700 leading-relaxed text-center mb-8">
+            <p className="text-lg text-gray-700 leading-relaxed text-center mb-4">
               It is not just a legal mandate—it signals that your company values:
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 "✔️ Employee safety",
                 "✔️ Workplace dignity",
                 "✔️ Equality of opportunity",
                 "✔️ Global compliance readiness",
               ].map((value, index) => (
-                <div key={index} className="bg-pink-50 p-6 rounded-2xl text-center">
+                <div key={index} className="bg-pink-50 p-4 rounded-2xl text-center">
                   <span className="text-gray-700 font-medium">{value}</span>
                 </div>
               ))}
@@ -72,21 +72,21 @@ export default function POSHCompliancePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🇮🇳 India: POSH-Compliant Redressal Process
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="max-w-4xl mx-auto mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed text-center">
+          <div className="max-w-4xl mx-auto mb-3">
+            <p className="text-base text-gray-700 leading-relaxed text-center">
               The Prevention of Sexual Harassment (POSH) Act, 2013 makes it mandatory for organizations with 10+
               employees to establish a compliance framework.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { title: "Policy", desc: "Draft & circulate a written POSH policy." },
               {
@@ -98,36 +98,36 @@ export default function POSHCompliancePage() {
               { title: "Investigation", desc: "Impartial inquiries completed within 90 days." },
               { title: "Recordkeeping", desc: "Registers, reports, and annual filings under Section 21." },
             ].map((step, index) => (
-              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
-                <h3 className="font-semibold text-gray-900 mb-3">{step.title}</h3>
-                <p className="text-gray-700 leading-relaxed">{step.desc}</p>
+              <div key={index} className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
+                <h3 className="font-semibold text-gray-900 mb-2">{step.title}</h3>
+                <p className="text-gray-700 leading-relaxed text-sm">{step.desc}</p>
               </div>
             ))}
           </div>
-          <div className="mt-12 bg-red-50 border border-red-200 p-6 rounded-2xl">
-            <div className="flex items-center mb-4">
-              <AlertTriangle className="h-6 w-6 text-red-600 mr-3" />
+          <div className="mt-6 bg-red-50 border border-red-200 p-4 rounded-2xl">
+            <div className="flex items-center mb-2">
+              <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
               <h3 className="font-semibold text-red-900">Penalty for Non-Compliance:</h3>
             </div>
-            <p className="text-red-800">Up to ₹50,000, license cancellation, and reputational risk.</p>
+            <p className="text-red-800 text-sm">Up to ₹50,000, license cancellation, and reputational risk.</p>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🇬🇧 UK: Workplace Harassment & Equality Compliance
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="max-w-4xl mx-auto mb-12">
+          <div className="max-w-4xl mx-auto mb-3">
             <p className="text-lg text-gray-700 leading-relaxed text-center">
               The Equality Act 2010 requires employers to provide a workplace free from harassment and discrimination.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4">
             {[
               "Clear Anti-Harassment Policy with grievance procedure.",
               "Equality & Diversity Training for employees & managers.",
@@ -135,7 +135,7 @@ export default function POSHCompliancePage() {
               "External Advisors – NGOs, HR, or legal experts in complex cases.",
               "Documentation & Transparency – investigation reports and actions taken.",
             ].map((practice, index) => (
-              <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+              <div key={index} className="flex items-start space-x-4 p-4 bg-pink-50 rounded-2xl">
                 <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
                   <CheckCircle className="h-4 w-4 text-white" />
                 </div>
@@ -143,7 +143,7 @@ export default function POSHCompliancePage() {
               </div>
             ))}
           </div>
-          <div className="mt-8 bg-blue-50 border border-blue-200 p-6 rounded-2xl">
+          <div className="mt-8 bg-blue-50 border border-blue-200 p-4 rounded-2xl">
             <p className="text-blue-800 font-medium">
               UK Regulators Expect: Swift, fair, and documented responses to complaints.
             </p>
@@ -151,21 +151,21 @@ export default function POSHCompliancePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🇺🇸 US: Workplace Harassment Redressal & Compliance
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="max-w-4xl mx-auto mb-12">
+          <div className="max-w-4xl mx-auto mb-3">
             <p className="text-lg text-gray-700 leading-relaxed text-center">
               In the US, sexual harassment is prohibited under Title VII of the Civil Rights Act of 1964, enforced by
               the Equal Employment Opportunity Commission (EEOC).
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               "Anti-Harassment Policy – acknowledged by all staff.",
               "Complaint Process – confidential reporting and escalation.",
@@ -174,7 +174,7 @@ export default function POSHCompliancePage() {
               "External Investigators – for objectivity in sensitive cases.",
               "Documentation – maintain records for litigation defense & audits.",
             ].map((element, index) => (
-              <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+              <div key={index} className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
                 <p className="text-gray-700 font-medium leading-relaxed">{element}</p>
               </div>
             ))}
@@ -182,15 +182,15 @@ export default function POSHCompliancePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               🌍 Why Choose URE POSH for POSH & Harassment Compliance?
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4">
             {[
               "✔️ End-to-End POSH Compliance (India) – Policy drafting, IC setup, training, reporting.",
               "✔️ Global Alignment (UK & US) – Policies tailored to Equality Act 2010 & EEOC standards.",
@@ -198,7 +198,7 @@ export default function POSHCompliancePage() {
               "✔️ Neutral Investigations – with external NGO/legal experts.",
               "✔️ Audit-Ready Recordkeeping – compliant with ESG & investor due diligence.",
             ].map((service, index) => (
-              <div key={index} className="flex items-start space-x-4 p-6 bg-pink-50 rounded-2xl">
+              <div key={index} className="flex items-start space-x-4 p-4 bg-pink-50 rounded-2xl">
                 <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
                   <CheckCircle className="h-4 w-4 text-white" />
                 </div>
@@ -214,13 +214,13 @@ export default function POSHCompliancePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">❓ 12 Detailed & Technical FAQs</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">❓ 12 Detailed & Technical FAQs</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-4">
             {[
               {
                 question: "1. What is POSH-compliant redressal?",
@@ -283,7 +283,7 @@ export default function POSHCompliancePage() {
                   "Investors and regulators increasingly demand Social Governance metrics. POSH compliance demonstrates: Commitment to human rights & equality. Mitigation of reputational and litigation risks. Strengthened ESG scores for global investment readiness.",
               },
             ].map((faq, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100">
+              <div key={index} className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
                 <h3 className="font-semibold text-gray-900 mb-4 text-lg">{faq.question}</h3>
                 <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
               </div>
@@ -292,16 +292,16 @@ export default function POSHCompliancePage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
+      <section className="py-8 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6 text-balance">📢 Call to Action</h2>
+          <h2 className="text-2xl font-bold mb-3 text-balance">📢 Call to Action</h2>
           <p className="text-2xl mb-4 text-pink-100 font-semibold">
             ✨ Protect your workplace. Safeguard your brand. Stay compliant.
           </p>
-          <p className="text-xl mb-12 text-pink-100 text-balance max-w-3xl mx-auto">
+          <p className="text-xl mb-3 text-pink-100 text-balance max-w-3xl mx-auto">
             Partner with URE POSH – India's Leading POSH & Global Workplace Compliance Firm.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-3">
             <a
               href="tel:+911199999444807"
               className="group flex items-center space-x-3 bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -328,9 +328,9 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center space-x-3 mb-6">
+          <div className="flex items-center justify-center space-x-3 mb-3">
             <div className="bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-xl">
               <Shield className="h-6 w-6 text-white" />
             </div>

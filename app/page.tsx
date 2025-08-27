@@ -468,7 +468,7 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center min-h-[75vh] py-4 sm:py-6 lg:py-6">
+            <div className="grid lg:grid-cols-2 gap-4 sm:gap-4 lg:gap-12 items-center min-h-[75vh] py-4 sm:py-6 lg:py-6">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -484,14 +484,14 @@ export default function HomePage() {
                   </Badge>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} className="space-y-2 sm:space-y-3 lg:space-y-4">
-                  <h1 className="text-xl sm:text-2xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
+                  <h1 className="text-xl sm:text-2xl lg:text-2xl xl:text-xl font-bold leading-tight tracking-tight text-slate-900 max-w-4xl">
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.6, duration: 0.8 }}
                       className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 mb-1 sm:mb-2"
                     >
-                      <span className="text-slate-600 font-medium text-xl sm:text-2xl lg:text-4xl xl:text-5xl">
+                      <span className="text-slate-600 font-medium text-xl sm:text-2xl lg:text-2xl xl:text-xl">
                         Creating
                       </span>
                       <motion.span 
@@ -515,7 +515,7 @@ export default function HomePage() {
                       initial={{ opacity: 0, y: 20 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 1.0, duration: 0.8 }}
-                      className="block text-slate-700 font-semibold text-xl sm:text-2xl lg:text-4xl xl:text-5xl"
+                      className="block text-slate-700 font-semibold text-xl sm:text-2xl lg:text-2xl xl:text-xl"
                     >
                       Workplaces for Everyone
                     </motion.span>
@@ -542,7 +542,7 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-4 flex flex-col items-center order-1 lg:order-2 mb-8 lg:mb-0">
+              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} className="relative lg:pl-4 flex flex-col items-center order-1 lg:order-2 mb-4 lg:mb-0">
                 <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl">
                   {/* Simplified Background Effects */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl lg:rounded-3xl blur-xl lg:blur-2xl scale-110"></div>
@@ -593,22 +593,22 @@ export default function HomePage() {
           <div className="absolute inset-0 z-0 opacity-10">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 text-[6rem] sm:text-[8rem] lg:text-[12rem] text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute top-1/4 -right-24 text-4xl sm:text-6xl lg:text-8xl text-slate-600 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
-              <Cog className="absolute bottom-1/4 -right-10 text-5xl sm:text-7xl lg:text-9xl text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 right-1/4 text-3xl sm:text-4xl lg:text-6xl text-slate-600 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute top-1/4 -right-24 text-2xl sm:text-6xl lg:text-8xl text-slate-600 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute bottom-1/4 -right-10 text-xl sm:text-7xl lg:text-9xl text-slate-700 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 right-1/4 text-xl sm:text-2xl lg:text-6xl text-slate-600 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-2 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-4 sm:space-y-6 mb-4 sm:mb-3">
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
                 <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
                   
-                  <span className="text-lg sm:text-xl lg:text-3xl xl:text-4xl">Expertise</span>
+                  <span className="text-lg sm:text-xl lg:text-xl xl:text-2xl">Expertise</span>
                 </Badge>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} viewport={{ once: true }} className="space-y-2 sm:space-y-3 lg:space-y-4">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight tracking-tight text-white">
+                <h2 className="text-xl sm:text-2xl lg:text-xl xl:text-2xl font-bold leading-tight tracking-tight text-white">
                   <motion.span 
                     initial={{ opacity: 0, y: 20 }} 
                     whileInView={{ opacity: 1, y: 0 }} 
@@ -695,10 +695,10 @@ export default function HomePage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
             {/* Team Section Heading */}
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-4 sm:space-y-6 mb-4 sm:mb-3">
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
                 <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
-                  <span className="text-lg sm:text-xl lg:text-3xl xl:text-4xl">World's Leading POSH Partner</span>
+                  <span className="text-lg sm:text-xl lg:text-xl xl:text-2xl">World's Leading POSH Partner</span>
                 </Badge>
               </motion.div>
             </motion.div>
@@ -738,21 +738,21 @@ export default function HomePage() {
               <Cog className="absolute -top-12 -left-12 text-[8rem] sm:text-[12rem] text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
               <Cog className="absolute top-1/4 -left-24 text-6xl sm:text-8xl text-slate-300 transition-transform duration-1000 ease-in-out group-hover:-rotate-[360deg]" />
               <Cog className="absolute bottom-1/4 -left-10 text-7xl sm:text-9xl text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
-              <Cog className="absolute -bottom-12 left-1/4 text-4xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
+              <Cog className="absolute -bottom-12 left-1/4 text-2xl sm:text-6xl text-slate-300 transition-transform duration-700 ease-in-out group-hover:-rotate-[360deg]" />
             </div>
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-6 sm:space-y-8 mb-12 sm:mb-20">
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="text-left space-y-6 sm:space-y-8 mb-3 sm:mb-20">
 
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }} className="inline-block">
                 <Badge className="bg-gradient-to-r from-slate-100 via-gray-100 to-slate-100 text-slate-800 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-xs sm:text-sm lg:text-base font-bold border border-slate-200/50 shadow-lg shadow-slate-200/50 rounded-full flex items-center space-x-2 sm:space-x-3">
-                  <span className="text-lg sm:text-xl lg:text-3xl xl:text-4xl">Sectors</span>
+                  <span className="text-lg sm:text-xl lg:text-xl xl:text-2xl">Sectors</span>
                 </Badge>
               </motion.div>
             </motion.div>
             
-            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
+            <motion.div variants={staggerContainer} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 lg:gap-4 max-w-7xl mx-auto">
               {industries.map((industry, index) => (
                 <motion.div key={index} variants={fadeInUp} whileHover={{ scale: 1.01, y: -4 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.3 }}>
                   <Card className="h-full border-0 shadow-lg sm:shadow-2xl hover:shadow-2xl sm:hover:shadow-3xl bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl overflow-hidden group relative">
@@ -760,11 +760,11 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-purple-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                     
-                    <CardContent className="relative p-4 sm:p-6 lg:p-8">
+                    <CardContent className="relative p-4 sm:p-4 lg:p-4">
                       {/* Header with Icon */}
-                      <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
+                      <div className="flex items-center justify-between mb-4 sm:mb-3 lg:mb-4">
                         <div className="relative">
-                          <div className="text-4xl sm:text-5xl lg:text-6xl mb-2">{industry.icon}</div>
+                          <div className="text-2xl sm:text-xl lg:text-6xl mb-2">{industry.icon}</div>
                         </div>
                       </div>
                       
@@ -772,7 +772,7 @@ export default function HomePage() {
                       <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 sm:mb-4 group-hover:text-slate-800 transition-colors duration-300">{industry.name}</h3>
                       
                       {/* Description */}
-                      <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed font-medium">{industry.description}</p>
+                      <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-3 leading-relaxed font-medium">{industry.description}</p>
                       
                       {/* Bottom Accent */}
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>

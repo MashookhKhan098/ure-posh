@@ -6,17 +6,17 @@ export default function POSHCompliancePage() {
       
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-pink-50 via-white to-pink-50 py-8 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+            <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <Shield className="h-4 w-4 mr-2" />
               India, UK, and US Compliance Guide
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-balance leading-tight">
               POSH Committee and <span className="text-pink-600">External NGO Members</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 text-balance leading-relaxed">
+            <p className="text-base text-gray-600 mb-6 text-balance leading-relaxed">
               India, UK, and US Compliance Guide for workplace harassment prevention with expert external members
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -39,17 +39,17 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* What is POSH Committee Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-2xl mb-6">
-              <Building className="h-8 w-8 text-pink-600" />
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-10 h-10 bg-pink-100 rounded-2xl mb-3">
+              <Building className="h-5 w-5 text-pink-600" />
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">What is a POSH Committee?</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">What is a POSH Committee?</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-700 leading-relaxed text-center">
+            <p className="text-sm text-gray-700 leading-relaxed text-center">
               A POSH Committee, also known as the Internal Committee (IC), is a specialized team that helps
               organizations prevent and address workplace sexual harassment. Having an effective POSH Committee is
               crucial not only for legal compliance but also for building a truly safe and inclusive environment.
@@ -59,38 +59,38 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* POSH Committee Structure Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               POSH Committee Structure in India: The Power of External Members
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-6">
-              <p className="text-lg text-gray-700 leading-relaxed">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div className="space-y-3">
+              <p className="text-sm text-gray-700 leading-relaxed">
                 Under India's POSH Act, 2013, every company with 10 or more employees is required to establish an
                 Internal Committee to address complaints of sexual harassment. A unique feature of this law is the
                 mandatory inclusion of an external member, a representative from a respected NGO or a professional with
                 experience in women's issues.
               </p>
             </div>
-            <div className="bg-pink-50 p-8 rounded-2xl">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+            <div className="bg-pink-50 p-4 rounded-2xl">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Why Include External Members from Renowned NGOs?
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {[
                   "Neutrality & Objectivity: External members provide an unbiased voice, ensuring fair investigations and decisions.",
                   "Credibility: Their presence reassures employees that the process is trustworthy and professional.",
                   "Expertise: NGO professionals bring deep experience in gender issues, legal requirements, and trauma-sensitive care.",
                 ].map((item, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center mt-1">
-                      <CheckCircle className="h-4 w-4 text-white" />
+                  <div key={index} className="flex items-start space-x-2">
+                    <div className="flex-shrink-0 w-4 h-4 bg-pink-600 rounded-full flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-3 w-3 text-white" />
                     </div>
-                    <span className="text-gray-700 font-medium leading-relaxed">{item}</span>
+                    <span className="text-gray-700 font-medium leading-relaxed text-sm">{item}</span>
                   </div>
                 ))}
               </div>
@@ -100,28 +100,28 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* NGO Partners Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               Well-known NGOs whose members serve as external IC members include:
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {["WCRT", "Breakthrough India", "Jagori", "Majlis Legal Centre", "CSR India", "SAKSHI"].map(
               (ngo, index) => (
                 <div
                   key={index}
-                  className="group flex items-center justify-center p-6 bg-pink-50 rounded-2xl hover:bg-pink-100 transition-colors"
+                  className="group flex items-center justify-center p-4 bg-pink-50 rounded-2xl hover:bg-pink-100 transition-colors"
                 >
-                  <span className="text-gray-700 font-semibold text-lg">{ngo}</span>
+                  <span className="text-gray-700 font-semibold text-base">{ngo}</span>
                 </div>
               ),
             )}
           </div>
-          <div className="mt-12 text-center">
-            <p className="text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto">
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-700 leading-relaxed max-w-4xl mx-auto">
               Having these NGO experts on your POSH Committee not only fulfills legal needs but shows your
               organization's genuine commitment to a respectful workplace.
             </p>
@@ -130,32 +130,32 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* UK and US Standards Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               POSH & Harassment Committees: UK and US Standards
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">UK Approach:</h3>
-              <p className="text-gray-700 leading-relaxed">
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
+              <h3 className="text-base font-semibold text-gray-900 mb-2">UK Approach:</h3>
+              <p className="text-gray-700 leading-relaxed text-sm">
                 Businesses may invite external HR professionals or NGO representatives—such as those from the Equality
                 and Human Rights Commission or Women's Aid—to ensure transparency and fairness in investigations.
               </p>
             </div>
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">US Practice:</h3>
-              <p className="text-gray-700 leading-relaxed">
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
+              <h3 className="text-base font-semibold text-gray-900 mb-2">US Practice:</h3>
+              <p className="text-gray-700 leading-relaxed text-sm">
                 US firms often include external legal experts or NGO specialists like those from the National Women's
                 Law Center (NWLC) or RAINN to bring unbiased perspectives in sensitive cases.
               </p>
             </div>
           </div>
-          <div className="mt-12 text-center">
-            <p className="text-lg text-gray-700 leading-relaxed max-w-4xl mx-auto">
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-700 leading-relaxed max-w-4xl mx-auto">
               While the UK and US do not have a law identical to India's POSH Act, workplace harassment and gender
               equality are taken very seriously. Companies are encouraged to form harassment committees or ethics boards
               to deal with complaints, and it's considered best practice to involve external advisors for impartiality.
@@ -165,15 +165,15 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">
               Benefits of Involving External NGO Members:
             </h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6">
             {[
               "Unbiased investigation and resolution",
               "Up-to-date knowledge of local and global laws",
@@ -182,12 +182,12 @@ export default function POSHCompliancePage() {
             ].map((benefit, index) => (
               <div
                 key={index}
-                className="group flex items-center space-x-4 p-6 bg-pink-50 rounded-2xl hover:bg-pink-100 transition-colors"
+                className="group flex items-center space-x-3 p-4 bg-pink-50 rounded-2xl hover:bg-pink-100 transition-colors"
               >
-                <div className="flex-shrink-0 w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center">
-                  <CheckCircle className="h-5 w-5 text-white" />
+                <div className="flex-shrink-0 w-6 h-6 bg-pink-600 rounded-full flex items-center justify-center">
+                  <CheckCircle className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-gray-700 font-medium leading-relaxed">{benefit}</span>
+                <span className="text-gray-700 font-medium leading-relaxed text-sm">{benefit}</span>
               </div>
             ))}
           </div>
@@ -195,19 +195,19 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* How UREPosh Can Help Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 to-white">
+      <section className="py-8 bg-gradient-to-br from-pink-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">How UREPosh Can Help</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">How UREPosh Can Help</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-700 leading-relaxed text-center mb-12">
+            <p className="text-base text-gray-700 leading-relaxed text-center mb-8">
               Our network includes leading NGO professionals and compliance specialists ready to serve as external POSH
               Committee members for organizations in India and as external advisors for companies in the UK and US. We
               help you:
             </p>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
                 "Select qualified external IC members",
                 "Stay audit-ready and compliant with the latest laws",
@@ -215,12 +215,12 @@ export default function POSHCompliancePage() {
               ].map((service, index) => (
                 <div
                   key={index}
-                  className="group bg-white p-8 rounded-2xl shadow-sm border border-pink-100 hover:shadow-lg transition-all duration-200"
+                  className="group bg-white p-6 rounded-2xl shadow-sm border border-pink-100 hover:shadow-lg transition-all duration-200"
                 >
-                  <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-pink-600 transition-colors">
-                    <CheckCircle className="h-6 w-6 text-pink-600 group-hover:text-white transition-colors" />
+                  <div className="w-10 h-10 bg-pink-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-600 transition-colors">
+                    <CheckCircle className="h-5 w-5 text-pink-600 group-hover:text-white transition-colors" />
                   </div>
-                  <p className="text-gray-700 font-medium leading-relaxed">{service}</p>
+                  <p className="text-gray-700 font-medium leading-relaxed text-sm">{service}</p>
                 </div>
               ))}
             </div>
@@ -229,13 +229,13 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-balance">Frequently Asked:</h2>
-            <div className="w-24 h-1 bg-pink-600 mx-auto rounded-full"></div>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 text-balance">Frequently Asked:</h2>
+            <div className="w-16 h-1 bg-pink-600 mx-auto rounded-full"></div>
           </div>
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-6">
             {[
               {
                 question: "Who can be an external member of the POSH Committee in India?",
@@ -258,9 +258,9 @@ export default function POSHCompliancePage() {
                   "To appoint an external expert for your company's committee, identify the specific expertise needed and research reputable professionals or organizations with relevant experience. Verify their credentials and define their roles and responsibilities clearly. Then, formalize the appointment through a written agreement outlining scope, confidentiality, and terms of engagement. Seek approval from senior management or the board as required, and onboard the expert by introducing them to the committee and providing necessary information. This process ensures a transparent and effective appointment aligned with organizational standards.",
               },
             ].map((faq, index) => (
-              <div key={index} className="bg-pink-50 p-8 rounded-2xl">
-                <h3 className="font-semibold text-gray-900 mb-4 text-lg">{faq.question}</h3>
-                <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+              <div key={index} className="bg-pink-50 p-4 rounded-2xl">
+                <h3 className="font-semibold text-gray-900 mb-2 text-base">{faq.question}</h3>
+                <p className="text-gray-700 leading-relaxed text-sm">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -268,24 +268,24 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
+      <section className="py-8 bg-gradient-to-r from-pink-600 to-pink-700 text-white relative overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-6 text-balance">Connect with Us:</h2>
-          <p className="text-xl mb-12 text-pink-100 text-balance max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-3 text-balance">Connect with Us:</h2>
+          <p className="text-base mb-6 text-pink-100 text-balance max-w-3xl mx-auto">
             UREPosh: Trusted Partners for POSH, Harassment Committee Compliance, and Workplace Inclusion
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <a
               href="tel:+919999644807"
-              className="group flex items-center space-x-3 bg-white text-pink-600 px-8 py-4 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="group flex items-center space-x-3 bg-white text-pink-600 px-6 py-3 rounded-xl font-semibold hover:bg-pink-50 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              <Phone className="h-5 w-5" />
+              <Phone className="h-4 w-4" />
               <span>📞9999644807</span>
             </a>
           </div>
-          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm px-6 py-3 rounded-xl">
-            <Phone className="h-6 w-6 mr-3 text-pink-200" />
-            <a href="tel:+919999644807" className="text-2xl font-bold text-white hover:text-pink-200 transition-colors">
+          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl">
+            <Phone className="h-5 w-5 mr-2 text-pink-200" />
+            <a href="tel:+919999644807" className="text-lg font-bold text-white hover:text-pink-200 transition-colors">
               📞9999644807
             </a>
           </div>
@@ -293,15 +293,15 @@ export default function POSHCompliancePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center space-x-3 mb-6">
+          <div className="flex items-center justify-center space-x-3 mb-3">
             <div className="bg-gradient-to-br from-pink-500 to-pink-600 p-2 rounded-xl">
-              <Shield className="h-6 w-6 text-white" />
+              <Shield className="h-5 w-5 text-white" />
             </div>
-            <span className="text-2xl font-bold">URE POSH</span>
+            <span className="text-lg font-bold">URE POSH</span>
           </div>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-sm">
             Trusted Partners for POSH, Harassment Committee Compliance, and Workplace Inclusion
           </p>
         </div>
