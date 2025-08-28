@@ -23,6 +23,24 @@ interface TeamMember {
 
 const mockMembers: TeamMember[] = [
   {
+    id: 6,
+    name: "Pradeep Kumar",
+    title: "POSH Expert",
+    specialization: "POSH Expert - IC Inquiry Redressal",
+    description: "Seasoned legal and compliance professional specializing in workplace safety and POSH consulting",
+    longDescription: "Pradeep Kumar is a seasoned legal and compliance professional with 12+ years of experience in taxation, litigation, corporate governance, fundraising, and workplace safety. As a certified POSH (Prevention of Sexual Harassment) consultant, he has been instrumental in helping organizations create safe, inclusive, and legally compliant workplaces across industries including FMCG, defense, banking, manufacturing, real estate, and startups. With a strong foundation in law (LLB), commerce (B.Com, M.Com), and professional qualifications (CA & CS Inter), Pradeep combines legal expertise with practical corporate insights. Over the past decade, he has conducted 100+ POSH awareness sessions and IC trainings for corporates, PSUs, and startups, guided 90+ MNC/organizations in forming and strengthening Internal Committees (IC) in line with the POSH Act, 2013, and advised on sensitive workplace harassment cases with confidentiality, fairness, and neutrality.",
+    icon: Compass,
+    color: "from-slate-600 via-gray-700 to-zinc-800",
+    accentColor: "bg-slate-600",
+    image: "/images/URE%20POSH_/Pradeep.jpeg",
+    achievements: ["POSH Consultant", "100+ Training Sessions", "90+ Organizations Guided"],
+    skills: ["POSH Compliance", "Legal Advisory", "IC Training", "Workplace Safety"],
+    experience: "10+ Years",
+    location: "India",
+    email: "pradeep@ureposh.com",
+    linkedin: "linkedin.com/in/pradeepadv"
+  },
+  {
     id: 1,
     name: "Adv Shrigarika",
     title: "Legal Advisor",
@@ -111,24 +129,6 @@ const mockMembers: TeamMember[] = [
     location: "India",
     email: "pankaj@ureposh.com",
     linkedin: "linkedin.com/in/pankaj"
-  },
-  {
-    id: 6,
-    name: "Pradeep",
-    title: "Operations Manager",
-    specialization: "Operations & Process Management",
-    description: "Optimizing operations for maximum efficiency and compliance",
-    longDescription: "Pradeep is an operations expert focused on process management, operational efficiency, and quality assurance. He ensures smooth operations while maintaining compliance with all regulatory requirements.",
-    icon: Compass,
-    color: "from-slate-600 via-gray-700 to-zinc-800",
-    accentColor: "bg-slate-600",
-    image: "/images/URE%20POSH_/Pradeep.jpeg",
-    achievements: ["Operations Excellence", "Process Management", "Quality Assurance"],
-    skills: ["Operations Management", "Process Improvement", "Quality Control", "Team Leadership"],
-    experience: "9+ Years",
-    location: "India",
-    email: "pradeep@ureposh.com",
-    linkedin: "linkedin.com/in/pradeep"
   }
 ];
 
@@ -402,45 +402,182 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
       {/* Member Profile Modal (if selectedMember) */}
       {selectedMember && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={closeModal} // Click on backdrop closes modal
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={closeModal}
         >
           <div
-            className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8"
-            onClick={e => e.stopPropagation()} // Prevent modal click from closing
+            className="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-6 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200"
+              className="absolute top-6 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200 group"
             >
-              <X className="h-6 w-6 text-gray-600" />
+              <X className="h-6 w-6 text-gray-600 group-hover:text-red-500 transition-colors" />
             </button>
-            {/* Modal Content (example, you can customize) */}
-            <div className="flex flex-col items-center gap-4">
-              <selectedMember.icon className="h-16 w-16 text-cyan-500" />
-              <h2 className="text-2xl font-bold text-gray-900">{selectedMember.name}</h2>
-              <p className="text-cyan-600 font-semibold">{selectedMember.title}</p>
-              <p className="text-gray-700 text-center">{selectedMember.longDescription}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {selectedMember.skills.map((skill, i) => (
-                  <span key={i} className="bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full text-xs font-medium">
-                    {skill}
-                  </span>
-                ))}
+
+            {/* Header Section with Background */}
+            <div className="relative h-48 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 rounded-t-3xl overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-4 left-4 w-32 h-32 bg-white/10 rounded-full blur-xl" />
+                <div className="absolute bottom-4 right-4 w-24 h-24 bg-cyan-500/20 rounded-full blur-lg" />
               </div>
-              <div className="flex gap-4 mt-4">
-                <a href={`mailto:${selectedMember.email}`} className="text-cyan-600 hover:underline flex items-center gap-1">
-                  <Mail className="h-4 w-4" /> {selectedMember.email}
-                </a>
-                <a href={`https://${selectedMember.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
-                  <Linkedin className="h-4 w-4" /> LinkedIn
-                </a>
-                {selectedMember.github && (
-                  <a href={`https://${selectedMember.github}`} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:underline flex items-center gap-1">
-                    <Github className="h-4 w-4" /> GitHub
+              
+              {/* Profile Image & Basic Info */}
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <div className="flex items-end gap-6">
+                  <div className="relative">
+                    {selectedMember.image ? (
+                      <div className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
+                        <img 
+                          src={selectedMember.image} 
+                          alt={selectedMember.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${selectedMember.color} flex items-center justify-center border-4 border-white shadow-2xl`}>
+                        <selectedMember.icon className="h-12 w-12 text-white" />
+                      </div>
+                    )}
+                    <div className={`absolute -bottom-2 -right-2 w-8 h-8 ${selectedMember.accentColor} rounded-xl flex items-center justify-center border-2 border-white`}>
+                      <selectedMember.icon className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
+                  
+                  <div className="text-white pb-2">
+                    <h1 className="text-3xl font-black mb-1">{selectedMember.name}</h1>
+                    <p className="text-cyan-300 font-semibold text-lg">{selectedMember.title}</p>
+                    <div className="flex items-center gap-2 mt-2 text-gray-300">
+                      <MapPin className="h-4 w-4" />
+                      <span className="text-sm">{selectedMember.location}</span>
+                      <div className="w-1 h-1 bg-gray-400 rounded-full mx-2" />
+                      <Calendar className="h-4 w-4" />
+                      <span className="text-sm">{selectedMember.experience}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="p-8 space-y-8">
+              {/* Specialization Banner */}
+              <div className={`bg-gradient-to-r ${selectedMember.color} p-6 rounded-2xl text-white`}>
+                <div className="flex items-center gap-4">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
+                    <Target className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Specialization</h3>
+                    <p className="text-white/90">{selectedMember.specialization}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* About Section */}
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                  <div className="w-1 h-8 bg-gradient-to-b from-cyan-500 to-blue-600 rounded-full" />
+                  About
+                </h3>
+                <p className="text-gray-700 leading-relaxed text-lg">{selectedMember.longDescription}</p>
+              </div>
+
+              {/* Skills & Achievements Grid */}
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Skills */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-cyan-500" />
+                    Core Skills
+                  </h4>
+                  <div className="space-y-3">
+                    {selectedMember.skills.map((skill, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border border-cyan-100 hover:shadow-md transition-all duration-200 group">
+                        <div className="w-2 h-2 bg-cyan-500 rounded-full group-hover:scale-125 transition-transform" />
+                        <span className="font-medium text-gray-800">{skill}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Achievements */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-yellow-500" />
+                    Key Achievements
+                  </h4>
+                  <div className="space-y-3">
+                    {selectedMember.achievements.map((achievement, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-100 hover:shadow-md transition-all duration-200 group">
+                        <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Star className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="font-medium text-gray-800">{achievement}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Section */}
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
+                <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-green-500" />
+                  Get In Touch
+                </h4>
+                <div className="flex flex-wrap gap-4">
+                  <a 
+                    href={`mailto:${selectedMember.email}`}
+                    className="flex items-center gap-3 bg-white hover:bg-green-50 text-gray-800 hover:text-green-700 px-6 py-3 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200 group shadow-sm hover:shadow-md"
+                  >
+                    <Mail className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    <span className="font-medium">{selectedMember.email}</span>
                   </a>
-                )}
+                  
+                  <a 
+                    href={`https://${selectedMember.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 bg-white hover:bg-blue-50 text-gray-800 hover:text-blue-700 px-6 py-3 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-200 group shadow-sm hover:shadow-md"
+                  >
+                    <Linkedin className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    <span className="font-medium">LinkedIn Profile</span>
+                  </a>
+                  
+                  {selectedMember.github && (
+                    <a 
+                      href={`https://${selectedMember.github}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 bg-white hover:bg-gray-50 text-gray-800 hover:text-gray-900 px-6 py-3 rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 group shadow-sm hover:shadow-md"
+                    >
+                      <Github className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                      <span className="font-medium">GitHub Profile</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-4">
+                <button 
+                  onClick={() => window.location.href = `mailto:${selectedMember.email}`}
+                  className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3 group"
+                >
+                  <Mail className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <span>Contact Now</span>
+                </button>
+                
+                <button 
+                  onClick={closeModal}
+                  className="px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-xl font-semibold transition-all duration-200 border border-gray-200"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>

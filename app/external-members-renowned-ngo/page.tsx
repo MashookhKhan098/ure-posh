@@ -10,7 +10,6 @@ export default function POSHCompliancePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
-              <Shield className="h-4 w-4 mr-2" />
               India, UK, and US Compliance Guide
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 text-balance leading-tight">
