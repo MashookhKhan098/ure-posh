@@ -345,28 +345,14 @@ export default function PostsPage() {
         </div>
       )}
 
-             {/* Category Navigation */}
-       <div className="bg-white border-b border-pink-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center py-4">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent">
-              News & Updates
-            </h1>
-          </div>
-        </div>
-      </div>
+        
 
       {/* Main Content */}
              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Category Selector - Always Visible Above Content */}
         <div className="mb-8">
           <div className="bg-white rounded-2xl shadow-lg border border-pink-100 p-6">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full"></div>
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
-                Select Category
-              </h2>
-            </div>
+            
             
             <div className="flex flex-wrap items-center gap-2">
               <Button
@@ -389,44 +375,34 @@ export default function PostsPage() {
                 </div>
               </Button>
               
-              {categories.map((category) => {
-                // Create shorter names for categories
-                const shortName = category.name
-                  .replace("Compliance & Legal Insights (Blog Section)", "Legal")
-                  .replace("Events & Webinars", "Events")
-                  .replace("International Regulatory & Policy Watch", "Policy")
-                  .replace("News & Media Coverage", "Media")
-                  .replace("Newsletter Archive", "Archive")
-                  .replace("Thought Leadership", "Leadership")
-                  .replace("United Kingdom Workplace", "UK")
-                  .replace("US Work Place", "US")
-                  .replace("Workplace Stories", "Stories")
-                  .replace("Company Updates", "Updates")
-                
-                const isActive = activeCategory === category.slug
-                
-                return (
-                  <div key={category.id} className="relative group">
-                    <Button
-                      variant={isActive ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setActiveCategory(category.slug)}
-                      className="hover:bg-pink-50 transition-colors text-black text-xs px-3 py-1.5"
-                      style={{
-                        backgroundColor: isActive ? category.color : undefined,
-                        color: isActive ? "white" : "black",
-                      }}
-                    >
-                      {shortName}
-                    </Button>
-                    {/* Tooltip - only shows on hover, not when active */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none whitespace-nowrap z-50">
-                      {category.name}
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-900"></div>
+              {categories
+                .filter(category => [
+                  "Compliance & Legal Insights (Blog Section)",
+                  "Events & Webinars",
+                  "International Regulatory & Policy Watch",
+                  "United Kingdom Workplace",
+                  "US Work Place",
+                  "Best Practice Guides"
+                ].some(n => n === category.name))
+                .map((category) => {
+                  const isActive = activeCategory === category.slug;
+                  return (
+                    <div key={category.id} className="relative group">
+                      <Button
+                        variant={isActive ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setActiveCategory(category.slug)}
+                        className="hover:bg-pink-50 transition-colors text-black text-xs px-2 py-1 h-7 min-h-0"
+                        style={{
+                          backgroundColor: isActive ? category.color : undefined,
+                          color: isActive ? "white" : "black",
+                        }}
+                      >
+                        {category.name}
+                      </Button>
                     </div>
-                  </div>
-                )
-              })}
+                  );
+                })}
             </div>
           </div>
         </div>

@@ -111,7 +111,7 @@ export default function Footer() {
               {
                 title: "Resources",
                 links: [
-                  'Compliance & Legal Insights',
+                  'Compliance & Legal Insights (Blog Section)',
                   'Events & Webinars',
                   'International Regulatory & Policy Watch',
                   'United Kingdom Workplace',
@@ -137,16 +137,18 @@ export default function Footer() {
                     const getHref = (linkText: string, sectionTitle: string) => {
                       if (sectionTitle === "Resources") {
                         switch (linkText) {
-                          case 'Company Updates':
-                            return '/posts?category=company-updates';
-                          case 'Legal Insights':
-                            return '/posts?category=legal-insights';
+                          case 'Compliance & Legal Insights (Blog Section)':
+                            return '/posts?category=compliance-legal-insights-blog-section';
                           case 'Events & Webinars':
                             return '/posts?category=events-webinars';
-                          case 'Policy Watch':
-                            return '/posts?category=policy-watch';
-                          case 'Workplace Stories':
-                            return '/posts?category=workplace-stories';
+                          case 'International Regulatory & Policy Watch':
+                            return '/posts?category=international-regulatory-policy-watch';
+                          case 'United Kingdom Workplace':
+                            return '/posts?category=united-kingdom-workplace';
+                          case 'US Work Place':
+                            return '/posts?category=us-work-place';
+                          case 'Best Practice Guides':
+                            return '/posts?category=best-practice-guides';
                           default:
                             return '/posts';
                         }
