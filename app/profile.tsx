@@ -2,19 +2,16 @@
 
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Mail, Linkedin } from "lucide-react"
 
 
 interface TeamMember {
-  linkedin: string
-  email: string
   name: string
   role: string
   bio: string
   image: string
   expertise: string[]
   achievements: string[]
-  stats?: string
+  stats: string
 }
 
 interface TeamCarouselProps {
@@ -37,7 +34,7 @@ export const TeamCarousel: React.FC<TeamCarouselProps> = ({ teamMembers }) => {
   const expandedWidth = 40 // percent
 
   return (
-    <div className="relative w-full max-w-4xl h-80 md:h-80 h-[340px] mx-auto flex items-center select-none">
+    <div className="relative w-full max-w-4xl h-80 mx-auto flex items-center select-none">
       <div className="relative w-full h-full">
         {teamMembers.map((member, idx) => {
           // Calculate left position for each slice
@@ -60,7 +57,7 @@ export const TeamCarousel: React.FC<TeamCarouselProps> = ({ teamMembers }) => {
           return (
             <motion.div
               key={idx}
-              className="absolute top-0 h-full transition-all duration-500 cursor-pointer rounded-xl md:rounded-2xl overflow-hidden shadow-xl"
+              className="absolute top-0 h-full transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden shadow-xl"
               style={{ left, width, zIndex }}
               animate={{
                 left,
@@ -87,8 +84,8 @@ export const TeamCarousel: React.FC<TeamCarouselProps> = ({ teamMembers }) => {
                 animate={{ opacity: activeIdx === idx ? 0.3 : 0.7 }}
               />
               {/* Name & Role (always visible, but more info on expand) */}
-              <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 text-center w-11/12">
-                <div className="text-white font-bold text-sm md:text-base drop-shadow-lg tracking-wide">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center w-11/12">
+                <div className="text-white font-bold text-base md:text-lg drop-shadow-lg tracking-wide">
                   {member.name}
                 </div>
                 <div className="text-white/80 text-xs md:text-sm font-medium drop-shadow">
@@ -102,38 +99,26 @@ export const TeamCarousel: React.FC<TeamCarouselProps> = ({ teamMembers }) => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 30 }}
-                    className="absolute inset-0 flex flex-col justify-center items-center bg-black/90 px-2 py-3 md:px-4 md:py-6 text-center"
+                    className="absolute inset-0 flex flex-col justify-center items-center bg-black/70 px-4 py-6 text-center"
                     style={{ zIndex: 40 }}
                   >
-                    {/* Mobile: show less content */}
-                    <div className="text-white text-sm md:text-lg font-bold mb-1">{member.name}</div>
-                    <div className="text-fuchsia-200 text-xs md:text-sm font-semibold mb-2">{member.role}</div>
-                    <div className="text-white/90 text-xs md:text-sm mb-2 line-clamp-3">{member.bio}</div>
+                    {/* All icons removed from expanded view */}
+                    <div className="text-white text-lg font-bold mb-1">{member.name}</div>
+                    <div className="text-fuchsia-200 text-sm font-semibold mb-2">{member.role}</div>
+                    <div className="text-white/90 text-sm mb-3 line-clamp-3">{member.bio}</div>
                     <div className="flex flex-wrap justify-center gap-1 mb-2">
-                      {member.expertise.slice(0, 2).map((skill, i) => (
-                        <span key={i} className="bg-white/20 text-white text-xs md:text-sm rounded px-2 py-0.5 mr-1 mb-1">
+                      {member.expertise.map((skill, i) => (
+                        <span key={i} className="bg-white/20 text-white text-xs rounded px-2 py-0.5 mr-1 mb-1">
                           {skill}
                         </span>
                       ))}
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      {member.achievements.slice(0, 1).map((ach, i) => (
-                        <span key={i} className="text-green-200 text-xs md:text-sm flex items-center gap-1">
+                      {member.achievements.map((ach, i) => (
+                        <span key={i} className="text-green-200 text-xs flex items-center gap-1">
                           {ach}
                         </span>
                       ))}
-                    </div>
-                    <div className="flex justify-center gap-3 mt-2">
-                      {member.email && (
-                        <a href={`mailto:${member.email}`} target="_blank" rel="noopener noreferrer">
-                          <Mail className="h-4 w-4 md:h-5 md:w-5 text-white hover:text-blue-400 transition" />
-                        </a>
-                      )}
-                      {member.linkedin && (
-                        <a href={member.linkedin.startsWith("http") ? member.linkedin : `https://${member.linkedin}`} target="_blank" rel="noopener noreferrer">
-                          <Linkedin className="h-4 w-4 md:h-5 md:w-5 text-white hover:text-blue-600 transition" />
-                        </a>
-                      )}
                     </div>
                   </motion.div>
                 )}

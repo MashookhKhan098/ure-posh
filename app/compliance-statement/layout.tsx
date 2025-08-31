@@ -1,0 +1,7 @@
+"use client";
+
+export default function ComplianceStatementLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="min-h-screen bg-white text-gray-900">{children}</main>
+  );
+}

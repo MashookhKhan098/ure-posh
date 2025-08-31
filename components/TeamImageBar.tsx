@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Scale, Users, Briefcase, Lightbulb, Target, Zap, Compass, ArrowRight, Star, Award, Sparkles, Mail, Linkedin, Github, MapPin, Calendar, Trophy, X } from 'lucide-react';
 
 interface TeamMember {
   id: number;
@@ -29,7 +28,7 @@ const mockMembers: TeamMember[] = [
     specialization: "POSH Expert - IC Inquiry Redressal",
     description: "Seasoned legal and compliance professional specializing in workplace safety and POSH consulting",
     longDescription: "Pradeep Kumar is a seasoned legal and compliance professional with 12+ years of experience in taxation, litigation, corporate governance, fundraising, and workplace safety. As a certified POSH (Prevention of Sexual Harassment) consultant, he has been instrumental in helping organizations create safe, inclusive, and legally compliant workplaces across industries including FMCG, defense, banking, manufacturing, real estate, and startups. With a strong foundation in law (LLB), commerce (B.Com, M.Com), and professional qualifications (CA & CS Inter), Pradeep combines legal expertise with practical corporate insights. Over the past decade, he has conducted 100+ POSH awareness sessions and IC trainings for corporates, PSUs, and startups, guided 90+ MNC/organizations in forming and strengthening Internal Committees (IC) in line with the POSH Act, 2013, and advised on sensitive workplace harassment cases with confidentiality, fairness, and neutrality.",
-    icon: Compass,
+    icon: undefined,
     color: "from-slate-600 via-gray-700 to-zinc-800",
     accentColor: "bg-slate-600",
     image: "/images/URE%20POSH_/Pradeep.jpeg",
@@ -47,7 +46,7 @@ const mockMembers: TeamMember[] = [
     specialization: "Legal Compliance & POSH",
     description: "Expert in workplace harassment prevention and legal compliance",
     longDescription: "Adv Shrigarika brings extensive experience in legal compliance and workplace harassment prevention. She specializes in POSH (Prevention of Sexual Harassment) policies and ensures organizations maintain a safe and compliant work environment.",
-    icon: Scale,
+    icon: undefined,
     color: "from-purple-500 via-pink-500 to-rose-500",
     accentColor: "bg-purple-500",
     image: "/images/URE%20POSH_/Adv%20Shrigarika.jpg",
@@ -65,7 +64,7 @@ const mockMembers: TeamMember[] = [
     specialization: "Financial Compliance & Audit",
     description: "Ensuring financial transparency and regulatory compliance",
     longDescription: "CA Shweta is a qualified Chartered Accountant with expertise in financial compliance, audit, and regulatory requirements. She ensures organizations maintain proper financial governance and compliance with statutory requirements.",
-    icon: Briefcase,
+    icon: undefined,
     color: "from-blue-500 via-cyan-500 to-teal-500",
     accentColor: "bg-blue-500",
     image: "/images/URE%20POSH_/Ca%20Shweta%20.jpg",
@@ -83,7 +82,7 @@ const mockMembers: TeamMember[] = [
     specialization: "Corporate Governance & Compliance",
     description: "Expert in corporate governance and statutory compliance",
     longDescription: "CS Aanchal is a qualified Company Secretary specializing in corporate governance, board management, and statutory compliance. She ensures organizations meet their regulatory obligations and maintain high standards of corporate governance.",
-    icon: Users,
+    icon: undefined,
     color: "from-emerald-500 via-green-500 to-teal-500",
     accentColor: "bg-emerald-500",
     image: "/images/URE%20POSH_/CS%20Aanchal%20_1.jpeg",
@@ -101,7 +100,7 @@ const mockMembers: TeamMember[] = [
     specialization: "Legal & Regulatory Affairs",
     description: "Specialized in legal documentation and regulatory compliance",
     longDescription: "CS Sarvargya brings expertise in legal affairs, regulatory compliance, and corporate secretarial practice. He assists organizations in navigating complex regulatory requirements and maintaining proper legal documentation.",
-    icon: Target,
+    icon: undefined,
     color: "from-orange-500 via-red-500 to-pink-500",
     accentColor: "bg-orange-500",
     image: "/images/URE%20POSH_/CS%20Sarvargya%20_2.jpg",
@@ -119,7 +118,7 @@ const mockMembers: TeamMember[] = [
     specialization: "Strategic Planning & Operations",
     description: "Driving business growth through strategic planning and operations",
     longDescription: "Pankaj is an experienced business consultant who specializes in strategic planning, operational efficiency, and business development. He helps organizations optimize their processes and achieve sustainable growth.",
-    icon: Lightbulb,
+    icon: undefined,
     color: "from-indigo-500 via-purple-500 to-violet-500",
     accentColor: "bg-indigo-500",
     image: "/images/URE%20POSH_/Pankaj%202.jpeg",
@@ -255,8 +254,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                     </div>
                   ) : (
                     <div className={`h-[450px] lg:h-[550px] w-full bg-gradient-to-br ${member.color} flex items-center justify-center relative`}>
-                      <member.icon className="h-16 w-16 lg:h-24 lg:w-24 text-white opacity-80" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                     </div>
                   )}
 
@@ -267,8 +264,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                     <div className="text-center space-y-2 lg:space-y-4">
                       {/* Professional Badge */}
                       <div className="bg-black/60 backdrop-blur-sm rounded-xl lg:rounded-2xl px-3 lg:px-4 py-2 lg:py-3 mb-2 lg:mb-4 border border-white/20">
-                        <member.icon className="h-4 w-4 lg:h-6 lg:w-6 text-white mx-auto mb-1 lg:mb-2" />
-                        <div className={`w-6 lg:w-8 h-0.5 lg:h-1 ${member.accentColor} rounded-full mx-auto`} />
                       </div>
                       
                       {/* Name - Horizontal Only */}
@@ -292,23 +287,16 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       <div className="flex items-center justify-between">
                         <div className={`w-12 lg:w-20 h-1 lg:h-2 ${member.accentColor} rounded-full shadow-lg transform origin-left transition-all duration-500 ${hoveredId === member.id ? 'scale-x-100' : 'scale-x-0'}`} />
                         <div className="flex gap-1 lg:gap-2">
-                          {member.achievements.slice(0, 2).map((achievement, i) => (
-                            <div key={i} className="bg-yellow-500/20 backdrop-blur-sm rounded-full p-1.5 lg:p-2 transform transition-all duration-300">
-                              <Trophy className="h-3 w-3 lg:h-4 lg:w-4 text-yellow-400" />
-                            </div>
-                          ))}
                         </div>
                       </div>
                       
                       {/* Professional Icon */}
                       <div className="flex items-center gap-3 lg:gap-4">
                         <div className={`p-2.5 lg:p-4 ${member.accentColor} rounded-xl lg:rounded-2xl shadow-xl transform transition-all duration-300`}>
-                          <member.icon className="h-5 w-5 lg:h-8 lg:w-8 text-white" />
                         </div>
                         <div className="text-white">
                           <div className="text-xs lg:text-sm text-gray-300 font-medium">{member.specialization}</div>
                           <div className="flex items-center gap-2 text-xs text-gray-400">
-                            <Calendar className="h-2.5 w-2.5 lg:h-3 lg:w-3" />
                             <span>{member.experience}</span>
                           </div>
                         </div>
@@ -326,7 +314,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                           {member.title}
                         </p>
                         <div className="flex items-center gap-2 text-gray-300">
-                          <MapPin className="h-3 w-3 lg:h-4 lg:w-4" />
                           <span className="text-xs lg:text-sm">{member.location}</span>
                         </div>
                       </div>
@@ -368,15 +355,12 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                           className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl font-bold text-xs lg:text-sm transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 group"
                         >
                           <span>View Profile</span>
-                          <ArrowRight className="h-3 w-3 lg:h-4 lg:w-4 group-hover:translate-x-1 transition-transform" />
                         </button>
                         
                         <div className="flex gap-1.5 lg:gap-2">
                           <button className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white p-2 lg:p-3 rounded-lg lg:rounded-xl transition-all duration-300 border border-white/20 hover:border-white/40 transform hover:scale-110">
-                            <Mail className="h-3 w-3 lg:h-4 lg:w-4" />
                           </button>
                           <button className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white p-2 lg:p-3 rounded-lg lg:rounded-xl transition-all duration-300 border border-white/20 hover:border-white/40 transform hover:scale-110">
-                            <Linkedin className="h-3 w-3 lg:h-4 lg:w-4" />
                           </button>
                         </div>
                       </div>
@@ -414,7 +398,7 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
               onClick={closeModal}
               className="absolute top-6 right-6 z-50 bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-all duration-200 shadow-lg border border-gray-200 group"
             >
-              <X className="h-6 w-6 text-gray-600 group-hover:text-red-500 transition-colors" />
+              <span className="text-gray-600 group-hover:text-red-500 transition-colors">×</span>
             </button>
 
             {/* Header Section with Background */}
@@ -439,11 +423,9 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       </div>
                     ) : (
                       <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${selectedMember.color} flex items-center justify-center border-4 border-white shadow-2xl`}>
-                        <selectedMember.icon className="h-12 w-12 text-white" />
                       </div>
                     )}
                     <div className={`absolute -bottom-2 -right-2 w-8 h-8 ${selectedMember.accentColor} rounded-xl flex items-center justify-center border-2 border-white`}>
-                      <selectedMember.icon className="h-4 w-4 text-white" />
                     </div>
                   </div>
                   
@@ -451,10 +433,8 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                     <h1 className="text-3xl font-black mb-1">{selectedMember.name}</h1>
                     <p className="text-cyan-300 font-semibold text-lg">{selectedMember.title}</p>
                     <div className="flex items-center gap-2 mt-2 text-gray-300">
-                      <MapPin className="h-4 w-4" />
                       <span className="text-sm">{selectedMember.location}</span>
                       <div className="w-1 h-1 bg-gray-400 rounded-full mx-2" />
-                      <Calendar className="h-4 w-4" />
                       <span className="text-sm">{selectedMember.experience}</span>
                     </div>
                   </div>
@@ -468,7 +448,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
               <div className={`bg-gradient-to-r ${selectedMember.color} p-6 rounded-2xl text-white`}>
                 <div className="flex items-center gap-4">
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
-                    <Target className="h-6 w-6" />
                   </div>
                   <div>
                     <h3 className="font-bold text-lg mb-1">Specialization</h3>
@@ -491,7 +470,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                 {/* Skills */}
                 <div className="space-y-4">
                   <h4 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-cyan-500" />
                     Core Skills
                   </h4>
                   <div className="space-y-3">
@@ -507,14 +485,12 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                 {/* Achievements */}
                 <div className="space-y-4">
                   <h4 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <Trophy className="h-5 w-5 text-yellow-500" />
                     Key Achievements
                   </h4>
                   <div className="space-y-3">
                     {selectedMember.achievements.map((achievement, i) => (
                       <div key={i} className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-100 hover:shadow-md transition-all duration-200 group">
                         <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <Star className="h-4 w-4 text-white" />
                         </div>
                         <span className="font-medium text-gray-800">{achievement}</span>
                       </div>
@@ -526,7 +502,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
               {/* Contact Section */}
               <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
                 <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Mail className="h-5 w-5 text-green-500" />
                   Get In Touch
                 </h4>
                 <div className="flex flex-wrap gap-4">
@@ -534,7 +509,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                     href={`mailto:${selectedMember.email}`}
                     className="flex items-center gap-3 bg-white hover:bg-green-50 text-gray-800 hover:text-green-700 px-6 py-3 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200 group shadow-sm hover:shadow-md"
                   >
-                    <Mail className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     <span className="font-medium">{selectedMember.email}</span>
                   </a>
                   
@@ -544,7 +518,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 bg-white hover:bg-blue-50 text-gray-800 hover:text-blue-700 px-6 py-3 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-200 group shadow-sm hover:shadow-md"
                   >
-                    <Linkedin className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     <span className="font-medium">LinkedIn Profile</span>
                   </a>
                   
@@ -555,7 +528,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 bg-white hover:bg-gray-50 text-gray-800 hover:text-gray-900 px-6 py-3 rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 group shadow-sm hover:shadow-md"
                     >
-                      <Github className="h-5 w-5 group-hover:scale-110 transition-transform" />
                       <span className="font-medium">GitHub Profile</span>
                     </a>
                   )}
@@ -568,7 +540,6 @@ export default function EnhancedTeamPage({ members = mockMembers }: { members?: 
                   onClick={() => window.location.href = `mailto:${selectedMember.email}`}
                   className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3 group"
                 >
-                  <Mail className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   <span>Contact Now</span>
                 </button>
                 

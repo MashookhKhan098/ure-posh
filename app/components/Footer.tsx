@@ -52,15 +52,15 @@ export default function Footer() {
               <div className="flex flex-wrap items-center gap-3 text-slate-300 text-xs">
                 <div className="flex items-center space-x-1">
                   <Mail className="h-3 w-3 text-blue-400 flex-shrink-0" />
-                  <span>contact@ureposh.com</span>
+                  <span>ureposh@gmail.com</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Phone className="h-3 w-3 text-purple-400 flex-shrink-0" />
-                  <span>+91 98765 43210</span>
+                  <span>+91 99999 44807</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <MapPin className="h-3 w-3 text-pink-400 flex-shrink-0" />
-                  <span>Mumbai, Maharashtra, India</span>
+                  <span>C 84, Sector 2, Noida, 201301</span>
                 </div>
               </div>
               
@@ -221,22 +221,22 @@ export default function Footer() {
             <div className="flex flex-col lg:flex-row items-center space-y-3 lg:space-y-0 lg:space-x-6">
               <p className="text-slate-400 text-xs">&copy; {currentYear} Ureposh. All rights reserved.</p>
               <div className="flex space-x-6 text-xs">
-                <Link href="#" className="text-slate-400 hover:text-white transition-colors">
+                <Link href="/privacy-policy" className="text-slate-400 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
-                <Link href="#" className="text-slate-400 hover:text-white transition-colors">
+                <Link href="/terms-of-service" className="text-slate-400 hover:text-white transition-colors">
                   Terms of Service
                 </Link>
-                <Link href="#" className="text-slate-400 hover:text-white transition-colors">
+                <Link href="/cookie-policy" className="text-slate-400 hover:text-white transition-colors">
                   Cookie Policy
                 </Link>
-                <Link href="#" className="text-slate-400 hover:text-white transition-colors">
+                <Link href="/compliance-statement" className="text-slate-400 hover:text-white transition-colors">
                   Compliance Statement
                 </Link>
               </div>
             </div>
+            {/* Removed logo and emoji as requested */}
             <div className="flex items-center space-x-3 text-slate-400">
-              <Shield className="h-4 w-4 text-green-400" />
               <span className="text-xs">Proudly serving organizations across India and beyond</span>
             </div>
           </div>
