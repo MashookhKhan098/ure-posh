@@ -203,3 +203,6 @@ Today, he brings this unique blend of legal, financial, and workplace compliance
     email: "aanchal@ureposh.com"
   }
 ];
+
+// No hero section or icons related to the listed services exist in this file.
+// If you have a hero section in another file (e.g., Home, Services, or a POSH landing page), please specify the filepath.

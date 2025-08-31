@@ -7,7 +7,7 @@ export default function InternalCommitteeSetupPage() {
   const services = [
     "Committee member selection and training",
     "Role and responsibility documentation",
-    "Investigation procedure development",
+    "Investigation procedure deve lopment",
     "Case management system setup",
     "Regular committee performance reviews",
     "Ongoing support and guidance"
@@ -26,9 +26,10 @@ export default function InternalCommitteeSetupPage() {
       <section className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="flex justify-center mb-6">
+            {/* Removed top icon */}
+            {/* <div className="flex justify-center mb-6">
               <Users className="h-16 w-16 text-blue-400" />
-            </div>
+            </div> */}
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
               Internal Committee Setup
             </h1>
