@@ -49,36 +49,36 @@ import { TeamSliceCarousel } from "./people/TeamSliceCarousel"
 
 const teamMembers = [
   {
+    name: "Pradeep Kumar",
+    role: "Founder & CEO",
+    bio: "Visionary leader with a passion for building inclusive workplaces and driving organizational transformation.",
+    image: "/images/URE%20POSH_/Pradeep.jpeg",
+    expertise: ["Leadership", "Inclusion", "Strategy"],
+    achievements: ["20+ Years Experience", "Founder", "Industry Leader"]
+  },
+  {
     name: "CS Anchal Chopra",
     role: "Company Secretary & Legal Expert",
     bio: "Expert in corporate governance and legal compliance with extensive experience in POSH implementation and workplace safety regulations.",
-    image: "/images/1.jpg",
+    image: "/images/URE%20POSH_/CS%20Aanchal%20_1.jpeg",
     expertise: ["Corporate Governance", "Legal Compliance", "POSH Implementation"],
     achievements: ["10+ Years Experience", "500+ Organizations", "99% Success Rate"]
   },
   {
-    name: "Dr. Priya Sharma",
-    role: "HR & Compliance Specialist",
-    bio: "Specialized in human resources management and compliance with deep understanding of workplace culture transformation.",
-    image: "/images/2.jpg",
-    expertise: ["HR Management", "Compliance Training", "Culture Transformation"],
-    achievements: ["15+ Years Experience", "300+ Training Sessions", "Expert Trainer"]
+    name: "Adv. Shrigarika",
+    role: "Senior Legal Advisor",
+    bio: "Renowned legal advisor specializing in employment law, workplace safety, and POSH compliance.",
+    image: "/images/URE%20POSH_/Adv%20Shrigarika.jpg",
+    expertise: ["Employment Law", "POSH Advisory", "Legal Training"],
+    achievements: ["15+ Years Experience", "300+ Cases", "POSH Specialist"]
   },
   {
-    name: "Adv. Rajesh Kumar",
-    role: "Employment Law Expert",
-    bio: "Leading employment law specialist with focus on workplace safety and employee rights protection.",
-    image: "/images/3.jpg",
-    expertise: ["Employment Law", "Legal Advisory", "Policy Development"],
-    achievements: ["12+ Years Experience", "200+ Legal Cases", "Certified Expert"]
-  },
-  {
-    name: "Dr. Anjali Mehta",
-    role: "Mental health professional",
-    bio: "Expert in organizational behavior and workplace psychology with specialization in inclusive workplace design.",
-    image: "/images/4.jpg",
-    expertise: ["Psychology", "Behavioral Training", "Inclusive Design"],
-    achievements: ["8+ Years Experience", "150+ Organizations", "PhD Psychology"]
+    name: "Pankaj",
+    role: "Compliance & Training Specialist",
+    bio: "Dedicated compliance professional with expertise in training and implementing workplace policies.",
+    image: "/images/URE%20POSH_/Pankaj%202.jpeg",
+    expertise: ["Compliance", "Training", "Policy Implementation"],
+    achievements: ["12+ Years Experience", "200+ Trainings", "Certified Trainer"]
   }
 ]
 
@@ -376,40 +376,34 @@ export default function HomePage() {
 
   const industries = [
     {
-      name: "Information Technology & Software",
-      icon: "💻",
-      description: "From startups to tech giants, ensuring safe digital workspaces",
-      challenges: ["Remote work policies", "Digital harassment", "Rapid scaling"],
+      name: "Compliance & Legal Insights",
+      icon: "⚖️",
+      description: "Latest updates, articles, and expert opinions on compliance and legal matters in the workplace.",
+      challenges: [],
     },
     {
-      name: "Healthcare & Life Sciences",
-      icon: "🏥",
-      description: "Protecting healthcare workers and maintaining patient care standards",
-      challenges: ["High-stress environments", "Hierarchical structures", "Patient interaction protocols"],
+      name: "Events & Webinars",
+      icon: "📅",
+      description: "Upcoming and past events, webinars, and training sessions for workplace compliance and culture.",
+      challenges: [],
     },
     {
-      name: "Financial Services & Banking",
-      icon: "🏦",
-      description: "Ensuring compliance in regulated financial environments",
-      challenges: ["Regulatory compliance", "Client-facing roles", "Performance pressure"],
+      name: "International Regulatory & Policy Watch",
+      icon: "🌐",
+      description: "Global regulatory updates and policy changes impacting workplaces and compliance.",
+      challenges: [],
     },
     {
-      name: "Manufacturing & Engineering",
-      icon: "🏭",
-      description: "Creating safe environments in industrial settings",
-      challenges: ["Blue-collar workforce", "Multiple shifts", "Safety integration"],
+      name: "United Kingdom Workplace",
+      icon: "🇬🇧",
+      description: "Insights and updates on workplace compliance and culture in the UK.",
+      challenges: [],
     },
     {
-      name: "Education & Research Institutions",
-      icon: "🎓",
-      description: "Fostering safe learning and research environments",
-      challenges: ["Student-faculty dynamics", "Research collaborations", "Campus safety"],
-    },
-    {
-      name: "Professional Services & Consulting",
-      icon: "💼",
-      description: "Maintaining professional standards in client-service environments",
-      challenges: ["Client interactions", "Travel policies", "Project-based teams"],
+      name: "US Work Place",
+      icon: "🇺🇸",
+      description: "Trends, laws, and best practices for workplace compliance in the United States.",
+      challenges: [],
     },
   ]
 
@@ -437,9 +431,54 @@ export default function HomePage() {
   const staggerContainer = {
     animate: {
       transition: {
-        staggerChildren: 0.1,
+       staggerChildren: 0.1,
       },
     },
+  }
+
+  // Add Razorpay script loader utility
+  function loadRazorpayScript(src: string) {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  }
+
+  // Razorpay payment handler for buying poster
+  async function handleBuyPoster() {
+    const res = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    const options = {
+      key: "rzp_test_YourKeyHere", // Replace with your Razorpay key
+      amount: 49900, // Poster price in paise (e.g., ₹499)
+      currency: "INR",
+      name: "Ureposh",
+      description: "POSH Poster Purchase",
+      image: "/logo.png", // Optional: your logo path
+      handler: function (response: any) {
+        alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+        // You can add further logic here (e.g., show download link, send email, etc.)
+      },
+      prefill: {
+        name: "",
+        email: "",
+        contact: "",
+      },
+      theme: {
+        color: "#6366f1",
+      },
+    };
+
+    // @ts-ignore
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   }
 
   if (!isLoaded) {
@@ -457,7 +496,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <main>
         {/* Hero Section */}
-        <section className="relative pt-4 sm:pt-6 lg:pt-8 mt-2 sm:mt-4 lg:mt-6 flex items-center justify-center overflow-hidden bg-white">
+        <section className="relative pt-8 sm:pt-12 lg:pt-16 mt-2 sm:mt-4 lg:mt-6 flex items-center justify-center overflow-hidden bg-white min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]">
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute right-0 top-0 w-1/2 h-full group">
               <Cog className="absolute -top-12 -right-12 w-24 h-24 sm:w-32 sm:h-32 text-slate-200 transition-transform duration-1000 ease-in-out group-hover:rotate-[360deg]" />
@@ -468,7 +507,7 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid lg:grid-cols-2 gap-4 sm:gap-4 lg:gap-12 items-center min-h-[75vh] py-4 sm:py-6 lg:py-6">
+            <div className="grid lg:grid-cols-2 gap-4 sm:gap-4 lg:gap-12 items-center min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] py-6 sm:py-10 lg:py-12">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -528,12 +567,13 @@ export default function HomePage() {
                     <span className="font-bold text-slate-800 bg-green-100 px-1 sm:px-1.5 lg:px-2 py-0.5 rounded-md text-sm sm:text-base lg:text-lg">safer, more inclusive</span>, and legally compliant across India.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
-                    <Link href="/contact">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base lg:text-lg">
-                        Get Started
-                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-1.5 sm:ml-2" />
-                      </Button>
-                    </Link>
+                    <Button
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base lg:text-lg"
+                      onClick={() => window.location.href = "http://localhost:4000/connect"}
+                    >
+                      Get Started
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ml-1.5 sm:ml-2" />
+                    </Button>
                     <Link href="/about">
                       <Button variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base lg:text-lg">
                         Learn More
@@ -723,10 +763,12 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="text-center mt-2 sm:mt-4"
             >
-              <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 border-0 text-sm sm:text-base">
-                Meet Our Full Team
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-              </Button>
+              <Link href="/people">
+                <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 border-0 text-sm sm:text-base">
+                  Meet Our Full Team
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </section>
@@ -784,9 +826,38 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Poster Section with Razorpay Gateway */}
+        <section className="flex flex-col items-center justify-center py-8 bg-white">
+          <div className="max-w-md w-full bg-gradient-to-br from-blue-50 via-white to-green-50 rounded-2xl shadow-xl p-6 mb-4 text-center">
+            <h2 className="text-2xl font-bold mb-2 text-slate-900">Buy POSH Poster</h2>
+            <p className="text-slate-600 mb-4">
+              Get your legally compliant POSH poster for your workplace. Pay securely via Razorpay and download instantly.
+            </p>
+            <div className="mb-4">
+              <Image
+                src="/images/posh-poster-sample.jpg"
+                alt="POSH Poster Sample"
+                width={320}
+                height={450}
+                className="rounded-lg mx-auto shadow"
+              />
+            </div>
+            <div className="mb-2">
+              <span className="text-lg font-semibold text-green-700">₹499</span>
+              <span className="ml-2 text-slate-500 text-sm">per poster (PDF)</span>
+            </div>
+            <Button
+              className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 mt-2"
+              onClick={handleBuyPoster}
+            >
+              Buy Now
+            </Button>
+          </div>
+        </section>
+
       
       </main>
-      
     </div>
   )
 }
+

@@ -6,14 +6,114 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Check, Star, Shield, FileText, Users, Award, ShoppingCart, Heart, Eye, Search, Filter, TrendingUp, Zap, Clock, Download, X, CreditCard, Wallet, Lock } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
+import { Check, Star, Shield, ShoppingCart, Heart, Eye, Zap, X, CreditCard } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 
+// ===================== Razorpay Setup =====================
+function loadRazorpayScript(src: string) {
+  return new Promise((resolve) => {
+    if (document.querySelector(`script[src="${src}"]`)) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
+// Razorpay Setup with backend order creation (fix 401 Unauthorized)
+async function handleRazorpayPayment({
+  amount,
+  name,
+  email,
+  phone,
+  productName,
+  onSuccess,
+}: {
+  amount: number,
+  name: string,
+  email: string,
+  phone: string,
+  productName: string,
+  onSuccess: (paymentId: string) => void
+}) {
+  // 1. Load Razorpay script
+  const res = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
+  if (!res) {
+    alert("Razorpay SDK failed to load. Are you online?");
+    return;
+  }
+
+  // 2. Create order on backend
+  let orderData;
+  try {
+    const orderRes = await fetch("/api/razorpay-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: Math.round(amount * 100), // paise, ensure integer
+        currency: "INR",
+        receipt: `rcpt_${Date.now()}`,
+      }),
+    });
+    orderData = await orderRes.json();
+    if (!orderRes.ok || !orderData.orderId) {
+      throw new Error(orderData.error || "Failed to create Razorpay order");
+    }
+  } catch (err: any) {
+    alert("Failed to initiate payment: " + (err?.message || "Unknown error"));
+    return;
+  }
+
+  // 3. Open Razorpay checkout
+  const options = {
+    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_YourKeyHere", // Use your real Razorpay key here
+    amount: orderData.amount,
+    currency: orderData.currency,
+    name: "Ureposh",
+    description: productName,
+    image: "/logo.png",
+    order_id: orderData.orderId,
+    handler: function (response: any) {
+      if (response.razorpay_payment_id) {
+        onSuccess(response.razorpay_payment_id);
+      } else {
+        alert("Payment failed or cancelled.");
+      }
+    },
+    prefill: {
+      name,
+      email,
+      contact: phone,
+    },
+    theme: {
+      color: "#6366f1",
+    },
+    modal: {
+      ondismiss: function () {
+        // Optionally handle modal close
+      }
+    }
+  };
+
+  // @ts-ignore
+  if (typeof window !== "undefined" && window.Razorpay) {
+    // @ts-ignore
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } else {
+    alert("Razorpay SDK not loaded.");
+  }
+}
+
+
+
+// ===================== Main Component =====================
 export default function PosterAndPolicyDiscloserPage() {
   const [cartItems, setCartItems] = useState<{id: number, quantity: number}[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -22,7 +122,6 @@ export default function PosterAndPolicyDiscloserPage() {
   const [showCart, setShowCart] = useState(false)
   const [showPurchaseDialog, setShowPurchaseDialog] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('')
   const [purchaseLoading, setPurchaseLoading] = useState(false)
   const [customerDetails, setCustomerDetails] = useState({
     name: '',
@@ -31,9 +130,7 @@ export default function PosterAndPolicyDiscloserPage() {
     address: ''
   })
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
-  const [purchaseResult, setPurchaseResult] = useState<any>(null)
-  // Download feature removed: no downloads state or tab
-
+  const [paymentId, setPaymentId] = useState<string | null>(null)
   const [posters, setPosters] = useState<any[]>([])
   const [loadingPosters, setLoadingPosters] = useState(false)
   const [postersError, setPostersError] = useState<string | null>(null)
@@ -129,35 +226,42 @@ export default function PosterAndPolicyDiscloserPage() {
     setShowPurchaseDialog(true)
   }
 
-  const handlePurchase = async () => {
-    if (!selectedProduct) return
-    
-    setPurchaseLoading(true)
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Generate mock transaction details
-      const transactionId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-      
-      // Set purchase result
-      setPurchaseResult({
-        transactionId,
-        product: selectedProduct,
-        customerDetails
-      })
-      
-      // Show success dialog
-      setShowSuccessDialog(true)
-      setShowPurchaseDialog(false)
-      
-    } catch (error) {
-      console.error('Purchase error:', error)
-      alert('Purchase failed. Please try again.')
-    } finally {
-      setPurchaseLoading(false)
+  // Checkout from cart: open purchase dialog with all cart items
+  const handleCartCheckout = () => {
+    if (cartItems.length > 0) {
+      const firstProduct = posters.find(p => p.id === cartItems[0].id);
+      setSelectedProduct(firstProduct);
+      setShowPurchaseDialog(true);
     }
   }
+
+  // Razorpay-only purchase handler
+  const handlePurchase = async () => {
+    if (!selectedProduct) return;
+    if (!customerDetails.name || !customerDetails.email) {
+      alert("Please fill in your name and email.");
+      return;
+    }
+    setPurchaseLoading(true);
+    try {
+      await handleRazorpayPayment({
+        amount: selectedProduct.price,
+        name: customerDetails.name,
+        email: customerDetails.email,
+        phone: customerDetails.phone,
+        productName: selectedProduct.name,
+        onSuccess: (paymentId: string) => {
+          setPaymentId(paymentId);
+          setShowPurchaseDialog(false);
+          setShowSuccessDialog(true);
+        }
+      });
+    } catch (error) {
+      alert("Payment failed. Please try again.");
+    } finally {
+      setPurchaseLoading(false);
+    }
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -450,10 +554,11 @@ export default function PosterAndPolicyDiscloserPage() {
                             </div>
                             <Button 
                               onClick={() => {
-                                setShowCart(false)
-                                setShowPurchaseDialog(true)
+                                setShowCart(false);
+                                handleCartCheckout();
                               }}
                               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                              disabled={cartItems.length === 0}
                             >
                               <CreditCard className="w-4 h-4 mr-2" />
                               Checkout
@@ -532,7 +637,7 @@ export default function PosterAndPolicyDiscloserPage() {
 
                     {/* Features */}
                     <div className="flex flex-wrap gap-1 mb-2.5">
-                      {product.features.slice(0, 2).map((feature, index) => (
+                      {product.features.slice(0, 2).map((feature: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined, index: React.Key | null | undefined) => (
                         <Badge key={index} variant="secondary" className="text-[10px] py-0.5 px-1.5">
                           {feature}
                         </Badge>
@@ -562,35 +667,26 @@ export default function PosterAndPolicyDiscloserPage() {
                   </CardContent>
                   
                   <CardContent className="pt-1">
-                                     <div className="flex gap-2">
-                       {getCartItem(product.id) ? (
-                         <div className="flex-1 flex items-center justify-center gap-1.5 bg-green-50 border border-green-200 rounded-lg px-2 py-1.5">
-                           <Check className="w-3 h-3 text-green-600" />
-                           <span className="text-[11px] text-green-700 font-medium">
-                             In Cart ({getCartItem(product.id)?.quantity})
-                           </span>
-                         </div>
-                       ) : (
-                      <Button 
-                        onClick={() => addToCart(product.id)}
-                           className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-8 text-xs"
-                        disabled={!product.inStock}
-                      >
-                           <ShoppingCart className="w-3.5 h-3.5 mr-2" />
-                        Add to Cart
-                      </Button>
-                       )}
-                      <Button 
-                         onClick={() => handleBuyNow(product)}
-                        variant="outline" 
-                         className="px-3 h-8 text-xs"
-                        disabled={!product.inStock}
-                      >
-                         <Download className="w-3.5 h-3.5 mr-2" />
-                        Buy Now
-                      </Button>
-                    </div>
-                  </CardContent>
+  <div className="flex gap-2">
+    {getCartItem(product.id) ? (
+      <div className="flex-1 flex items-center justify-center gap-1.5 bg-green-50 border border-green-200 rounded-lg px-2 py-1.5">
+        <Check className="w-3 h-3 text-green-600" />
+        <span className="text-[11px] text-green-700 font-medium">
+          In Cart ({getCartItem(product.id)?.quantity})
+        </span>
+      </div>
+    ) : (
+      <Button 
+        onClick={() => addToCart(product.id)}
+        className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-8 text-xs"
+        disabled={!product.inStock}
+      >
+        <ShoppingCart className="w-3.5 h-3.5 mr-2" />
+        Add to Cart
+      </Button>
+    )}
+  </div>
+</CardContent>
                 </Card>
               ))}
             </div>
@@ -605,39 +701,31 @@ export default function PosterAndPolicyDiscloserPage() {
           </div>
       </>
       
-      {/* Purchase Dialog */}
+      {/* Purchase Dialog (Razorpay) */}
       <Dialog open={showPurchaseDialog} onOpenChange={setShowPurchaseDialog}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Complete Your Purchase</DialogTitle>
+            <DialogTitle>Checkout with Razorpay</DialogTitle>
             <DialogDescription>
-              Please provide your details to complete the purchase
+              Enter your details and pay securely via Razorpay.
             </DialogDescription>
           </DialogHeader>
-          
           {selectedProduct && (
             <div className="space-y-6">
               {/* Product Summary */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center gap-4">
-                  <img 
-                    src={selectedProduct.image} 
-                    alt={selectedProduct.name}
-                    className="w-20 h-20 object-cover rounded-lg"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-lg">{selectedProduct.name}</h4>
-                    <p className="text-gray-600">{selectedProduct.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="text-2xl font-bold text-green-600">₹{selectedProduct.price}</span>
-                      {selectedProduct.originalPrice > selectedProduct.price && (
-                        <span className="text-sm text-gray-500 line-through">₹{selectedProduct.originalPrice}</span>
-                      )}
-                    </div>
+              <div className="bg-gray-50 rounded-lg p-4 flex items-center gap-4">
+                <img 
+                  src={selectedProduct.image} 
+                  alt={selectedProduct.name}
+                  className="w-20 h-20 object-cover rounded-lg"
+                />
+                <div>
+                  <h4 className="font-semibold text-lg">{selectedProduct.name}</h4>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-2xl font-bold text-green-600">₹{selectedProduct.price}</span>
                   </div>
                 </div>
               </div>
-
               {/* Customer Details Form */}
               <div className="space-y-4">
                 <h4 className="font-semibold">Customer Details</h4>
@@ -683,34 +771,6 @@ export default function PosterAndPolicyDiscloserPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Payment Method Selection */}
-              <div className="space-y-4">
-                <h4 className="font-semibold">Payment Method</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[
-                    { id: 'card', label: 'Credit/Debit Card', icon: CreditCard },
-                    { id: 'wallet', label: 'Digital Wallet', icon: Wallet },
-                    { id: 'upi', label: 'UPI Payment', icon: Lock }
-                  ].map((method) => (
-                    <div
-                      key={method.id}
-                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                        selectedPaymentMethod === method.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                      onClick={() => setSelectedPaymentMethod(method.id)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <method.icon className="w-6 h-6 text-gray-600" />
-                        <span className="font-medium">{method.label}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Terms and Conditions */}
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -725,19 +785,19 @@ export default function PosterAndPolicyDiscloserPage() {
                   </Label>
                 </div>
               </div>
-
-              {/* Action Buttons */}
+              {/* Razorpay Button */}
               <div className="flex gap-4 pt-4">
                 <Button
                   variant="outline"
                   onClick={() => setShowPurchaseDialog(false)}
                   className="flex-1"
+                  disabled={purchaseLoading}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handlePurchase}
-                  disabled={purchaseLoading || !customerDetails.name || !customerDetails.email || !selectedPaymentMethod}
+                  disabled={purchaseLoading || !customerDetails.name || !customerDetails.email}
                   className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                 >
                   {purchaseLoading ? (
@@ -748,7 +808,7 @@ export default function PosterAndPolicyDiscloserPage() {
                   ) : (
                     <>
                       <CreditCard className="w-4 h-4 mr-2" />
-                      Complete Purchase
+                      Pay with Razorpay
                     </>
                   )}
                 </Button>
@@ -762,34 +822,27 @@ export default function PosterAndPolicyDiscloserPage() {
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-center text-green-600">Purchase Successful! 🎉</DialogTitle>
+            <DialogTitle className="text-center text-green-600">Payment Successful! 🎉</DialogTitle>
             <DialogDescription className="text-center">
-              Your poster has been purchased and is now available for download.
+              Thank you for your purchase. Your payment was processed via Razorpay.
             </DialogDescription>
           </DialogHeader>
-          
-          {purchaseResult && (
-            <div className="space-y-4">
-              <div className="bg-green-50 rounded-lg p-4 text-center">
-                <Check className="w-12 h-12 text-green-600 mx-auto mb-2" />
-                <p className="text-sm text-green-700">
-                  Transaction ID: <span className="font-mono">{purchaseResult.transactionId}</span>
-                </p>
-              </div>
-              
-              <div className="space-y-3">
-                <Button
-                  onClick={() => setShowSuccessDialog(false)}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                >
-                  Done
-                </Button>
-              </div>
-            </div>
-          )}
+          <div className="space-y-4 text-center">
+            <Check className="w-12 h-12 text-green-600 mx-auto mb-2" />
+            {paymentId && (
+              <p className="text-sm text-green-700">
+                Payment ID: <span className="font-mono">{paymentId}</span>
+              </p>
+            )}
+            <Button
+              onClick={() => setShowSuccessDialog(false)}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+            >
+              Done
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   )
 }
-      
