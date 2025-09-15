@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next build outputs
+.next
+out
+
+# Local env files
+.env
+.env.*
+!.env.production
+
+# VCS
+.git
+.gitignore
+
+# Editor/OS
+.vscode
+.DS_Store

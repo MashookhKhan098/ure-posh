@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  web:
+    image: ure-posh:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ure-posh
+    env_file:
+      - .env
+    ports:
+      - "3004:3004"
+    restart: unless-stopped
